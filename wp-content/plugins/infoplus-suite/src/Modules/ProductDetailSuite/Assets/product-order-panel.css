@@ -1,0 +1,351 @@
+/**
+ * Product Order Panel Widget Styles
+ *
+ * Styles for the ProductOrderPanel Elementor widget.
+ * Depends on product-detail-suite.css for CSS variables.
+ */
+
+/* ==========================================================================
+   PANEL WRAPPER
+   ========================================================================== */
+
+.infoplus-order-panel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Default gap between sections — overridden by Elementor control */
+.infoplus-order-panel > * + * {
+    margin-top: 20px;
+}
+
+/* ==========================================================================
+   SECTION 1: PRODUCT INFO
+   ========================================================================== */
+
+.infoplus-order-panel__info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.infoplus-order-panel__info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--infoplus-text, #333333);
+    line-height: 1.4;
+}
+
+.infoplus-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    font-style: normal;
+}
+
+/* SVG-based icons via CSS — no external icon font needed */
+.infoplus-info-icon--qty::before {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: #4caf50;
+    border-radius: 50%;
+}
+
+.infoplus-info-icon--delivery::before {
+    content: '⏱';
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* ==========================================================================
+   SECTION 2: BULK PRICE TABLE
+   ========================================================================== */
+
+.infoplus-order-panel__bulk {
+    width: 100%;
+}
+
+.infoplus-order-panel__bulk-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    color: var(--infoplus-text-light, #666666);
+    font-size: 13px;
+}
+
+.infoplus-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--infoplus-border, #e0e0e0);
+    border-top-color: var(--infoplus-primary, #e91e8c);
+    border-radius: 50%;
+    animation: infoplus-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes infoplus-spin {
+    to { transform: rotate(360deg); }
+}
+
+.infoplus-order-panel__bulk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+}
+
+.infoplus-order-panel__bulk-grid[data-cols="3"] {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.infoplus-bulk-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: background-color 0.15s ease;
+}
+
+.infoplus-bulk-row.is-active {
+    background-color: rgba(233, 30, 140, 0.08);
+}
+
+.infoplus-bulk-qty {
+    font-size: 12px;
+    color: var(--infoplus-text-light, #666666);
+    white-space: nowrap;
+}
+
+.infoplus-bulk-price {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--infoplus-text, #333333);
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   SECTION 3: QUANTITY SELECTOR
+   ========================================================================== */
+
+.infoplus-order-panel__quantity {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: fit-content;
+}
+
+.infoplus-qty-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--infoplus-background, #f8f9fa);
+    border: 1px solid var(--infoplus-border, #e0e0e0);
+    color: var(--infoplus-text, #333333);
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    user-select: none;
+    border-radius: 6px;
+}
+
+.infoplus-qty-btn:hover:not(:disabled) {
+    background-color: var(--infoplus-border, #e0e0e0);
+}
+
+.infoplus-qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.infoplus-qty-minus {
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+}
+
+.infoplus-qty-plus {
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+}
+
+.infoplus-qty-input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid var(--infoplus-border, #e0e0e0);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--infoplus-text, #333333);
+    background: #ffffff;
+    border-radius: 0;
+    -moz-appearance: textfield;
+    outline: none;
+    padding: 0;
+}
+
+.infoplus-qty-input::-webkit-outer-spin-button,
+.infoplus-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.infoplus-qty-input:focus {
+    border-color: var(--infoplus-primary, #e91e8c);
+    box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.15);
+    z-index: 1;
+    position: relative;
+}
+
+/* ==========================================================================
+   SECTION 4: PRICE DISPLAY
+   ========================================================================== */
+
+.infoplus-order-panel__prices {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.infoplus-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.infoplus-price-label {
+    font-size: 14px;
+    color: var(--infoplus-text-light, #666666);
+}
+
+.infoplus-price-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--infoplus-text, #333333);
+}
+
+.infoplus-price-row--total .infoplus-price-label {
+    color: var(--infoplus-text, #333333);
+    font-weight: 500;
+}
+
+.infoplus-price-row--total .infoplus-price-value {
+    font-size: 20px;
+    color: var(--infoplus-primary, #e91e8c);
+}
+
+.infoplus-price-suffix {
+    font-size: 11px;
+    color: var(--infoplus-text-light, #666666);
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   SECTION 5: ACTION BUTTONS
+   ========================================================================== */
+
+.infoplus-order-panel__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.infoplus-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+    line-height: 1.2;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Primary buttons (Editor + Cart) */
+.infoplus-btn--editor,
+.infoplus-btn--cart {
+    background-color: var(--infoplus-primary, #e91e8c);
+    color: #ffffff;
+    border-color: transparent;
+}
+
+.infoplus-btn--editor:not(.infoplus-btn--disabled):hover,
+.infoplus-btn--cart:not(.infoplus-btn--disabled):hover {
+    background-color: var(--infoplus-primary-hover, #d11a7d);
+    color: #ffffff;
+}
+
+/* Anfrage button (outline) */
+.infoplus-btn--anfrage {
+    background-color: transparent;
+    color: var(--infoplus-primary, #e91e8c);
+    border-color: var(--infoplus-primary, #e91e8c);
+}
+
+.infoplus-btn--anfrage:hover {
+    background-color: rgba(233, 30, 140, 0.06);
+}
+
+/* Disabled state */
+.infoplus-btn--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Hidden state */
+.infoplus-btn--hidden {
+    display: none !important;
+}
+
+/* Loading state */
+.infoplus-btn--loading {
+    opacity: 0.7;
+    cursor: wait;
+    pointer-events: none;
+}
+
+/* Success state */
+.infoplus-btn--success {
+    background-color: #4caf50;
+    border-color: #4caf50;
+}
+
+/* Pulsing state — used for requestable / requestable_with_variants Anfrage button */
+@keyframes infoplus-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(233, 30, 140, 0.45); }
+    55%       { box-shadow: 0 0 0 10px rgba(233, 30, 140, 0); }
+}
+
+.infoplus-btn--pulsing {
+    animation: infoplus-pulse 1.8s ease-in-out infinite;
+}
+
+/* Error message below buttons */
+.infoplus-btn-error {
+    font-size: 12px;
+    color: #c0392b;
+    margin-top: -4px;
+    padding: 0 4px;
+}

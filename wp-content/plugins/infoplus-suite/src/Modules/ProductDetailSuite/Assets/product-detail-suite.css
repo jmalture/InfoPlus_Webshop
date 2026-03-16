@@ -1,0 +1,1003 @@
+/**
+ * Infoplus Product Detail Suite - Main Stylesheet
+ * 
+ * Styles for Model Selector, Variation Dropdowns, and Product Image widgets.
+ */
+
+/* ==========================================================================
+   CSS VARIABLES
+   ========================================================================== */
+
+:root {
+    --infoplus-primary: #e91e8c;
+    --infoplus-primary-hover: #d11a7d;
+    --infoplus-text: #333333;
+    --infoplus-text-light: #666666;
+    --infoplus-border: #e0e0e0;
+    --infoplus-background: #f8f9fa;
+    --infoplus-white: #ffffff;
+    --infoplus-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --infoplus-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --infoplus-radius: 8px;
+    --infoplus-radius-sm: 6px;
+    --infoplus-transition: 0.2s ease;
+}
+
+/* ==========================================================================
+   MODEL SELECTOR WIDGET
+   ========================================================================== */
+
+.infoplus-model-selector {
+    width: 100%;
+}
+
+.infoplus-model-selector__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--infoplus-text);
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.infoplus-model-selector__list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--infoplus-border) transparent;
+    direction: rtl;
+}
+
+.infoplus-model-selector__list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.infoplus-model-selector__list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.infoplus-model-selector__list::-webkit-scrollbar-thumb {
+    background-color: var(--infoplus-border);
+    border-radius: 3px;
+}
+
+/* Horizontal layout */
+.infoplus-model-selector--horizontal .infoplus-model-selector__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: visible;
+}
+
+/* Model Card */
+.infoplus-model-selector__card {
+    display: flex;
+    flex-direction: column;
+    background: var(--infoplus-white);
+    border: 1px solid var(--infoplus-border);
+    border-radius: var(--infoplus-radius);
+    padding: 12px;
+    cursor: pointer;
+    transition: all var(--infoplus-transition);
+    position: relative;
+}
+
+.infoplus-model-selector__card:hover {
+    border-color: var(--infoplus-primary);
+    /*box-shadow: var(--infoplus-shadow);*/
+}
+
+.infoplus-model-selector__card.is-active {
+    border-color: #0066cc;
+    background: var(--infoplus-background);
+}
+
+/* Active indicator bar */
+.infoplus-model-selector__card.is-active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 4px;
+    background: #0066cc;
+    border-radius: 0 var(--infoplus-radius) var(--infoplus-radius) 0;
+}
+
+/* Card Image */
+.infoplus-model-selector__image {
+    position: relative;
+    width: 100%;
+    min-height: 120px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius-sm);
+    overflow: hidden;
+}
+
+.infoplus-model-selector__image img {
+    max-width: 100%;
+    max-height: 120px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--infoplus-radius-sm);
+}
+
+/* Info Button - needs high specificity to override Elementor button styles */
+.infoplus-model-selector .infoplus-model-selector__info-btn,
+.infoplus-model-selector button.infoplus-model-selector__info-btn,
+.infoplus-model-selector .infoplus-model-selector__info-btn[type="button"],
+.elementor-widget-infoplus-model-selector .infoplus-model-selector__info-btn,
+.elementor-element .infoplus-model-selector__info-btn,
+button.infoplus-model-selector__info-btn,
+.infoplus-model-selector__info-btn[type="button"],
+.infoplus-model-selector__info-btn {
+    position: absolute !important;
+    bottom: 8px !important;
+    right: 8px !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: var(--infoplus-white) !important;
+    background-color: var(--infoplus-white) !important;
+    border: 1px solid var(--infoplus-primary) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: var(--infoplus-primary) !important;
+    transition: all var(--infoplus-transition) !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    outline: none !important;
+}
+
+/* Hover state */
+.infoplus-model-selector .infoplus-model-selector__info-btn:hover,
+.infoplus-model-selector .infoplus-model-selector__info-btn:focus,
+.infoplus-model-selector button.infoplus-model-selector__info-btn:hover,
+.infoplus-model-selector button.infoplus-model-selector__info-btn:focus,
+.elementor-widget-infoplus-model-selector .infoplus-model-selector__info-btn:hover,
+.elementor-widget-infoplus-model-selector .infoplus-model-selector__info-btn:focus,
+.elementor-element .infoplus-model-selector__info-btn:hover,
+.elementor-element .infoplus-model-selector__info-btn:focus,
+button.infoplus-model-selector__info-btn:hover,
+button.infoplus-model-selector__info-btn:focus,
+.infoplus-model-selector__info-btn[type="button"]:hover,
+.infoplus-model-selector__info-btn[type="button"]:focus,
+.infoplus-model-selector__info-btn:hover,
+.infoplus-model-selector__info-btn:focus {
+    background: var(--infoplus-primary) !important;
+    background-color: var(--infoplus-primary) !important;
+    border-color: var(--infoplus-primary) !important;
+    color: var(--infoplus-white) !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* Card Content */
+.infoplus-model-selector__content {
+    text-align: center;
+}
+
+.infoplus-model-selector__name {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--infoplus-text);
+    margin-bottom: 4px;
+}
+
+.infoplus-model-selector__price {
+    display: block;
+    font-size: 13px;
+    color: var(--infoplus-primary);
+}
+
+/* Placeholder */
+.infoplus-model-selector__placeholder {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--infoplus-text-light);
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius);
+}
+
+/* ==========================================================================
+   VARIATION DROPDOWNS WIDGET
+   ========================================================================== */
+
+.infoplus-variation-dropdowns {
+    display: flex;
+    flex-direction: column;
+}
+
+.infoplus-dropdown {
+    position: relative;
+}
+
+.infoplus-dropdown__label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--infoplus-text-light);
+    margin-bottom: 6px;
+}
+
+.infoplus-dropdown__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--infoplus-white);
+    border: 1px solid var(--infoplus-border);
+    border-radius: var(--infoplus-radius-sm);
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all var(--infoplus-transition);
+}
+
+.infoplus-dropdown__trigger:hover,
+.infoplus-dropdown__trigger:focus {
+    border-color: var(--infoplus-primary);
+}
+
+.infoplus-dropdown.is-open .infoplus-dropdown__trigger {
+    border-color: var(--infoplus-primary);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.infoplus-dropdown__selected {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Per-dropdown height: only applied when JS detects that dropdown has term images */
+.infoplus-dropdown[data-has-images="yes"] .infoplus-dropdown__trigger {
+    min-height: calc(var(--infoplus-dropdown-image-height, 32px) + 20px) !important;
+    box-sizing: border-box;
+}
+
+.infoplus-dropdown[data-has-images="yes"] .infoplus-dropdown__selected {
+    min-height: var(--infoplus-dropdown-image-height, 32px);
+}
+
+/* Image in selected state - only shown when actually selected */
+.infoplus-dropdown__selected-image {
+    width: var(--infoplus-dropdown-image-width, 42px);
+    height: var(--infoplus-dropdown-image-height, 32px);
+    border-radius: 4px!important;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: none; /* Hidden by default */
+}
+
+/* When image is selected (img element with src), show it */
+img.infoplus-dropdown__selected-image[src]:not([src=""]) {
+    display: block !important;
+}
+
+/* Info button in selected trigger - ALWAYS hidden by default */
+/* Using high specificity to override any Elementor styles */
+.infoplus-variation-dropdowns .infoplus-dropdown .infoplus-dropdown__selected-info,
+.infoplus-dropdown .infoplus-dropdown__selected-info,
+.infoplus-dropdown__selected-info,
+button.infoplus-dropdown__selected-info {
+    display: none !important; /* Hidden by default */
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    padding: 0;
+    margin: 0 0 0 auto;
+    background: transparent;
+    border: 1px solid var(--infoplus-primary);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--infoplus-primary);
+    transition: all var(--infoplus-transition);
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+/* Show info button ONLY when dropdown has BOTH classes: has-selection AND has-info */
+.infoplus-variation-dropdowns .infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info,
+.infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info,
+.infoplus-dropdown.has-selection.has-info button.infoplus-dropdown__selected-info {
+    display: flex !important;
+}
+
+.infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info:hover,
+.infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info:focus {
+    background: var(--infoplus-primary);
+    color: var(--infoplus-white);
+}
+
+.infoplus-dropdown__selected-text {
+    font-size: 14px;
+    color: var(--infoplus-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.infoplus-dropdown__arrow {
+    flex-shrink: 0;
+    color: var(--infoplus-text-light);
+    transition: transform var(--infoplus-transition);
+}
+
+.infoplus-dropdown.is-open .infoplus-dropdown__arrow {
+    transform: rotate(180deg);
+}
+
+/* Options List */
+.infoplus-dropdown__options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--infoplus-white);
+    border: 1px solid var(--infoplus-primary);
+    border-top: none;
+    border-radius: 0 0 var(--infoplus-radius-sm) var(--infoplus-radius-sm);
+    max-height: 240px;
+    overflow-y: auto;
+    box-shadow: var(--infoplus-shadow);
+}
+
+.infoplus-dropdown__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background var(--infoplus-transition);
+}
+
+.infoplus-dropdown__option:hover {
+    background: var(--infoplus-background);
+}
+
+.infoplus-dropdown__option.is-selected {
+    background: rgba(233, 30, 140, 0.05);
+}
+
+.infoplus-dropdown__option-image {
+    width: 42px;
+    height: 32px;
+    border-radius: 6px!important;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.infoplus-dropdown__option-text {
+    flex: 1;
+    font-size: 14px;
+    color: var(--infoplus-text);
+}
+
+/* Info button - needs high specificity to override Elementor button styles */
+/* Elementor's reset.css applies styles to [type-button], button:not(:disabled) etc. */
+.infoplus-dropdown .infoplus-dropdown__option-info,
+.infoplus-dropdown button.infoplus-dropdown__option-info,
+.infoplus-dropdown .infoplus-dropdown__option-info[type="button"],
+.elementor-widget-infoplus-variation-dropdowns .infoplus-dropdown__option-info,
+.elementor-element .infoplus-dropdown__option-info,
+button.infoplus-dropdown__option-info,
+.infoplus-dropdown__option-info[type="button"],
+.infoplus-dropdown__option-info {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 1px solid var(--infoplus-primary) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: var(--infoplus-primary) !important;
+    transition: all  !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    outline: none !important;
+}
+
+/* Hover state - also need high specificity */
+.infoplus-dropdown .infoplus-dropdown__option-info:hover,
+.infoplus-dropdown .infoplus-dropdown__option-info:focus,
+.infoplus-dropdown button.infoplus-dropdown__option-info:hover,
+.infoplus-dropdown button.infoplus-dropdown__option-info:focus,
+.elementor-widget-infoplus-variation-dropdowns .infoplus-dropdown__option-info:hover,
+.elementor-widget-infoplus-variation-dropdowns .infoplus-dropdown__option-info:focus,
+.elementor-element .infoplus-dropdown__option-info:hover,
+.elementor-element .infoplus-dropdown__option-info:focus,
+button.infoplus-dropdown__option-info:hover,
+button.infoplus-dropdown__option-info:focus,
+.infoplus-dropdown__option-info[type="button"]:hover,
+.infoplus-dropdown__option-info[type="button"]:focus,
+.infoplus-dropdown__option-info:hover,
+.infoplus-dropdown__option-info:focus {
+    background: var(--infoplus-primary) !important;
+    background-color: var(--infoplus-primary) !important;
+    border-color: var(--infoplus-primary) !important;
+    color: var(--infoplus-white) !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* Placeholder */
+.infoplus-variation-dropdowns__placeholder {
+    padding: 20px;
+    text-align: center;
+    color: var(--infoplus-text-light);
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius);
+}
+
+/* ==========================================================================
+   PRODUCT IMAGE WIDGET
+   ========================================================================== */
+
+.infoplus-product-image {
+    width: 100%;
+}
+
+.infoplus-product-image__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.infoplus-product-image--gallery-left .infoplus-product-image__wrapper {
+    flex-direction: row-reverse;
+}
+
+.infoplus-product-image--gallery-right .infoplus-product-image__wrapper {
+    flex-direction: row;
+}
+
+.infoplus-product-image--gallery-left .infoplus-product-image__gallery,
+.infoplus-product-image--gallery-right .infoplus-product-image__gallery {
+    flex-direction: column;
+}
+
+/* Main Image Container */
+.infoplus-product-image__main {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius);
+    overflow: hidden;
+    cursor: zoom-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infoplus-product-image__img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.1s ease-out;
+}
+
+/* Zoom Lens */
+.infoplus-product-image__zoom-lens {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: 200%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.infoplus-product-image__main:hover .infoplus-product-image__zoom-lens {
+    opacity: 1;
+}
+
+.infoplus-product-image__main:hover .infoplus-product-image__img {
+    opacity: 0;
+}
+
+/* Fullscreen Button */
+.infoplus-product-image__fullscreen {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    background: var(--infoplus-white);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--infoplus-shadow);
+    transition: all var(--infoplus-transition);
+    opacity: 0;
+}
+
+.infoplus-product-image__main:hover .infoplus-product-image__fullscreen {
+    opacity: 1;
+}
+
+.infoplus-product-image__fullscreen:hover {
+    background: var(--infoplus-primary);
+    color: var(--infoplus-white);
+}
+
+/* Gallery Thumbnails */
+.infoplus-product-image__gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.infoplus-product-image__thumb {
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    background: var(--infoplus-white);
+    border: 2px solid var(--infoplus-border);
+    border-radius: var(--infoplus-radius-sm);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--infoplus-transition);
+}
+
+.infoplus-product-image__thumb:hover {
+    border-color: var(--infoplus-primary);
+}
+
+.infoplus-product-image__thumb.is-active {
+    border-color: var(--infoplus-primary);
+}
+
+.infoplus-product-image__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ==========================================================================
+   INFO MODAL
+   ========================================================================== */
+
+.infoplus-info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.infoplus-info-modal__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.infoplus-info-modal__content {
+    position: relative;
+    background: var(--infoplus-white);
+    border-radius: var(--infoplus-radius);
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 24px;
+    box-shadow: var(--infoplus-shadow-lg);
+}
+
+.infoplus-info-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--infoplus-text-light);
+    transition: all var(--infoplus-transition);
+}
+
+.infoplus-info-modal__close:hover {
+    background: var(--infoplus-background);
+    color: var(--infoplus-text);
+}
+
+.infoplus-info-modal__image {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 16px;
+}
+
+.infoplus-info-modal__image img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--infoplus-radius-sm);
+}
+
+.infoplus-info-modal__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--infoplus-text);
+    margin: 0 0 12px;
+    text-align: center;
+}
+
+.infoplus-info-modal__description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--infoplus-text-light);
+}
+
+/* ==========================================================================
+   LIGHTBOX
+   ========================================================================== */
+
+.infoplus-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.infoplus-lightbox__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.infoplus-lightbox__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+}
+
+.infoplus-lightbox__close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: all var(--infoplus-transition);
+    z-index: 10;
+}
+
+.infoplus-lightbox__close:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.infoplus-lightbox__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.infoplus-lightbox__nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+    padding: 0 20px;
+}
+
+.infoplus-lightbox__prev,
+.infoplus-lightbox__next {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--infoplus-transition);
+    opacity: 0.8;
+}
+
+.infoplus-lightbox__prev:hover,
+.infoplus-lightbox__next:hover {
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .infoplus-lightbox__content {
+        padding: 60px 20px;
+    }
+    
+    .infoplus-lightbox__nav {
+        padding: 0 10px;
+    }
+    
+    .infoplus-lightbox__prev,
+    .infoplus-lightbox__next {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .infoplus-lightbox__close {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ==========================================================================
+   TOOLTIP
+   ========================================================================== */
+
+/* Base tooltip - only shown when explicitly enabled via class */
+.infoplus-show-tooltip[data-tooltip] {
+    position: relative;
+}
+
+.infoplus-show-tooltip[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: fixed;
+    background: var(--infoplus-text);
+    color: var(--infoplus-white);
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--infoplus-transition);
+    z-index: 100000;
+    pointer-events: none;
+    max-width: 300px;
+    white-space: normal;
+    text-align: center;
+}
+
+.infoplus-show-tooltip[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* JavaScript-based tooltip container */
+.infoplus-tooltip {
+    position: fixed;
+    background: var(--infoplus-text);
+    color: var(--infoplus-white);
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    max-width: 280px;
+    text-align: center;
+    z-index: 100000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    line-height: 1.4;
+}
+
+.infoplus-tooltip.is-visible {
+    opacity: 1;
+}
+
+.infoplus-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--infoplus-text);
+}
+
+.infoplus-tooltip.is-below::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: var(--infoplus-text);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .infoplus-model-selector__card {
+        padding: 10px;
+    }
+    
+    .infoplus-product-image--gallery-left .infoplus-product-image__wrapper,
+    .infoplus-product-image--gallery-right .infoplus-product-image__wrapper {
+        flex-direction: column;
+    }
+    
+    .infoplus-product-image--gallery-left .infoplus-product-image__gallery,
+    .infoplus-product-image--gallery-right .infoplus-product-image__gallery {
+        flex-direction: row;
+    }
+    
+    .infoplus-product-image__thumb {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* ==========================================================================
+   ORDER TYPE BUTTON STATES
+   ========================================================================== */
+
+/* Hidden button (controlled by order type JS) */
+.infoplus-btn-hidden {
+    display: none !important;
+}
+
+/* Disabled state for editor / cart action buttons */
+.infoplus-btn-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* "Kombination nicht verfügbar" error message below disabled button */
+.infoplus-btn-error-msg {
+    display: block;
+    color: #a12828;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 4px;
+}
+
+/* ─── Anfrage form: product field readonly ─── */
+#form-field-product {
+    background-color: #f0f0f0 !important;
+    color: #888 !important;
+    cursor: not-allowed !important;
+    border-color: #ddd !important;
+    opacity: 0.7;
+    user-select: none;
+}
+
+/* ── Requestable Model Lock ──────────────────────────────────────── */
+
+.infoplus-variation-dropdowns {
+    position: relative; /* needed for overlay positioning */
+}
+
+.infoplus-dropdowns-lock {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--infoplus-radius, 8px);
+    cursor: default;
+}
+
+.infoplus-dropdowns-lock__message {
+    font-size: 2rem;
+    color: var(--infoplus-primary, #e91e8c);
+    text-align: center;
+    padding: 0.25rem 1rem;
+    letter-spacing: 0.01em;
+    pointer-events: none;
+}
+
+/* ── Anfrage Pulse Animation ─────────────────────────────────────── */
+
+@keyframes infoplus-anfrage-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(233, 30, 140, 0.50); }
+    60%  { box-shadow: 0 0 0 14px rgba(233, 30, 140, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(233, 30, 140, 0); }
+}
+
+.infoplus-anfrage-pulse {
+    animation: infoplus-anfrage-pulse 0.7s ease-out !important;
+}
+
+.infoplus-anfrage-pulse--long {
+    animation: infoplus-anfrage-pulse 0.75s ease-out 4 !important;
+}

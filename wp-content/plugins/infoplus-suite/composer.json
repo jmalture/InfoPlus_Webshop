@@ -1,0 +1,20 @@
+{
+  "name": "infoplus/suite",
+  "description": "Aditional tools for Infoplus theme",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "JM"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Infoplus\\Suite\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "composer/installers": "^2.0"
+  }
+}

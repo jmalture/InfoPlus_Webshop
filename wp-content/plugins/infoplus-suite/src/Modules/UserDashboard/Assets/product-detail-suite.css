@@ -1,0 +1,693 @@
+/**
+ * Infoplus Product Detail Suite - Main Stylesheet
+ * 
+ * Styles for Model Selector, Variation Dropdowns, and Product Image widgets.
+ */
+
+/* ==========================================================================
+   CSS VARIABLES
+   ========================================================================== */
+
+:root {
+    --infoplus-primary: #e91e8c;
+    --infoplus-primary-hover: #d11a7d;
+    --infoplus-text: #333333;
+    --infoplus-text-light: #666666;
+    --infoplus-border: #e0e0e0;
+    --infoplus-background: #f8f9fa;
+    --infoplus-white: #ffffff;
+    --infoplus-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --infoplus-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --infoplus-radius: 8px;
+    --infoplus-radius-sm: 6px;
+    --infoplus-transition: 0.2s ease;
+}
+
+/* ==========================================================================
+   MODEL SELECTOR WIDGET
+   ========================================================================== */
+
+.infoplus-model-selector {
+    width: 100%;
+}
+
+.infoplus-model-selector__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--infoplus-text);
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.infoplus-model-selector__list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--infoplus-border) transparent;
+}
+
+.infoplus-model-selector__list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.infoplus-model-selector__list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.infoplus-model-selector__list::-webkit-scrollbar-thumb {
+    background-color: var(--infoplus-border);
+    border-radius: 3px;
+}
+
+/* Horizontal layout */
+.infoplus-model-selector--horizontal .infoplus-model-selector__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: visible;
+}
+
+/* Model Card */
+.infoplus-model-selector__card {
+    display: flex;
+    flex-direction: column;
+    background: var(--infoplus-white);
+    border: 1px solid var(--infoplus-border);
+    border-radius: var(--infoplus-radius);
+    padding: 12px;
+    cursor: pointer;
+    transition: all var(--infoplus-transition);
+    position: relative;
+}
+
+.infoplus-model-selector__card:hover {
+    border-color: var(--infoplus-primary);
+    box-shadow: var(--infoplus-shadow);
+}
+
+.infoplus-model-selector__card.is-active {
+    border-color: #0066cc;
+    background: var(--infoplus-background);
+}
+
+/* Active indicator bar */
+.infoplus-model-selector__card.is-active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 4px;
+    background: #0066cc;
+    border-radius: 0 var(--infoplus-radius) var(--infoplus-radius) 0;
+}
+
+/* Card Image */
+.infoplus-model-selector__image {
+    position: relative;
+    width: 100%;
+    min-height: 120px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius-sm);
+    overflow: hidden;
+}
+
+.infoplus-model-selector__image img {
+    max-width: 100%;
+    max-height: 120px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: var(--infoplus-radius-sm);
+}
+
+/* Info Button */
+.infoplus-model-selector__info-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: var(--infoplus-white);
+    border: 1px solid var(--infoplus-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--infoplus-transition);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--infoplus-text-light);
+}
+
+.infoplus-model-selector__info-btn:hover {
+    background: var(--infoplus-primary);
+    border-color: var(--infoplus-primary);
+    color: var(--infoplus-white);
+}
+
+/* Card Content */
+.infoplus-model-selector__content {
+    text-align: center;
+}
+
+.infoplus-model-selector__name {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--infoplus-text);
+    margin-bottom: 4px;
+}
+
+.infoplus-model-selector__price {
+    display: block;
+    font-size: 13px;
+    color: var(--infoplus-primary);
+}
+
+/* Placeholder */
+.infoplus-model-selector__placeholder {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--infoplus-text-light);
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius);
+}
+
+/* ==========================================================================
+   VARIATION DROPDOWNS WIDGET
+   ========================================================================== */
+
+.infoplus-variation-dropdowns {
+    display: flex;
+    flex-direction: column;
+}
+
+.infoplus-dropdown {
+    position: relative;
+}
+
+.infoplus-dropdown__label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--infoplus-text-light);
+    margin-bottom: 6px;
+}
+
+.infoplus-dropdown__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--infoplus-white);
+    border: 1px solid var(--infoplus-border);
+    border-radius: var(--infoplus-radius-sm);
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all var(--infoplus-transition);
+}
+
+.infoplus-dropdown__trigger:hover,
+.infoplus-dropdown__trigger:focus {
+    border-color: var(--infoplus-primary);
+}
+
+.infoplus-dropdown.is-open .infoplus-dropdown__trigger {
+    border-color: var(--infoplus-primary);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.infoplus-dropdown__selected {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.infoplus-dropdown__selected-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.infoplus-dropdown__selected-text {
+    font-size: 14px;
+    color: var(--infoplus-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.infoplus-dropdown__arrow {
+    flex-shrink: 0;
+    color: var(--infoplus-text-light);
+    transition: transform var(--infoplus-transition);
+}
+
+.infoplus-dropdown.is-open .infoplus-dropdown__arrow {
+    transform: rotate(180deg);
+}
+
+/* Options List */
+.infoplus-dropdown__options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--infoplus-white);
+    border: 1px solid var(--infoplus-primary);
+    border-top: none;
+    border-radius: 0 0 var(--infoplus-radius-sm) var(--infoplus-radius-sm);
+    max-height: 240px;
+    overflow-y: auto;
+    box-shadow: var(--infoplus-shadow);
+}
+
+.infoplus-dropdown__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background var(--infoplus-transition);
+}
+
+.infoplus-dropdown__option:hover {
+    background: var(--infoplus-background);
+}
+
+.infoplus-dropdown__option.is-selected {
+    background: rgba(233, 30, 140, 0.05);
+}
+
+.infoplus-dropdown__option-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.infoplus-dropdown__option-text {
+    flex: 1;
+    font-size: 14px;
+    color: var(--infoplus-text);
+}
+
+.infoplus-dropdown__option-info {
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border: 1px solid var(--infoplus-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--infoplus-text-light);
+    transition: all var(--infoplus-transition);
+    flex-shrink: 0;
+}
+
+.infoplus-dropdown__option-info:hover {
+    background: var(--infoplus-primary);
+    border-color: var(--infoplus-primary);
+    color: var(--infoplus-white);
+}
+
+/* Placeholder */
+.infoplus-variation-dropdowns__placeholder {
+    padding: 20px;
+    text-align: center;
+    color: var(--infoplus-text-light);
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius);
+}
+
+/* ==========================================================================
+   PRODUCT IMAGE WIDGET
+   ========================================================================== */
+
+.infoplus-product-image {
+    width: 100%;
+}
+
+.infoplus-product-image__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.infoplus-product-image--gallery-left .infoplus-product-image__wrapper {
+    flex-direction: row-reverse;
+}
+
+.infoplus-product-image--gallery-right .infoplus-product-image__wrapper {
+    flex-direction: row;
+}
+
+.infoplus-product-image--gallery-left .infoplus-product-image__gallery,
+.infoplus-product-image--gallery-right .infoplus-product-image__gallery {
+    flex-direction: column;
+}
+
+/* Main Image Container */
+.infoplus-product-image__main {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    background: var(--infoplus-background);
+    border-radius: var(--infoplus-radius);
+    overflow: hidden;
+    cursor: zoom-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infoplus-product-image__img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.1s ease-out;
+}
+
+/* Zoom Lens */
+.infoplus-product-image__zoom-lens {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: 200%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.infoplus-product-image__main:hover .infoplus-product-image__zoom-lens {
+    opacity: 1;
+}
+
+.infoplus-product-image__main:hover .infoplus-product-image__img {
+    opacity: 0;
+}
+
+/* Fullscreen Button */
+.infoplus-product-image__fullscreen {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    background: var(--infoplus-white);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--infoplus-shadow);
+    transition: all var(--infoplus-transition);
+    opacity: 0;
+}
+
+.infoplus-product-image__main:hover .infoplus-product-image__fullscreen {
+    opacity: 1;
+}
+
+.infoplus-product-image__fullscreen:hover {
+    background: var(--infoplus-primary);
+    color: var(--infoplus-white);
+}
+
+/* Gallery Thumbnails */
+.infoplus-product-image__gallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.infoplus-product-image__thumb {
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    background: var(--infoplus-white);
+    border: 2px solid var(--infoplus-border);
+    border-radius: var(--infoplus-radius-sm);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--infoplus-transition);
+}
+
+.infoplus-product-image__thumb:hover {
+    border-color: var(--infoplus-primary);
+}
+
+.infoplus-product-image__thumb.is-active {
+    border-color: var(--infoplus-primary);
+}
+
+.infoplus-product-image__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ==========================================================================
+   INFO MODAL
+   ========================================================================== */
+
+.infoplus-info-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.infoplus-info-modal__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.infoplus-info-modal__content {
+    position: relative;
+    background: var(--infoplus-white);
+    border-radius: var(--infoplus-radius);
+    max-width: 500px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 24px;
+    box-shadow: var(--infoplus-shadow-lg);
+}
+
+.infoplus-info-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--infoplus-text-light);
+    transition: all var(--infoplus-transition);
+}
+
+.infoplus-info-modal__close:hover {
+    background: var(--infoplus-background);
+    color: var(--infoplus-text);
+}
+
+.infoplus-info-modal__image {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 16px;
+}
+
+.infoplus-info-modal__image img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--infoplus-radius-sm);
+}
+
+.infoplus-info-modal__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--infoplus-text);
+    margin: 0 0 12px;
+    text-align: center;
+}
+
+.infoplus-info-modal__description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--infoplus-text-light);
+}
+
+/* ==========================================================================
+   LIGHTBOX
+   ========================================================================== */
+
+.infoplus-lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infoplus-lightbox__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.infoplus-lightbox__content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.infoplus-lightbox__close {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    opacity: 0.8;
+    transition: opacity var(--infoplus-transition);
+}
+
+.infoplus-lightbox__close:hover {
+    opacity: 1;
+}
+
+.infoplus-lightbox__image {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+.infoplus-lightbox__nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.infoplus-lightbox__prev,
+.infoplus-lightbox__next {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 20px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background var(--infoplus-transition);
+}
+
+.infoplus-lightbox__prev:hover,
+.infoplus-lightbox__next:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   TOOLTIP
+   ========================================================================== */
+
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--infoplus-text);
+    color: var(--infoplus-white);
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--infoplus-transition);
+    z-index: 1000;
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .infoplus-model-selector__card {
+        padding: 10px;
+    }
+    
+    .infoplus-product-image--gallery-left .infoplus-product-image__wrapper,
+    .infoplus-product-image--gallery-right .infoplus-product-image__wrapper {
+        flex-direction: column;
+    }
+    
+    .infoplus-product-image--gallery-left .infoplus-product-image__gallery,
+    .infoplus-product-image--gallery-right .infoplus-product-image__gallery {
+        flex-direction: row;
+    }
+    
+    .infoplus-product-image__thumb {
+        width: 60px;
+        height: 60px;
+    }
+}

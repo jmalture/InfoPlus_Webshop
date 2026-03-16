@@ -1,0 +1,66 @@
+/* Sonderkontur Files - Admin Order Display */
+.sonderkontur-files-admin {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.sonderkontur-files-admin h4 {
+    margin: 0 0 12px 0;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+.sonderkontur-file-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sonderkontur-file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.sonderkontur-file-item:last-child {
+    margin-bottom: 0;
+}
+
+.sonderkontur-file-item .file-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.sonderkontur-file-item .file-name {
+    flex: 1;
+    font-weight: 500;
+    color: #23282d;
+}
+
+.sonderkontur-file-item .file-size {
+    color: #666;
+    font-size: 12px;
+}
+
+.sonderkontur-file-item .button {
+    margin-left: auto;
+    padding: 4px 12px;
+    height: auto;
+    line-height: 1.5;
+}
+
+.sonderkontur-file-item .file-missing {
+    color: #dc3232;
+    font-size: 12px;
+    font-style: italic;
+}

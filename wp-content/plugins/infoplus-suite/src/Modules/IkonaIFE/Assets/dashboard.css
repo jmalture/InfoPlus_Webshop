@@ -1,0 +1,723 @@
+/**
+ * Ikona IFE Dashboard Styles
+ * 
+ * @package Infoplus\Suite\Modules\IkonaIFE
+ * @since 1.0.0
+ */
+
+
+/* ==========================================================================
+   Admin styles
+   ========================================================================== */
+
+
+#adminmenu li#toplevel_page_infoplus-suite .wp-menu-image { 
+    padding: 6px 0 !important; 
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+#adminmenu li#toplevel_page_infoplus-suite .wp-menu-image img {
+    display: block; 
+    width: 28px; 
+    height: 28px; 
+    object-fit: contain;
+    padding: 0;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Table Styles
+   ========================================================================== */
+
+.infoplus-sync-dashboard {
+    margin-top: 20px;
+}
+
+.infoplus-table-wrap {
+    max-height: 70vh;
+    overflow-y: auto;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    background: #fff;
+}
+
+#infoplus-sync-table {
+    border: none;
+    margin: 0;
+}
+
+#infoplus-sync-table thead {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
+    box-shadow: 0 1px 0 #c3c4c7;
+}
+
+#infoplus-sync-table thead th {
+    background: #f6f7f7;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+#infoplus-sync-table thead tr.infoplus-filter-row th {
+    top: 38px;
+    background: #f6f7f7;
+    box-shadow: 0 1px 0 #e2e4e7;
+    padding: 4px 8px;
+}
+
+/* Sortable headers */
+#infoplus-sync-table thead .sortable {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: relative;
+    padding-right: 18px;
+}
+
+#infoplus-sync-table thead .sortable:hover {
+    background: #ececec;
+}
+
+#infoplus-sync-table thead .sortable::after {
+    content: "";
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #b3b3b3;
+    opacity: 0.6;
+}
+
+#infoplus-sync-table thead .sortable.sort-asc::after {
+    border-top: none;
+    border-bottom: 6px solid #2271b1;
+    opacity: 1;
+}
+
+#infoplus-sync-table thead .sortable.sort-desc::after {
+    border-top: 6px solid #2271b1;
+    opacity: 1;
+}
+
+/* Row styles */
+#infoplus-sync-table .variant-row td {
+    border-top: none;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+#infoplus-sync-table .variant-row {
+    font-size: 0.96em;
+    background: #f9f9ff;
+}
+
+#infoplus-sync-table .product-row .toggle-vars {
+    font-size: 18px;
+    vertical-align: middle;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: #2271b1;
+}
+
+#infoplus-sync-table .product-row .toggle-vars:hover {
+    color: #135e96;
+}
+
+/* Filter row */
+.infoplus-filter-row select {
+    width: 100%;
+    max-width: 180px;
+}
+
+/* ==========================================================================
+   Badge Styles
+   ========================================================================== */
+
+.infoplus-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.infoplus-badge.ok {
+    background: #e7f5ee;
+    color: #137333;
+    border: 1px solid #b7e2c7;
+}
+
+.infoplus-badge.warn {
+    background: #fff4e5;
+    color: #8a6116;
+    border: 1px solid #ffe1b2;
+}
+
+.infoplus-badge.err {
+    background: #fdecea;
+    color: #a12828;
+    border: 1px solid #f5c6cb;
+}
+
+.infoplus-badge.changed {
+    background: #fff4e5;
+    color: #8a6116;
+    border: 1px solid #ffd699;
+}
+
+.infoplus-badge.never {
+    background: #f0f0f1;
+    color: #555;
+    border: 1px solid #c3c4c7;
+}
+
+/* ==========================================================================
+   Search & Toolbar
+   ========================================================================== */
+
+.infoplus-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.infoplus-search-wrap {
+    position: relative;
+}
+
+.infoplus-search-wrap input[type="search"] {
+    padding-right: 30px;
+    min-width: 320px;
+}
+
+.infoplus-spinner {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #c3c4c7;
+    border-top-color: #2271b1;
+    border-radius: 50%;
+    animation: infoplus-spin 0.8s linear infinite;
+}
+
+.infoplus-hl {
+    background: #fff3cd;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+/* ==========================================================================
+   Sync Button States
+   ========================================================================== */
+
+.infoplus-sync-single {
+    position: relative;
+    min-width: 36px;
+    min-height: 30px;
+    transition: all 0.2s ease;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.infoplus-sync-single .dashicons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.infoplus-sync-single.syncing {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.infoplus-sync-single.syncing .dashicons {
+    animation: infoplus-spin 1s linear infinite;
+}
+
+.infoplus-sync-single.success {
+    background: #e7f5ee !important;
+    border-color: #137333 !important;
+    color: #137333 !important;
+}
+
+.infoplus-sync-single.error {
+    background: #fdecea !important;
+    border-color: #a12828 !important;
+    color: #a12828 !important;
+}
+
+/* ==========================================================================
+   Modal Styles
+   ========================================================================== */
+
+.infoplus-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.infoplus-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    animation: infoplus-fadeIn 0.2s ease;
+}
+
+.infoplus-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    animation: infoplus-slideIn 0.3s ease;
+}
+
+.infoplus-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.infoplus-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.infoplus-modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #666;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.infoplus-modal-close:hover {
+    background: #f0f0f1;
+    color: #1d2327;
+}
+
+.infoplus-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.infoplus-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ==========================================================================
+   Sync Result Content
+   ========================================================================== */
+
+.sync-result-status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.sync-result-status.success {
+    background: #e7f5ee;
+    border: 1px solid #b7e2c7;
+}
+
+.sync-result-status.error {
+    background: #fdecea;
+    border: 1px solid #f5c6cb;
+}
+
+.sync-result-status .dashicons {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+}
+
+.sync-result-status.success .dashicons {
+    color: #137333;
+}
+
+.sync-result-status.error .dashicons {
+    color: #a12828;
+}
+
+.sync-result-status-text h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+}
+
+.sync-result-status-text p {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+}
+
+.sync-result-info {
+    background: #f6f7f7;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.sync-result-info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.sync-result-info-row:last-child {
+    border-bottom: none;
+}
+
+.sync-result-info-label {
+    font-weight: 500;
+    color: #1d2327;
+}
+
+.sync-result-info-value {
+    color: #666;
+    font-family: monospace;
+    font-size: 12px;
+    max-width: 300px;
+    word-break: break-all;
+}
+
+/* Variants toggle dropdown */
+.sync-variants-toggle {
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.sync-variants-toggle-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    background: #f6f7f7;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.sync-variants-toggle-btn:hover {
+    background: #ececec;
+}
+
+.sync-variants-toggle-btn .dashicons {
+    transition: transform 0.2s;
+}
+
+.sync-variants-toggle.open .sync-variants-toggle-btn .dashicons {
+    transform: rotate(90deg);
+}
+
+.sync-variants-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.sync-variants-toggle.open .sync-variants-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.sync-variant-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 13px;
+}
+
+.sync-variant-item:last-child {
+    border-bottom: none;
+}
+
+.sync-variant-item:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.sync-variant-id {
+    font-weight: 500;
+    min-width: 80px;
+    color: #2271b1;
+}
+
+.sync-variant-ife {
+    font-family: monospace;
+    font-size: 11px;
+    color: #666;
+    margin-left: auto;
+}
+
+/* ==========================================================================
+   Toast Notifications
+   ========================================================================== */
+
+#infoplus-toast-container {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    z-index: 100200;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.infoplus-toast {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    max-width: 400px;
+    animation: infoplus-toastIn 0.3s ease;
+    border-left: 4px solid #2271b1;
+}
+
+.infoplus-toast.success {
+    border-left-color: #137333;
+}
+
+.infoplus-toast.error {
+    border-left-color: #a12828;
+}
+
+.infoplus-toast.warning {
+    border-left-color: #8a6116;
+}
+
+.infoplus-toast .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.infoplus-toast.success .dashicons {
+    color: #137333;
+}
+
+.infoplus-toast.error .dashicons {
+    color: #a12828;
+}
+
+.infoplus-toast.warning .dashicons {
+    color: #8a6116;
+}
+
+.infoplus-toast-content {
+    flex: 1;
+}
+
+.infoplus-toast-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.infoplus-toast-message {
+    font-size: 13px;
+    color: #666;
+}
+
+.infoplus-toast-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #999;
+    transition: color 0.2s;
+}
+
+.infoplus-toast-close:hover {
+    color: #333;
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes infoplus-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes infoplus-fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes infoplus-slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes infoplus-toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes infoplus-toastOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+/* ==========================================================================
+   Loading State
+   ========================================================================== */
+
+.infoplus-loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e5e5e5;
+    border-top-color: #2271b1;
+    border-radius: 50%;
+    animation: infoplus-spin 0.8s linear infinite;
+    margin: 0 auto;
+}
+
+.infoplus-loading-row td {
+    background: #fff !important;
+}
+
+/* ==========================================================================
+   Progress Bar (for batch sync)
+   ========================================================================== */
+
+#infoplus-sync-progress {
+    margin-top: 20px;
+}
+
+.infoplus-progress-bar-wrap {
+    background: #f0f0f1;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 30px;
+    position: relative;
+}
+
+#infoplus-sync-progress-bar {
+    background: #2271b1;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 500;
+}
+
+#infoplus-sync-log {
+    margin-top: 10px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 12px;
+}
+
+/* ==========================================================================
+   Sync All Button States
+   ========================================================================== */
+
+#infoplus-sync-all.syncing {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+#infoplus-sync-all .dashicons.spinning {
+    animation: infoplus-spin 1s linear infinite;
+}
+
+/* Warning status for modal */
+.sync-result-status.warning {
+    background: #fff4e5;
+    border: 1px solid #ffd699;
+}
+
+.sync-result-status.warning .dashicons {
+    color: #8a6116;
+}

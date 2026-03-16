@@ -1,0 +1,146 @@
+/* Hide upload wrapper by default */
+#upload_wrapper {
+    display: none !important;
+}
+
+/* Show upload wrapper when visible class is added */
+#upload_wrapper.visible {
+    display: block !important;
+    animation: fadeInSlide 0.3s ease;
+}
+
+/* Fade in and slide animation */
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Upload container base styles */
+#upload_container {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Drag hover effect */
+#upload_container.drag-hover {
+    border-color: #e91e8c !important;
+    background-color: #fff5fb !important;
+    transform: scale(1.02);
+}
+
+/* Upload button cursor */
+#upload {
+    cursor: pointer !important;
+}
+
+/* File list container */
+.sonderkontur-file-list {
+    margin-top: 20px;
+    display: none;
+}
+
+.sonderkontur-file-list .file-list-header {
+    margin-bottom: 12px;
+}
+
+.sonderkontur-file-list .file-list-header h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Individual file item */
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: white;
+    transition: all 0.2s ease;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.file-item:hover {
+    border-color: #e91e8c;
+    box-shadow: 0 2px 8px rgba(233, 30, 140, 0.1);
+}
+
+/* File icon */
+.file-item .file-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #666;
+    font-size: 18px;
+}
+
+/* File info */
+.file-item .file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-item .file-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 2px;
+}
+
+.file-item .file-size {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Remove button */
+.file-item .file-remove {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    color: #e91e8c;
+    font-size: 16px;
+}
+
+.file-item .file-remove:hover {
+    background-color: #fee;
+    transform: scale(1.1);
+}

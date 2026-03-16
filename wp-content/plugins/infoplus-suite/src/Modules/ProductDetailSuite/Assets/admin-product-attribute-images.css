@@ -1,0 +1,597 @@
+/**
+ * Infoplus Suite Admin Styles
+ * Covers the top-level Infoplus Suite meta box and all inner panels.
+ */
+
+/* ==========================================================================
+   TOP-LEVEL SUITE TABS
+   ========================================================================== */
+
+.infoplus-suite-wrap {
+    margin: -6px -12px -12px;
+}
+
+.infoplus-suite-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    background: #1d2327;
+    border-bottom: 3px solid #e91e8c;
+    padding: 0 12px;
+}
+
+.infoplus-suite-tab {
+    padding: 12px 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #a7aaad;
+    transition: all 0.15s ease;
+    letter-spacing: 0.3px;
+}
+
+.infoplus-suite-tab:hover {
+    color: #fff;
+}
+
+.infoplus-suite-tab.is-active {
+    color: #fff;
+    background: #e91e8c;
+}
+
+.infoplus-suite-panels {
+    background: #fff;
+}
+
+.infoplus-suite-panel {
+    display: none;
+    padding: 20px;
+}
+
+.infoplus-suite-panel.is-active {
+    display: block;
+}
+
+/* ==========================================================================
+   IBE/IFE PANEL
+   ========================================================================== */
+
+.infoplus-ife-panel .form-field {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.infoplus-ife-panel .form-field:last-child {
+    border-bottom: none;
+}
+
+.infoplus-ife-panel .form-field label {
+    min-width: 160px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #1d2327;
+}
+
+.infoplus-ife-panel .locked-field-wrap,
+.infoplus-ife-panel p.form-field span[style*="position:relative"] {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 400px;
+}
+
+.infoplus-locked-field input[type="text"] {
+    background-color: #f6f7f7 !important;
+    color: #50575e !important;
+    cursor: not-allowed;
+    padding-right: 35px !important;
+}
+
+.infoplus-lock-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #bbb;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   DEFAULT VARIATION PANEL
+   ========================================================================== */
+
+.infoplus-default-variation-wrap {
+    max-width: 600px;
+}
+
+.infoplus-default-variation-wrap > .description {
+    margin: 0 0 20px;
+    color: #646970;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.infoplus-default-attr-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.infoplus-default-attr-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.infoplus-default-attr-row label {
+    min-width: 130px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #1d2327;
+    flex-shrink: 0;
+}
+
+.infoplus-default-attr-row select {
+    flex: 1;
+    max-width: 300px;
+    padding: 6px 10px;
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #1d2327;
+}
+
+.infoplus-default-attr-row select:focus {
+    border-color: #e91e8c;
+    outline: none;
+    box-shadow: 0 0 0 1px #e91e8c;
+}
+
+/* Status badge */
+.infoplus-variation-status {
+    min-height: 28px;
+    margin: 8px 0 16px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.infoplus-variation-status .status-found {
+    color: #00a32a;
+    background: #edfaef;
+    border: 1px solid #68de7c;
+    padding: 5px 12px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.infoplus-variation-status .status-notfound {
+    color: #d63638;
+    background: #fcf0f1;
+    border: 1px solid #f86368;
+    padding: 5px 12px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.infoplus-no-default-note {
+    color: #646970;
+    font-style: italic;
+    font-size: 12px;
+}
+
+/* ==========================================================================
+   ATTRIBUTE OVERRIDES — inner wrap (formerly the entire meta box)
+   ========================================================================== */
+
+.infoplus-attr-images-wrap {
+    margin: 0;
+}
+
+.infoplus-attr-images-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    background: #f6f7f7;
+    border-bottom: 1px solid #ddd;
+    padding: 0 12px;
+}
+
+.infoplus-attr-tab {
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #50575e;
+    transition: all 0.15s ease;
+    margin-bottom: -1px;
+}
+
+.infoplus-attr-tab:hover {
+    color: #007cba;
+}
+
+.infoplus-attr-tab.is-active {
+    color: #007cba;
+    border-bottom-color: #007cba;
+    background: #fff;
+}
+
+.infoplus-attr-tab .count {
+    color: #999;
+    font-weight: normal;
+    margin-left: 4px;
+}
+
+.infoplus-attr-images-panels {
+    padding: 16px;
+    background: #fff;
+}
+
+.infoplus-attr-panel {
+    display: none;
+}
+
+.infoplus-attr-panel.is-active {
+    display: block;
+}
+
+.infoplus-attr-panel > .description {
+    margin: 0 0 16px;
+    color: #666;
+}
+
+.infoplus-attr-terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+/* Term Card */
+.infoplus-term-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.infoplus-term-card.has-override {
+    border-color: #007cba;
+}
+
+.infoplus-term-card .term-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+.infoplus-term-card .term-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #23282d;
+}
+
+.infoplus-term-card .override-badge {
+    font-size: 11px;
+    background: #007cba;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+}
+
+/* Term Fields */
+.infoplus-term-card .term-fields {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.infoplus-term-card .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.infoplus-term-card .field-group > label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #23282d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.infoplus-term-card .field-group input[type="text"],
+.infoplus-term-card .field-group textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.infoplus-term-card .field-group input[type="text"]:focus,
+.infoplus-term-card .field-group textarea:focus {
+    border-color: #007cba;
+    outline: none;
+    box-shadow: 0 0 0 1px #007cba;
+}
+
+.infoplus-term-card .field-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.infoplus-term-card .field-group .global-hint {
+    color: #999;
+    font-size: 11px;
+    font-style: italic;
+}
+
+/* Hide Checkbox Styles */
+.infoplus-term-card .field-hide-all {
+    padding: 10px 12px;
+    background: #fff8e5;
+    border: 1px solid #f0c36d;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.infoplus-term-card .hide-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+}
+
+.infoplus-term-card .hide-checkbox-label input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.infoplus-term-card .hide-checkbox-label span {
+    user-select: none;
+}
+
+.infoplus-term-card .field-hide-all .hide-checkbox-label {
+    font-weight: 600;
+    color: #856404;
+}
+
+.infoplus-term-card .field-hide-row {
+    margin-bottom: 6px;
+}
+
+.infoplus-term-card .hide-single {
+    font-size: 11px;
+    color: #999;
+}
+
+/* Field Content - disabled state */
+.infoplus-term-card .field-content {
+    transition: opacity 0.2s ease;
+}
+
+.infoplus-term-card .field-content.is-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.infoplus-term-card .field-content.is-disabled input,
+.infoplus-term-card .field-content.is-disabled textarea,
+.infoplus-term-card .field-content.is-disabled button {
+    background-color: #f5f5f5 !important;
+    cursor: not-allowed;
+}
+
+/* Hidden preview strikethrough */
+.infoplus-term-card .global-preview.is-hidden-preview {
+    opacity: 0.3;
+    position: relative;
+}
+
+.infoplus-term-card .global-preview.is-hidden-preview::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: #dc3232;
+    transform: rotate(-10deg);
+}
+
+/* Image Field */
+.infoplus-term-card .field-image {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.infoplus-term-card .field-image > label {
+    width: 100%;
+}
+
+.infoplus-term-card .field-image .field-hide-row {
+    width: 100%;
+}
+
+.infoplus-term-card .field-image .field-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+}
+
+.infoplus-term-card .global-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    background: #f9f9f9;
+    border-radius: 4px;
+}
+
+.infoplus-term-card .global-preview img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    opacity: 0.6;
+}
+
+.infoplus-term-card .global-preview .global-label {
+    font-size: 10px;
+    color: #999;
+    text-transform: uppercase;
+}
+
+.infoplus-term-card .image-upload-field {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.infoplus-term-card .image-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.infoplus-term-card .image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.infoplus-term-card .image-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.infoplus-term-card .image-actions .button {
+    padding: 4px 10px;
+    font-size: 12px;
+}
+
+.infoplus-term-card .infoplus-remove-btn {
+    color: #a00;
+}
+
+.infoplus-term-card .infoplus-remove-btn:hover {
+    color: #dc3232;
+    border-color: #dc3232;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .infoplus-attr-terms-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---- Model Gallery Upload ---- */
+
+.gallery-upload-field {
+    flex: 1;
+    min-width: 0;
+}
+
+.gallery-preview-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    min-height: 0;
+}
+
+.gallery-thumb-item {
+    position: relative;
+    width: 72px;
+    flex-shrink: 0;
+    cursor: grab;
+}
+
+.gallery-thumb-item:active {
+    cursor: grabbing;
+}
+
+.gallery-thumb-item.ui-sortable-helper {
+    opacity: 0.7;
+    cursor: grabbing;
+}
+
+.gallery-thumb-item img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 2px solid #e0e0e0;
+    display: block;
+}
+
+.gallery-main-badge {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    background: #e91e8c;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.gallery-remove-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-remove-btn:hover {
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.gallery-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
