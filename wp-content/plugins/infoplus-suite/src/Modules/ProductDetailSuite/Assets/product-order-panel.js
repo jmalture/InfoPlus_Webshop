@@ -107,7 +107,8 @@
                 ? 'ab ' + from + ' bis ' + to + ' Stück'
                 : 'ab ' + from + ' Stück';
 
-            var $row = $('<div class="infoplus-bulk-row"></div>');
+            var $row = $('<div class="infoplus-bulk-row" role="button" tabindex="0"></div>');
+            $row.attr('data-from', from);
             $row.append('<span class="infoplus-bulk-qty">' + qtyLabel + '</span>');
             $row.append('<span class="infoplus-bulk-price">' + formatPrice(price) + '</span>');
             $grid.append($row);
@@ -217,6 +218,13 @@
             $input.val(val);
             $minus.prop('disabled', val <= state.minQty);
             updatePrices($panel);
+            highlightActiveTier($panel);
+            // Publish to shared state so BulkPriceTable (and other widgets) can react.
+            // source='panel' prevents the echo coming back and re-triggering setQty.
+            if (w.infoplusProductState) {
+                w.infoplusProductState.currentQty = val;
+                w.infoplusProductState.emit('qty:changed', { qty: val, source: 'panel' });
+            }
         }
 
         $minus.on('click', function () {
@@ -232,16 +240,37 @@
         });
 
         $input.on('input', function () {
-            // Live update while typing (no clamp yet, that happens on blur)
+            // Live update while typing (no clamp yet — blur handles that).
+            // We DO notify infoplusProductState so BulkPriceTable updates its
+            // active-cell highlight in real time as the user types.
             var v = parseInt($(this).val(), 10);
             if (!isNaN(v) && v >= state.minQty) {
                 state.currentQty = v;
                 updatePrices($panel);
+                highlightActiveTier($panel);
+                if (w.infoplusProductState) {
+                    w.infoplusProductState.currentQty = v;
+                    w.infoplusProductState.emit('qty:changed', { qty: v, source: 'panel' });
+                }
             }
         });
 
         // Init
         setQty(state.minQty);
+
+        // Listen for qty changes requested by other widgets (e.g. BulkPriceTable cell click).
+        // source='panel' events originated here — skip them to avoid an echo loop.
+        // NOTE: we intentionally do NOT guard on data.qty !== state.currentQty because
+        // the source check already prevents the echo. The equality guard would block
+        // legitimate updates when the user clicks the lowest-tier row whose 'from'
+        // happens to equal the current minQty.
+        if (w.infoplusProductState) {
+            w.infoplusProductState.on('qty:changed', function (data) {
+                if (data.source !== 'panel') {
+                    setQty(data.qty);
+                }
+            });
+        }
     }
 
     // ── Action Buttons ────────────────────────────────────────────────────────
@@ -552,6 +581,17 @@
         initQuantitySelector($panel);
         bindProductStateEvents($panel);
         replayCurrentState($panel);
+
+        // Click on a bulk-price row → jump qty to that tier's minimum.
+        // Delegates through infoplusProductState.setQty so BulkPriceTable widget
+        // (if present) also updates its active-cell highlight at the same time.
+        $panel.on('click keypress', '.infoplus-bulk-row', function (e) {
+            if (e.type === 'keypress' && e.which !== 13) return;
+            var from = parseInt($(this).data('from'), 10);
+            if (!isNaN(from) && from >= 1 && w.infoplusProductState) {
+                w.infoplusProductState.setQty(from);
+            }
+        });
 
         // Click handlers
         $panel.on('click', '.infoplus-btn--cart', function (e) {

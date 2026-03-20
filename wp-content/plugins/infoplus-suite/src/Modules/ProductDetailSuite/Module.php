@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) exit;
 final class Module implements ModuleInterface
 {
     /** @var string Module version */
-    public const VERSION = '1.0.52';
+    public const VERSION = '1.0.58';
 
     public function slug(): string
     {
@@ -50,6 +50,10 @@ final class Module implements ModuleInterface
 
         // Register REST API endpoints
         add_action('rest_api_init', [$this, 'registerRestRoutes']);
+
+        // Intercept /products/prices before the legacy AlgolPlus plugin handles it.
+        // rest_pre_dispatch short-circuits dispatch entirely — no route conflict.
+        add_filter('rest_pre_dispatch', [$this, 'interceptBulkPricesRoute'], 10, 3);
 
         // Output product state to frontend
         add_action('woocommerce_after_single_product', [$this, 'outputProductState'], 5);
@@ -98,11 +102,13 @@ final class Module implements ModuleInterface
         require_once __DIR__ . '/Widgets/VariationDropdowns.php';
         require_once __DIR__ . '/Widgets/ProductImage.php';
         require_once __DIR__ . '/Widgets/ProductOrderPanel.php';
+        require_once __DIR__ . '/Widgets/BulkPriceTable.php';
 
         $widgets_manager->register(new Widgets\ModelSelector());
         $widgets_manager->register(new Widgets\VariationDropdowns());
         $widgets_manager->register(new Widgets\ProductImage());
         $widgets_manager->register(new Widgets\ProductOrderPanel());
+        $widgets_manager->register(new Widgets\BulkPriceTable());
     }
 
     /**
@@ -174,6 +180,23 @@ final class Module implements ModuleInterface
         wp_enqueue_style(
             'infoplus-product-order-panel',
             $assetUrl . 'product-order-panel.css',
+            ['infoplus-product-detail-suite'],
+            $ver
+        );
+
+        // Bulk price table widget JS
+        wp_enqueue_script(
+            'infoplus-bulk-price-table',
+            $assetUrl . 'bulk-price-table.js',
+            ['jquery', 'infoplus-product-state'],
+            $ver,
+            true
+        );
+
+        // Bulk price table widget CSS
+        wp_enqueue_style(
+            'infoplus-bulk-price-table',
+            $assetUrl . 'bulk-price-table.css',
             ['infoplus-product-detail-suite'],
             $ver
         );
@@ -264,6 +287,141 @@ final class Module implements ModuleInterface
             'callback' => [$this, 'getAttributeTerms'],
             'permission_callback' => '__return_true',
         ]);
+    }
+
+    // -------------------------------------------------------------------------
+    // Bulk prices REST endpoint
+    // -------------------------------------------------------------------------
+
+    /**
+     * Intercept GET /wp-json/infoplus/v1/products/prices?sku=XXX before the
+     * legacy AlgolPlus Products.php plugin handles it.
+     *
+     * The old handler only matched rules that stored SKUs in their filter value.
+     * New pricing rules created in the WDP admin store WooCommerce variation IDs
+     * (or parent product IDs) instead. This implementation handles all three cases.
+     *
+     * Returning a non-null value from rest_pre_dispatch short-circuits dispatch.
+     */
+    public function interceptBulkPricesRoute(mixed $result, \WP_REST_Server $server, \WP_REST_Request $request): mixed
+    {
+        // Only intercept if nothing has already claimed this request
+        if ($result !== null) {
+            return $result;
+        }
+
+        if ($request->get_route() !== '/infoplus/v1/products/prices') {
+            return $result;
+        }
+
+        if ($request->get_method() !== 'GET') {
+            return $result;
+        }
+
+        $sku = sanitize_text_field((string) ($request->get_param('sku') ?? ''));
+        if ($sku === '') {
+            return new \WP_REST_Response([], 400);
+        }
+
+        return new \WP_REST_Response($this->getBulkPricesBySku($sku), 200);
+    }
+
+    /**
+     * Query the WDP rules table for bulk price tiers matching the given SKU.
+     *
+     * Matches against:
+     *   1. The SKU string itself  (old-style rules filtered by SKU attribute)
+     *   2. The variation post ID  (new-style rules filtered by "Products")
+     *   3. The parent product ID  (rules applied at parent-product level)
+     *
+     * Returns an array of { from, to, value } objects ordered as stored in WDP.
+     * Open-ended "to" values (≥ 99 000) are normalised to an empty string so the
+     * frontend can render "500+ Stück" labels correctly.
+     */
+    private function getBulkPricesBySku(string $sku): array
+    {
+        global $wpdb;
+
+        // Resolve WooCommerce IDs from the SKU
+        $variation_id = (int) wc_get_product_id_by_sku($sku);
+        $parent_id    = 0;
+
+        if ($variation_id > 0) {
+            $variation = wc_get_product($variation_id);
+            if ($variation && $variation->get_parent_id()) {
+                $parent_id = (int) $variation->get_parent_id();
+            }
+        }
+
+        $table = $wpdb->prefix . 'wdp_rules';
+
+        // Guard: table might not exist when the WDP plugin is inactive
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$table}'") !== $table) {
+            return [];
+        }
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $rules = $wpdb->get_results(
+            "SELECT filters, bulk_adjustments FROM {$table} WHERE enabled = 1 ORDER BY priority ASC, id ASC"
+        );
+
+        foreach ($rules as $rule) {
+            $filters = maybe_unserialize($rule->filters);
+            if (!is_array($filters)) {
+                continue;
+            }
+
+            foreach ($filters as $filter) {
+                $values = $filter['value'] ?? [];
+                if (!is_array($values)) {
+                    continue;
+                }
+
+                // Cast values to strings for reliable in_array comparison
+                $str_values = array_map('strval', $values);
+
+                $matched = in_array($sku, $str_values, true)
+                    || ($variation_id > 0 && in_array((string) $variation_id, $str_values, true))
+                    || ($parent_id    > 0 && in_array((string) $parent_id,    $str_values, true));
+
+                if ($matched) {
+                    return $this->parseWdpRanges($rule->bulk_adjustments);
+                }
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Deserialise a WDP bulk_adjustments blob into the { from, to, value } shape
+     * expected by the BulkPriceTable frontend widget.
+     */
+    private function parseWdpRanges(string $raw): array
+    {
+        $bulk   = maybe_unserialize($raw);
+        $ranges = $bulk['ranges'] ?? [];
+        $result = [];
+
+        foreach ($ranges as $range) {
+            $from  = (string) ($range['from']  ?? '');
+            $to    = (string) ($range['to']    ?? '');
+            $value = (string) ($range['value'] ?? '');
+
+            // Normalise open-ended upper bounds (WDP uses 99999 as "unlimited")
+            if ($to !== '' && (int) $to >= 99000) {
+                $to = '';
+            }
+
+            $result[] = [
+                'from'  => $from,
+                'to'    => $to,
+                'value' => $value,
+            ];
+        }
+
+        return $result;
     }
 
     /**
@@ -369,9 +527,14 @@ final class Module implements ModuleInterface
         $delivery = (int) get_post_meta($product_id, '_infoplus_delivery_days', true);
         $data['delivery_days'] = $delivery > 0 ? $delivery : 0;
 
-        // Default pre-selected variation (set via Infoplus Suite → Default Variation tab)
+        // Default pre-selected variation — legacy single default
         $default_var_id = (int) get_post_meta($product_id, '_infoplus_default_variation_id', true);
         $data['default_variation_id'] = $default_var_id > 0 ? $default_var_id : null;
+
+        // Per-model default variations map (model_slug => variation_id)
+        $model_defaults_raw = get_post_meta($product_id, '_infoplus_model_default_variations', true);
+        $model_defaults     = $model_defaults_raw ? json_decode($model_defaults_raw, true) : null;
+        $data['model_default_variations'] = is_array($model_defaults) && !empty($model_defaults) ? $model_defaults : null;
 
         return $data;
     }

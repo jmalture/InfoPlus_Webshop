@@ -1149,6 +1149,25 @@ final class Module implements ModuleInterface
         }
         ?>
         <style id="infoplus-cart-styles">
+        /* ── Page heading ────────────────────────────────────────────────── */
+        .infoplus-page-heading {
+            width: 100%;
+            margin-bottom: 28px;
+        }
+        .infoplus-page-heading__title {
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 700;
+            color: #e91e8c;
+            text-align: left;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* ── Viewport-fill: the main content grows to fill header↔footer gap */
+        .site-main, main.site-main, #main, main#main, main {
+            min-height: calc(100vh - 684px); /* fallback (83px header + 601px footer) */
+        }
+
         /* ── Buttons (overrides WP default #32373c) ─────────────────────── */
         .wp-block-woocommerce-cart .wp-element-button,
         .wp-block-woocommerce-cart .wp-block-button__link,
@@ -1205,6 +1224,47 @@ final class Module implements ModuleInterface
             letter-spacing: 0.5px;
         }
         </style>
+        <script>
+        (function(){
+            var hSels = ['header#masthead','header.site-header','#masthead','.site-header','header'];
+            var fSels = ['footer#colophon','footer.site-footer','#colophon','.site-footer','footer'];
+            var mSels = ['.site-main','main.site-main','#main','main#main','main'];
+            function measure(sels){
+                for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el)return el.getBoundingClientRect().height;}
+                return 0;
+            }
+            function find(sels){
+                for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el)return el;}
+                return null;
+            }
+            function applyHeight(){
+                var hH=measure(hSels)||83, fH=measure(fSels)||601;
+                var main=find(mSels);
+                if(main) main.style.minHeight=Math.max(300,window.innerHeight-hH-fH)+'px';
+            }
+            // Align the heading with the WC cart block.
+            // The cart block uses WordPress alignfull (negative margins to break out of the
+            // content container). We read the block's computed margins and apply the same
+            // offset + extra padding to the heading so the text starts at the same x as the block.
+            function alignHeading(){
+                var block   = document.querySelector('.wp-block-woocommerce-cart');
+                var heading = document.querySelector('.infoplus-cart-heading');
+                if(!block || !heading) return;
+                var cs  = window.getComputedStyle(block);
+                var ml  = parseFloat(cs.marginLeft)  || 0;
+                var mr  = parseFloat(cs.marginRight) || 0;
+                // Only adjust when the block actually uses negative margins (alignfull).
+                if(ml < -1 || mr < -1){
+                    heading.style.marginLeft  = ml + 'px';
+                    heading.style.marginRight = mr + 'px';
+                    heading.style.boxSizing   = 'border-box';
+                    heading.style.width       = 'calc(100% + ' + (Math.abs(ml) + Math.abs(mr)) + 'px)';
+                }
+            }
+            document.addEventListener('DOMContentLoaded', function(){ applyHeight(); alignHeading(); });
+            window.addEventListener('resize', function(){ applyHeight(); alignHeading(); });
+        })();
+        </script>
         <?php
     }
 
@@ -1220,6 +1280,11 @@ final class Module implements ModuleInterface
         }
         ?>
         <style id="infoplus-checkout-styles">
+        /* ── Viewport fill ───────────────────────────────────────────────── */
+        .site-main, main.site-main, #main, main#main, main {
+            min-height: calc(100vh - 684px);
+        }
+
         /* ── Primary submit button ("Jetzt kaufen") ─────────────────────── */
         /* Override both the theme [type=submit] rule AND WP element buttons */
         .wp-block-woocommerce-checkout .wp-element-button,
@@ -1294,6 +1359,28 @@ final class Module implements ModuleInterface
             box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.15) !important;
         }
         </style>
+        <script>
+        (function(){
+            var hSels = ['header#masthead','header.site-header','#masthead','.site-header','header'];
+            var fSels = ['footer#colophon','footer.site-footer','#colophon','.site-footer','footer'];
+            var mSels = ['.site-main','main.site-main','#main','main#main','main'];
+            function measure(sels){
+                for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el)return el.getBoundingClientRect().height;}
+                return 0;
+            }
+            function find(sels){
+                for(var i=0;i<sels.length;i++){var el=document.querySelector(sels[i]);if(el)return el;}
+                return null;
+            }
+            function applyHeight(){
+                var hH=measure(hSels)||83, fH=measure(fSels)||601;
+                var main=find(mSels);
+                if(main) main.style.minHeight=Math.max(300,window.innerHeight-hH-fH)+'px';
+            }
+            document.addEventListener('DOMContentLoaded',applyHeight);
+            window.addEventListener('resize',applyHeight);
+        })();
+        </script>
         <?php
     }
 
@@ -1380,7 +1467,11 @@ final class Module implements ModuleInterface
             . '})();'
             . '</script>';
 
-        return $wrapped . $style . $script . $block_content;
+        $heading = '<div class="infoplus-page-heading infoplus-cart-heading">'
+                 . '<h1 class="infoplus-page-heading__title">Warenkorb</h1>'
+                 . '</div>';
+
+        return $heading . $wrapped . $style . $script . $block_content;
     }
 
     /**

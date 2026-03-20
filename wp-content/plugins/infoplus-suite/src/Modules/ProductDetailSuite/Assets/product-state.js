@@ -24,6 +24,9 @@
         // Event listeners registry
         listeners: {},
 
+        // Current quantity (shared across widgets, driven by ProductOrderPanel)
+        currentQty: 1,
+
         /**
          * Initialize state from product data
          */
@@ -54,13 +57,29 @@
         },
 
         /**
-         * Pre-select the default variation stored in infoplusProductData.default_variation_id.
-         * Runs the full event chain: setModel() → setAttribute() → variation:found.
-         * Silently skipped if the variation no longer exists or is out of stock.
+         * Pre-select the default variation on page load.
+         * Prefers per-model defaults (model_default_variations map); falls back to
+         * the legacy single default_variation_id if no per-model map is set.
+         * setModel() → applyModelDefault() handles the full event chain.
          */
         applyDefaultVariation: function() {
             if (!this.productData) return;
 
+            // --- New: per-model defaults ---
+            var modelDefaults = this.productData.model_default_variations;
+            if (modelDefaults && typeof modelDefaults === 'object') {
+                var models = this.productData.models || [];
+                for (var m = 0; m < models.length; m++) {
+                    var mSlug = models[m].slug;
+                    if (modelDefaults[mSlug]) {
+                        // setModel() will call applyModelDefault() internally
+                        this.setModel(mSlug);
+                        return;
+                    }
+                }
+            }
+
+            // --- Legacy fallback: single default_variation_id ---
             var defaultId = this.productData.default_variation_id;
             if (!defaultId) return;
 
@@ -74,33 +93,100 @@
                 }
             }
 
-            // Silently skip if variation not found or out of stock
             if (!defaultVar || !defaultVar.is_in_stock) {
                 console.log('[InfoplusState] Default variation', defaultId, 'skipped (not found or out of stock)');
                 return;
             }
 
-            console.log('[InfoplusState] Applying default variation', defaultId, defaultVar);
+            console.log('[InfoplusState] Applying legacy default variation', defaultId, defaultVar);
 
-            // attrs keys use WC convention: 'attribute_pa_model', 'attribute_pa_format', …
             var attrs = defaultVar.attributes || {};
-
-            // 1) Set model first if pa_model is a variation attribute
-            //    setModel() resets all other attributes, so it must come first.
             var modelValue = attrs['attribute_pa_model'];
             if (modelValue) {
                 this.setModel(modelValue);
             }
 
-            // 2) Set each remaining variation attribute
             for (var attrKey in attrs) {
-                var bareKey = attrKey.replace('attribute_', ''); // 'pa_format', …
-                if (bareKey === 'pa_model') continue;            // already handled above
+                var bareKey = attrKey.replace('attribute_', '');
+                if (bareKey === 'pa_model') continue;
                 var attrValue = attrs[attrKey];
                 if (attrValue) {
                     this.setAttribute(bareKey, attrValue);
                 }
             }
+        },
+
+        /**
+         * Apply the per-model default variation for the given model slug.
+         * Called automatically by setModel() after every model switch.
+         *
+         * Attributes are written to selectedAttributes all at once (no per-attribute
+         * syncToWooCommerce calls). This avoids the WooCommerce "count < count_all →
+         * resetVariations" loop that would clear selects between each setAttribute call.
+         * setModel() is responsible for calling syncToWooCommerce() after this returns.
+         *
+         * Silently skipped if no default is configured or the variation is out of stock.
+         */
+        applyModelDefault: function(modelSlug) {
+            if (!this.productData) return;
+
+            var modelDefaults = this.productData.model_default_variations;
+            if (!modelDefaults || !modelDefaults[modelSlug]) return;
+
+            var defaultId = modelDefaults[modelSlug];
+            var variations = this.productData.variations || [];
+            var defaultVar = null;
+
+            for (var i = 0; i < variations.length; i++) {
+                if (variations[i].id == defaultId) {
+                    defaultVar = variations[i];
+                    break;
+                }
+            }
+
+            if (!defaultVar || !defaultVar.is_in_stock) {
+                console.log('[InfoplusState] Model default variation', defaultId, 'for', modelSlug, 'skipped (not found or out of stock)');
+                return;
+            }
+
+            console.log('[InfoplusState] Applying model default', modelSlug, '->', defaultId);
+
+            var attrs = defaultVar.attributes || {};
+
+            // --- Pass 1: write all attribute values at once (no events yet) ---
+            for (var attrKey in attrs) {
+                var bareKey = attrKey.replace('attribute_', '');
+                if (bareKey === 'pa_model') continue;
+                var attrValue = attrs[attrKey];
+                if (attrValue) {
+                    this.selectedAttributes[bareKey] = attrValue;
+                }
+            }
+
+            // Rebuild available attributes once with the complete new selection
+            this.buildAvailableAttributes();
+
+            // --- Pass 2: notify widgets about each attribute (UI update only) ---
+            for (var attrKey2 in attrs) {
+                var bareKey2 = attrKey2.replace('attribute_', '');
+                if (bareKey2 === 'pa_model') continue;
+                var attrValue2 = attrs[attrKey2];
+                if (attrValue2) {
+                    this.emit('attribute:changed', {
+                        attribute: bareKey2,
+                        value: attrValue2,
+                        selectedAttributes: this.selectedAttributes,
+                        availableAttributes: this.availableAttributes
+                    });
+                }
+            }
+
+            // Find the matching variation — all attrs are now set so this should succeed
+            this.findMatchingVariation();
+
+            // syncToWooCommerce is intentionally NOT called here.
+            // setModel() calls it once after this function returns so that WC sees
+            // the complete selection in a single pass.
         },
 
         /**
@@ -140,8 +226,13 @@
             
             // Try to find matching variation
             this.findMatchingVariation();
-            
-            // Sync with native WooCommerce
+
+            // Apply per-model default variation BEFORE syncing to WooCommerce.
+            // applyModelDefault writes all attributes at once, then we do a single
+            // WC sync so WC sees the complete selection (not partial intermediate states).
+            this.applyModelDefault(modelSlug);
+
+            // Sync with native WooCommerce once — after defaults are applied.
             this.syncToWooCommerce();
         },
 
@@ -274,20 +365,38 @@
         },
 
         /**
-         * Sync selections to native WooCommerce form
+         * Sync selections to native WooCommerce form.
+         *
+         * WHY single-trigger: WooCommerce's onVariationChange handler checks
+         * whether ALL required attributes are selected (count === count_all).
+         * If we trigger 'change' on each select individually, WC sees a partial
+         * selection after each trigger and calls resetVariations(), which clears
+         * the variation display and fires reset_data. By setting all <select>
+         * values silently first and then triggering 'change' on just one, WC
+         * reads the complete state in a single pass and goes straight to
+         * finding the matching variation without intermediate resets.
          */
         syncToWooCommerce: function() {
             const $form = $('form.variations_form');
             if (!$form.length) return;
-            
+
+            var $lastSelect = null;
+
+            // Pass 1: set all values without triggering WC's change handler
             Object.entries(this.selectedAttributes).forEach(([attr, value]) => {
                 const selectName = attr.replace('pa_', 'attribute_pa_');
                 const $select = $form.find(`select[name="${selectName}"]`);
-                
                 if ($select.length && value) {
-                    $select.val(value).trigger('change');
+                    $select.val(value);
+                    $lastSelect = $select;
                 }
             });
+
+            // Pass 2: trigger change ONCE on the last set select.
+            // WC now reads all selects together → count === count_all → finds variation.
+            if ($lastSelect) {
+                $lastSelect.trigger('change');
+            }
         },
 
         /**
@@ -333,6 +442,17 @@
                 self.selectedVariation = null;
                 self.emit('variation:reset', {});
             });
+        },
+
+        /**
+         * Set the current quantity and notify all listeners.
+         * source='panel' means the change originated from ProductOrderPanel (prevents echo-back).
+         * source='external' (default) means it came from another widget (e.g. BulkPriceTable cell click).
+         */
+        setQty: function(qty, source) {
+            var parsed = Math.max(1, parseInt(qty, 10) || 1);
+            this.currentQty = parsed;
+            this.emit('qty:changed', { qty: parsed, source: source || 'external' });
         },
 
         /**

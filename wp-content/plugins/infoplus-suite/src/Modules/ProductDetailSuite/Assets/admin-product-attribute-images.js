@@ -373,38 +373,134 @@ jQuery(document).ready(function($) {
     // DEFAULT VARIATION — cascading dropdown logic
     // =========================================================================
 
+    // Stores the full original option list per model section per attribute,
+    // so we can rebuild selects after filtering without losing any options.
+    var modelDefaultAllOptions = {};
+
     /**
-     * Called whenever any default attribute dropdown changes.
-     * Finds a matching variation from infoplusAdminData.variations and
-     * updates the hidden #infoplus_default_variation_id input.
+     * Capture the original <option> elements for every model-default select on
+     * page load (before any filtering removes options).
      */
-    function onDefaultAttrChange() {
-        var selections = {};
+    function initModelDefaultAttrOptions() {
+        $('.infoplus-model-default-section').each(function() {
+            var $section  = $(this);
+            var modelSlug = $section.data('model-slug');
+            modelDefaultAllOptions[modelSlug] = {};
+
+            $section.find('.infoplus-model-default-attr-select').each(function() {
+                var $select = $(this);
+                var attr    = $select.data('attr');
+                var opts    = [];
+                $select.find('option').each(function() {
+                    opts.push({ val: $(this).val(), text: $(this).text() });
+                });
+                modelDefaultAllOptions[modelSlug][attr] = opts;
+            });
+        });
+    }
+
+    /**
+     * Rebuild each select in a model section so it only shows attribute values
+     * that actually exist in at least one variation for this model, given the
+     * current values selected in the other selects.
+     * If a previously selected value is no longer valid it is silently cleared.
+     * @param {jQuery} $section - the .infoplus-model-default-section element
+     */
+    function filterModelDefaultSelects($section) {
+        var modelSlug  = $section.data('model-slug');
+        var variations = (window.infoplusAdminData && window.infoplusAdminData.variations) || [];
+        var allOptions = modelDefaultAllOptions[modelSlug] || {};
+
+        // Narrow to variations belonging to this model
+        var modelVars = variations.filter(function(v) {
+            return (v.attributes['attribute_pa_model'] || '') === modelSlug;
+        });
+
+        var $selects = $section.find('.infoplus-model-default-attr-select');
+
+        $selects.each(function() {
+            var $thisSelect = $(this);
+            var thisAttr    = $thisSelect.data('attr');
+            var currentVal  = $thisSelect.val();
+
+            // Collect the currently selected values of all OTHER selects
+            var otherSels = {};
+            $selects.each(function() {
+                var $other    = $(this);
+                var otherAttr = $other.data('attr');
+                if (otherAttr === thisAttr) return;
+                var v = $other.val();
+                if (v) otherSels[otherAttr] = v;
+            });
+
+            // Determine which values for thisAttr are reachable given otherSels
+            var valid = {};
+            modelVars.forEach(function(v) {
+                var ok = true;
+                for (var attr in otherSels) {
+                    var varVal = v.attributes['attribute_' + attr] || '';
+                    if (varVal && varVal !== otherSels[attr]) { ok = false; break; }
+                }
+                if (ok) {
+                    var val = v.attributes['attribute_' + thisAttr];
+                    if (val) valid[val] = true;
+                }
+            });
+
+            // Rebuild from stored originals — only keep valid options
+            var origOpts = allOptions[thisAttr] || [];
+            $thisSelect.empty();
+            origOpts.forEach(function(opt) {
+                if (!opt.val || valid[opt.val]) {
+                    $thisSelect.append($('<option>', { value: opt.val, text: opt.text }));
+                }
+            });
+
+            // Restore previous value if still valid, otherwise clear
+            if (currentVal && valid[currentVal]) {
+                $thisSelect.val(currentVal);
+            } else {
+                $thisSelect.val('');
+            }
+        });
+    }
+
+    /**
+     * Called whenever a dropdown changes inside a model default section.
+     * Finds a matching variation (scoped to that model) and updates the
+     * hidden input + status badge for that section.
+     * @param {jQuery} $section - the .infoplus-model-default-section element
+     */
+    function onModelDefaultAttrChange($section) {
+        var modelSlug  = $section.data('model-slug');
+        var selections = { pa_model: modelSlug };
         var allSelected = true;
 
-        $('.infoplus-default-attr-select').each(function() {
-            var attr = $(this).data('attr'); // e.g. 'pa_model'
+        $section.find('.infoplus-model-default-attr-select').each(function() {
+            var attr = $(this).data('attr');
             var val  = $(this).val();
             selections[attr] = val;
             if (!val) allSelected = false;
         });
 
+        var $statusEl    = $section.find('.infoplus-model-variation-status');
+        var $hiddenInput = $section.find('.infoplus-model-default-variation-id');
+
         if (!allSelected) {
-            $('#infoplus_default_variation_id').val('');
-            showVariationStatus('none');
+            $hiddenInput.val('');
+            showModelVariationStatus($statusEl, 'none');
             return;
         }
 
-        // Find matching variation from PHP-supplied data
         var variations = (window.infoplusAdminData && window.infoplusAdminData.variations) || [];
         var match = null;
 
         for (var i = 0; i < variations.length; i++) {
-            var v = variations[i];
+            var v        = variations[i];
             var allMatch = true;
 
             for (var attr in selections) {
-                var attrKey = 'attribute_' + attr; // 'attribute_pa_model'
+                var attrKey = 'attribute_' + attr;
                 if ((v.attributes[attrKey] || '') !== selections[attr]) {
                     allMatch = false;
                     break;
@@ -418,80 +514,81 @@ jQuery(document).ready(function($) {
         }
 
         if (match) {
-            $('#infoplus_default_variation_id').val(match.id);
-            showVariationStatus('found', match);
+            $hiddenInput.val(match.id);
+            showModelVariationStatus($statusEl, 'found', match);
         } else {
-            $('#infoplus_default_variation_id').val('');
-            showVariationStatus('notfound');
+            $hiddenInput.val('');
+            showModelVariationStatus($statusEl, 'notfound');
         }
     }
 
     /**
-     * Show status feedback below the dropdowns.
-     * @param {string} state - 'found' | 'notfound' | 'none'
-     * @param {object|null} variation
+     * Update the status badge inside a model default section.
+     * @param {jQuery} $el    - the .infoplus-model-variation-status element
+     * @param {string} state  - 'found' | 'notfound' | 'none'
+     * @param {object} [variation]
      */
-    function showVariationStatus(state, variation) {
-        var $status = $('.infoplus-variation-status');
-        var $noDefault = $('.infoplus-no-default-note');
-
+    function showModelVariationStatus($el, state, variation) {
         if (state === 'found') {
-            $status.html(
+            $el.html(
                 '<span class="status-found">&#10003; Variation #' + variation.id +
                 ' (SKU: ' + (variation.sku || '—') + ')</span>'
             );
-            $noDefault.hide();
         } else if (state === 'notfound') {
-            $status.html('<span class="status-notfound">&#10007; Keine passende Variation gefunden</span>');
-            $noDefault.hide();
+            $el.html('<span class="status-notfound">&#10007; Keine passende Variation gefunden</span>');
         } else {
-            $status.html('');
-            $noDefault.show();
+            $el.html('<span class="status-none" style="color:#888;">Kein Standard gesetzt</span>');
         }
     }
 
     /**
-     * On page load: pre-populate the dropdowns from the stored default variation
-     * and show the initial status badge.
+     * On page load: pre-populate each model section's dropdowns from the stored
+     * modelDefaultVariations map and show the initial status badges.
      */
-    function initDefaultVariationDropdowns() {
+    function initModelDefaultVariationDropdowns() {
         var data = window.infoplusAdminData;
-        if (!data) return;
+        if (!data || !data.modelDefaultVariations) return;
 
-        var defaultId  = data.defaultVariationId;
+        var defaults   = data.modelDefaultVariations;
         var variations = data.variations || [];
 
-        if (!defaultId) return;
+        $('.infoplus-model-default-section').each(function() {
+            var $section  = $(this);
+            var modelSlug = $section.data('model-slug');
+            var savedId   = defaults[modelSlug];
 
-        // Find the stored variation
-        var defaultVar = null;
-        for (var i = 0; i < variations.length; i++) {
-            if (variations[i].id === defaultId) {
-                defaultVar = variations[i];
-                break;
+            if (!savedId) return;
+
+            // Find the saved variation object
+            var savedVar = null;
+            for (var i = 0; i < variations.length; i++) {
+                if (variations[i].id === savedId) {
+                    savedVar = variations[i];
+                    break;
+                }
             }
-        }
 
-        if (!defaultVar) return;
+            if (!savedVar) return;
 
-        // Set each dropdown to the stored value
-        $('.infoplus-default-attr-select').each(function() {
-            var $select = $(this);
-            var attr    = $select.data('attr');          // 'pa_model'
-            var attrKey = 'attribute_' + attr;           // 'attribute_pa_model'
-            var val     = defaultVar.attributes[attrKey] || '';
-            if (val) {
-                $select.val(val);
-            }
+            // Pre-populate each select
+            $section.find('.infoplus-model-default-attr-select').each(function() {
+                var $select = $(this);
+                var attrKey = 'attribute_' + $select.data('attr');
+                var val     = savedVar.attributes[attrKey] || '';
+                if (val) $select.val(val);
+            });
+
+            // Filter options based on saved selection, then resolve status badge
+            filterModelDefaultSelects($section);
+            onModelDefaultAttrChange($section);
         });
-
-        // Trigger status update (will show the 'found' badge)
-        onDefaultAttrChange();
     }
 
-    // Listen for any dropdown change
-    $(document).on('change', '.infoplus-default-attr-select', function() {
-        onDefaultAttrChange();
+    // Live: filter available options then resolve variation whenever a dropdown changes
+    $(document).on('change', '.infoplus-model-default-attr-select', function() {
+        var $section = $(this).closest('.infoplus-model-default-section');
+        filterModelDefaultSelects($section);
+        onModelDefaultAttrChange($section);
     });
 
     // =========================================================================
@@ -515,6 +612,9 @@ jQuery(document).ready(function($) {
     // Initialize gallery field event handlers
     initGalleryFields();
 
-    // Initialize Default Variation dropdowns from stored data
-    initDefaultVariationDropdowns();
+    // Capture original option lists BEFORE any filtering removes options
+    initModelDefaultAttrOptions();
+
+    // Initialize per-model Default Variation dropdowns from stored data
+    initModelDefaultVariationDropdowns();
 });

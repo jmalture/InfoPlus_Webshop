@@ -47,9 +47,14 @@ class ProductAttributeImages
     private const META_KEY_ORDER_TYPE = '_infoplus_attr_order_type_';
 
     /**
-     * Meta key for the pre-selected default variation ID
+     * Meta key for the pre-selected default variation ID (legacy — single product default)
      */
     private const META_KEY_DEFAULT_VARIATION = '_infoplus_default_variation_id';
+
+    /**
+     * Meta key for per-model default variation IDs (JSON map: model_slug => variation_id)
+     */
+    private const META_KEY_MODEL_DEFAULT_VARIATIONS = '_infoplus_model_default_variations';
 
     /**
      * List of product attribute taxonomies to show in the Attribute Overrides tab
@@ -276,13 +281,24 @@ class ProductAttributeImages
     }
 
     /**
-     * Render the Default Variation panel with cascading attribute dropdowns
+     * Render the Default Variation panel — one section per pa_model term.
+     * Each section has cascading selects for all non-model variation attributes.
+     * The resolved variation ID is stored in _infoplus_model_default_variations JSON map.
      */
     private function renderDefaultVariationTab(int $product_id, \WC_Product $product): void
     {
-        // Collect only variation-type attributes on this product
+        // Fetch all pa_model terms assigned to this product
+        $model_terms = wc_get_product_terms($product_id, 'pa_model', ['fields' => 'all']);
+
+        if (empty($model_terms)) {
+            echo '<p>' . esc_html__('No model (pa_model) attribute terms found on this product.', 'infoplus-suite') . '</p>';
+            return;
+        }
+
+        // Collect all variation-type attributes EXCEPT pa_model
         $variation_attrs = [];
         foreach ($product->get_attributes() as $attr_slug => $attr) {
+            if ($attr_slug === 'pa_model') continue;
             if ($attr->get_variation() && $attr->is_taxonomy()) {
                 $terms = wc_get_product_terms($product_id, $attr_slug, ['fields' => 'all']);
                 if (!empty($terms)) {
@@ -296,81 +312,93 @@ class ProductAttributeImages
         }
 
         if (empty($variation_attrs)) {
-            echo '<p>' . esc_html__('No variation-type attributes found on this product.', 'infoplus-suite') . '</p>';
+            echo '<p>' . esc_html__('No variation-type attributes (other than Model) found on this product.', 'infoplus-suite') . '</p>';
             return;
         }
 
-        // Load currently stored default variation
-        $default_variation_id = (int) get_post_meta($product_id, self::META_KEY_DEFAULT_VARIATION, true);
-        $default_attrs        = []; // ['attribute_pa_model' => 'aufsteller', ...]
-
-        if ($default_variation_id > 0) {
-            $default_variation = wc_get_product($default_variation_id);
-            if ($default_variation && $default_variation->get_parent_id() === $product_id) {
-                $default_attrs = $default_variation->get_variation_attributes();
-            } else {
-                $default_variation_id = 0; // no longer valid — treat as unset
-            }
+        // Load saved per-model defaults map
+        $saved_raw      = get_post_meta($product_id, self::META_KEY_MODEL_DEFAULT_VARIATIONS, true);
+        $saved_defaults = $saved_raw ? json_decode($saved_raw, true) : [];
+        if (!is_array($saved_defaults)) {
+            $saved_defaults = [];
         }
         ?>
-        <div class="infoplus-default-variation-wrap">
+        <div class="infoplus-model-defaults-wrap">
 
-            <p class="description">
+            <p class="description" style="margin-bottom:20px;">
                 <?php esc_html_e(
-                    'Choose a variation to be pre-selected when the product page loads. All widgets will initialize with this selection active (model card highlighted, dropdowns set, bulk prices fetched, action button enabled).',
+                    'Set a default variation for each model. The first model\'s default is applied on page load; switching to any model applies that model\'s default automatically.',
                     'infoplus-suite'
                 ); ?>
             </p>
 
-            <div class="infoplus-default-attr-rows">
-                <?php foreach ($variation_attrs as $attr_slug => $data):
-                    // $default_attrs uses 'attribute_pa_*' keys (WC convention)
-                    $saved_value = $default_attrs['attribute_' . $attr_slug] ?? '';
-                ?>
-                <div class="infoplus-default-attr-row">
-                    <label for="infoplus_default_sel_<?php echo esc_attr($attr_slug); ?>">
-                        <?php echo esc_html($data['label']); ?>
-                    </label>
-                    <select id="infoplus_default_sel_<?php echo esc_attr($attr_slug); ?>"
-                            class="infoplus-default-attr-select"
-                            data-attr="<?php echo esc_attr($attr_slug); ?>">
-                        <option value=""><?php esc_html_e('— Select —', 'infoplus-suite'); ?></option>
-                        <?php foreach ($data['terms'] as $term): ?>
-                            <option value="<?php echo esc_attr($term->slug); ?>"
-                                    <?php selected($saved_value, $term->slug); ?>>
-                                <?php echo esc_html($term->name); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+            <?php foreach ($model_terms as $model_term):
+                $model_slug         = $model_term->slug;
+                $saved_variation_id = isset($saved_defaults[$model_slug]) ? (int) $saved_defaults[$model_slug] : 0;
+
+                // Validate the stored variation still belongs to this product
+                $saved_variation_attrs = [];
+                if ($saved_variation_id > 0) {
+                    $saved_var = wc_get_product($saved_variation_id);
+                    if ($saved_var && $saved_var->get_parent_id() === $product_id) {
+                        $saved_variation_attrs = $saved_var->get_variation_attributes();
+                    } else {
+                        $saved_variation_id = 0;
+                    }
+                }
+            ?>
+            <div class="infoplus-model-default-section" data-model-slug="<?php echo esc_attr($model_slug); ?>"
+                 style="border:1px solid #e0e0e0;border-radius:4px;padding:16px;margin-bottom:16px;">
+
+                <strong style="display:block;margin-bottom:12px;font-size:13px;">
+                    <?php echo esc_html($model_term->name); ?>
+                </strong>
+
+                <div class="infoplus-default-attr-rows">
+                    <?php foreach ($variation_attrs as $attr_slug => $data):
+                        $saved_value = $saved_variation_attrs['attribute_' . $attr_slug] ?? '';
+                    ?>
+                    <div class="infoplus-default-attr-row">
+                        <label><?php echo esc_html($data['label']); ?></label>
+                        <select class="infoplus-model-default-attr-select"
+                                data-attr="<?php echo esc_attr($attr_slug); ?>">
+                            <option value=""><?php esc_html_e('— Select —', 'infoplus-suite'); ?></option>
+                            <?php foreach ($data['terms'] as $term): ?>
+                                <option value="<?php echo esc_attr($term->slug); ?>"
+                                        <?php selected($saved_value, $term->slug); ?>>
+                                    <?php echo esc_html($term->name); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
+
+                <!-- Status badge -->
+                <div class="infoplus-model-variation-status" style="margin-top:10px;font-size:12px;">
+                    <?php if ($saved_variation_id > 0):
+                        $var = wc_get_product($saved_variation_id); ?>
+                        <span class="status-found">
+                            &#10003; <?php printf(
+                                /* translators: 1: variation ID, 2: SKU */
+                                esc_html__('Variation #%1$d (SKU: %2$s)', 'infoplus-suite'),
+                                $saved_variation_id,
+                                esc_html($var ? ($var->get_sku() ?: '—') : '—')
+                            ); ?>
+                        </span>
+                    <?php else: ?>
+                        <span class="status-none" style="color:#888;"><?php esc_html_e('No default set', 'infoplus-suite'); ?></span>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Hidden input — JS writes the resolved variation ID here; PHP reads it on save -->
+                <input type="hidden"
+                       class="infoplus-model-default-variation-id"
+                       name="_infoplus_model_default_variations[<?php echo esc_attr($model_slug); ?>]"
+                       value="<?php echo esc_attr($saved_variation_id > 0 ? $saved_variation_id : ''); ?>" />
+
             </div>
-
-            <!-- Status badge — populated by JS on load and on change -->
-            <div class="infoplus-variation-status">
-                <?php if ($default_variation_id > 0): ?>
-                    <?php $var = wc_get_product($default_variation_id); ?>
-                    <span class="status-found">
-                        &#10003; <?php printf(
-                            /* translators: 1: variation ID, 2: SKU */
-                            esc_html__('Variation #%1$d (SKU: %2$s)', 'infoplus-suite'),
-                            $default_variation_id,
-                            esc_html($var ? ($var->get_sku() ?: '—') : '—')
-                        ); ?>
-                    </span>
-                <?php endif; ?>
-            </div>
-
-            <!-- Hidden input — JS writes the resolved variation ID here; PHP reads it on save -->
-            <input type="hidden"
-                   id="infoplus_default_variation_id"
-                   name="<?php echo esc_attr(self::META_KEY_DEFAULT_VARIATION); ?>"
-                   value="<?php echo esc_attr($default_variation_id > 0 ? $default_variation_id : ''); ?>" />
-
-            <p class="description infoplus-no-default-note"
-               style="<?php echo $default_variation_id > 0 ? 'display:none;' : ''; ?> margin-top:12px;">
-                <?php esc_html_e('No default variation set. Page will load without pre-selection.', 'infoplus-suite'); ?>
-            </p>
+            <?php endforeach; ?>
 
         </div>
         <?php
@@ -775,7 +803,7 @@ class ProductAttributeImages
             }
         }
 
-        // ---- Tab 3: Default Variation ID -----------------------------------
+        // ---- Tab 3: Default Variation ID (legacy single default) -----------
 
         if (isset($_POST[self::META_KEY_DEFAULT_VARIATION])) {
             $variation_id = absint($_POST[self::META_KEY_DEFAULT_VARIATION]);
@@ -789,6 +817,28 @@ class ProductAttributeImages
                 }
             } else {
                 delete_post_meta($post_id, self::META_KEY_DEFAULT_VARIATION);
+            }
+        }
+
+        // ---- Tab 3: Per-model default variations ---------------------------
+
+        if (isset($_POST['_infoplus_model_default_variations']) && is_array($_POST['_infoplus_model_default_variations'])) {
+            $raw = (array) $_POST['_infoplus_model_default_variations'];
+            $map = [];
+            foreach ($raw as $model_slug => $variation_id) {
+                $model_slug   = sanitize_key($model_slug);
+                $variation_id = absint($variation_id);
+                if ($model_slug && $variation_id > 0) {
+                    $var = wc_get_product($variation_id);
+                    if ($var && $var->get_parent_id() === $post_id) {
+                        $map[$model_slug] = $variation_id;
+                    }
+                }
+            }
+            if (!empty($map)) {
+                update_post_meta($post_id, self::META_KEY_MODEL_DEFAULT_VARIATIONS, wp_json_encode($map));
+            } else {
+                delete_post_meta($post_id, self::META_KEY_MODEL_DEFAULT_VARIATIONS);
             }
         }
 
@@ -908,7 +958,7 @@ class ProductAttributeImages
         wp_enqueue_media();
 
         $asset_url = INFOPLUS_SUITE_URL . 'src/Modules/ProductDetailSuite/Assets/';
-        $version   = \Infoplus\Suite\Plugin::VERSION . '.6'; // Bump for cache busting
+        $version   = \Infoplus\Suite\Plugin::VERSION . '.7'; // Bump for cache busting
 
         // Enqueue CSS
         wp_enqueue_style(
@@ -946,9 +996,13 @@ class ProductAttributeImages
                 }
             }
 
+            $model_defaults_raw = get_post_meta($post_id, self::META_KEY_MODEL_DEFAULT_VARIATIONS, true);
+            $model_defaults     = $model_defaults_raw ? json_decode($model_defaults_raw, true) : [];
+
             wp_localize_script('infoplus-product-attribute-images-admin', 'infoplusAdminData', [
-                'variations'         => $variations_data,
-                'defaultVariationId' => (int) get_post_meta($post_id, self::META_KEY_DEFAULT_VARIATION, true),
+                'variations'             => $variations_data,
+                'defaultVariationId'     => (int) get_post_meta($post_id, self::META_KEY_DEFAULT_VARIATION, true),
+                'modelDefaultVariations' => is_array($model_defaults) ? $model_defaults : (object) [],
             ]);
         }
     }
