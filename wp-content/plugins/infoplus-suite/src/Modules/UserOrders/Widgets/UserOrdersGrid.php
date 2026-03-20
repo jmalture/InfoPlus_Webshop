@@ -231,23 +231,24 @@ class UserOrdersGrid extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'invoice_button_text',
-            [
-                'label' => __('Invoice Button', 'infoplus-suite'),
-                'type' => Controls_Manager::TEXT,
-                'default' => 'Rechnung',
-            ]
-        );
+        // Invoice button controls — hidden for now, feature not yet complete
+        // $this->add_control(
+        //     'invoice_button_text',
+        //     [
+        //         'label' => __('Invoice Button', 'infoplus-suite'),
+        //         'type' => Controls_Manager::TEXT,
+        //         'default' => 'Rechnung',
+        //     ]
+        // );
 
-        $this->add_control(
-            'show_invoice_button',
-            [
-                'label' => __('Show Invoice Button', 'infoplus-suite'),
-                'type' => Controls_Manager::SWITCHER,
-                'default' => 'yes',
-            ]
-        );
+        // $this->add_control(
+        //     'show_invoice_button',
+        //     [
+        //         'label' => __('Show Invoice Button', 'infoplus-suite'),
+        //         'type' => Controls_Manager::SWITCHER,
+        //         'default' => 'yes',
+        //     ]
+        // );
 
         $this->add_control(
             'open_in_new_tab',
@@ -883,27 +884,29 @@ class UserOrdersGrid extends Widget_Base
                         // Build custom order details URL
                         $order_url = home_url($order_details_base . $order->get_order_number() . '/');
                         
-                        // Build invoice URL with proper nonce for WP Overnight PDF plugin
-                        $invoice_url = add_query_arg([
-                            'action' => 'generate_wpo_wcpdf',
-                            'document_type' => 'invoice',
-                            'order_ids' => $order->get_id(),
-                            'my_account_pdf' => 'true',
-                            '_wpnonce' => wp_create_nonce('generate_wpo_wcpdf'),
-                        ], admin_url('admin-ajax.php'));
+                        // Invoice URL build — kept for future use when feature is complete
+                        // $invoice_url = add_query_arg([
+                        //     'action'          => 'generate_wpo_wcpdf',
+                        //     'document_type'   => 'invoice',
+                        //     'order_ids'       => $order->get_id(),
+                        //     'my_account_pdf'  => 'true',
+                        //     '_wpnonce'        => wp_create_nonce('generate_wpo_wcpdf'),
+                        // ], admin_url('admin-ajax.php'));
                         ?>
-                        <a href="<?php echo esc_url($order_url); ?>" 
+                        <a href="<?php echo esc_url($order_url); ?>"
                            class="infoplus-btn infoplus-btn-primary"<?php echo $target_attr; ?>>
                             <?php echo esc_html($settings['view_button_text']); ?>
                         </a>
+                        <?php /* Invoice button — hidden for now, feature not yet complete
                         <?php if ($settings['show_invoice_button'] === 'yes'): ?>
-                        <a href="<?php echo esc_url($invoice_url); ?>" 
-                           class="infoplus-btn infoplus-btn-secondary" 
+                        <a href="<?php echo esc_url($invoice_url); ?>"
+                           class="infoplus-btn infoplus-btn-secondary"
                            target="_blank"
                            data-order-id="<?php echo esc_attr($order->get_id()); ?>">
                             <?php echo esc_html($settings['invoice_button_text']); ?>
                         </a>
                         <?php endif; ?>
+                        */ ?>
                     </div>
                 </div>
                 <?php 

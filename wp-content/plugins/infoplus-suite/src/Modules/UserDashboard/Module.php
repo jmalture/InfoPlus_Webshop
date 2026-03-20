@@ -25,6 +25,9 @@ final class Module implements ModuleInterface
         
         // Redirect logged-in users away from login page
         add_action('template_redirect', [$this, 'redirectLoggedInUsers']);
+
+        // Redirect guests away from the account/dashboard page
+        add_action('template_redirect', [$this, 'redirectGuestUsers']);
         
         // Register shortcode for login guard
         add_shortcode('infoplus_login_guard', [$this, 'renderLoginGuard']);
@@ -334,6 +337,46 @@ final class Module implements ModuleInterface
                 // User is logged in and trying to access login page
                 // Redirect to dashboard
                 wp_safe_redirect(home_url('/account'));
+                exit;
+            }
+        }
+    }
+
+    /**
+     * Redirect guests (non-logged-in users) away from the account/dashboard area.
+     * Sends them to the login page so they can authenticate first.
+     */
+    public function redirectGuestUsers(): void
+    {
+        // Never redirect inside the Elementor editor or WP admin
+        if (is_admin()) {
+            return;
+        }
+
+        if (
+            isset($_GET['elementor-preview']) ||
+            isset($_GET['elementor_library']) ||
+            (isset($_GET['action']) && $_GET['action'] === 'elementor')
+        ) {
+            return;
+        }
+
+        // Already logged in — nothing to do
+        if (is_user_logged_in()) {
+            return;
+        }
+
+        $current_url = $_SERVER['REQUEST_URI'] ?? '';
+
+        // Protected paths that require login
+        $protected_paths = [
+            '/account',
+        ];
+
+        foreach ($protected_paths as $path) {
+            if (strpos($current_url, $path) === 0 || $current_url === $path) {
+                // Send guests to the login page; after login WC/WP redirects them to /account
+                wp_safe_redirect(home_url('/log-in/'));
                 exit;
             }
         }

@@ -76,12 +76,42 @@ class OrderDetails extends Widget_Base
             ]
         );
 
+        // Invoice button control — hidden for now, keeping for future use
+        // $this->add_control(
+        //     'show_invoice_button',
+        //     [
+        //         'label' => __('Show Invoice Button', 'infoplus-suite'),
+        //         'type' => Controls_Manager::SWITCHER,
+        //         'default' => 'yes',
+        //     ]
+        // );
+
         $this->add_control(
-            'show_invoice_button',
+            'show_back_button',
             [
-                'label' => __('Show Invoice Button', 'infoplus-suite'),
+                'label' => __('Show Back Button', 'infoplus-suite'),
                 'type' => Controls_Manager::SWITCHER,
                 'default' => 'yes',
+            ]
+        );
+
+        $this->add_control(
+            'back_button_text',
+            [
+                'label' => __('Back Button Text', 'infoplus-suite'),
+                'type' => Controls_Manager::TEXT,
+                'default' => '← Zurück zur Übersicht',
+                'condition' => ['show_back_button' => 'yes'],
+            ]
+        );
+
+        $this->add_control(
+            'back_button_url',
+            [
+                'label' => __('Back Button URL', 'infoplus-suite'),
+                'type' => Controls_Manager::TEXT,
+                'default' => '/account/',
+                'condition' => ['show_back_button' => 'yes'],
             ]
         );
 
@@ -103,15 +133,16 @@ class OrderDetails extends Widget_Base
             ]
         );
 
-        $this->add_control(
-            'invoice_button_text',
-            [
-                'label' => __('Invoice Button Text', 'infoplus-suite'),
-                'type' => Controls_Manager::TEXT,
-                'default' => 'Rechnung herunterladen',
-                'condition' => ['show_invoice_button' => 'yes'],
-            ]
-        );
+        // Invoice button text control — hidden for now, keeping for future use
+        // $this->add_control(
+        //     'invoice_button_text',
+        //     [
+        //         'label' => __('Invoice Button Text', 'infoplus-suite'),
+        //         'type' => Controls_Manager::TEXT,
+        //         'default' => 'Rechnung herunterladen',
+        //         'condition' => ['show_invoice_button' => 'yes'],
+        //     ]
+        // );
 
         $this->add_control(
             'email_button_text',
@@ -692,7 +723,15 @@ class OrderDetails extends Widget_Base
         ?>
 
         <div class="infoplus-order-details" data-order-id="<?php echo esc_attr($order_id); ?>">
-            
+
+            <?php if ($settings['show_back_button'] === 'yes'): ?>
+            <div class="infoplus-order-back">
+                <a href="<?php echo esc_url($settings['back_button_url']); ?>" class="infoplus-back-btn">
+                    <?php echo esc_html($settings['back_button_text']); ?>
+                </a>
+            </div>
+            <?php endif; ?>
+
             <!-- Header -->
             <div class="infoplus-order-header">
                 <div class="infoplus-order-header-left">
@@ -709,9 +748,10 @@ class OrderDetails extends Widget_Base
                     </div>
                     
                     <div class="infoplus-order-actions">
+                        <?php /* Invoice button — hidden for now, keeping for future use
                         <?php if ($settings['show_invoice_button'] === 'yes'): ?>
-                        <a href="<?php echo esc_url($invoice_url); ?>" 
-                           class="infoplus-btn infoplus-btn-primary" 
+                        <a href="<?php echo esc_url($invoice_url); ?>"
+                           class="infoplus-btn infoplus-btn-primary"
                            target="_blank"
                            download>
                             <?php echo esc_html($settings['invoice_button_text']); ?>
@@ -722,6 +762,7 @@ class OrderDetails extends Widget_Base
                             </svg>
                         </a>
                         <?php endif; ?>
+                        */ ?>
                         
                         <?php if ($settings['show_email_button'] === 'yes'): ?>
                         <a href="<?php echo esc_url($mailto_url); ?>" class="infoplus-btn infoplus-btn-secondary">
@@ -860,6 +901,26 @@ class OrderDetails extends Widget_Base
         .infoplus-order-details {
             max-width: 1200px;
             margin: 0 auto;
+        }
+
+        /* Back Button */
+        .infoplus-order-back {
+            margin-bottom: 1.5rem;
+        }
+
+        .infoplus-back-btn {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #e91e8c;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .infoplus-back-btn:hover {
+            opacity: 0.75;
+            color: #e91e8c;
         }
 
         /* Header */

@@ -53,6 +53,14 @@ final class Module implements ModuleInterface
         
         // Shortcode for manual placement: [infoplus_order_received]
         add_shortcode('infoplus_order_received', [$this, 'orderReceivedShortcode']);
+
+        // Beautiful empty cart:
+        //  - Classic WC cart (shortcode-based): woocommerce_cart_is_empty action
+        //  - Block-based WC cart (Gutenberg): render_block filter on woocommerce/cart
+        //  - Manual placement shortcode: [infoplus_empty_cart]
+        add_action('woocommerce_cart_is_empty', [$this, 'renderEmptyCartContent'], 1);
+        add_filter('render_block', [$this, 'filterWooCartBlock'], 10, 2);
+        add_shortcode('infoplus_empty_cart', [$this, 'emptyCartShortcode']);
     }
 
     private function assetUrl(string $path): string
@@ -640,6 +648,10 @@ final class Module implements ModuleInterface
         // Mark as rendered
         self::$thankYouRendered = true;
 
+        $logged_in  = is_user_logged_in();
+        $login_url  = home_url('/log-in/');
+        $register_url = home_url('/log-in/?eael-register=1');
+
         // Status labels in German
         $status_labels = [
             'pending' => 'Ausstehend',
@@ -1069,24 +1081,423 @@ final class Module implements ModuleInterface
                 </div>
             </div>
             
-            <!-- Action Buttons -->
+            <!-- Action Buttons — login-aware -->
             <div class="infoplus-thankyou-actions">
-                <a href="<?php echo esc_url(home_url('/account/')); ?>" class="infoplus-thankyou-btn infoplus-thankyou-btn-primary">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                <?php if ($logged_in): ?>
+                    <!-- Logged-in: Dashboard (primary) + Weiter einkaufen (secondary) -->
+                    <a href="<?php echo esc_url(home_url('/account/')); ?>" class="infoplus-thankyou-btn infoplus-thankyou-btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Zum Dashboard
+                    </a>
+                    <a href="<?php echo esc_url(home_url('/namensschilder/')); ?>" class="infoplus-thankyou-btn infoplus-thankyou-btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        Weiter einkaufen
+                    </a>
+                <?php else: ?>
+                    <!-- Guest: Weiter einkaufen (primary) + Konto erstellen (secondary) -->
+                    <a href="<?php echo esc_url(home_url('/namensschilder/')); ?>" class="infoplus-thankyou-btn infoplus-thankyou-btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        Weiter einkaufen
+                    </a>
+                    <a href="<?php echo esc_url($register_url); ?>" class="infoplus-thankyou-btn infoplus-thankyou-btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <line x1="20" y1="8" x2="20" y2="14"></line>
+                            <line x1="23" y1="11" x2="17" y2="11"></line>
+                        </svg>
+                        Konto erstellen
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php
+    }
+
+    // -------------------------------------------------------------------------
+    // Empty Cart
+    // -------------------------------------------------------------------------
+
+    /**
+     * render_block filter — intercepts the Gutenberg-based WooCommerce cart block.
+     *
+     * Strategy:
+     *  - Always inject our custom empty-cart HTML before the WC block, wrapped in
+     *    a container whose initial visibility is set server-side (hidden when cart
+     *    has items, visible when empty).
+     *  - Always hide `.wp-block-woocommerce-empty-cart-block` via CSS so the WC
+     *    default empty state never shows — React still mounts into it (no error).
+     *  - A JS snippet subscribes to the WC Blocks `wc/store/cart` data store so
+     *    that when the user empties the cart on the page (AJAX, no reload) our
+     *    overlay appears and the WC default stays hidden.
+     */
+    public function filterWooCartBlock(string $block_content, array $block): string
+    {
+        if (($block['blockName'] ?? '') !== 'woocommerce/cart') {
+            return $block_content;
+        }
+
+        if (!function_exists('WC') || !WC()->cart) {
+            return $block_content;
+        }
+
+        // Server-side initial state — JS takes over after hydration.
+        $initially_empty = WC()->cart->is_empty();
+
+        ob_start();
+        $this->renderEmptyCartContent();
+        $our_html = ob_get_clean();
+
+        $initial_display = $initially_empty ? 'block' : 'none';
+
+        $wrapped = '<div id="infoplus-empty-cart-overlay" style="display:' . $initial_display . '" aria-hidden="' . ($initially_empty ? 'false' : 'true') . '">'
+                 . $our_html
+                 . '</div>';
+
+        // Always hide the WC default empty-cart block — we replace it with ours.
+        // !important beats React inline styles in all browsers per CSS spec.
+        $style = '<style>'
+               . '#infoplus-empty-cart-overlay{}'   // anchor for specificity
+               . '.wp-block-woocommerce-empty-cart-block{display:none!important}'
+               . '</style>';
+
+        // JS: subscribe to wc/store/cart so visibility updates without a page reload.
+        // We wait for wp.data to be available (WC Blocks registers it after DOM ready).
+        //
+        // Critical: during WC Blocks' loading/hydration phases getCartData() returns an
+        // object where items_count is still undefined. Treating undefined===0 as false
+        // would incorrectly hide the overlay. We guard with typeof === 'number' so we
+        // only ever act on a real, settled value from the store.
+        $initially_empty_js = $initially_empty ? 'true' : 'false';
+        $script = '<script>'
+            . '(function(){'
+            .   'var overlay=document.getElementById("infoplus-empty-cart-overlay");'
+            .   'if(!overlay)return;'
+            .   'var lastEmpty=' . $initially_empty_js . ';'
+            .   'function applyState(isEmpty){'
+            .     'if(isEmpty===lastEmpty)return;'
+            .     'lastEmpty=isEmpty;'
+            .     'overlay.style.display=isEmpty?"block":"none";'
+            .     'overlay.setAttribute("aria-hidden",isEmpty?"false":"true");'
+            .   '}'
+            .   'function subscribe(){'
+            .     'if(!window.wp||!wp.data)return false;'
+            .     'var store=wp.data.select("wc/store/cart");'
+            .     'if(!store)return false;'
+            .     'wp.data.subscribe(function(){'
+            .       'try{'
+            .         'var d=wp.data.select("wc/store/cart").getCartData();'
+            // Guard: only act when items_count is a real settled number, not undefined/null
+            // (WC store emits many updates during hydration where items_count is not yet set).
+            .         'if(d&&typeof d.items_count==="number")applyState(d.items_count===0);'
+            .       '}catch(e){}'
+            .     '});'
+            .     'return true;'
+            .   '}'
+            // Try immediately (wp.data may already be loaded), then retry on load.
+            .   'if(!subscribe()){'
+            .     'window.addEventListener("load",function(){subscribe()||setTimeout(subscribe,800);});'
+            .   '}'
+            . '})();'
+            . '</script>';
+
+        return $wrapped . $style . $script . $block_content;
+    }
+
+    /**
+     * Shortcode: [infoplus_empty_cart]
+     * Returns empty string when cart has items; renders custom empty-cart layout otherwise.
+     */
+    public function emptyCartShortcode(array $atts = []): string
+    {
+        if (!function_exists('WC') || !WC()->cart || !WC()->cart->is_empty()) {
+            return '';
+        }
+
+        ob_start();
+        $this->renderEmptyCartContent();
+        return ob_get_clean();
+    }
+
+    /**
+     * Hooked on woocommerce_cart_is_empty (priority 1).
+     * Renders a polished empty-cart UI and suppresses the default WC output.
+     */
+    public function renderEmptyCartContent(): void
+    {
+        $shop_url    = home_url('/namensschilder/');
+        $account_url = home_url('/account/');
+        $login_url   = home_url('/log-in/');   // custom login page (matches UserDashboard module)
+        $logged_in   = is_user_logged_in();
+        ?>
+        <style>
+            /* Hide the default WooCommerce empty-cart elements */
+            .cart-empty,
+            .return-to-shop,
+            .woocommerce-info.woocommerce-cart-form__cart-info {
+                display: none !important;
+            }
+
+            .infoplus-empty-cart-wrap {
+                max-width: 700px;
+                margin: 0 auto 48px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+
+            /* Hero banner */
+            .infoplus-empty-cart-hero {
+                text-align: center;
+                padding: 48px 24px 40px;
+                background: var(--e-global-color-primary, #e91e8c);
+                border-radius: 16px;
+                margin-bottom: 28px;
+                color: #fff;
+            }
+
+            .infoplus-empty-cart-icon {
+                width: 80px;
+                height: 80px;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 20px;
+            }
+
+            .infoplus-empty-cart-icon svg {
+                width: 40px;
+                height: 40px;
+                stroke: #fff;
+                stroke-width: 2;
+                fill: none;
+            }
+
+            .infoplus-empty-cart-title {
+                font-size: 26px;
+                font-weight: 700;
+                margin: 0 0 10px;
+                color: #fff;
+            }
+
+            .infoplus-empty-cart-subtitle {
+                font-size: 15px;
+                opacity: 0.88;
+                margin: 0;
+            }
+
+            /* Hint card */
+            .infoplus-empty-cart-card {
+                background: #fff;
+                border-radius: 12px;
+                padding: 24px 28px;
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+                margin-bottom: 24px;
+            }
+
+            .infoplus-empty-cart-card-title {
+                font-size: 13px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: #888;
+                margin: 0 0 14px;
+                padding-bottom: 12px;
+                border-bottom: 2px solid #f0f0f0;
+            }
+
+            .infoplus-empty-cart-tips {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .infoplus-empty-cart-tips li {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 10px 0;
+                border-bottom: 1px solid #f5f5f5;
+                font-size: 14px;
+                color: #444;
+                line-height: 1.5;
+            }
+
+            .infoplus-empty-cart-tips li:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+
+            .infoplus-empty-cart-tip-icon {
+                flex-shrink: 0;
+                width: 32px;
+                height: 32px;
+                background: rgba(233, 30, 140, 0.08);
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .infoplus-empty-cart-tip-icon svg {
+                width: 16px;
+                height: 16px;
+                stroke: #e91e8c;
+                fill: none;
+                stroke-width: 2;
+            }
+
+            /* Action buttons */
+            .infoplus-empty-cart-actions {
+                display: flex;
+                gap: 14px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .infoplus-empty-cart-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 14px 28px;
+                border-radius: 8px;
+                font-weight: 600;
+                font-size: 15px;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                cursor: pointer;
+                border: none;
+            }
+
+            .infoplus-empty-cart-btn svg {
+                width: 18px;
+                height: 18px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 2;
+            }
+
+            .infoplus-empty-cart-btn-primary {
+                background: var(--e-global-color-primary, #e91e8c);
+                color: #fff;
+            }
+
+            .infoplus-empty-cart-btn-primary:hover {
+                opacity: 0.88;
+                transform: translateY(-1px);
+                color: #fff;
+            }
+
+            .infoplus-empty-cart-btn-secondary {
+                background: transparent;
+                color: #e91e8c;
+                border: 1.5px solid #e91e8c;
+            }
+
+            .infoplus-empty-cart-btn-secondary:hover {
+                background: rgba(233, 30, 140, 0.06);
+                color: #e91e8c;
+            }
+
+            @media (max-width: 600px) {
+                .infoplus-empty-cart-actions {
+                    flex-direction: column;
+                }
+                .infoplus-empty-cart-btn {
+                    justify-content: center;
+                }
+            }
+        </style>
+
+        <div class="infoplus-empty-cart-wrap">
+
+            <!-- Hero -->
+            <div class="infoplus-empty-cart-hero">
+                <div class="infoplus-empty-cart-icon">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                </div>
+                <h2 class="infoplus-empty-cart-title">Ihr Warenkorb ist leer</h2>
+                <p class="infoplus-empty-cart-subtitle">Entdecken Sie unsere Produkte und fügen Sie Artikel hinzu.</p>
+            </div>
+
+            <!-- Tips card -->
+            <div class="infoplus-empty-cart-card">
+                <p class="infoplus-empty-cart-card-title">So geht's weiter</p>
+                <ul class="infoplus-empty-cart-tips">
+                    <li>
+                        <span class="infoplus-empty-cart-tip-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        </span>
+                        <span>Entdecken Sie unsere <a href="<?php echo esc_url($shop_url); ?>" style="color:#e91e8c;font-weight:600;">Namensschilder</a> und fügen Sie Artikel hinzu.</span>
+                    </li>
+                    <?php if ($logged_in): ?>
+                    <li>
+                        <span class="infoplus-empty-cart-tip-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </span>
+                        <span>Schauen Sie in Ihr <a href="<?php echo esc_url($account_url); ?>" style="color:#e91e8c;font-weight:600;">Dashboard</a> für Ihre Bestellhistorie und gespeicherten Konfigurationen.</span>
+                    </li>
+                    <?php else: ?>
+                    <li>
+                        <span class="infoplus-empty-cart-tip-icon">
+                            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </span>
+                        <span>Mit einem <a href="<?php echo esc_url($login_url); ?>" style="color:#e91e8c;font-weight:600;">kostenlosen Konto</a> können Sie Bestellungen verwalten, Konfigurationen speichern und schneller bestellen.</span>
+                    </li>
+                    <?php endif; ?>
+                    <li>
+                        <span class="infoplus-empty-cart-tip-icon">
+                            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </span>
+                        <span>Haben Sie Fragen? Kontaktieren Sie uns jederzeit — wir helfen gerne.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="infoplus-empty-cart-actions">
+                <a href="<?php echo esc_url($shop_url); ?>" class="infoplus-empty-cart-btn infoplus-empty-cart-btn-primary">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    Namensschilder entdecken
+                </a>
+                <?php if ($logged_in): ?>
+                <a href="<?php echo esc_url($account_url); ?>" class="infoplus-empty-cart-btn infoplus-empty-cart-btn-secondary">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
                     </svg>
                     Zum Dashboard
                 </a>
-                <a href="<?php echo esc_url(home_url('')); ?>" class="infoplus-thankyou-btn infoplus-thankyou-btn-secondary">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="9" cy="21" r="1"></circle>
-                        <circle cx="20" cy="21" r="1"></circle>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                <?php else: ?>
+                <a href="<?php echo esc_url($login_url); ?>" class="infoplus-empty-cart-btn infoplus-empty-cart-btn-secondary">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
                     </svg>
-                    Weiter einkaufen
+                    Anmelden / Registrieren
                 </a>
+                <?php endif; ?>
             </div>
+
         </div>
         <?php
     }

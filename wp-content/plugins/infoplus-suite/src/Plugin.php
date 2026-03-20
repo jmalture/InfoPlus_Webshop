@@ -11,6 +11,7 @@ use Infoplus\Suite\Modules\ElementorUserAvatar\Module as ElementorUserAvatarModu
 use Infoplus\Suite\Modules\UserDashboard\Module as UserDashboardModule;
 use Infoplus\Suite\Modules\UserOrders\Module as UserOrdersModule;
 use Infoplus\Suite\Modules\ProductDetailSuite\Module as ProductDetailSuiteModule;
+use Infoplus\Suite\Modules\Custom404\Module as Custom404Module;
 
 final class Plugin
 {
@@ -49,6 +50,7 @@ final class Plugin
         new UserDashboardModule(),       //Backed functionality for the user dashboard
          new UserOrdersModule(),        // Orders display and management (runs in background)
         new ProductDetailSuiteModule(), // Product detail page widgets (runs in background)
+        new Custom404Module(),          // Custom branded 404 page (runs in background)
     ];
 
         // Only these modules should have visible tabs in the dashboard
