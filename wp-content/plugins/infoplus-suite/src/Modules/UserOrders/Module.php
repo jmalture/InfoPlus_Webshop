@@ -63,6 +63,10 @@ final class Module implements ModuleInterface
         add_action('wp_head', [$this, 'enqueueCartStyles']);
         add_action('wp_head', [$this, 'enqueueCheckoutStyles']);
         add_shortcode('infoplus_empty_cart', [$this, 'emptyCartShortcode']);
+
+        // Brand the "Completed order" customer email with plugin colours
+        add_filter('woocommerce_email_styles',            [$this, 'brandCompletedOrderEmailStyles'], 10, 2);
+        add_action('woocommerce_email_before_order_table', [$this, 'renderCompletedOrderEmailBanner'], 10, 4);
     }
 
     private function assetUrl(string $path): string
@@ -1661,6 +1665,149 @@ final class Module implements ModuleInterface
             </div>
 
         </div>
+        <?php
+    }
+
+    // -------------------------------------------------------------------------
+    // Branded Completed-Order Email
+    // -------------------------------------------------------------------------
+
+    /**
+     * Inject brand-colour CSS into the "Abgeschlossene Bestellung" customer email.
+     *
+     * WooCommerce collects this CSS into a <style> block placed in the email <head>.
+     * We target only customer_completed_order to avoid changing every other WC email.
+     * The overrides here handle:
+     *  - Email header banner background → brand pink
+     *  - Primary action button → brand pink
+     *  - Section h2 headings → brand pink
+     *  - Grand-total row → brand pink + bold
+     *
+     * @param string        $css   Existing WooCommerce email CSS.
+     * @param \WC_Email|null $email The email being sent (null in some WC versions).
+     */
+    public function brandCompletedOrderEmailStyles(string $css, $email): string
+    {
+        if (!$email || $email->id !== 'customer_completed_order') {
+            return $css;
+        }
+
+        return $css . '
+
+            /* ── Infoplus brand overrides — completed-order email ─────── */
+
+            /* Header banner */
+            #template_header                      { background-color: #e91e8c !important; }
+            #template_header h1,
+            #template_header p                    { color: #ffffff !important; }
+
+            /* Section headings */
+            h2                                    { color: #e91e8c !important; }
+
+            /* Primary CTA button */
+            a.button {
+                background-color: #e91e8c !important;
+                border-color:     #e91e8c !important;
+                color:            #ffffff !important;
+            }
+
+            /* Order table links */
+            .order_item td.td a                   { color: #e91e8c; }
+
+            /* Grand total row (last tfoot row) */
+            tfoot tr:last-child td {
+                color:       #e91e8c !important;
+                font-weight: 700     !important;
+            }
+        ';
+    }
+
+    /**
+     * Render a branded success banner above the WooCommerce order table in the
+     * "Abgeschlossene Bestellung" customer email.
+     *
+     * Uses inline table-based layout for broad email-client compatibility.
+     * Fires for every email that has an order table; returns early unless this
+     * is the customer-facing completed-order notification.
+     *
+     * @param \WC_Abstract_Order $order          The order object.
+     * @param bool               $sent_to_admin  True when the copy is sent to the shop admin.
+     * @param bool               $plain_text     True for plain-text email variants.
+     * @param \WC_Email|null     $email          The WC_Email object (null in some versions).
+     */
+    public function renderCompletedOrderEmailBanner($order, bool $sent_to_admin, bool $plain_text, $email): void
+    {
+        // Plain-text emails don't support HTML; admin copies don't need the greeting
+        if ($plain_text || $sent_to_admin) {
+            return;
+        }
+
+        if (!$email || $email->id !== 'customer_completed_order') {
+            return;
+        }
+
+        $first_name  = $order->get_billing_first_name();
+        $order_num   = $order->get_order_number();
+        $account_url = home_url('/account/');
+        $shop_url    = home_url('/namensschilder/');
+        ?>
+        <!--[if mso]><table width="100%"><tr><td><![endif]-->
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"
+               style="margin-bottom:24px;">
+            <tr>
+                <td align="center"
+                    style="background-color:#fdf2f8;border-left:4px solid #e91e8c;
+                           border-radius:6px;padding:20px 24px;">
+
+                    <!-- Checkmark icon + headline -->
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                            <td width="36" valign="middle" style="padding-right:12px;">
+                                <div style="width:36px;height:36px;border-radius:50%;
+                                            background:#e91e8c;text-align:center;
+                                            line-height:36px;">
+                                    <span style="color:#fff;font-size:20px;font-weight:700;">✓</span>
+                                </div>
+                            </td>
+                            <td valign="middle">
+                                <p style="margin:0 0 4px;font-size:17px;font-weight:700;
+                                          color:#e91e8c;line-height:1.3;">
+                                    Bestellung #<?php echo esc_html($order_num); ?> abgeschlossen
+                                </p>
+                                <p style="margin:0;font-size:14px;color:#555;line-height:1.6;">
+                                    Hallo <?php echo esc_html($first_name); ?>, Ihre Bestellung wurde
+                                    erfolgreich abgeschlossen. Vielen Dank für Ihren Einkauf!
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+        <!--[if mso]></td></tr></table><![endif]-->
+
+        <!-- Quick-action links -->
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"
+               style="margin-bottom:28px;">
+            <tr>
+                <td align="center" style="padding:0 0 4px;">
+                    <a href="<?php echo esc_url($account_url); ?>"
+                       style="display:inline-block;background-color:#e91e8c;color:#fff;
+                              text-decoration:none;font-weight:600;font-size:14px;
+                              padding:10px 22px;border-radius:6px;margin-right:10px;">
+                        Zum Dashboard
+                    </a>
+                    <a href="<?php echo esc_url($shop_url); ?>"
+                       style="display:inline-block;background-color:#fff;color:#e91e8c;
+                              text-decoration:none;font-weight:600;font-size:14px;
+                              padding:10px 22px;border-radius:6px;
+                              border:2px solid #e91e8c;">
+                        Weiter einkaufen
+                    </a>
+                </td>
+            </tr>
+        </table>
         <?php
     }
 }
