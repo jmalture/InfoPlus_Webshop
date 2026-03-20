@@ -60,6 +60,7 @@ final class Module implements ModuleInterface
         //  - Manual placement shortcode: [infoplus_empty_cart]
         add_action('woocommerce_cart_is_empty', [$this, 'renderEmptyCartContent'], 1);
         add_filter('render_block', [$this, 'filterWooCartBlock'], 10, 2);
+        add_action('wp_head', [$this, 'enqueueCartStyles']);
         add_shortcode('infoplus_empty_cart', [$this, 'emptyCartShortcode']);
     }
 
@@ -1128,6 +1129,77 @@ final class Module implements ModuleInterface
     // -------------------------------------------------------------------------
     // Empty Cart
     // -------------------------------------------------------------------------
+
+    /**
+     * Inject brand-consistent styles into the WooCommerce Blocks cart page.
+     * Fires on wp_head, but only outputs anything on the cart page.
+     * Overrides the default dark WordPress button styles with the brand pink.
+     */
+    public function enqueueCartStyles(): void
+    {
+        if (!function_exists('is_cart') || !is_cart()) {
+            return;
+        }
+        ?>
+        <style id="infoplus-cart-styles">
+        /* ── Buttons (overrides WP default #32373c) ─────────────────────── */
+        .wp-block-woocommerce-cart .wp-element-button,
+        .wp-block-woocommerce-cart .wp-block-button__link,
+        .wp-block-woocommerce-cart .wc-block-cart__submit-button,
+        .wp-block-woocommerce-cart .wc-block-components-button:not(.is-link) {
+            background-color: #e91e8c !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            border: none !important;
+            font-weight: 600 !important;
+            padding: 14px 28px !important;
+            transition: background-color 0.2s !important;
+        }
+        .wp-block-woocommerce-cart .wp-element-button:hover,
+        .wp-block-woocommerce-cart .wc-block-cart__submit-button:hover,
+        .wp-block-woocommerce-cart .wc-block-components-button:not(.is-link):hover {
+            background-color: #d91a7e !important;
+            color: #fff !important;
+        }
+
+        /* ── Links & coupon toggle ───────────────────────────────────────── */
+        .wp-block-woocommerce-cart a,
+        .wp-block-woocommerce-cart .wc-block-components-totals-coupon__button,
+        .wp-block-woocommerce-cart .wc-block-components-panel__button {
+            color: #e91e8c !important;
+        }
+        .wp-block-woocommerce-cart a:hover {
+            color: #d91a7e !important;
+        }
+
+        /* ── Product name ────────────────────────────────────────────────── */
+        .wp-block-woocommerce-cart .wc-block-cart-item__product-name,
+        .wp-block-woocommerce-cart .wc-block-cart-item__product-name a {
+            color: #e91e8c !important;
+            font-weight: 600;
+        }
+
+        /* ── Grand total value ───────────────────────────────────────────── */
+        .wp-block-woocommerce-cart .wc-block-components-totals-footer-item
+            .wc-block-components-totals-item__value {
+            color: #e91e8c !important;
+            font-weight: 700 !important;
+        }
+
+        /* ── Remove item link ────────────────────────────────────────────── */
+        .wp-block-woocommerce-cart .wc-block-cart-item__remove-link {
+            color: #e91e8c !important;
+        }
+
+        /* ── Section headings ────────────────────────────────────────────── */
+        .wp-block-woocommerce-cart .wc-block-components-order-summary__title,
+        .wp-block-woocommerce-cart .wp-block-woocommerce-cart-order-summary-heading-block {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        </style>
+        <?php
+    }
 
     /**
      * render_block filter — intercepts the Gutenberg-based WooCommerce cart block.

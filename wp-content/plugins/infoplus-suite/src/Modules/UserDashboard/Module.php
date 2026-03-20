@@ -31,6 +31,9 @@ final class Module implements ModuleInterface
         
         // Register shortcode for login guard
         add_shortcode('infoplus_login_guard', [$this, 'renderLoginGuard']);
+
+        // Register shortcode for full profile settings form
+        add_shortcode('infoplus_profile_settings', [$this, 'renderProfileSettings']);
     }
 
     private function assetUrl(string $path): string
@@ -139,52 +142,103 @@ final class Module implements ModuleInterface
             return new \WP_Error('user_not_found', 'Benutzer nicht gefunden', ['status' => 404]);
         }
 
+        // Company: prefer WC billing_company, fall back to legacy infoplus_company
+        $company = get_user_meta($user_id, 'billing_company', true)
+                ?: get_user_meta($user_id, 'infoplus_company', true);
+
         return new \WP_REST_Response([
             'success' => true,
             'data' => [
-                'user_name' => $user->display_name,
-                'user_email' => $user->user_email,
-                'user_company' => get_user_meta($user_id, 'infoplus_company', true),
-                'avatar_url' => $this->getUserAvatarUrl($user_id),
+                // Legacy fields kept for backward compat with old Elementor form
+                'user_name'    => $user->display_name,
+                'user_email'   => $user->user_email,
+                'user_company' => $company,
+                'avatar_url'   => $this->getUserAvatarUrl($user_id),
+                // Extended fields for [infoplus_profile_settings] shortcode
+                'first_name'   => $user->first_name,
+                'last_name'    => $user->last_name,
+                'phone'        => get_user_meta($user_id, 'billing_phone', true),
+                'company'      => $company,
+                'vat_id'       => get_user_meta($user_id, 'infoplus_vat_id', true),
+                'address_1'    => get_user_meta($user_id, 'billing_address_1', true),
+                'address_2'    => get_user_meta($user_id, 'billing_address_2', true),
+                'postcode'     => get_user_meta($user_id, 'billing_postcode', true),
+                'city'         => get_user_meta($user_id, 'billing_city', true),
+                'country'      => get_user_meta($user_id, 'billing_country', true),
             ]
         ], 200);
     }
 
     /**
-     * Update user profile information
+     * Update user profile information.
+     * Accepts both the legacy Elementor-form fields (user_name, user_email, user_company)
+     * and the new extended fields from [infoplus_profile_settings] shortcode.
      */
     public function updateUserProfile(\WP_REST_Request $request)
     {
         $user_id = get_current_user_id();
-        
-        $name = sanitize_text_field($request->get_param('user_name'));
-        $email = sanitize_email($request->get_param('user_email'));
-        $company = sanitize_text_field($request->get_param('user_company'));
 
-        // Validate email
-        if (!is_email($email)) {
+        // ── Email (required by both old and new form) ────────────────────────
+        $email = sanitize_email(
+            $request->get_param('user_email') ?: $request->get_param('email') ?: ''
+        );
+
+        if ($email && !is_email($email)) {
             return new \WP_Error('invalid_email', 'Ungültige E-Mail-Adresse', ['status' => 400]);
         }
 
-        // Check if email is already taken by another user
-        $email_exists = email_exists($email);
-        if ($email_exists && $email_exists != $user_id) {
-            return new \WP_Error('email_exists', 'Diese E-Mail-Adresse wird bereits verwendet', ['status' => 400]);
+        if ($email) {
+            $email_exists = email_exists($email);
+            if ($email_exists && $email_exists != $user_id) {
+                return new \WP_Error('email_exists', 'Diese E-Mail-Adresse wird bereits verwendet', ['status' => 400]);
+            }
         }
 
-        // Update user data
-        $result = wp_update_user([
-            'ID' => $user_id,
-            'display_name' => $name,
-            'user_email' => $email,
-        ]);
+        // ── Core WP user fields ───────────────────────────────────────────────
+        $first_name   = sanitize_text_field($request->get_param('first_name') ?? '');
+        $last_name    = sanitize_text_field($request->get_param('last_name')  ?? '');
+        // Build display_name from first+last if available, else use legacy user_name
+        $display_name = trim($first_name . ' ' . $last_name)
+                     ?: sanitize_text_field($request->get_param('user_name') ?? '');
 
+        $user_data = ['ID' => $user_id];
+        if ($display_name)  $user_data['display_name'] = $display_name;
+        if ($first_name)    $user_data['first_name']   = $first_name;
+        if ($last_name)     $user_data['last_name']    = $last_name;
+        if ($email)         $user_data['user_email']   = $email;
+
+        $result = wp_update_user($user_data);
         if (is_wp_error($result)) {
             return new \WP_Error('update_failed', $result->get_error_message(), ['status' => 500]);
         }
 
-        // Update company (custom meta)
-        update_user_meta($user_id, 'infoplus_company', $company);
+        // ── WooCommerce billing meta (auto-populates checkout) ────────────────
+        $wc_fields = [
+            'billing_phone'     => $request->get_param('phone'),
+            'billing_company'   => $request->get_param('company')
+                                ?: $request->get_param('user_company'),  // legacy compat
+            'billing_address_1' => $request->get_param('address_1'),
+            'billing_address_2' => $request->get_param('address_2'),
+            'billing_postcode'  => $request->get_param('postcode'),
+            'billing_city'      => $request->get_param('city'),
+            'billing_country'   => $request->get_param('country'),
+            // Mirror first/last into billing so WC checkout is fully pre-filled
+            'billing_first_name' => $first_name,
+            'billing_last_name'  => $last_name,
+        ];
+
+        foreach ($wc_fields as $meta_key => $value) {
+            if ($value !== null) {
+                update_user_meta($user_id, $meta_key, sanitize_text_field((string) $value));
+            }
+        }
+
+        // ── Custom Infoplus meta ──────────────────────────────────────────────
+        $vat_id  = $request->get_param('vat_id');
+        $company = $request->get_param('company') ?: $request->get_param('user_company');
+
+        if ($vat_id  !== null) update_user_meta($user_id, 'infoplus_vat_id',  sanitize_text_field($vat_id));
+        if ($company !== null) update_user_meta($user_id, 'infoplus_company',  sanitize_text_field($company)); // BC
 
         return new \WP_REST_Response([
             'success' => true,
@@ -380,6 +434,334 @@ final class Module implements ModuleInterface
                 exit;
             }
         }
+    }
+
+    /**
+     * Render the full profile-settings form.
+     * Shortcode: [infoplus_profile_settings]
+     *
+     * Sections:
+     *  1. Profilbild       — avatar upload (reuses existing JS #infoplus-avatar-* IDs)
+     *  2. Persönliche Daten — Vorname, Nachname, E-Mail, Telefon
+     *  3. Firmendaten       — Firmenname, Umsatzsteuer-ID
+     *  4. Adresse           — Straße, Adresszusatz, PLZ, Stadt, Land (WC dropdown)
+     *  5. Passwort ändern   — reuses existing JS #infoplus_password_form
+     *
+     * JS in user-dashboard.js pre-populates via GET /user/profile and handles submit
+     * via POST /user/profile using the #infoplus-profile-settings-form ID.
+     */
+    public function renderProfileSettings(): string
+    {
+        if (!is_user_logged_in()) {
+            return '';
+        }
+
+        $countries = function_exists('WC') ? WC()->countries->get_countries() : [];
+
+        ob_start();
+        ?>
+        <style>
+        .infoplus-settings-wrap {
+            font-family: inherit;
+        }
+        .infoplus-settings-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .infoplus-settings-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .infoplus-settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .infoplus-settings-grid.cols-1 {
+            grid-template-columns: 1fr;
+        }
+        .infoplus-settings-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .infoplus-settings-field.full-width {
+            grid-column: 1 / -1;
+        }
+        .infoplus-settings-field label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #555;
+            letter-spacing: 0.3px;
+        }
+        .infoplus-settings-field input,
+        .infoplus-settings-field select {
+            padding: 10px 14px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #1a1a1a;
+            background: #fafafa;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .infoplus-settings-field input:focus,
+        .infoplus-settings-field select:focus {
+            outline: none;
+            border-color: #e91e8c;
+            box-shadow: 0 0 0 3px rgba(233,30,140,0.1);
+            background: #fff;
+        }
+        .infoplus-settings-field input::placeholder {
+            color: #bbb;
+        }
+        .infoplus-settings-save-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 11px 28px;
+            background: #e91e8c;
+            color: #fff !important;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+        .infoplus-settings-save-btn:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+        .infoplus-settings-save-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+            transform: none;
+        }
+        .infoplus-settings-feedback {
+            margin-top: 14px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+        .infoplus-settings-feedback.success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        .infoplus-settings-feedback.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        /* Avatar */
+        .infoplus-avatar-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        #infoplus-avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #f0f0f0;
+        }
+        .infoplus-avatar-actions p {
+            font-size: 0.8rem;
+            color: #999;
+            margin: 6px 0 0 0;
+        }
+        #infoplus-avatar-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            background: #e91e8c;
+            color: #fff !important;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        #infoplus-avatar-btn:hover { opacity: 0.88; }
+        #infoplus-avatar-upload { display: none; }
+
+        @media (max-width: 640px) {
+            .infoplus-settings-card { padding: 20px 16px; }
+            .infoplus-settings-grid { grid-template-columns: 1fr; }
+        }
+        </style>
+
+        <div class="infoplus-settings-wrap">
+
+            <!-- 1. Profilbild -->
+            <div class="infoplus-settings-card">
+                <h3>Profilbild</h3>
+                <div class="infoplus-avatar-row">
+                    <img id="infoplus-avatar-preview" src="" alt="Profilbild">
+                    <div class="infoplus-avatar-actions">
+                        <button type="button" id="infoplus-avatar-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            Neues Bild hochladen
+                        </button>
+                        <input type="file" id="infoplus-avatar-upload" accept="image/jpeg,image/png,image/gif">
+                        <p>JPG, PNG oder GIF. Maximal 5 MB.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2–4. Main profile form -->
+            <form id="infoplus-profile-settings-form" novalidate>
+
+                <!-- 2. Persönliche Daten -->
+                <div class="infoplus-settings-card">
+                    <h3>Persönliche Daten</h3>
+                    <div class="infoplus-settings-grid">
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-first_name">Vorname</label>
+                            <input type="text" id="infoplus-field-first_name" name="first_name"
+                                   placeholder="Max" autocomplete="given-name">
+                        </div>
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-last_name">Nachname</label>
+                            <input type="text" id="infoplus-field-last_name" name="last_name"
+                                   placeholder="Mustermann" autocomplete="family-name">
+                        </div>
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-email">E-Mail-Adresse</label>
+                            <input type="email" id="infoplus-field-email" name="email"
+                                   placeholder="max@firma.de" autocomplete="email">
+                        </div>
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-phone">Telefon</label>
+                            <input type="tel" id="infoplus-field-phone" name="phone"
+                                   placeholder="+49 30 123456" autocomplete="tel">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Firmendaten -->
+                <div class="infoplus-settings-card">
+                    <h3>Firmendaten</h3>
+                    <div class="infoplus-settings-grid">
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-company">Firmenname</label>
+                            <input type="text" id="infoplus-field-company" name="company"
+                                   placeholder="Muster GmbH" autocomplete="organization">
+                        </div>
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-vat_id">Umsatzsteuer-ID</label>
+                            <input type="text" id="infoplus-field-vat_id" name="vat_id"
+                                   placeholder="DE123456789">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Adresse -->
+                <div class="infoplus-settings-card">
+                    <h3>Rechnungs- &amp; Lieferadresse</h3>
+                    <div class="infoplus-settings-grid">
+                        <div class="infoplus-settings-field full-width">
+                            <label for="infoplus-field-address_1">Straße und Hausnummer</label>
+                            <input type="text" id="infoplus-field-address_1" name="address_1"
+                                   placeholder="Musterstraße 42" autocomplete="address-line1">
+                        </div>
+                        <div class="infoplus-settings-field full-width">
+                            <label for="infoplus-field-address_2">Adresszusatz <span style="font-weight:400;color:#999">(optional)</span></label>
+                            <input type="text" id="infoplus-field-address_2" name="address_2"
+                                   placeholder="c/o, Etage, Gebäude …" autocomplete="address-line2">
+                        </div>
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-postcode">Postleitzahl</label>
+                            <input type="text" id="infoplus-field-postcode" name="postcode"
+                                   placeholder="10115" autocomplete="postal-code">
+                        </div>
+                        <div class="infoplus-settings-field">
+                            <label for="infoplus-field-city">Stadt</label>
+                            <input type="text" id="infoplus-field-city" name="city"
+                                   placeholder="Berlin" autocomplete="address-level2">
+                        </div>
+                        <div class="infoplus-settings-field full-width">
+                            <label for="infoplus-field-country">Land</label>
+                            <select id="infoplus-field-country" name="country" autocomplete="country">
+                                <option value="">— Land auswählen —</option>
+                                <?php foreach ($countries as $code => $label): ?>
+                                <option value="<?php echo esc_attr($code); ?>">
+                                    <?php echo esc_html($label); ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="infoplus-settings-save-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Änderungen speichern
+                </button>
+
+                <div id="infoplus-settings-feedback" class="infoplus-settings-feedback"></div>
+
+            </form>
+
+            <!-- 5. Passwort ändern -->
+            <form id="infoplus_password_form" class="infoplus-settings-card" novalidate>
+                <h3>Passwort ändern</h3>
+                <div class="infoplus-settings-grid cols-1">
+                    <div class="infoplus-settings-field">
+                        <label for="infoplus-pwd-current">Aktuelles Passwort</label>
+                        <input type="password" id="infoplus-pwd-current"
+                               name="form_fields[current_password]"
+                               placeholder="Aktuelles Passwort eingeben" autocomplete="current-password">
+                    </div>
+                    <div class="infoplus-settings-field">
+                        <label for="infoplus-pwd-new">Neues Passwort</label>
+                        <input type="password" id="infoplus-pwd-new"
+                               name="form_fields[new_password]"
+                               placeholder="Neues Passwort eingeben" autocomplete="new-password">
+                    </div>
+                    <div class="infoplus-settings-field">
+                        <label for="infoplus-pwd-confirm">Neues Passwort bestätigen</label>
+                        <input type="password" id="infoplus-pwd-confirm"
+                               name="form_fields[confirm_password]"
+                               placeholder="Neues Passwort bestätigen" autocomplete="new-password">
+                    </div>
+                </div>
+                <button type="submit" class="infoplus-settings-save-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Passwort aktualisieren
+                </button>
+                <div id="infoplus-password-feedback" class="infoplus-settings-feedback"></div>
+            </form>
+
+        </div>
+        <?php
+        return ob_get_clean();
     }
 
     /**

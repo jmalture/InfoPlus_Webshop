@@ -16,13 +16,14 @@
             this.initialized = true;
             
             this.loadUserData();
-            this.bindProfileForm();
+            this.bindProfileForm();    // legacy Elementor form
+            this.bindSettingsForm();   // new [infoplus_profile_settings] shortcode form
             this.bindPasswordForm();
             this.bindAvatarUpload();
         },
 
         /**
-         * Load current user data and populate forms
+         * Load current user data and populate all forms
          */
         loadUserData: function() {
             $.ajax({
@@ -32,11 +33,32 @@
                     xhr.setRequestHeader('X-WP-Nonce', infoplusUserDashboard.nonce);
                 },
                 success: function(response) {
-                    if (response.success && response.data) {
-                        // Populate profile form
-                        $('input[name="form_fields[user_name]"]').val(response.data.user_name);
-                        $('input[name="form_fields[user_email]"]').val(response.data.user_email);
-                        $('input[name="form_fields[user_company]"]').val(response.data.user_company || '');
+                    if (!response.success || !response.data) return;
+                    const d = response.data;
+
+                    // ── Legacy Elementor form fields ──────────────────────────
+                    $('input[name="form_fields[user_name]"]').val(d.user_name   || '');
+                    $('input[name="form_fields[user_email]"]').val(d.user_email || '');
+                    $('input[name="form_fields[user_company]"]').val(d.user_company || '');
+
+                    // ── [infoplus_profile_settings] shortcode fields ──────────
+                    $('#infoplus-field-first_name').val(d.first_name || '');
+                    $('#infoplus-field-last_name').val(d.last_name   || '');
+                    $('#infoplus-field-email').val(d.user_email      || '');
+                    $('#infoplus-field-phone').val(d.phone           || '');
+                    $('#infoplus-field-company').val(d.company       || '');
+                    $('#infoplus-field-vat_id').val(d.vat_id         || '');
+                    $('#infoplus-field-address_1').val(d.address_1   || '');
+                    $('#infoplus-field-address_2').val(d.address_2   || '');
+                    $('#infoplus-field-postcode').val(d.postcode     || '');
+                    $('#infoplus-field-city').val(d.city             || '');
+                    if (d.country) {
+                        $('#infoplus-field-country').val(d.country);
+                    }
+
+                    // Avatar preview
+                    if (d.avatar_url) {
+                        $('#infoplus-avatar-preview').attr('src', d.avatar_url);
                     }
                 },
                 error: function(xhr) {
@@ -130,6 +152,74 @@
         },
 
         /**
+         * Bind the [infoplus_profile_settings] shortcode form (#infoplus-profile-settings-form).
+         * Collects all field values and POSTs to /user/profile.
+         * Feedback shown inline rather than via the global toast, so the user can see it
+         * without scrolling.
+         */
+        bindSettingsForm: function() {
+            const self = this;
+            const $form = $('#infoplus-profile-settings-form');
+
+            if ($form.length === 0) {
+                return; // Shortcode not on this page — no-op
+            }
+
+            $form.on('submit', function(e) {
+                e.preventDefault();
+
+                const $btn      = $form.find('.infoplus-settings-save-btn');
+                const $feedback = $('#infoplus-settings-feedback');
+                const origText  = $btn.html();
+
+                $btn.prop('disabled', true).html('Wird gespeichert …');
+                $feedback.hide().removeClass('success error');
+
+                const payload = {
+                    first_name : $('#infoplus-field-first_name').val().trim(),
+                    last_name  : $('#infoplus-field-last_name').val().trim(),
+                    email      : $('#infoplus-field-email').val().trim(),
+                    phone      : $('#infoplus-field-phone').val().trim(),
+                    company    : $('#infoplus-field-company').val().trim(),
+                    vat_id     : $('#infoplus-field-vat_id').val().trim(),
+                    address_1  : $('#infoplus-field-address_1').val().trim(),
+                    address_2  : $('#infoplus-field-address_2').val().trim(),
+                    postcode   : $('#infoplus-field-postcode').val().trim(),
+                    city       : $('#infoplus-field-city').val().trim(),
+                    country    : $('#infoplus-field-country').val(),
+                };
+
+                $.ajax({
+                    url: infoplusUserDashboard.restUrl + 'user/profile',
+                    method: 'POST',
+                    data: payload,
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader('X-WP-Nonce', infoplusUserDashboard.nonce);
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $feedback
+                                .addClass('success')
+                                .text(response.message || 'Profil erfolgreich aktualisiert!')
+                                .show();
+                            // Auto-hide after 4 s
+                            setTimeout(function() { $feedback.fadeOut(); }, 4000);
+                        }
+                    },
+                    error: function(xhr) {
+                        const msg = xhr.responseJSON && xhr.responseJSON.message
+                            ? xhr.responseJSON.message
+                            : 'Speichern fehlgeschlagen. Bitte erneut versuchen.';
+                        $feedback.addClass('error').text(msg).show();
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html(origText);
+                    }
+                });
+            });
+        },
+
+        /**
          * Bind password form submission
          */
         bindPasswordForm: function() {
@@ -173,10 +263,13 @@
          * Change password via AJAX
          */
         changePassword: function(data) {
-            const $submitBtn = $('#infoplus_password_form').find('button[type="submit"]');
-            const originalText = $submitBtn.text();
-            
+            const $form      = $('#infoplus_password_form');
+            const $submitBtn = $form.find('button[type="submit"]');
+            const originalHtml = $submitBtn.html();
+            const $feedback  = $('#infoplus-password-feedback');
+
             $submitBtn.prop('disabled', true).text('Aktualisierung...');
+            if ($feedback.length) $feedback.hide().removeClass('success error');
 
             $.ajax({
                 url: infoplusUserDashboard.restUrl + 'user/password',
@@ -187,19 +280,29 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        UserDashboard.showMessage('success', response.message || 'Passwort erfolgreich geändert!');
+                        const msg = response.message || 'Passwort erfolgreich geändert!';
+                        if ($feedback.length) {
+                            $feedback.addClass('success').text(msg).show();
+                            setTimeout(function() { $feedback.fadeOut(); }, 4000);
+                        } else {
+                            UserDashboard.showMessage('success', msg);
+                        }
                         // Clear password fields
-                        $('#infoplus_password_form').find('input[type="password"]').val('');
+                        $form.find('input[type="password"]').val('');
                     }
                 },
                 error: function(xhr) {
-                    const error = xhr.responseJSON && xhr.responseJSON.message 
-                        ? xhr.responseJSON.message 
+                    const error = xhr.responseJSON && xhr.responseJSON.message
+                        ? xhr.responseJSON.message
                         : 'Passwortänderung fehlgeschlagen';
-                    UserDashboard.showMessage('error', error);
+                    if ($feedback.length) {
+                        $feedback.addClass('error').text(error).show();
+                    } else {
+                        UserDashboard.showMessage('error', error);
+                    }
                 },
                 complete: function() {
-                    $submitBtn.prop('disabled', false).text(originalText);
+                    $submitBtn.prop('disabled', false).html(originalHtml);
                 }
             });
         },
