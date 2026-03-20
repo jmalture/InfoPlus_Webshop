@@ -61,6 +61,7 @@ final class Module implements ModuleInterface
         add_action('woocommerce_cart_is_empty', [$this, 'renderEmptyCartContent'], 1);
         add_filter('render_block', [$this, 'filterWooCartBlock'], 10, 2);
         add_action('wp_head', [$this, 'enqueueCartStyles']);
+        add_action('wp_head', [$this, 'enqueueCheckoutStyles']);
         add_shortcode('infoplus_empty_cart', [$this, 'emptyCartShortcode']);
     }
 
@@ -1196,6 +1197,95 @@ final class Module implements ModuleInterface
         .wp-block-woocommerce-cart .wp-block-woocommerce-cart-order-summary-heading-block {
             font-weight: 700;
             letter-spacing: 0.5px;
+        }
+        </style>
+        <?php
+    }
+
+    /**
+     * Inject brand-consistent styles into the WooCommerce Blocks checkout page.
+     * Fires on wp_head, outputs only on the checkout page.
+     * Overrides the theme's transparent/outlined button style with solid pink.
+     */
+    public function enqueueCheckoutStyles(): void
+    {
+        if (!function_exists('is_checkout') || !is_checkout()) {
+            return;
+        }
+        ?>
+        <style id="infoplus-checkout-styles">
+        /* ── Primary submit button ("Jetzt kaufen") ─────────────────────── */
+        /* Override both the theme [type=submit] rule AND WP element buttons */
+        .wp-block-woocommerce-checkout .wp-element-button,
+        .wp-block-woocommerce-checkout .wp-block-button__link,
+        .wp-block-woocommerce-checkout .wc-block-components-checkout-step__submit,
+        .wp-block-woocommerce-checkout .wc-block-components-button:not(.is-link),
+        .wp-block-woocommerce-checkout [type="submit"],
+        .wp-block-woocommerce-checkout button[type="submit"] {
+            background-color: #e91e8c !important;
+            border: none !important;
+            border-radius: 8px !important;
+            color: #fff !important;
+            font-weight: 600 !important;
+            padding: 14px 28px !important;
+            transition: background-color 0.2s !important;
+            text-align: center !important;
+        }
+        .wp-block-woocommerce-checkout .wp-element-button:hover,
+        .wp-block-woocommerce-checkout .wc-block-components-checkout-step__submit:hover,
+        .wp-block-woocommerce-checkout .wc-block-components-button:not(.is-link):hover,
+        .wp-block-woocommerce-checkout [type="submit"]:hover {
+            background-color: #d91a7e !important;
+            color: #fff !important;
+            border: none !important;
+        }
+
+        /* ── "Zurück zum Warenkorb" + all other links ───────────────────── */
+        .wp-block-woocommerce-checkout a,
+        .wp-block-woocommerce-checkout .wc-block-components-checkout-return-to-cart-button {
+            color: #e91e8c !important;
+        }
+        .wp-block-woocommerce-checkout a:hover {
+            color: #d91a7e !important;
+        }
+
+        /* ── "Bearbeiten" link inside address block ─────────────────────── */
+        .wp-block-woocommerce-checkout .wc-block-components-address-card__edit {
+            color: #e91e8c !important;
+            font-weight: 500;
+        }
+
+        /* ── Radio/checkbox accent (selected payment method border) ────── */
+        .wp-block-woocommerce-checkout .wc-block-components-radio-control__input:checked {
+            accent-color: #e91e8c;
+            border-color: #e91e8c !important;
+        }
+        .wp-block-woocommerce-checkout
+            .wc-block-components-radio-control-accordion-option--checked {
+            border-color: #e91e8c !important;
+            box-shadow: 0 0 0 1px #e91e8c !important;
+        }
+
+        /* ── "Gutscheine hinzufügen" toggle ─────────────────────────────── */
+        .wp-block-woocommerce-checkout .wc-block-components-panel__button,
+        .wp-block-woocommerce-checkout .wc-block-components-totals-coupon__button {
+            color: #e91e8c !important;
+        }
+
+        /* ── Totals: grand total value ──────────────────────────────────── */
+        .wp-block-woocommerce-checkout .wc-block-components-totals-footer-item
+            .wc-block-components-totals-item__value {
+            color: #e91e8c !important;
+            font-weight: 700 !important;
+        }
+
+        /* ── Input focus ring ────────────────────────────────────────────── */
+        .wp-block-woocommerce-checkout input:focus,
+        .wp-block-woocommerce-checkout select:focus,
+        .wp-block-woocommerce-checkout textarea:focus {
+            outline: none !important;
+            border-color: #e91e8c !important;
+            box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.15) !important;
         }
         </style>
         <?php
