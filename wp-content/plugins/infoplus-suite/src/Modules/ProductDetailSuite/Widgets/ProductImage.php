@@ -346,12 +346,13 @@ class ProductImage extends Widget_Base
 
         $product_id = $product->get_id();
 
-        foreach ($product->get_available_variations() as $variation) {
-            $model_slug = $variation['attributes']['attribute_pa_model'] ?? '';
-            if (!$model_slug) {
-                continue;
-            }
+        // Get the first model term assigned to this product — no need to load all variations
+        $model_terms = wc_get_product_terms($product_id, 'pa_model', ['fields' => 'slugs']);
+        if (empty($model_terms)) {
+            return [];
+        }
 
+        foreach ($model_terms as $model_slug) {
             $gallery = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermGalleryUrls(
                 $product_id,
                 'pa_model',

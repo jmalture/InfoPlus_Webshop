@@ -15,7 +15,7 @@ use Infoplus\Suite\Modules\Custom404\Module as Custom404Module;
 
 final class Plugin
 {
-    public const VERSION = '0.9.93';
+    public const VERSION = '0.10.24';
 
     private string $file;
     private array $modules = [];

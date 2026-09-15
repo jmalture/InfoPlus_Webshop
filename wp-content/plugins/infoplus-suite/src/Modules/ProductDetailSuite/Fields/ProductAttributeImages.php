@@ -198,6 +198,7 @@ class ProductAttributeImages
      */
     private function renderIfeTab(int $product_id): void
     {
+        $is_admin          = current_user_can('manage_options');
         $uuid_value        = get_post_meta($product_id, '_ife_uuid', true);
         $unique_name_value = get_post_meta($product_id, '_ife_unique_text_name', true);
         $print_api_value   = get_post_meta($product_id, '_ife_print_api_id', true);
@@ -211,40 +212,58 @@ class ProductAttributeImages
         ?>
         <div class="infoplus-ife-panel">
 
-            <!-- UUID (locked) -->
+            <!-- UUID (admin-lockable) -->
             <p class="form-field infoplus-locked-field">
                 <label for="ife_uuid"><?php esc_html_e('UUID', 'infoplus-suite'); ?></label>
                 <span class="locked-field-wrap">
                     <input type="text" id="ife_uuid" name="ife_uuid"
                            value="<?php echo esc_attr($uuid_value); ?>"
                            readonly="readonly" style="width:100%;max-width:400px;" />
-                    <span class="dashicons dashicons-lock infoplus-lock-icon"></span>
+                    <button type="button"
+                            class="infoplus-ife-lock-btn locked"
+                            data-target="ife_uuid"
+                            title="<?php echo $is_admin ? esc_attr__('Click to unlock and edit', 'infoplus-suite') : esc_attr__('Only admins can edit this field', 'infoplus-suite'); ?>"
+                            <?php echo $is_admin ? '' : 'disabled'; ?>>
+                        <span class="dashicons dashicons-lock"></span>
+                    </button>
                 </span>
                 <span class="dashicons dashicons-editor-help woocommerce-help-tip"
                       data-tip="<?php esc_attr_e('This field is managed by the IFE sync system and cannot be edited manually.', 'infoplus-suite'); ?>"></span>
             </p>
 
-            <!-- Einzigart. Name (locked) -->
+            <!-- Einzigart. Name (admin-lockable) -->
             <p class="form-field infoplus-locked-field">
                 <label for="ife_unique_text_name"><?php esc_html_e('Einzigart. Name', 'infoplus-suite'); ?></label>
                 <span class="locked-field-wrap">
                     <input type="text" id="ife_unique_text_name" name="ife_unique_text_name"
                            value="<?php echo esc_attr($unique_name_value); ?>"
                            readonly="readonly" style="width:100%;max-width:400px;" />
-                    <span class="dashicons dashicons-lock infoplus-lock-icon"></span>
+                    <button type="button"
+                            class="infoplus-ife-lock-btn locked"
+                            data-target="ife_unique_text_name"
+                            title="<?php echo $is_admin ? esc_attr__('Click to unlock and edit', 'infoplus-suite') : esc_attr__('Only admins can edit this field', 'infoplus-suite'); ?>"
+                            <?php echo $is_admin ? '' : 'disabled'; ?>>
+                        <span class="dashicons dashicons-lock"></span>
+                    </button>
                 </span>
                 <span class="dashicons dashicons-editor-help woocommerce-help-tip"
                       data-tip="<?php esc_attr_e('Unique display name used by the editor/system. Managed by IFE sync.', 'infoplus-suite'); ?>"></span>
             </p>
 
-            <!-- Print API ID (locked) -->
+            <!-- Print API ID (admin-lockable) -->
             <p class="form-field infoplus-locked-field">
                 <label for="ife_print_api_id"><?php esc_html_e('Print API ID', 'infoplus-suite'); ?></label>
                 <span class="locked-field-wrap">
                     <input type="text" id="ife_print_api_id" name="ife_print_api_id"
                            value="<?php echo esc_attr($print_api_value); ?>"
                            readonly="readonly" style="width:100%;max-width:400px;" />
-                    <span class="dashicons dashicons-lock infoplus-lock-icon"></span>
+                    <button type="button"
+                            class="infoplus-ife-lock-btn locked"
+                            data-target="ife_print_api_id"
+                            title="<?php echo $is_admin ? esc_attr__('Click to unlock and edit', 'infoplus-suite') : esc_attr__('Only admins can edit this field', 'infoplus-suite'); ?>"
+                            <?php echo $is_admin ? '' : 'disabled'; ?>>
+                        <span class="dashicons dashicons-lock"></span>
+                    </button>
                 </span>
                 <span class="dashicons dashicons-editor-help woocommerce-help-tip"
                       data-tip="<?php esc_attr_e('Print API ID for this product. Managed by IFE sync.', 'infoplus-suite'); ?>"></span>
@@ -1003,6 +1022,10 @@ class ProductAttributeImages
                 'variations'             => $variations_data,
                 'defaultVariationId'     => (int) get_post_meta($post_id, self::META_KEY_DEFAULT_VARIATION, true),
                 'modelDefaultVariations' => is_array($model_defaults) ? $model_defaults : (object) [],
+            ]);
+            wp_localize_script('infoplus-product-attribute-images-admin', 'infoplusI18n', [
+                'unlockField' => __('Click to unlock and edit', 'infoplus-suite'),
+                'lockField'   => __('Click to lock', 'infoplus-suite'),
             ]);
         }
     }

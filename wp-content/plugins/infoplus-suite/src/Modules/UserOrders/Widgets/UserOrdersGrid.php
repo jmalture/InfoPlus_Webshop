@@ -727,6 +727,7 @@ class UserOrdersGrid extends Widget_Base
             'limit' => -1,
             'orderby' => 'date',
             'order' => 'DESC',
+            'status' => ['wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'],
         ]);
 
         // Get status colors from settings

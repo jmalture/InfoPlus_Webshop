@@ -1,21 +1,51 @@
 /**
  * Elementor Bulk Calculator
- * 
- * Integrates with ProductDetailSuite widgets to display bulk pricing.
+ *
+ * Fetches bulk pricing from the API and drives the qty controls,
+ * per-unit / total price display, and min/max qty limits.
+ * The visual bulk-price grid is now handled by the BulkPriceTable widget —
+ * this script only manages data, qty, and price values.
+ *
  * Listens to infoplusProductState for variation changes.
  * Uses the existing /infoplus/v1/products/prices?sku=XXX endpoint
  */
 jQuery(function($) {
     'use strict';
-    
+
     console.log('[BulkCalculator] Script loaded');
-    
+
     let prevPieceValue = null;
     let prevTotalValue = null;
     let minQty = 1;
     let maxQty = 99999;
     let lastBreaks = [];
     let currentProductId = null;
+
+    /** Check if the currently selected model is requestable (no pricing). */
+    function isRequestableModel() {
+        var ps = window.infoplusProductState;
+        if (!ps || !ps.selectedModel || !ps.productData || !ps.productData.models) return false;
+        var models = ps.productData.models;
+        for (var i = 0; i < models.length; i++) {
+            if (models[i].slug === ps.selectedModel) {
+                var ot = models[i].order_type || 'editable';
+                return ot === 'requestable' || ot === 'requestable_with_variants';
+            }
+        }
+        return false;
+    }
+
+    /** Hide the entire qty row (buttons + input). */
+    function hideQtyRow() {
+        var $qtyRow = $('#qty_value').closest('.e-con');
+        if ($qtyRow.length) $qtyRow.hide();
+    }
+
+    /** Show the qty row. */
+    function showQtyRow() {
+        var $qtyRow = $('#qty_value').closest('.e-con');
+        if ($qtyRow.length) $qtyRow.show();
+    }
 
     // --- Animation Helpers ---
     function animateText($el, newText, prevValStore) {
@@ -32,50 +62,14 @@ jQuery(function($) {
         return num.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
     }
 
-    // --- Bulk Table Update ---
-    function updateBulkGridFromAPI(breaks) {
-        console.log('[BulkCalculator] Updating bulk grid with:', breaks);
-        let $rows = $('#bulk_table .bulk_item');
-        
-        if (!$rows.length) {
-            console.warn('[BulkCalculator] No bulk_item rows found in #bulk_table');
-            return;
-        }
-        
-        $rows.each(function(i) {
-            let $row   = $(this);
-            let $count = $row.find('.bulk_count p');
-            let $price = $row.find('.bulk_price p');
-            let data   = breaks[i];
-
-            let valid =
-                data &&
-                (typeof data.from === "string" || typeof data.from === "number") &&
-                (data.to === "" || typeof data.to === "string" || typeof data.to === "number") &&
-                !isNaN(parseFloat(data.value));
-
-            if (valid) {
-                // Show the "to" value if present, otherwise show "from+"
-                let countText = data.to && data.to !== "" && data.to !== 0 ? String(data.to) : (data.from + "+");
-                let priceText = Number(data.value).toLocaleString('de-DE', {minimumFractionDigits: 2}) + " €";
-                animateText($count, countText);
-                animateText($price, priceText);
-                $row.show();
-            } else {
-                animateText($price, "–");
-                $row.show();
-            }
-        });
-    }
-
     // --- Bulk Price Calculation ---
     function getBulkPriceForQty(breaks, qty) {
         if (!Array.isArray(breaks) || !breaks.length) return null;
-        
+
         for (let i = 0; i < breaks.length; i++) {
             let from = parseInt(breaks[i].from, 10);
             let to   = breaks[i].to ? parseInt(breaks[i].to, 10) : null;
-            
+
             if ((qty >= from) && (to === null || to === 0 || to === '' || qty <= to)) {
                 return parseFloat(String(breaks[i].value).replace(',', '.'));
             }
@@ -87,9 +81,9 @@ jQuery(function($) {
         let price  = getBulkPriceForQty(lastBreaks, qty);
         let $piece = $('#Stuckpreis_value h2');
         let $total = $('#Gesamtpreis_value h2');
-        
+
         console.log('[BulkCalculator] Updating prices for qty:', qty, 'price:', price);
-        
+
         if (price !== null) {
             animateText($piece, formatPrice(price));
             animateText($total, formatPrice(price * qty));
@@ -106,7 +100,7 @@ jQuery(function($) {
 
         const $val = $('#qty_value');
         if (!$val.length) return;
-        
+
         let current = parseInt($val.val(), 10);
         if (isNaN(current)) current = minQty;
         if (current < minQty) current = minQty;
@@ -169,22 +163,6 @@ jQuery(function($) {
         $('#qty-limit-message').stop(true).fadeOut(200);
     }
 
-    // --- Active Price Tier Highlight ---
-    function highlightActiveTier(qty) {
-        var $rows = $('#bulk_table .bulk_item');
-        if (!$rows.length || !lastBreaks.length) return;
-
-        $rows.removeClass('bulk_item--active');
-        for (var i = 0; i < lastBreaks.length; i++) {
-            var from = parseInt(lastBreaks[i].from, 10);
-            var to   = parseInt(lastBreaks[i].to, 10);
-            if (qty >= from && qty <= to) {
-                $rows.eq(i).addClass('bulk_item--active');
-                break;
-            }
-        }
-    }
-
     // --- Helper to get min bulk qty from API breaks ---
     function getMinBulkQty(breaks) {
         if (!Array.isArray(breaks) || !breaks.length) return null;
@@ -216,7 +194,7 @@ jQuery(function($) {
             return n;
         }
 
-        function apply(qty) {
+        function apply(qty, sourceEvent) {
             const q = clamp(qty);
             $val.val(q).attr('aria-valuenow', q);
 
@@ -224,10 +202,16 @@ jQuery(function($) {
             const $nativeQty = $('form.cart').find('input.qty');
             if ($nativeQty.length) $nativeQty.val(q).trigger('change');
 
-            // Update price display, button states, active tier
+            // Update price display and button states
             updateIndividualAndTotalPrice(q);
             updateButtonStates(q);
-            highlightActiveTier(q);
+
+            // Emit qty:changed so BulkPriceTable and other widgets stay in sync.
+            // source='calculator' prevents the echo coming back and re-triggering apply.
+            if (!sourceEvent && window.infoplusProductState) {
+                window.infoplusProductState.currentQty = q;
+                window.infoplusProductState.emit('qty:changed', { qty: q, source: 'calculator' });
+            }
         }
 
         $minus.off('click.qtywrap').on('click.qtywrap', function(e) {
@@ -265,8 +249,13 @@ jQuery(function($) {
                 var typed = parseInt(digits, 10);
                 if (!isNaN(typed) && typed >= 1) {
                     updateIndividualAndTotalPrice(typed);
-                    highlightActiveTier(typed);
                     updateButtonStates(clamp(typed));
+
+                    // Notify BulkPriceTable and other widgets
+                    if (window.infoplusProductState) {
+                        window.infoplusProductState.currentQty = typed;
+                        window.infoplusProductState.emit('qty:changed', { qty: typed, source: 'calculator' });
+                    }
                 }
             })
             .on('blur.qtywrap', function() {
@@ -294,6 +283,15 @@ jQuery(function($) {
                 apply(raw);
             });
 
+        // Listen for qty:changed from external widgets (e.g. BulkPriceTable cell click).
+        // source='calculator' events originated here — skip them to prevent echo loops.
+        if (window.infoplusProductState) {
+            window.infoplusProductState.on('qty:changed', function(data) {
+                if (data.source === 'calculator') return;
+                apply(data.qty, true); // true = sourceEvent, suppresses re-emit
+            });
+        }
+
         console.log('[BulkCalculator] Qty wrapper wired');
     }
 
@@ -303,20 +301,18 @@ jQuery(function($) {
             console.log('[BulkCalculator] No SKU provided - skipping API call');
             return;
         }
-        
+
         // Use the existing API endpoint that works with SKU
         let apiUrl = '/wp-json/infoplus/v1/products/prices?sku=' + encodeURIComponent(sku);
-        
+
         console.log('[BulkCalculator] Fetching prices from:', apiUrl);
 
         $.getJSON(apiUrl, function(prices) {
             console.log('[BulkCalculator] API response:', prices);
-            
+
             // The API returns an array directly
             lastBreaks = Array.isArray(prices) ? prices : [];
             console.log('[BulkCalculator] Processed breaks:', lastBreaks);
-            
-            updateBulkGridFromAPI(lastBreaks);
 
             // Derive min: max of (ACF mindestanzahl, first API break)
             var acfMin = 1;
@@ -339,34 +335,40 @@ jQuery(function($) {
 
             setQtyLimits(finalMin, finalMax);
             setQtyControlsEnabled(true);
-            
+
+            // Notify info box (and other widgets) of the effective minimum
+            if (window.infoplusProductState) {
+                window.infoplusProductState.emit('minqty:changed', { minQty: finalMin });
+            }
+
             // Set qty to min and refresh prices
             const $val = $('#qty_value');
             if ($val.length) {
                 $val.val(finalMin).attr('aria-valuenow', finalMin);
                 updateIndividualAndTotalPrice(finalMin);
-                highlightActiveTier(finalMin);
                 updateButtonStates(finalMin);
             }
 
             // Update minimum quantity display if it exists
             $('#Mindestanzahl_value').text(finalMin);
-            
+
         }).fail(function(xhr, status, error) {
             console.error('[BulkCalculator] API error:', error);
             console.error('[BulkCalculator] Response:', xhr.responseText);
-            
+
             // Reset to defaults on error
             lastBreaks = [];
-            updateBulkGridFromAPI([]);
             setQtyLimits(1, 99999);
+            if (window.infoplusProductState) {
+                window.infoplusProductState.emit('minqty:changed', { minQty: 1 });
+            }
         });
     }
 
     // --- Handle Variation Found ---
     function handleVariationFound(data) {
         console.log('[BulkCalculator] Variation found:', data);
-        
+
         const variation = data.variation;
         if (!variation) {
             console.log('[BulkCalculator] No variation data');
@@ -374,11 +376,8 @@ jQuery(function($) {
         }
 
         // Get the SKU from the variation
-        // SKU can be in different places depending on the source:
-        // - Our ProductDetailSuite: variation.sku
-        // - Native WooCommerce: variation.sku (but sometimes not present)
         let sku = variation.sku;
-        
+
         // If no SKU yet, try to get it from the variation ID using productData
         if (!sku && variation.id && window.infoplusProductData && window.infoplusProductData.variations) {
             const fullVariation = window.infoplusProductData.variations.find(
@@ -389,7 +388,7 @@ jQuery(function($) {
                 console.log('[BulkCalculator] Found SKU from productData:', sku);
             }
         }
-        
+
         // Also try variation_id
         if (!sku && variation.variation_id && window.infoplusProductData && window.infoplusProductData.variations) {
             const fullVariation = window.infoplusProductData.variations.find(
@@ -400,19 +399,20 @@ jQuery(function($) {
                 console.log('[BulkCalculator] Found SKU from productData (via variation_id):', sku);
             }
         }
-        
-        if (!sku) {
-            console.log('[BulkCalculator] No SKU found in variation data:', variation);
-            // Reset pricing since we can't fetch without SKU
+
+        if (!sku || isRequestableModel()) {
+            console.log('[BulkCalculator] No SKU or requestable model — hiding qty row');
             lastBreaks = [];
-            updateBulkGridFromAPI([]);
+            hideQtyRow();
             return;
         }
-        
+
+        showQtyRow();
+
         console.log('[BulkCalculator] Variation SKU:', sku);
-        
+
         setQtyControlsEnabled(true);
-        
+
         // Fetch bulk prices using the SKU
         fetchBulkPrices(sku);
     }
@@ -451,16 +451,6 @@ jQuery(function($) {
                 'opacity: 0.35;' +
                 'cursor: not-allowed;' +
             '}' +
-            /* Active price tier */
-            '.bulk_item--active {' +
-                'background: rgba(233, 30, 140, 0.08);' +
-                'border-radius: 6px;' +
-                'transition: background 0.2s ease;' +
-            '}' +
-            '.bulk_item--active .bulk_price p {' +
-                'font-weight: 700;' +
-                'color: #e91e8c;' +
-            '}' +
             ''
         ).appendTo('head');
     }
@@ -469,7 +459,7 @@ jQuery(function($) {
     function init() {
         console.log('[BulkCalculator] Initializing...');
         injectStyles();
-        
+
         // Get product ID from global data
         if (window.infoplusProductData) {
             currentProductId = window.infoplusProductData.id;
@@ -478,43 +468,46 @@ jQuery(function($) {
             currentProductId = window.currentProduct.id;
             console.log('[BulkCalculator] Product ID (from currentProduct):', currentProductId);
         }
-        
+
         // Hide native Woo fields
         $('.single_variation_wrap, .woocommerce-variation-add-to-cart, .woocommerce-variation-price').hide();
-        
+
         // Initial state
         setQtyControlsEnabled(false);
-        
+
         // Wire up quantity controls
         wireQtyWrapper();
-        
+
         // Initial price display
         updateIndividualAndTotalPrice(1);
-        
+
         // Set initial zeros
         let $piece = $('#Stuckpreis_value h2');
         let $total = $('#Gesamtpreis_value h2');
         animateText($piece, '0,00 €', v => prevPieceValue = v);
         animateText($total, '0,00 €', v => prevTotalValue = v);
-        
+
         // Listen to ProductDetailSuite state events
         if (window.infoplusProductState) {
             console.log('[BulkCalculator] Binding to infoplusProductState events');
-            
-            // When a variation is found (all attributes selected)
+
             window.infoplusProductState.on('variation:found', handleVariationFound);
-            
-            // When variation is reset
+
             window.infoplusProductState.on('variation:reset', function() {
                 console.log('[BulkCalculator] Variation reset');
                 setQtyControlsEnabled(false);
                 hideQtyMessage();
                 lastBreaks = [];
-                updateBulkGridFromAPI([]);
-                $('#bulk_table .bulk_item').removeClass('bulk_item--active');
+                hideQtyRow();
                 updateIndividualAndTotalPrice(1);
             });
-            
+
+            window.infoplusProductState.on('model:changed', function() {
+                if (isRequestableModel()) {
+                    hideQtyRow();
+                }
+            });
+
             // Check if there's already a selected variation
             if (window.infoplusProductState.selectedVariation) {
                 console.log('[BulkCalculator] Found existing selected variation');
@@ -522,8 +515,7 @@ jQuery(function($) {
             }
         } else {
             console.log('[BulkCalculator] infoplusProductState not found, waiting...');
-            
-            // Wait for it to be available
+
             let attempts = 0;
             const maxAttempts = 20;
             const checkInterval = setInterval(function() {
@@ -531,61 +523,59 @@ jQuery(function($) {
                 if (window.infoplusProductState) {
                     clearInterval(checkInterval);
                     console.log('[BulkCalculator] infoplusProductState now available, binding...');
-                    
+
                     window.infoplusProductState.on('variation:found', handleVariationFound);
                     window.infoplusProductState.on('variation:reset', function() {
                         setQtyControlsEnabled(false);
                         hideQtyMessage();
                         lastBreaks = [];
-                        updateBulkGridFromAPI([]);
-                        $('#bulk_table .bulk_item').removeClass('bulk_item--active');
+                        hideQtyRow();
                     });
-                    
+                    window.infoplusProductState.on('model:changed', function() {
+                        if (isRequestableModel()) {
+                            hideQtyRow();
+                        }
+                    });
+
                     if (window.infoplusProductState.selectedVariation) {
                         handleVariationFound({ variation: window.infoplusProductState.selectedVariation });
                     }
                 } else if (attempts >= maxAttempts) {
                     clearInterval(checkInterval);
                     console.warn('[BulkCalculator] infoplusProductState not found after waiting');
-                    
-                    // Fallback: try native WooCommerce events
                     bindNativeWooEvents();
                 }
             }, 250);
         }
-        
-        // Only bind to native WooCommerce events if infoplusProductState is NOT available
-        // (avoids double-firing and premature variation:found when not all attributes selected)
+
         if (!window.infoplusProductState) {
             bindNativeWooEvents();
         }
-        
+
         console.log('[BulkCalculator] Initialization complete');
     }
 
     // --- Fallback: Native WooCommerce Events ---
     function bindNativeWooEvents() {
         const $form = $('form.variations_form');
-        
+
         if (!$form.length) {
             console.log('[BulkCalculator] No native variations form found');
             return;
         }
-        
+
         console.log('[BulkCalculator] Binding to native WooCommerce events');
-        
+
         $form.on('found_variation', function(event, variation) {
             console.log('[BulkCalculator] Native found_variation triggered:', variation);
             handleVariationFound({ variation: variation });
         });
-        
+
         $form.on('reset_data', function() {
             console.log('[BulkCalculator] Native reset_data triggered');
             setQtyControlsEnabled(false);
             hideQtyMessage();
             lastBreaks = [];
-            updateBulkGridFromAPI([]);
-            $('#bulk_table .bulk_item').removeClass('bulk_item--active');
             updateIndividualAndTotalPrice(1);
         });
     }

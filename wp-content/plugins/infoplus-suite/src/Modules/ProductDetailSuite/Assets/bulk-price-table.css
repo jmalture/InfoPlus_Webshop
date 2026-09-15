@@ -12,6 +12,7 @@
 
 .infoplus-bulk-price-table {
     width: 100%;
+    position: relative; /* needed for overlay positioning */
 }
 
 /* ── Grid ─────────────────────────────────────────────────────────────────── */
@@ -102,4 +103,36 @@
 @keyframes ibpt-shimmer {
     0%   { background-position:  200% 0; }
     100% { background-position: -200% 0; }
+}
+
+/* ── Placeholder cells (behind frosted overlay) ──────────────────────────── */
+
+.ibpt-placeholder-cell {
+    pointer-events: none;
+    opacity: 0.45;
+}
+
+/* ── "No prices yet" frosted-glass overlay ───────────────────────────────── */
+
+.ibpt-no-prices-lock {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(2.5px);
+    -webkit-backdrop-filter: blur(2.5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--infoplus-radius, 8px);
+    cursor: default;
+}
+
+.ibpt-no-prices-lock__message {
+    font-size: 1.1rem;
+    color: var(--infoplus-primary, #e91e8c);
+    text-align: center;
+    padding: 0.25rem 1rem;
+    letter-spacing: 0.01em;
+    pointer-events: none;
 }

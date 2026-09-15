@@ -603,37 +603,37 @@ final class Module implements ModuleInterface
 
         $variations = [];
         if ($product->is_type('variable')) {
-            $available = $product->get_available_variations();
-            
-            if (!empty($available)) {
-                foreach ($available as $v) {
-                    $vid = isset($v['variation_id']) ? (int) $v['variation_id'] : 0;
-                    $variations[] = [
-                        'model'        => $v['attributes']['attribute_pa_model']       ?? '',
-                        'format'       => $v['attributes']['attribute_pa_format']      ?? '',
-                        'befestigung'  => $v['attributes']['attribute_pa_befestigung'] ?? '',
-                        'oberflaeche'  => $v['attributes']['attribute_pa_oberflache']  ?? '',
-                        'variation_id' => $vid,
-                    ];
+            global $wpdb;
+            $children = $product->get_children();
+
+            if (!empty($children)) {
+                $ids_placeholder = implode(',', array_map('intval', $children));
+                $attr_keys = ['attribute_pa_model', 'attribute_pa_format', 'attribute_pa_befestigung', 'attribute_pa_oberflache'];
+                $attr_keys_sql = "'" . implode("','", $attr_keys) . "'";
+
+                $rows = $wpdb->get_results(
+                    "SELECT post_id, meta_key, meta_value
+                     FROM {$wpdb->postmeta}
+                     WHERE post_id IN ({$ids_placeholder})
+                       AND meta_key IN ({$attr_keys_sql})
+                     ORDER BY post_id"
+                );
+
+                // Group by post_id
+                $attr_map = [];
+                foreach ($rows as $row) {
+                    $attr_map[$row->post_id][$row->meta_key] = $row->meta_value;
                 }
-            } else {
-                $children = $product->get_children();
-                
-                if (!empty($children)) {
-                    foreach ($children as $child_id) {
-                        $variation = wc_get_product($child_id);
-                        if (!$variation) continue;
-                        
-                        $attributes = $variation->get_variation_attributes();
-                        
-                        $variations[] = [
-                            'model'        => $attributes['attribute_pa_model']       ?? '',
-                            'format'       => $attributes['attribute_pa_format']      ?? '',
-                            'befestigung'  => $attributes['attribute_pa_befestigung'] ?? '',
-                            'oberflaeche'  => $attributes['attribute_pa_oberflache']  ?? '',
-                            'variation_id' => $child_id,
-                        ];
-                    }
+
+                foreach ($children as $child_id) {
+                    $attrs = $attr_map[$child_id] ?? [];
+                    $variations[] = [
+                        'model'        => $attrs['attribute_pa_model'] ?? '',
+                        'format'       => $attrs['attribute_pa_format'] ?? '',
+                        'befestigung'  => $attrs['attribute_pa_befestigung'] ?? '',
+                        'oberflaeche'  => $attrs['attribute_pa_oberflache'] ?? '',
+                        'variation_id' => $child_id,
+                    ];
                 }
             }
         }

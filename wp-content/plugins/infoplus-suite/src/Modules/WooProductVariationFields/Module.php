@@ -22,14 +22,17 @@ final class Module implements ModuleInterface
 
     public function saveProductFields(int $post_id): void
     {
-        if (isset($_POST['ife_uuid'])) {
-            update_post_meta($post_id, '_ife_uuid', sanitize_text_field($_POST['ife_uuid']));
-        }
-        if (isset($_POST['ife_unique_text_name'])) {
-            update_post_meta($post_id, '_ife_unique_text_name', sanitize_text_field($_POST['ife_unique_text_name']));
-        }
-        if (isset($_POST['ife_print_api_id'])) {
-            update_post_meta($post_id, '_ife_print_api_id', sanitize_text_field($_POST['ife_print_api_id']));
+        // Admin-only fields: only save if current user has manage_options capability
+        if (current_user_can('manage_options')) {
+            if (isset($_POST['ife_uuid'])) {
+                update_post_meta($post_id, '_ife_uuid', sanitize_text_field($_POST['ife_uuid']));
+            }
+            if (isset($_POST['ife_unique_text_name'])) {
+                update_post_meta($post_id, '_ife_unique_text_name', sanitize_text_field($_POST['ife_unique_text_name']));
+            }
+            if (isset($_POST['ife_print_api_id'])) {
+                update_post_meta($post_id, '_ife_print_api_id', sanitize_text_field($_POST['ife_print_api_id']));
+            }
         }
         if (isset($_POST['ife_name_2'])) {
             update_post_meta($post_id, '_ife_name_2', sanitize_text_field($_POST['ife_name_2']));

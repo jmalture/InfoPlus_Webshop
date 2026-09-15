@@ -7,7 +7,7 @@
  * Widgets communicate via a shared state system to create an integrated experience.
  * 
  * @package Infoplus\Suite\Modules\ProductDetailSuite
- * @since 1.0.52
+ * @since 1.0.100
  */
 
 namespace Infoplus\Suite\Modules\ProductDetailSuite;
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) exit;
 final class Module implements ModuleInterface
 {
     /** @var string Module version */
-    public const VERSION = '1.0.58';
+    public const VERSION = '1.1.0';
 
     public function slug(): string
     {
@@ -57,6 +57,15 @@ final class Module implements ModuleInterface
 
         // Output product state to frontend
         add_action('woocommerce_after_single_product', [$this, 'outputProductState'], 5);
+
+        // Invalidate product data cache when product is saved
+        add_action('woocommerce_after_product_object_save', [$this, 'invalidateProductCache']);
+
+        // Force AJAX variation loading for products with many variations.
+        // Prevents WooCommerce from embedding a huge JSON blob inline.
+        add_filter('woocommerce_ajax_variation_threshold', function () {
+            return self::VARIATION_AJAX_THRESHOLD;
+        });
     }
 
     /**
@@ -103,12 +112,14 @@ final class Module implements ModuleInterface
         require_once __DIR__ . '/Widgets/ProductImage.php';
         require_once __DIR__ . '/Widgets/ProductOrderPanel.php';
         require_once __DIR__ . '/Widgets/BulkPriceTable.php';
+        require_once __DIR__ . '/Widgets/ProductInfoBox.php';
 
         $widgets_manager->register(new Widgets\ModelSelector());
         $widgets_manager->register(new Widgets\VariationDropdowns());
         $widgets_manager->register(new Widgets\ProductImage());
         $widgets_manager->register(new Widgets\ProductOrderPanel());
         $widgets_manager->register(new Widgets\BulkPriceTable());
+        $widgets_manager->register(new Widgets\ProductInfoBox());
     }
 
     /**
@@ -188,6 +199,15 @@ final class Module implements ModuleInterface
         wp_enqueue_script(
             'infoplus-bulk-price-table',
             $assetUrl . 'bulk-price-table.js',
+            ['jquery', 'infoplus-product-state'],
+            $ver,
+            true
+        );
+
+        // Product info box widget JS
+        wp_enqueue_script(
+            'infoplus-product-info-box',
+            $assetUrl . 'product-info-box.js',
             ['jquery', 'infoplus-product-state'],
             $ver,
             true
@@ -281,6 +301,21 @@ final class Module implements ModuleInterface
             ],
         ]);
 
+        // Get ONLY variations for a product (lightweight, for deferred loading)
+        register_rest_route('infoplus/v1', '/product/(?P<id>\d+)/variations', [
+            'methods' => 'GET',
+            'callback' => [$this, 'getProductVariations'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'id' => [
+                    'validate_callback' => function ($param) {
+                        return is_numeric($param) && $param > 0;
+                    },
+                    'sanitize_callback' => 'absint',
+                ],
+            ],
+        ]);
+
         // Get attribute term data (images, descriptions)
         register_rest_route('infoplus/v1', '/attribute-terms/(?P<attribute>[\w-]+)', [
             'methods' => 'GET',
@@ -323,7 +358,17 @@ final class Module implements ModuleInterface
             return new \WP_REST_Response([], 400);
         }
 
-        return new \WP_REST_Response($this->getBulkPricesBySku($sku), 200);
+        // Use transient cache to avoid re-querying WDP rules on every request
+        $cache_key = 'infoplus_prices_' . md5($sku);
+        $cached = get_transient($cache_key);
+        if ($cached !== false) {
+            return new \WP_REST_Response($cached, 200);
+        }
+
+        $prices = $this->getBulkPricesBySku($sku);
+        set_transient($cache_key, $prices, DAY_IN_SECONDS);
+
+        return new \WP_REST_Response($prices, 200);
     }
 
     /**
@@ -448,6 +493,31 @@ final class Module implements ModuleInterface
     }
 
     /**
+     * Get ONLY variations for a product — lightweight endpoint for deferred loading.
+     * Uses get_children() + direct meta queries instead of get_available_variations()
+     * to avoid loading full WC_Product objects for every variation.
+     */
+    public function getProductVariations(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $product_id = (int) $request->get_param('id');
+        $product = wc_get_product($product_id);
+
+        if (!$product || !$product->is_type('variable')) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => 'Product not found or not variable',
+            ], 404);
+        }
+
+        $variations = $this->buildVariationsDataLite($product);
+
+        return new \WP_REST_Response([
+            'success' => true,
+            'variations' => $variations,
+        ], 200);
+    }
+
+    /**
      * Get attribute terms with custom fields
      */
     public function getAttributeTerms(\WP_REST_Request $request): \WP_REST_Response
@@ -512,9 +582,11 @@ final class Module implements ModuleInterface
 
         // If variable product, get variations with custom fields
         if ($product->is_type('variable')) {
-            $data['variations'] = $this->buildVariationsData($product);
+            // Fetch available variations once and reuse for both builders
+            $raw_variations = $product->get_available_variations();
+            $data['variations'] = $this->buildVariationsData($product, $raw_variations);
             $data['attributes'] = $this->buildAttributesData($product);
-            $data['models'] = $this->buildModelsData($product);
+            $data['models'] = $this->buildModelsData($product, $raw_variations);
         }
 
         // Add IFE/IBE fields
@@ -542,11 +614,15 @@ final class Module implements ModuleInterface
     /**
      * Build variations data with custom fields
      */
-    private function buildVariationsData($product): array
+    private function buildVariationsData($product, ?array $raw_variations = null): array
     {
         $variations = [];
 
-        foreach ($product->get_available_variations() as $variation_data) {
+        if ($raw_variations === null) {
+            $raw_variations = $product->get_available_variations();
+        }
+
+        foreach ($raw_variations as $variation_data) {
             $variation_id = $variation_data['variation_id'];
             $variation = wc_get_product($variation_id);
 
@@ -577,6 +653,83 @@ final class Module implements ModuleInterface
                 ],
                 'description' => get_post_meta($variation_id, '_infoplus_model_description', true),
                 'tooltip' => get_post_meta($variation_id, '_infoplus_model_tooltip', true),
+            ];
+        }
+
+        return $variations;
+    }
+
+    /**
+     * Build variations data using direct DB queries — no WC_Product loading.
+     * Returns only the fields needed by the JS (id, sku, attributes, is_in_stock, price, image).
+     */
+    private function buildVariationsDataLite($product): array
+    {
+        global $wpdb;
+
+        $children = $product->get_children();
+        if (empty($children)) return [];
+
+        $ids_placeholder = implode(',', array_map('intval', $children));
+
+        // Get all relevant meta for all children in one query
+        $meta_rows = $wpdb->get_results(
+            "SELECT post_id, meta_key, meta_value
+             FROM {$wpdb->postmeta}
+             WHERE post_id IN ({$ids_placeholder})
+               AND meta_key IN ('_sku', '_price', '_stock_status', '_thumbnail_id')
+             ORDER BY post_id"
+        );
+
+        // Get attribute meta (attribute_pa_*) for all children
+        $attr_rows = $wpdb->get_results(
+            "SELECT post_id, meta_key, meta_value
+             FROM {$wpdb->postmeta}
+             WHERE post_id IN ({$ids_placeholder})
+               AND meta_key LIKE 'attribute_%'
+             ORDER BY post_id"
+        );
+
+        // Group meta by post_id
+        $meta_map = [];
+        foreach ($meta_rows as $row) {
+            $meta_map[$row->post_id][$row->meta_key] = $row->meta_value;
+        }
+
+        $attr_map = [];
+        foreach ($attr_rows as $row) {
+            $attr_map[$row->post_id][$row->meta_key] = $row->meta_value;
+        }
+
+        // Check which children are published
+        $status_rows = $wpdb->get_results(
+            "SELECT ID FROM {$wpdb->posts}
+             WHERE ID IN ({$ids_placeholder})
+               AND post_status = 'publish'"
+        );
+        $published = array_flip(array_map(function($r) { return $r->ID; }, $status_rows));
+
+        $variations = [];
+        foreach ($children as $child_id) {
+            if (!isset($published[$child_id])) continue;
+
+            $meta = $meta_map[$child_id] ?? [];
+            $attrs = $attr_map[$child_id] ?? [];
+
+            $thumbnail_id = $meta['_thumbnail_id'] ?? '';
+            $image_url = $thumbnail_id ? wp_get_attachment_url((int) $thumbnail_id) : '';
+
+            $variations[] = [
+                'id'             => $child_id,
+                'sku'            => $meta['_sku'] ?? '',
+                'price'          => $meta['_price'] ?? '',
+                'is_in_stock'    => ($meta['_stock_status'] ?? 'instock') === 'instock',
+                'is_purchasable' => true,
+                'attributes'     => $attrs,
+                'image'          => [
+                    'url' => $image_url,
+                    'src' => $image_url,
+                ],
             ];
         }
 
@@ -629,11 +782,13 @@ final class Module implements ModuleInterface
     /**
      * Build models data grouped by model attribute
      */
-    private function buildModelsData($product): array
+    private function buildModelsData($product, ?array $variations = null): array
     {
         $models = [];
         $product_id = $product->get_id();
-        $variations = $product->get_available_variations();
+        if ($variations === null) {
+            $variations = $product->get_available_variations();
+        }
         $model_attribute = 'attribute_pa_model';
 
         // Group variations by model
@@ -742,7 +897,16 @@ final class Module implements ModuleInterface
     }
 
     /**
-     * Output product state to frontend (for initial page load)
+     * Max variations to embed inline. Products above this threshold
+     * will have variations loaded via AJAX to prevent page timeouts.
+     */
+    private const VARIATION_AJAX_THRESHOLD = 200;
+
+    /**
+     * Output product state to frontend (for initial page load).
+     * For products with many variations, skip embedding variation data
+     * inline and let product-state.js load it via REST instead.
+     * Uses transient caching to avoid rebuilding on every page view.
      */
     public function outputProductState(): void
     {
@@ -752,11 +916,173 @@ final class Module implements ModuleInterface
             return;
         }
 
-        $data = $this->buildProductData($product);
+        $product_id = $product->get_id();
+        $cache_key  = 'infoplus_pd_' . $product_id . '_' . self::VERSION;
+        $json       = get_transient($cache_key);
+
+        if ($json === false) {
+            $variation_count = $product->is_type('variable')
+                ? count($product->get_children())
+                : 0;
+
+            if ($variation_count > self::VARIATION_AJAX_THRESHOLD) {
+                $data = $this->buildProductDataLite($product);
+                $data['_variationsDeferred'] = true;
+            } else {
+                $data = $this->buildProductData($product);
+            }
+
+            $json = wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            set_transient($cache_key, $json, 12 * HOUR_IN_SECONDS);
+        }
 
         echo '<script id="infoplus-product-data">';
-        echo 'window.infoplusProductData = ' . wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
+        echo 'window.infoplusProductData = ' . $json . ';';
         echo '</script>';
+    }
+
+    /**
+     * Invalidate cached product data when a product is saved.
+     */
+    public function invalidateProductCache($product): void
+    {
+        $product_id = $product->get_id();
+        // Delete current version cache
+        delete_transient('infoplus_pd_' . $product_id . '_' . self::VERSION);
+
+        // Also invalidate parent product cache if this is a variation
+        $parent_id = $product->get_parent_id();
+        if ($parent_id > 0) {
+            delete_transient('infoplus_pd_' . $parent_id . '_' . self::VERSION);
+        }
+    }
+
+    /**
+     * Build product data WITHOUT loading each variation object.
+     * Attributes and models are still included so the UI can render
+     * dropdowns/selectors immediately; variations arrive via REST.
+     */
+    private function buildProductDataLite($product): array
+    {
+        $product_id = $product->get_id();
+
+        $image_id  = $product->get_image_id();
+        $image_url = $image_id ? wp_get_attachment_url($image_id) : '';
+
+        $data = [
+            'id'         => $product_id,
+            'name'       => $product->get_name(),
+            'sku'        => $product->get_sku(),
+            'type'       => $product->get_type(),
+            'image'      => $image_url,
+            'gallery'    => $this->getGalleryImages($product),
+            'price'      => $product->get_price(),
+            'price_html' => $product->get_price_html(),
+            'variations' => [], // loaded via REST
+        ];
+
+        if ($product->is_type('variable')) {
+            $data['attributes'] = $this->buildAttributesData($product);
+            // Use lightweight model builder that doesn't load all variations
+            $data['models']     = $this->buildModelsDataLite($product);
+        }
+
+        $data['ife_uuid']    = get_post_meta($product_id, '_ife_uuid', true);
+        $data['editor_url']  = $this->buildEditorUrl($product_id);
+
+        $min_qty = (int) get_post_meta($product_id, '_infoplus_min_quantity', true);
+        $data['min_quantity']  = $min_qty > 0 ? $min_qty : 1;
+        $delivery = (int) get_post_meta($product_id, '_infoplus_delivery_days', true);
+        $data['delivery_days'] = $delivery > 0 ? $delivery : 0;
+
+        $default_var_id = (int) get_post_meta($product_id, '_infoplus_default_variation_id', true);
+        $data['default_variation_id'] = $default_var_id > 0 ? $default_var_id : null;
+
+        $model_defaults_raw = get_post_meta($product_id, '_infoplus_model_default_variations', true);
+        $model_defaults     = $model_defaults_raw ? json_decode($model_defaults_raw, true) : null;
+        $data['model_default_variations'] = is_array($model_defaults) && !empty($model_defaults) ? $model_defaults : null;
+
+        return $data;
+    }
+
+    /**
+     * Build models data WITHOUT calling get_available_variations().
+     * Uses taxonomy terms and child variation post meta directly,
+     * which is orders of magnitude faster for 1000+ variants.
+     */
+    private function buildModelsDataLite($product): array
+    {
+        $product_id = $product->get_id();
+        $models = [];
+
+        // Get model terms assigned to this product
+        $model_terms = wc_get_product_terms($product_id, 'pa_model', ['fields' => 'all']);
+        if (empty($model_terms) || is_wp_error($model_terms)) {
+            return [];
+        }
+
+        // Get min prices per model from child variations using a direct query
+        global $wpdb;
+        $children = $product->get_children();
+        if (empty($children)) return [];
+
+        $ids_placeholder = implode(',', array_map('intval', $children));
+
+        // Get model attribute and price for each child variation in one query
+        $rows = $wpdb->get_results(
+            "SELECT p.ID, pm_price.meta_value AS price, pm_model.meta_value AS model_slug
+             FROM {$wpdb->posts} p
+             LEFT JOIN {$wpdb->postmeta} pm_price ON p.ID = pm_price.post_id AND pm_price.meta_key = '_price'
+             LEFT JOIN {$wpdb->postmeta} pm_model ON p.ID = pm_model.post_id AND pm_model.meta_key = 'attribute_pa_model'
+             WHERE p.ID IN ({$ids_placeholder})
+               AND p.post_status = 'publish'"
+        );
+
+        $grouped = [];
+        foreach ($rows as $row) {
+            $slug = $row->model_slug ?: '';
+            if (!$slug) continue;
+
+            if (!isset($grouped[$slug])) {
+                $grouped[$slug] = [
+                    'min_price' => PHP_FLOAT_MAX,
+                    'count'     => 0,
+                ];
+            }
+
+            $price = (float) $row->price;
+            if ($price > 0 && $price < $grouped[$slug]['min_price']) {
+                $grouped[$slug]['min_price'] = $price;
+            }
+            $grouped[$slug]['count']++;
+        }
+
+        foreach ($model_terms as $term) {
+            $model_slug = $term->slug;
+            $model_group = $grouped[$model_slug] ?? null;
+            if (!$model_group) continue;
+
+            $gallery_images  = Fields\ProductAttributeImages::getTermGalleryUrls($product_id, 'pa_model', $model_slug);
+            $model_image_url = !empty($gallery_images) ? $gallery_images[0]['url'] : '';
+            $order_type      = Fields\ProductAttributeImages::getTermOrderType($product_id, 'pa_model', $model_slug);
+            $min_price       = $model_group['min_price'] === PHP_FLOAT_MAX ? 0 : $model_group['min_price'];
+
+            $models[] = [
+                'slug'            => $model_slug,
+                'name'            => $term->name,
+                'description'     => $term->description,
+                'image_url'       => $model_image_url,
+                'gallery'         => $gallery_images,
+                'order_type'      => $order_type,
+                'min_price'       => $min_price,
+                'min_price_html'  => wc_price($min_price),
+                'variation_count' => $model_group['count'],
+                'tooltip'         => get_term_meta($term->term_id, '_infoplus_term_tooltip', true),
+                'modal_content'   => get_term_meta($term->term_id, '_infoplus_term_modal_content', true),
+            ];
+        }
+
+        return $models;
     }
 
     /**

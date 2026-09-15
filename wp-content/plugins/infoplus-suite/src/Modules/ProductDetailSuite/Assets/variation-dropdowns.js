@@ -241,6 +241,29 @@
 
                 window.infoplusProductState.on('attribute:changed', function (data) {
                     VariationDropdowns.updateAvailableOptions($widget, data.availableAttributes);
+
+                    // Visually select the option if it has a value (e.g. from applyModelDefault)
+                    if (data.attribute && data.value) {
+                        var $dropdown = $widget.find('.infoplus-dropdown[data-attribute="' + data.attribute + '"]');
+                        if ($dropdown.length) {
+                            var $option = $dropdown.find('.infoplus-dropdown__option[data-value="' + data.value + '"]');
+                            if ($option.length && !$option.hasClass('is-selected')) {
+                                VariationDropdowns.applyOptionToUI($dropdown, $option);
+                            }
+                        }
+                    }
+                });
+
+                // Show skeleton shimmer while deferred variations load
+                window.infoplusProductState.on('variations:loading', function () {
+                    $widget.addClass('ip-variations-loading');
+                });
+
+                window.infoplusProductState.on('variations:loaded', function (data) {
+                    $widget.removeClass('ip-variations-loading');
+                    if (data.availableAttributes) {
+                        VariationDropdowns.updateAvailableOptions($widget, data.availableAttributes);
+                    }
                 });
             }
 
@@ -302,7 +325,7 @@
             const value = $option.data('value');
             const text = $option.find('.infoplus-dropdown__option-text').text();
             const $image = $option.find('.infoplus-dropdown__option-image');
-            const imageSrc = $image.length ? $image.attr('src') : null;
+            const imageSrc = $option.data('image') || ($image.length ? ($image.attr('data-src') || $image.attr('src')) : null) || null;
             const tooltip = $option.data('tooltip');
             const modalContent = $option.data('modal-content');
 
@@ -319,11 +342,13 @@
 
             // Update image
             if (imageSrc) {
+                $dropdown.addClass('has-image');
                 let $selectedImage = $selected.find('img.infoplus-dropdown__selected-image');
                 if ($selectedImage.length) {
                     $selectedImage.attr('src', imageSrc);
                 }
             } else {
+                $dropdown.removeClass('has-image');
                 $selected.find('.infoplus-dropdown__selected-image').attr('src', '');
             }
 
@@ -392,7 +417,7 @@
 
                 // Reset visual state
                 $dropdown.find('.infoplus-dropdown__option').removeClass('is-selected');
-                $dropdown.removeClass('has-selection has-info');
+                $dropdown.removeClass('has-selection has-info has-image');
                 $dropdown.find('.infoplus-dropdown__selected-text').text(placeholder);
                 $dropdown.find('.infoplus-dropdown__native').val('');
 
@@ -415,7 +440,7 @@
             const tooltip = $option.data('tooltip');
             const modalContent = $option.data('modal-content');
             const $image = $option.find('.infoplus-dropdown__option-image');
-            const imageSrc = $image.length ? $image.attr('src') : null;
+            const imageSrc = $option.data('image') || ($image.length ? ($image.attr('data-src') || $image.attr('src')) : null) || null;
 
             // Find or create modal
             let $modal = $('.infoplus-info-modal');
@@ -590,7 +615,7 @@
         applyOptionToUI: function ($dropdown, $option) {
             var text         = $option.find('.infoplus-dropdown__option-text').text();
             var $img         = $option.find('.infoplus-dropdown__option-image');
-            var imageSrc     = $img.length ? $img.attr('src') : null;
+            var imageSrc     = $option.data('image') || ($img.length ? ($img.attr('data-src') || $img.attr('src')) : null) || null;
             var tooltip      = $option.data('tooltip');
             var modalContent = $option.data('modal-content');
 
@@ -602,9 +627,11 @@
             $selected.find('.infoplus-dropdown__selected-text').text(text);
 
             if (imageSrc) {
+                $dropdown.addClass('has-image');
                 var $selImg = $selected.find('img.infoplus-dropdown__selected-image');
                 if ($selImg.length) { $selImg.attr('src', imageSrc); }
             } else {
+                $dropdown.removeClass('has-image');
                 $selected.find('.infoplus-dropdown__selected-image').attr('src', '');
             }
 
@@ -665,14 +692,42 @@
          *                           false/omitted for a single short pulse (overlay click).
          */
         pulseAnfrageButton: function (long) {
-            var $anfrage = $('#anfrage .elementor-button, .infoplus-btn--anfrage');
-            if (!$anfrage.length) return;
+            VariationDropdowns.pulseActionButton(long);
+        },
+
+        /**
+         * Pulse the primary action button based on the current order type.
+         * editable / buyable → pulse #editor; requestable → pulse #anfrage.
+         */
+        pulseActionButton: function (long) {
+            var ps = window.infoplusProductState;
+            var orderType = 'editable';
+
+            // Determine current order type from the selected model
+            if (ps && ps.selectedModel && ps.productData && ps.productData.models) {
+                for (var i = 0; i < ps.productData.models.length; i++) {
+                    if (ps.productData.models[i].slug === ps.selectedModel) {
+                        orderType = ps.productData.models[i].order_type || 'editable';
+                        break;
+                    }
+                }
+            }
+
+            var $btn;
+            if (orderType === 'requestable' || orderType === 'requestable_with_variants') {
+                $btn = $('#anfrage .elementor-button, .infoplus-btn--anfrage');
+            } else {
+                // editable or buyable — pulse the main action button
+                $btn = $('#editor .elementor-button, .infoplus-btn--editor, .infoplus-btn--cart');
+            }
+
+            if (!$btn.length) return;
             var cls = long ? 'infoplus-anfrage-pulse--long' : 'infoplus-anfrage-pulse';
-            $anfrage.removeClass('infoplus-anfrage-pulse infoplus-anfrage-pulse--long');
-            $anfrage.each(function () { void this.offsetWidth; }); // restart animation
-            $anfrage.addClass(cls);
+            $btn.removeClass('infoplus-anfrage-pulse infoplus-anfrage-pulse--long');
+            $btn.each(function () { void this.offsetWidth; }); // restart animation
+            $btn.addClass(cls);
             setTimeout(function () {
-                $anfrage.removeClass(cls);
+                $btn.removeClass(cls);
             }, long ? 3100 : 800);
         },
 
@@ -721,7 +776,7 @@
 
     // Re-initialize for Elementor editor
     $(window).on('elementor/frontend/init', function () {
-        if (window.elementorFrontend) {
+        if (window.elementorFrontend && window.elementorFrontend.hooks) {
             elementorFrontend.hooks.addAction('frontend/element_ready/infoplus-variation-dropdowns.default', function ($element) {
                 VariationDropdowns.initWidget($element.find('.infoplus-variation-dropdowns'));
             });

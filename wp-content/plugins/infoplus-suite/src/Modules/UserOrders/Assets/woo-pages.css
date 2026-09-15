@@ -1,0 +1,631 @@
+/**
+ * Infoplus Suite — WooCommerce Cart & Checkout Page Styles
+ *
+ * Targets WooCommerce Blocks (wc-block-*) HTML.
+ * Design language mirrors the Thank You page:
+ *   font: system stack · accent: #e91e8c · white cards · spacing-only separation
+ */
+
+/* =========================================================================
+   DESIGN TOKENS
+   ========================================================================= */
+
+:root {
+    --ip-pink:         #e91e8c;
+    --ip-pink-dark:    #d11a7d;
+    --ip-pink-light:   #fdf2f8;
+    --ip-pink-border:  #f9d0ea;   /* light pink for unselected borders  */
+    --ip-text:         #333;
+    --ip-muted:        #666;
+    --ip-subtle:       #999;
+    --ip-bg:           #f5f5f5;
+    --ip-white:        #fff;
+    --ip-radius:       12px;
+    --ip-radius-sm:    8px;
+    --ip-font:         -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* =========================================================================
+   BASE — apply font to both block wrappers
+   ========================================================================= */
+
+.wc-block-cart,
+.wc-block-checkout {
+    font-family: var(--ip-font);
+    color: var(--ip-text);
+    font-size: 14px;
+}
+
+/* =========================================================================
+   CART — .wc-block-cart
+   ========================================================================= */
+
+.wc-block-cart__main,
+.wc-block-cart__sidebar {
+    background: transparent;
+}
+
+/* --- Items panel --------------------------------------------------------- */
+
+.wc-block-cart__main {
+    background: var(--ip-white);
+    border-radius: var(--ip-radius);
+    padding: 24px;
+}
+
+.wc-block-cart-items .wc-block-cart-item__row {
+    border: none;
+    padding: 16px 0;
+}
+
+.wc-block-cart-items .wc-block-cart-item__row + .wc-block-cart-item__row {
+    margin-top: 4px;
+}
+
+/* Cart image — 2:1 ratio to match 300×150 badge products */
+.wc-block-cart-item__image {
+    position: relative !important;
+    width: 120px !important;
+    min-width: 120px !important;
+    height: 60px !important;
+    border-radius: var(--ip-radius-sm);
+    background: var(--ip-bg);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.wc-block-cart-item__image img {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    border-radius: var(--ip-radius-sm);
+}
+
+.wc-block-cart-item__product .wc-block-cart-item__product-name,
+.wc-block-cart-item__product .wc-block-cart-item__product-name a {
+    font-family: var(--ip-font);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ip-text);
+    text-decoration: none;
+}
+
+.wc-block-cart-item__product .wc-block-cart-item__product-name a:hover {
+    color: var(--ip-pink);
+}
+
+.wc-block-cart-item__product .wc-block-cart-item__product-variation {
+    font-family: var(--ip-font);
+    font-size: 13px;
+    color: var(--ip-muted);
+}
+
+.wc-block-cart-item__total .wc-block-components-formatted-money-amount,
+.wc-block-cart-item__total .price {
+    font-family: var(--ip-font);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ip-pink);
+}
+
+.wc-block-cart-item__remove-link {
+    font-family: var(--ip-font);
+    font-size: 13px;
+    color: var(--ip-subtle);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.wc-block-cart-item__remove-link:hover {
+    color: var(--ip-pink);
+    text-decoration: none;
+}
+
+/* Quantity badge (injected by cart-qty-fix.js when native selector is missing) */
+.ip-cart-qty-badge {
+    font-weight: 600;
+    color: var(--ip-pink);
+}
+
+/* On checkout, match the muted product name color */
+.wc-block-checkout .ip-cart-qty-badge {
+    color: var(--ip-muted);
+}
+
+/* Quantity selector */
+.wc-block-components-quantity-selector {
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    background: var(--ip-white);
+}
+
+.wc-block-components-quantity-selector__input {
+    font-family: var(--ip-font);
+    font-size: 14px;
+    color: var(--ip-text);
+}
+
+/* --- Cart sidebar -------------------------------------------------------- */
+
+.wc-block-cart__sidebar {
+    background: var(--ip-white);
+    border-radius: var(--ip-radius);
+    padding: 24px;
+}
+
+/* Summary panel heading */
+.wc-block-components-order-summary__title,
+.wc-block-components-panel__button,
+.wc-block-components-order-summary > .wc-block-components-order-summary__button-text {
+    font-family: var(--ip-font);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ip-muted);
+}
+
+/* Summary item name */
+.wc-block-components-order-summary-item__name {
+    font-family: var(--ip-font);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ip-text);
+}
+
+/* Summary item image — 2:1 ratio to match 300×150 badge products.
+   Keep position:relative so the quantity badge (position:absolute inside) stays correct. */
+.wc-block-components-order-summary-item__image {
+    position: relative !important;
+    width: 100px !important;
+    min-width: 100px !important;
+    height: 50px !important;
+    border-radius: var(--ip-radius-sm);
+    background: var(--ip-bg);
+    overflow: visible; /* allow quantity badge to sit inside without being clipped */
+    flex-shrink: 0;
+}
+
+/* Use the specific parent selector WooCommerce itself uses — beats the HTML width/height attrs */
+.wc-block-components-order-summary .wc-block-components-order-summary-item__image > img {
+    display: block !important;
+    width: 100px !important;
+    max-width: 100px !important;
+    height: 50px !important;
+    object-fit: contain !important;
+    border-radius: var(--ip-radius-sm);
+}
+
+/* Remove the translate that pushes the badge outside the container */
+.wc-block-components-order-summary .wc-block-components-order-summary-item__quantity {
+    transform: none !important;
+    /* keep it in the top-right corner of the image */
+    top: -6px !important;
+    right: -6px !important;
+}
+
+/* Summary item meta */
+.wc-block-components-order-summary-item__description,
+.wc-block-components-order-summary-item__quantity,
+.wc-block-components-order-summary-item__individual-prices {
+    font-family: var(--ip-font);
+    font-size: 13px;
+    color: var(--ip-muted);
+}
+
+/* Totals rows */
+.wc-block-components-totals-item {
+    border: none;
+    padding: 10px 0;
+    font-family: var(--ip-font);
+    font-size: 14px;
+}
+
+.wc-block-components-totals-item__label {
+    color: var(--ip-muted);
+}
+
+.wc-block-components-totals-item__value {
+    font-weight: 500;
+    color: var(--ip-text);
+}
+
+/* Grand total */
+.wc-block-components-totals-footer-item {
+    border: none;
+    padding-top: 20px;
+    margin-top: 8px;
+    font-family: var(--ip-font);
+}
+
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__label {
+    font-family: var(--ip-font);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ip-text);
+}
+
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__value {
+    font-family: var(--ip-font);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ip-pink);
+}
+
+/* Coupon input */
+.wc-block-components-totals-coupon__form input {
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--ip-font);
+    font-size: 14px;
+    color: var(--ip-text);
+    height: auto;
+}
+
+.wc-block-components-totals-coupon__form input:focus {
+    border-color: var(--ip-pink);
+    outline: none;
+    box-shadow: none;
+}
+
+/* --- Cart: proceed to checkout button ------------------------------------ */
+
+.wc-block-cart__submit-container .wc-block-cart__submit-button,
+.wp-block-woocommerce-proceed-to-checkout-block .wc-block-cart__submit-button {
+    background: var(--ip-pink) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--ip-radius-sm) !important;
+    font-family: var(--ip-font) !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    padding: 14px 28px !important;
+    box-shadow: none !important;
+    text-decoration: none!important;
+    transition: background 0.2s, transform 0.15s !important;
+}
+
+.wc-block-cart__submit-container .wc-block-cart__submit-button:hover {
+    background: var(--ip-pink-dark) !important;
+    transform: translateY(-1px);
+}
+
+/* =========================================================================
+   CHECKOUT — .wc-block-checkout
+   ========================================================================= */
+
+.wc-block-checkout__main {
+    background: transparent;
+}
+
+.wc-block-checkout__sidebar {
+    background: var(--ip-white);
+    border-radius: var(--ip-radius);
+    padding: 24px;
+}
+
+/* --- Checkout steps ------------------------------------------------------ */
+
+.wc-block-components-checkout-step {
+    background: var(--ip-white);
+    border-radius: var(--ip-radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    border: none;
+}
+
+.wc-block-components-checkout-step__title {
+    font-family: var(--ip-font);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ip-muted);
+    margin-bottom: 20px;
+}
+
+/* Step number circle → pink */
+.wc-block-components-checkout-step__heading-number {
+    background: var(--ip-pink);
+    color: #fff;
+    border: none;
+    font-family: var(--ip-font);
+    font-size: 13px;
+}
+
+/* =========================================================================
+   FORM INPUTS — floating label fix
+   Give enough top-padding so the floating label and the value don't overlap.
+   WC Blocks floats the label to the top of the field; the value text needs
+   padding-top to sit clearly below it.
+   ========================================================================= */
+
+/* Base input height & padding */
+.wc-block-components-text-input input,
+.wc-block-components-select .wc-block-components-select__select,
+.wc-block-checkout input[type="text"],
+.wc-block-checkout input[type="email"],
+.wc-block-checkout input[type="tel"],
+.wc-block-checkout input[type="number"],
+.wc-block-checkout input[type="password"],
+.wc-block-checkout select,
+.wc-block-checkout textarea {
+    border: 1px solid #e8e8e8 !important;
+    border-radius: 6px !important;
+    /* top padding creates room for the floating label; bottom padding
+       separates the value from the field bottom edge */
+    padding: 24px 14px 8px !important;
+    height: 56px !important;
+    font-family: var(--ip-font) !important;
+    font-size: 14px !important;
+    color: var(--ip-text) !important;
+    background: #fafafa !important;
+    box-shadow: none !important;
+    transition: border-color 0.15s !important;
+    line-height: 1.4 !important;
+}
+
+/* When field is focused or has a value the label floats — keep same height */
+.wc-block-components-text-input.is-active input,
+.wc-block-components-text-input.has-text input {
+    padding-top: 24px !important;
+    padding-bottom: 8px !important;
+}
+
+/* Pink border on focus */
+.wc-block-components-text-input input:focus,
+.wc-block-components-select .wc-block-components-select__select:focus,
+.wc-block-checkout input:focus,
+.wc-block-checkout select:focus {
+    border-color: var(--ip-pink) !important;
+    background: var(--ip-white) !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Labels */
+.wc-block-components-text-input label,
+.wc-block-components-select label,
+.wc-block-checkout label {
+    font-family: var(--ip-font);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ip-muted);
+}
+
+/* Floating label — when active/has text move it to the top of the taller field */
+.wc-block-components-text-input.is-active label,
+.wc-block-components-text-input.has-text label {
+    font-size: 11px;
+    color: var(--ip-muted);
+    /* WC Blocks moves label with transform; this nudge ensures enough clearance */
+    top: 10px;
+}
+
+/* =========================================================================
+   ADDRESS CARD  — light pink default, pink selected border
+   ========================================================================= */
+
+.wc-block-components-address-card {
+    border: 1px solid var(--ip-pink-border) !important;
+    border-radius: var(--ip-radius-sm) !important;
+    box-shadow: none !important;
+    font-family: var(--ip-font);
+    font-size: 14px;
+    color: var(--ip-text);
+    padding: 16px !important;
+}
+
+.wc-block-components-address-card:hover {
+    border-color: var(--ip-pink) !important;
+}
+
+.wp-block-woocommerce-checkout .wc-block-components-address-card__edit:hover {
+    color: #fff !important;
+}
+
+.wc-block-components-address-card--selected,
+.wc-block-components-address-card.selected {
+    border-color: var(--ip-pink) !important;
+    box-shadow: none !important;
+}
+
+/* =========================================================================
+   RADIO CONTROL ACCORDION OPTIONS
+   (shipping methods, payment methods, saved addresses)
+   ========================================================================= */
+
+/* All options — subtle light-pink border */
+.wc-block-components-radio-control-accordion-option {
+    border: 1px solid var(--ip-pink-border) !important;
+    border-radius: var(--ip-radius-sm) !important;
+    box-shadow: none !important;
+    font-family: var(--ip-font);
+    font-size: 14px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+}
+
+.wc-block-components-radio-control-accordion-option:hover {
+    border-color: var(--ip-pink) !important;
+    box-shadow: none !important;
+}
+
+/* Selected / highlighted option — solid pink border */
+.wc-block-components-radio-control-accordion-option--checked-option-highlighted,
+.wc-block-components-radio-control-accordion-option:has(input[type="radio"]:checked) {
+    border-color: var(--ip-pink) !important;
+    box-shadow: none !important;
+    background: var(--ip-pink-light);
+}
+
+/* Radio input dot — pink */
+.wc-block-components-radio-control__input,
+.wc-block-components-radio-control-accordion-option input[type="radio"] {
+    accent-color: var(--ip-pink);
+}
+
+/* Option label text */
+.wc-block-components-radio-control__label,
+.wc-block-components-radio-control-accordion-option label {
+    font-family: var(--ip-font);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ip-text);
+}
+
+/* Option description/secondary text */
+.wc-block-components-radio-control__description,
+.wc-block-components-radio-control-accordion-option .wc-block-components-radio-control__secondary-label {
+    font-family: var(--ip-font);
+    font-size: 13px;
+    color: var(--ip-muted);
+}
+
+/* =========================================================================
+   PAYMENT SECTION
+   ========================================================================= */
+
+.wc-block-components-payment-methods,
+.wc-block-checkout__payment-method {
+    background: var(--ip-bg);
+    border-radius: var(--ip-radius-sm);
+    padding: 20px;
+    border: none;
+}
+
+.wc-block-components-payment-method-label__name {
+    font-family: var(--ip-font);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ip-text);
+}
+
+/* =========================================================================
+   PLACE ORDER BUTTON
+   ========================================================================= */
+
+.wc-block-components-checkout-place-order-button {
+    background: var(--ip-pink) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--ip-radius-sm) !important;
+    font-family: var(--ip-font) !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    padding: 14px 28px !important;
+    box-shadow: none !important;
+    width: 100%;
+    transition: background 0.2s, transform 0.15s !important;
+}
+
+.wc-block-components-checkout-place-order-button:hover {
+    background: var(--ip-pink-dark) !important;
+    transform: translateY(-1px);
+}
+
+/* =========================================================================
+   NOTICES
+   ========================================================================= */
+
+.wc-block-components-notice-banner,
+.wc-block-store-notices {
+    border: none;
+    border-radius: var(--ip-radius-sm);
+    font-family: var(--ip-font);
+    font-size: 14px;
+    box-shadow: none;
+}
+
+.wc-block-components-notice-banner.is-info,
+.wc-block-components-notice-banner.is-success {
+    background: var(--ip-pink-light);
+    color: var(--ip-pink);
+}
+
+.wc-block-components-notice-banner.is-error {
+    background: #fdecea;
+    color: #c0392b;
+}
+
+.wc-block-components-notice-banner .wc-block-components-notice-banner__dismiss {
+    background: transparent !important;
+    border: none !important;
+    color: inherit !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+/* =========================================================================
+   CLASSIC SHORTCODE FALLBACK
+   ========================================================================= */
+
+.woocommerce-cart table.shop_table,
+.woocommerce-checkout table.shop_table {
+    border: none;
+    border-collapse: collapse;
+    font-family: var(--ip-font);
+    font-size: 14px;
+}
+
+.woocommerce-cart table.shop_table th,
+.woocommerce-cart table.shop_table td,
+.woocommerce-checkout table.shop_table th,
+.woocommerce-checkout table.shop_table td {
+    border: none;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-family: var(--ip-font);
+}
+
+.woocommerce-cart table.shop_table td.product-subtotal,
+.woocommerce-checkout table.shop_table tfoot .order-total td .amount {
+    color: var(--ip-pink);
+    font-weight: 600;
+}
+
+.cart_totals,
+.woocommerce-checkout #order_review {
+    background: var(--ip-white);
+    border-radius: var(--ip-radius);
+    padding: 24px;
+    border: none;
+    box-shadow: none;
+}
+
+.woocommerce-checkout #payment {
+    background: var(--ip-bg);
+    border-radius: var(--ip-radius-sm);
+    border: none;
+    padding: 20px;
+}
+
+.woocommerce-checkout #payment div.payment_box {
+    background: var(--ip-white);
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+.woocommerce-checkout #payment div.payment_box::before { display: none; }
+
+.woocommerce-cart a.checkout-button,
+.woocommerce-checkout #place_order {
+    background: var(--ip-pink) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: var(--ip-radius-sm) !important;
+    font-family: var(--ip-font) !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    box-shadow: none !important;
+}
+
+.woocommerce-cart a.checkout-button:hover,
+.woocommerce-checkout #place_order:hover {
+    background: var(--ip-pink-dark) !important;
+    color: #fff !important;
+}

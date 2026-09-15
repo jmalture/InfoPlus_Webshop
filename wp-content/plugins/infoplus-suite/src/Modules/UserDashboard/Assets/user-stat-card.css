@@ -1,0 +1,54 @@
+.ip-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.ip-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.ip-stat-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    flex-shrink: 0;
+}
+
+.ip-stat-card__icon i {
+    color: inherit;
+}
+
+.ip-stat-card__icon svg {
+    fill: currentColor;
+}
+
+.ip-stat-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.ip-stat-card__label {
+    font-size: 13px;
+    line-height: 1.3;
+    color: #888;
+}
+
+.ip-stat-card__value {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #333;
+}

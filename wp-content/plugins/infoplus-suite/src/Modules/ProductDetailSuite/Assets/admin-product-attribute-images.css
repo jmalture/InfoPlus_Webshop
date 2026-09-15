@@ -78,21 +78,32 @@
     color: #1d2327;
 }
 
-.infoplus-ife-panel .locked-field-wrap,
-.infoplus-ife-panel p.form-field span[style*="position:relative"] {
-    position: relative;
-    display: inline-block;
+.infoplus-ife-panel .locked-field-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 440px;
     width: 100%;
-    max-width: 400px;
+}
+
+.infoplus-ife-panel .locked-field-wrap input[type="text"] {
+    flex: 1;
+    min-width: 0;
 }
 
 .infoplus-locked-field input[type="text"] {
     background-color: #f6f7f7 !important;
     color: #50575e !important;
     cursor: not-allowed;
-    padding-right: 35px !important;
 }
 
+.infoplus-locked-field input[type="text"]:not([readonly]) {
+    background-color: #fff !important;
+    color: #1d2327 !important;
+    cursor: text;
+}
+
+/* Legacy static icon (kept for backwards compatibility) */
 .infoplus-lock-icon {
     position: absolute;
     right: 10px;
@@ -100,6 +111,55 @@
     transform: translateY(-50%);
     color: #bbb;
     font-size: 16px;
+    pointer-events: none;
+}
+
+/* Admin lock/unlock button */
+.infoplus-ife-lock-btn {
+    background: none;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    vertical-align: middle;
+}
+
+.infoplus-ife-lock-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.infoplus-ife-lock-btn.locked {
+    color: #8c8f94;
+}
+
+.infoplus-ife-lock-btn.locked:hover {
+    background: #f0f0f1;
+    border-color: #8c8f94;
+    color: #50575e;
+}
+
+.infoplus-ife-lock-btn.unlocked {
+    background: #edfaef;
+    border-color: #00a32a;
+    color: #00a32a;
+}
+
+.infoplus-ife-lock-btn.unlocked:hover {
+    background: #d5f5da;
+}
+
+.infoplus-ife-lock-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
     pointer-events: none;
 }
 

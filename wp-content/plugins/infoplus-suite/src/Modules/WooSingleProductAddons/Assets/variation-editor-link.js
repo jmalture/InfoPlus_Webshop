@@ -57,6 +57,18 @@
     return v.indexOf('sonderkontur') !== -1 || t.indexOf('sonderkontur') !== -1;
   }
 
+  // ── Pulse animation helper ───────────────────────────────────────────────
+
+  function pulseButton($wrap) {
+    var $btn = $wrap.find('.elementor-button');
+    if (!$btn.length) return;
+    var cls = 'infoplus-anfrage-pulse--long';
+    $btn.removeClass('infoplus-anfrage-pulse infoplus-anfrage-pulse--long');
+    $btn.each(function () { void this.offsetWidth; }); // restart animation
+    $btn.addClass(cls);
+    setTimeout(function () { $btn.removeClass(cls); }, 3100);
+  }
+
   // ── Error message helpers ─────────────────────────────────────────────────
 
   function showError($wrap, msg) {
@@ -288,17 +300,21 @@
       // Editor disabled until variation found, restore original label
       disableEditorBtn();
       restoreEditorLabel();
-      // If a valid variation is already selected, re-enable
+      // If a valid variation is already selected, re-enable + pulse
       if (variationIsValid && !variationNotFound) {
         var url = generateEditorUrl();
-        if (url) enableEditorUrl(url);
+        if (url) {
+          enableEditorUrl(url);
+          pulseButton($editor);
+        }
       } else if (variationNotFound && $editor.length) {
         showError($editor, KOMBINATION_TEXT);
       }
 
-    } else if (orderType === 'requestable') {
+    } else if (orderType === 'requestable' || orderType === 'requestable_with_variants') {
       $editor.addClass(HIDDEN_CLASS);
       $anfrage.removeClass(HIDDEN_CLASS);
+      pulseButton($anfrage);
 
     } else if (orderType === 'buyable') {
       $editor.removeClass(HIDDEN_CLASS);
@@ -308,6 +324,7 @@
       setEditorAsCartLabel();
       if (variationIsValid && !variationNotFound) {
         enableEditorAsCart();
+        pulseButton($editor);
       } else if (variationNotFound && $editor.length) {
         showError($editor, KOMBINATION_TEXT);
       }
@@ -324,9 +341,13 @@
 
     if (currentOrderType === 'editable') {
       var url = generateEditorUrl();
-      if (url) enableEditorUrl(url);
+      if (url) {
+        enableEditorUrl(url);
+        pulseButton($editor);
+      }
     } else if (currentOrderType === 'buyable') {
       enableEditorAsCart();
+      pulseButton($editor);
     }
     // requestable: nothing to do for #editor
   }

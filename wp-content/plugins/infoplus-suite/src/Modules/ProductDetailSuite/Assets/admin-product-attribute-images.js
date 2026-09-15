@@ -617,4 +617,25 @@ jQuery(document).ready(function($) {
 
     // Initialize per-model Default Variation dropdowns from stored data
     initModelDefaultVariationDropdowns();
+
+    // =========================================================================
+    // IBE/IFE ADMIN LOCK BUTTONS
+    // =========================================================================
+
+    $(document).on('click', '.infoplus-ife-lock-btn', function() {
+        var $btn   = $(this);
+        var $input = $('#' + $btn.data('target'));
+
+        if ($btn.hasClass('locked')) {
+            $btn.removeClass('locked').addClass('unlocked');
+            $btn.find('.dashicons').removeClass('dashicons-lock').addClass('dashicons-unlock');
+            $btn.attr('title', infoplusI18n.lockField || 'Click to lock');
+            $input.prop('readonly', false).focus();
+        } else {
+            $btn.removeClass('unlocked').addClass('locked');
+            $btn.find('.dashicons').removeClass('dashicons-unlock').addClass('dashicons-lock');
+            $btn.attr('title', infoplusI18n.unlockField || 'Click to unlock and edit');
+            $input.prop('readonly', true);
+        }
+    });
 });

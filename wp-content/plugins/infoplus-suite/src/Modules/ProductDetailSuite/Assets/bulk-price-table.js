@@ -21,6 +21,59 @@
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
+    /** Check if the currently selected model is a requestable type (no pricing). */
+    function isRequestableModel() {
+        var ps = w.infoplusProductState;
+        if (!ps || !ps.selectedModel || !ps.productData || !ps.productData.models) return false;
+        var models = ps.productData.models;
+        for (var i = 0; i < models.length; i++) {
+            if (models[i].slug === ps.selectedModel) {
+                var ot = models[i].order_type || 'editable';
+                return ot === 'requestable' || ot === 'requestable_with_variants';
+            }
+        }
+        return false;
+    }
+
+    /** Hide the entire table widget (no skeleton, no grid, no overlay). */
+    function hideTable($table) {
+        $table.find('.ibpt-skeleton').hide();
+        $table.find('.ibpt-grid').hide().empty();
+        $table.find('.ibpt-no-prices-lock').remove();
+        $table.removeClass('ibpt--has-overlay');
+    }
+
+    /**
+     * Show a frosted-glass overlay with placeholder cells and an informational
+     * message when a variation *should* have bulk prices but none exist yet.
+     */
+    function showNoPricesOverlay($table) {
+        $table.find('.ibpt-skeleton').hide();
+        $table.find('.ibpt-no-prices-lock').remove();
+
+        // Build placeholder cells so there is something to blur behind the overlay
+        var $grid = $table.find('.ibpt-grid');
+        $grid.empty();
+        for (var i = 0; i < 6; i++) {
+            $grid.append('<div class="ibpt-cell ibpt-placeholder-cell">' +
+                '<span class="ibpt-cell__label">ab</span>' +
+                '<span class="ibpt-cell__qty">—</span>' +
+                '<span class="ibpt-cell__label">Stück</span>' +
+                '<span class="ibpt-cell__price">— €</span>' +
+                '</div>');
+        }
+        $grid.show();
+
+        // Frosted overlay
+        var $overlay = $('<div class="ibpt-no-prices-lock">' +
+            '<span class="ibpt-no-prices-lock__message">' +
+                'Für diese Variante sind noch keine Staffelpreise hinterlegt' +
+            '</span>' +
+            '</div>');
+        $table.addClass('ibpt--has-overlay');
+        $table.append($overlay);
+    }
+
     function isEditMode() {
         return !!(w.elementorFrontend &&
                   w.elementorFrontend.isEditMode &&
@@ -42,6 +95,8 @@
     // ── Skeleton ──────────────────────────────────────────────────────────────
 
     function showSkeleton($table) {
+        $table.find('.ibpt-no-prices-lock').remove();
+        $table.removeClass('ibpt--has-overlay');
         $table.find('.ibpt-skeleton').show();
         $table.find('.ibpt-grid').hide().empty();
     }
@@ -123,9 +178,17 @@
      * Shows skeleton while the request is in flight.
      */
     function fetchAndRender(sku) {
+        // Requestable models have no pricing — hide the table entirely.
+        if (isRequestableModel()) {
+            prices = [];
+            getTables().each(function () { hideTable($(this)); });
+            return;
+        }
+
+        // Variation is selected but carries no SKU — pricing is not yet configured.
         if (!sku) {
             prices = [];
-            getTables().each(function () { showSkeleton($(this)); });
+            getTables().each(function () { showNoPricesOverlay($(this)); });
             return;
         }
 
@@ -137,21 +200,20 @@
         $.getJSON(apiUrl, function (data) {
             if (data && data.length) {
                 prices = data;
-                getTables().each(function () { renderGrid($(this), data); });
-            } else {
-                // No prices for this SKU — hide everything
-                prices = [];
                 getTables().each(function () {
-                    $(this).find('.ibpt-skeleton').hide();
-                    $(this).find('.ibpt-grid').hide().empty();
+                    var $t = $(this);
+                    $t.find('.ibpt-no-prices-lock').remove();
+                    $t.removeClass('ibpt--has-overlay');
+                    renderGrid($t, data);
                 });
+            } else {
+                // Variation should have prices but none exist yet — show overlay
+                prices = [];
+                getTables().each(function () { showNoPricesOverlay($(this)); });
             }
         }).fail(function () {
             prices = [];
-            getTables().each(function () {
-                $(this).find('.ibpt-skeleton').hide();
-                $(this).find('.ibpt-grid').hide().empty();
-            });
+            getTables().each(function () { showNoPricesOverlay($(this)); });
         });
     }
 
@@ -190,12 +252,20 @@
 
         ps.on('variation:reset', function () {
             prices = [];
-            getTables().each(function () { showSkeleton($(this)); });
+            getTables().each(function () { hideTable($(this)); });
         });
 
         ps.on('variation:notfound', function () {
             prices = [];
-            getTables().each(function () { showSkeleton($(this)); });
+            getTables().each(function () { hideTable($(this)); });
+        });
+
+        // When model changes, immediately hide for requestable models
+        ps.on('model:changed', function () {
+            if (isRequestableModel()) {
+                prices = [];
+                getTables().each(function () { hideTable($(this)); });
+            }
         });
 
         // qty:changed from ProductOrderPanel (source='panel') or from another cell click
@@ -217,8 +287,8 @@
         // ── Replay current state ──────────────────────────────────────────────
         // product-state.js may have already fired variation:found (via applyDefaultVariation)
         // before this widget registered its listener — catch up now.
-        if (ps.selectedVariation && ps.selectedVariation.sku) {
-            fetchAndRender(ps.selectedVariation.sku);
+        if (ps.selectedVariation) {
+            fetchAndRender(ps.selectedVariation.sku || null);
         }
     }
 

@@ -844,7 +844,7 @@ class OrderDetails extends Widget_Base
                         if (!$image_url && $product) {
                             $image_id = $product->get_image_id();
                             if ($image_id) {
-                                $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
+                                $image_url = wp_get_attachment_image_url($image_id, 'medium');
                             }
                         }
                         
@@ -1068,14 +1068,16 @@ class OrderDetails extends Widget_Base
 
         .infoplus-item-image {
             flex-shrink: 0;
-            width: 70px;
-            height: 70px;
+            width: 120px;
+            height: 60px;
+            background: #f5f5f5;
+            border-radius: 6px;
         }
 
         .infoplus-item-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 6px;
         }
 
@@ -1157,13 +1159,159 @@ class OrderDetails extends Widget_Base
 
         /* Print Styles */
         @media print {
-            .infoplus-order-actions {
+            @page {
+                size: A4 portrait;
+                margin: 1.2cm 1.5cm;
+            }
+
+            /* ── Hide site chrome ── */
+            [data-elementor-type="header"],
+            .elementor-location-header,
+            #masthead,
+            /*header.site-header,*/
+            [data-elementor-type="footer"],
+            .elementor-location-footer,
+            footer.site-footer,
+            #colophon {
                 display: none !important;
             }
-            
+
+            /* ── Hide unwanted order elements ── */
+            .infoplus-order-back,
+            .infoplus-back-btn,
+            .infoplus-order-header-right,
+            .infoplus-order-actions,
+            .infoplus-item-image,
+            .elementor-hidden-desktop {
+                display: none !important;
+            }
+
+            /* ── Suppress browser-injected link URLs ── */
+            a[href]::after,
+            a[href]::before {
+                content: none !important;
+            }
+
+            /* ── Root container ── */
+            .infoplus-order-details {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            /* ── Header ── */
+            .infoplus-order-header {
+                margin-bottom: 0.4rem;
+                padding-bottom: 0.4rem;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .infoplus-order-title {
+                font-size: 1.2rem;
+                margin-bottom: 0.15rem;
+            }
+
+            .infoplus-order-meta {
+                font-size: 0.8rem;
+                gap: 0.5rem;
+                margin-top: 0.15rem;
+            }
+
+            /* ── Customer: 3 columns, compact ── */
+            .infoplus-order-customer {
+                margin-top: 0.5rem;
+            }
+
+            .infoplus-customer-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 1rem;
+            }
+
+            .infoplus-section-title {
+                font-size: 0.85rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .infoplus-customer-name {
+                font-size: 0.85rem;
+                margin-bottom: 0.15rem;
+            }
+
+            .infoplus-customer-info h3,
+            .infoplus-shipping-address h3,
+            .infoplus-billing-address h3 {
+                font-size: 0.82rem;
+                margin-bottom: 0.15rem;
+            }
+
+            .infoplus-customer-info p,
+            .infoplus-shipping-address p,
+            .infoplus-billing-address p {
+                font-size: 0.78rem;
+                margin: 0;
+                line-height: 1.4;
+            }
+
+            /* ── Order items: compact rows ── */
+            .infoplus-order-items-section {
+                margin-top: 0.6rem;
+            }
+
+            .infoplus-order-items {
+                gap: 0;
+            }
+
+            .infoplus-order-item {
+                padding: 0.35rem 0;
+                border-radius: 0;
+                border: none;
+                border-bottom: 1px solid #eee;
+                background: transparent !important;
+                box-shadow: none;
+                transform: none;
+                text-decoration: none;
+            }
+
             .infoplus-order-item:hover {
                 transform: none;
-                background: #f8f8f8;
+                background: transparent;
+            }
+
+            .infoplus-item-name {
+                font-size: 0.82rem;
+                margin: 0 0 0.1rem;
+            }
+
+            .infoplus-item-sku,
+            .infoplus-item-model,
+            .infoplus-item-qty {
+                font-size: 0.78rem;
+                margin: 0;
+                line-height: 1.4;
+            }
+
+            .infoplus-item-price {
+                font-size: 0.82rem;
+            }
+
+            /* ── Totals: compact ── */
+            .infoplus-order-totals {
+                margin-top: 0.5rem;
+                padding-top: 0;
+                border-top: 1px solid #ddd;
+            }
+
+            .infoplus-totals-row {
+                padding: 0.12rem 0;
+                font-size: 0.82rem;
+            }
+
+            .infoplus-totals-total {
+                padding-top: 0.35rem;
+            }
+
+            .infoplus-order-grand-total {
+                font-size: 1.05rem;
             }
         }
 
@@ -1203,7 +1351,7 @@ class OrderDetails extends Widget_Base
             .infoplus-item-image {
                 width: 100%;
                 height: auto;
-                aspect-ratio: 1;
+                aspect-ratio: 2 / 1;
                 max-width: 120px;
             }
 

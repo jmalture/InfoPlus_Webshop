@@ -26,7 +26,8 @@
         currentSku:         null,         // current variation SKU
         bulkPrices:         [],           // [{from, to, value}] loaded from API
         currentQty:         1,            // current quantity (clamped to minQty)
-        minQty:             1,            // from data-min-qty attribute
+        minQty:             1,            // effective min (may be raised by bulk price first tier)
+        productMinQty:      1,            // product-level min (from meta / data attribute)
     };
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -122,6 +123,40 @@
         $panel.find('.infoplus-order-panel__bulk').show();
     }
 
+    /**
+     * Raise minQty to the first bulk-price tier's "from" value when it is
+     * higher than the product-level minimum, and re-clamp the current qty.
+     */
+    function applyBulkMinQty($panel, tiers) {
+        var firstFrom = parseInt(tiers[0].from, 10) || 1;
+        var effective = Math.max(state.productMinQty, firstFrom);
+        if (effective !== state.minQty) {
+            state.minQty = effective;
+            if (state.currentQty < effective) {
+                var $input = $panel.find('.infoplus-qty-input');
+                state.currentQty = effective;
+                $input.val(effective);
+                $panel.find('.infoplus-qty-minus').prop('disabled', true);
+                if (w.infoplusProductState) {
+                    w.infoplusProductState.currentQty = effective;
+                    w.infoplusProductState.emit('qty:changed', { qty: effective, source: 'panel' });
+                }
+            }
+        }
+        // Notify info box of the effective min qty
+        if (w.infoplusProductState) {
+            w.infoplusProductState.emit('minqty:changed', { minQty: effective });
+        }
+    }
+
+    /** Reset minQty back to the product-level value (when no bulk prices). */
+    function resetMinQty($panel) {
+        state.minQty = state.productMinQty;
+        if (w.infoplusProductState) {
+            w.infoplusProductState.emit('minqty:changed', { minQty: state.productMinQty });
+        }
+    }
+
     function fetchBulkPrices($panel, sku) {
         if (!sku) {
             state.bulkPrices = [];
@@ -141,16 +176,19 @@
         $.getJSON(apiUrl, function (data) {
             if (data && data.length) {
                 state.bulkPrices = data;
+                applyBulkMinQty($panel, data);
                 var cols = parseInt($panel.find('.infoplus-order-panel__bulk-grid').data('cols'), 10) || 2;
                 buildBulkGrid($panel, data, cols);
                 updatePrices($panel);
             } else {
                 state.bulkPrices = [];
+                resetMinQty($panel);
                 hideBulkSection($panel);
                 hidePriceSection($panel);
             }
         }).fail(function () {
             state.bulkPrices = [];
+            resetMinQty($panel);
             hideBulkSection($panel);
             hidePriceSection($panel);
         });
@@ -287,7 +325,9 @@
         resetButtonVisibility($panel);
 
         if (orderType === 'editable') {
-            $panel.find('.infoplus-btn--editor').removeClass('infoplus-btn--hidden');
+            $panel.find('.infoplus-btn--editor')
+                .removeClass('infoplus-btn--hidden')
+                .addClass('infoplus-btn--pulsing');
             $panel.find('.infoplus-btn--anfrage').removeClass('infoplus-btn--hidden');
 
         } else if (orderType === 'requestable' || orderType === 'requestable_with_variants') {
@@ -296,7 +336,9 @@
                 .addClass('infoplus-btn--pulsing');
 
         } else if (orderType === 'buyable') {
-            $panel.find('.infoplus-btn--cart').removeClass('infoplus-btn--hidden');
+            $panel.find('.infoplus-btn--cart')
+                .removeClass('infoplus-btn--hidden')
+                .addClass('infoplus-btn--pulsing');
         }
 
         // Re-apply enabled/disabled state based on current variation validity
@@ -316,7 +358,8 @@
                         .attr('target', '_blank')
                         .attr('rel', 'noopener')
                         .removeClass('infoplus-btn--disabled')
-                        .removeAttr('aria-disabled');
+                        .removeAttr('aria-disabled')
+                        .addClass('infoplus-btn--pulsing');
                     $panel.find('.infoplus-btn-error').hide();
                 }
             } else {
@@ -324,6 +367,7 @@
                     .attr('href', '#')
                     .removeAttr('target rel')
                     .addClass('infoplus-btn--disabled')
+                    .removeClass('infoplus-btn--pulsing')
                     .attr('aria-disabled', 'true');
                 if (state.variationNotFound) {
                     $panel.find('.infoplus-btn-error').show();
@@ -332,16 +376,26 @@
                 }
             }
 
+        } else if (orderType === 'requestable' || orderType === 'requestable_with_variants') {
+            // Re-enforce Anfrage visible + pulsing — these types need no variation
+            // to be actionable, so downstream events must not hide the button.
+            $panel.find('.infoplus-btn--anfrage')
+                .removeClass('infoplus-btn--hidden')
+                .addClass('infoplus-btn--pulsing');
+            $panel.find('.infoplus-btn-error').hide();
+
         } else if (orderType === 'buyable') {
             var $cart = $panel.find('.infoplus-btn--cart');
             if (state.variationIsValid && !state.variationNotFound) {
                 $cart
                     .removeClass('infoplus-btn--disabled')
+                    .addClass('infoplus-btn--pulsing')
                     .prop('disabled', false);
                 $panel.find('.infoplus-btn-error').hide();
             } else {
                 $cart
                     .addClass('infoplus-btn--disabled')
+                    .removeClass('infoplus-btn--pulsing')
                     .prop('disabled', true);
                 if (state.variationNotFound) {
                     $panel.find('.infoplus-btn-error').show();
@@ -410,7 +464,7 @@
                 $btn
                     .removeClass('infoplus-btn--success')
                     .text(originalText);
-            }, 2000);
+            }, 5000);
 
         }).catch(function (err) {
             $btn
@@ -575,8 +629,9 @@
         if (w.infoplusProductData && w.infoplusProductData.min_quantity) {
             minQty = Math.max(1, parseInt(w.infoplusProductData.min_quantity, 10));
         }
-        state.minQty    = minQty;
-        state.currentQty = minQty;
+        state.productMinQty = minQty;
+        state.minQty        = minQty;
+        state.currentQty    = minQty;
 
         initQuantitySelector($panel);
         bindProductStateEvents($panel);
@@ -628,7 +683,7 @@
 
     $(function () {
         // Elementor frontend hook
-        if (w.elementorFrontend) {
+        if (w.elementorFrontend && w.elementorFrontend.hooks) {
             w.elementorFrontend.hooks.addAction(
                 'frontend/element_ready/infoplus-product-order-panel.default',
                 initWidget

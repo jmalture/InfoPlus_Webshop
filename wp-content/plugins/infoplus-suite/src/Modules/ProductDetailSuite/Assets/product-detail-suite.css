@@ -294,8 +294,8 @@ button.infoplus-model-selector__info-btn:focus,
     display: none; /* Hidden by default */
 }
 
-/* When image is selected (img element with src), show it */
-img.infoplus-dropdown__selected-image[src]:not([src=""]) {
+/* Show image only when the selected option actually has an image */
+.infoplus-dropdown.has-image .infoplus-dropdown__selected-image {
     display: block !important;
 }
 
@@ -1000,4 +1000,78 @@ button.infoplus-dropdown__option-info:focus,
 
 .infoplus-anfrage-pulse--long {
     animation: infoplus-anfrage-pulse 0.75s ease-out 4 !important;
+}
+
+/* ==========================================================================
+   LOADING SKELETON — deferred variation loading
+   ========================================================================== */
+
+@keyframes ip-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.ip-variations-loading .infoplus-dropdown__trigger {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: ip-shimmer 1.5s infinite;
+    pointer-events: none;
+    color: transparent !important;
+}
+
+.ip-variations-loading .infoplus-dropdown__trigger .infoplus-dropdown__arrow {
+    visibility: hidden;
+}
+
+/* ==========================================================================
+   PRODUCT INFO BOX
+   ========================================================================== */
+
+.ip-info-box__heading {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.ip-info-box__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ip-info-box__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ip-info-box__icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.ip-info-box__icon i {
+    color: inherit;
+}
+
+.ip-info-box__icon svg {
+    fill: currentColor;
+}
+
+.ip-info-box__text {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.ip-info-box__sku-label {
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.ip-info-box__sku-value--no-sku {
+    color: #e91e8c;
+    font-style: italic;
 }

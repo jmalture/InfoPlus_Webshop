@@ -60,6 +60,7 @@ final class Module implements ModuleInterface
         //  - Manual placement shortcode: [infoplus_empty_cart]
         add_action('woocommerce_cart_is_empty', [$this, 'renderEmptyCartContent'], 1);
         add_filter('render_block', [$this, 'filterWooCartBlock'], 10, 2);
+        add_filter('render_block', [$this, 'filterWooCheckoutBlock'], 10, 2);
         add_action('wp_head', [$this, 'enqueueCartStyles']);
         add_action('wp_head', [$this, 'enqueueCheckoutStyles']);
         add_shortcode('infoplus_empty_cart', [$this, 'emptyCartShortcode']);
@@ -67,8 +68,9 @@ final class Module implements ModuleInterface
         // Brand customer-facing transactional order emails with plugin colours.
         // Covers both the "Bestellung in Bearbeitung" (processing) and the
         // "Bestellung abgeschlossen" (completed) emails.
-        add_filter('woocommerce_email_styles',            [$this, 'brandOrderEmailStyles'],  10, 2);
-        add_action('woocommerce_email_before_order_table', [$this, 'renderOrderEmailBanner'], 10, 4);
+        add_filter('woocommerce_email_styles',            [$this, 'brandOrderEmailStyles'],    10, 2);
+        add_action('woocommerce_email_before_order_table', [$this, 'renderOrderEmailBanner'],  10, 4);
+        add_action('woocommerce_email_header',             [$this, 'fixEmailHeaderInlineStyles'], 10, 2);
     }
 
     private function assetUrl(string $path): string
@@ -103,18 +105,38 @@ final class Module implements ModuleInterface
      */
     public function enqueueStyles(): void
     {
-        if (!is_user_logged_in()) {
-            return;
-        }
-
         $ver = Plugin::VERSION;
 
-        wp_enqueue_style(
-            'infoplus-user-orders',
-            $this->assetUrl('user-orders.css'),
-            [],
-            $ver
-        );
+        // Order history/dashboard styles — logged-in only
+        if (is_user_logged_in()) {
+            wp_enqueue_style(
+                'infoplus-user-orders',
+                $this->assetUrl('user-orders.css'),
+                [],
+                $ver
+            );
+        }
+
+        // Cart, checkout and thank-you page styles — available to all users (including guests)
+        if (is_cart() || is_checkout() || is_wc_endpoint_url('order-received')) {
+            wp_enqueue_style(
+                'infoplus-woo-pages',
+                $this->assetUrl('woo-pages.css'),
+                [],
+                $ver
+            );
+        }
+
+        // Cart & checkout quantity badge — shows "× qty" when native qty selector is missing
+        if (is_cart() || is_checkout()) {
+            wp_enqueue_script(
+                'infoplus-cart-qty-fix',
+                $this->assetUrl('cart-qty-fix.js'),
+                [],
+                $ver,
+                true
+            );
+        }
     }
 
     public function enqueueFrontend(): void
@@ -698,28 +720,23 @@ final class Module implements ModuleInterface
         
         ?>
         <style>
-        
-        
-            body.page-id-28.woocommerce-order-received .entry-title{
-                display: none;
-                
-            }
+            body.woocommerce-order-received .entry-title { display: none; }
 
             .infoplus-thankyou-container {
                 max-width: 900px;
                 margin: 0 auto 40px;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             }
-            
+
             .infoplus-thankyou-header {
                 text-align: center;
                 padding: 40px 20px;
-                background: var(--e-global-color-primary);
+                background: var(--e-global-color-primary, #e91e8c);
                 border-radius: 16px;
                 margin-bottom: 30px;
                 color: white;
             }
-            
+
             .infoplus-thankyou-icon {
                 width: 80px;
                 height: 80px;
@@ -730,7 +747,7 @@ final class Module implements ModuleInterface
                 justify-content: center;
                 margin: 0 auto 20px;
             }
-            
+
             .infoplus-thankyou-icon svg {
                 width: 40px;
                 height: 40px;
@@ -738,20 +755,20 @@ final class Module implements ModuleInterface
                 stroke-width: 3;
                 fill: none;
             }
-            
+
             .infoplus-thankyou-title {
                 font-size: 28px;
                 font-weight: 700;
                 margin: 0 0 10px;
                 color: white;
             }
-            
+
             .infoplus-thankyou-subtitle {
                 font-size: 16px;
                 opacity: 0.9;
                 margin: 0;
             }
-            
+
             .infoplus-thankyou-order-number {
                 display: inline-block;
                 background: rgba(255,255,255,0.2);
@@ -760,61 +777,51 @@ final class Module implements ModuleInterface
                 font-weight: 600;
                 margin-top: 15px;
             }
-            
+
             .infoplus-thankyou-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 24px;
                 margin-bottom: 30px;
             }
-            
+
             @media (max-width: 768px) {
-                .infoplus-thankyou-grid {
-                    grid-template-columns: 1fr;
-                }
+                .infoplus-thankyou-grid { grid-template-columns: 1fr; }
             }
-            
+
             .infoplus-thankyou-card {
                 background: white;
                 border-radius: 12px;
-                padding: 24px;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+                padding: 28px;
             }
-            
+
             .infoplus-thankyou-card-title {
-                font-size: 14px;
+                font-size: 13px;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                color: #666;
-                margin: 0 0 16px;
-                padding-bottom: 12px;
-                border-bottom: 2px solid #f0f0f0;
+                color: #999;
+                margin: 0 0 24px;
             }
-            
+
             .infoplus-thankyou-info-row {
                 display: flex;
                 justify-content: space-between;
                 padding: 10px 0;
-                border-bottom: 1px solid #f5f5f5;
             }
-            
-            .infoplus-thankyou-info-row:last-child {
-                border-bottom: none;
-            }
-            
+
             .infoplus-thankyou-info-label {
                 color: #666;
                 font-size: 14px;
             }
-            
+
             .infoplus-thankyou-info-value {
                 font-weight: 500;
                 color: #333;
                 font-size: 14px;
                 text-align: right;
             }
-            
+
             .infoplus-thankyou-status {
                 display: inline-block;
                 padding: 4px 12px;
@@ -824,106 +831,92 @@ final class Module implements ModuleInterface
                 background: #fef3c7;
                 color: #d97706;
             }
-            
-            .infoplus-thankyou-status.completed {
-                background: #d1fae5;
-                color: #059669;
-            }
-            
-            .infoplus-thankyou-status.processing {
-                background: #dbeafe;
-                color: #2563eb;
-            }
-            
+
+            .infoplus-thankyou-status.completed  { background: #d1fae5; color: #059669; }
+            .infoplus-thankyou-status.processing  { background: #dbeafe; color: #2563eb; }
+
             .infoplus-thankyou-address {
                 font-size: 14px;
                 line-height: 1.7;
                 color: #444;
             }
-            
+
             .infoplus-thankyou-items {
                 background: white;
                 border-radius: 12px;
-                padding: 24px;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+                padding: 28px;
                 margin-bottom: 30px;
             }
-            
+
             .infoplus-thankyou-item {
                 display: flex;
                 align-items: center;
                 gap: 16px;
-                padding: 16px 0;
-                border-bottom: 1px solid #f0f0f0;
+                padding: 14px 0;
             }
-            
-            .infoplus-thankyou-item:last-child {
-                border-bottom: none;
+
+            .infoplus-thankyou-item + .infoplus-thankyou-item {
+                margin-top: 4px;
             }
-            
+
             .infoplus-thankyou-item-image {
                 width: 70px;
                 height: 70px;
                 object-fit: cover;
                 border-radius: 8px;
-                background: #f5f5f5;
+                background: transparent;
+                flex-shrink: 0;
             }
-            
-            .infoplus-thankyou-item-details {
-                flex: 1;
-            }
-            
+
+            .infoplus-thankyou-item-details { flex: 1; }
+
             .infoplus-thankyou-item-name {
                 font-weight: 500;
                 color: #333;
                 margin-bottom: 4px;
                 font-size: 15px;
             }
-            
-            .infoplus-thankyou-item-meta {
-                font-size: 13px;
-                color: #666;
-            }
-            
+
+            .infoplus-thankyou-item-meta { font-size: 13px; color: #666; }
+
             .infoplus-thankyou-item-price {
                 font-weight: 600;
                 color: #e91e8c;
                 font-size: 16px;
             }
-            
+
             .infoplus-thankyou-totals {
-                background: #f8f8f8;
+                background: #f5f5f5;
                 border-radius: 8px;
-                padding: 16px 20px;
-                margin-top: 20px;
+                padding: 20px 24px;
+                margin-top: 24px;
             }
-            
+
             .infoplus-thankyou-total-row {
                 display: flex;
                 justify-content: space-between;
                 padding: 8px 0;
                 font-size: 14px;
             }
-            
+
             .infoplus-thankyou-total-row.grand-total {
-                border-top: 2px solid #e0e0e0;
-                margin-top: 8px;
-                padding-top: 16px;
+                margin-top: 16px;
+                padding-top: 8px;
                 font-size: 18px;
                 font-weight: 700;
             }
-            
+
             .infoplus-thankyou-total-row.grand-total .infoplus-thankyou-total-value {
                 color: #e91e8c;
             }
-            
+
             .infoplus-thankyou-actions {
                 display: flex;
                 gap: 16px;
                 justify-content: center;
                 flex-wrap: wrap;
             }
-            
+
             .infoplus-thankyou-btn {
                 display: inline-flex;
                 align-items: center;
@@ -932,42 +925,33 @@ final class Module implements ModuleInterface
                 border-radius: 8px;
                 font-weight: 600;
                 text-decoration: none;
-                transition: all 0.2s;
+                transition: background 0.2s, transform 0.15s;
                 font-size: 15px;
             }
-            
-            .infoplus-thankyou-btn-primary {
-                background: #e91e8c;
-                color: white;
-            }
-            
+
+            .infoplus-thankyou-btn-primary { background: #e91e8c; color: white; }
+
             .infoplus-thankyou-btn-primary:hover {
                 background: #d11a7d;
-                transform: translateY(-2px);
+                transform: translateY(-1px);
                 color: white;
             }
-            
+
             .infoplus-thankyou-btn-secondary {
-                background: white;
-                color: #e91e8c;
-                border: 2px solid #e91e8c;
-            }
-            
-            .infoplus-thankyou-btn-secondary:hover {
                 background: #fdf2f8;
                 color: #e91e8c;
             }
-            
-            .infoplus-thankyou-btn svg {
-                width: 18px;
-                height: 18px;
+
+            .infoplus-thankyou-btn-secondary:hover {
+                background: #fce4f3;
+                color: #e91e8c;
             }
-            
-            /* Hide default WooCommerce order details */
+
+            .infoplus-thankyou-btn svg { width: 18px; height: 18px; }
+
+            /* Hide default WooCommerce order details — we render our own */
             .woocommerce-order-details,
-            .woocommerce-customer-details {
-                display: none;
-            }
+            .woocommerce-customer-details { display: none; }
         </style>
         
         <div class="infoplus-thankyou-container">
@@ -1017,7 +1001,7 @@ final class Module implements ModuleInterface
                         <?php echo wp_kses_post($shipping_address); ?>
                     </div>
                     <?php if ($billing_phone): ?>
-                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #f0f0f0;">
+                    <div style="margin-top: 20px;">
                         <span class="infoplus-thankyou-info-label">Telefon:</span>
                         <span style="margin-left: 8px; font-weight: 500;"><?php echo esc_html($billing_phone); ?></span>
                     </div>
@@ -1035,7 +1019,7 @@ final class Module implements ModuleInterface
                     if ($product) {
                         $image_id = $product->get_image_id();
                         if ($image_id) {
-                            $image_url = wp_get_attachment_image_url($image_id, 'thumbnail');
+                            $image_url = wp_get_attachment_image_url($image_id, 'medium');
                         }
                     }
                 ?>
@@ -1403,6 +1387,7 @@ final class Module implements ModuleInterface
             return $block_content;
         }
 
+
         if (!function_exists('WC') || !WC()->cart) {
             return $block_content;
         }
@@ -1427,13 +1412,18 @@ final class Module implements ModuleInterface
                . '.wp-block-woocommerce-empty-cart-block{display:none!important}'
                . '</style>';
 
-        // JS: subscribe to wc/store/cart so visibility updates without a page reload.
-        // We wait for wp.data to be available (WC Blocks registers it after DOM ready).
+        // JS: detect when the cart becomes empty so our custom overlay appears.
         //
-        // Critical: during WC Blocks' loading/hydration phases getCartData() returns an
-        // object where items_count is still undefined. Treating undefined===0 as false
-        // would incorrectly hide the overlay. We guard with typeof === 'number' so we
-        // only ever act on a real, settled value from the store.
+        // Two strategies run in parallel for maximum reliability:
+        //
+        // 1. wp.data store subscription — watches wc/store/cart for items_count===0.
+        //    Guard: only act when items_count is a settled number (not undefined during
+        //    hydration). Also tries d.items.length as a fallback property name.
+        //
+        // 2. MutationObserver on .wp-block-woocommerce-filled-cart-block — when WC
+        //    Blocks hides this element (React sets display:none or removes it), we know
+        //    the cart is empty. This is the reliable fallback when the data store API
+        //    doesn't work or has changed shape.
         $initially_empty_js = $initially_empty ? 'true' : 'false';
         $script = '<script>'
             . '(function(){'
@@ -1445,7 +1435,12 @@ final class Module implements ModuleInterface
             .     'lastEmpty=isEmpty;'
             .     'overlay.style.display=isEmpty?"block":"none";'
             .     'overlay.setAttribute("aria-hidden",isEmpty?"false":"true");'
+            // When cart becomes empty, also hide the filled-cart block in case WC
+            // Blocks leaves it partially visible during transition.
+            .     'var filled=document.querySelector(".wp-block-woocommerce-filled-cart-block");'
+            .     'if(filled){filled.style.display=isEmpty?"none":""}'
             .   '}'
+            // Strategy 1: wp.data store subscription
             .   'function subscribe(){'
             .     'if(!window.wp||!wp.data)return false;'
             .     'var store=wp.data.select("wc/store/cart");'
@@ -1453,17 +1448,37 @@ final class Module implements ModuleInterface
             .     'wp.data.subscribe(function(){'
             .       'try{'
             .         'var d=wp.data.select("wc/store/cart").getCartData();'
-            // Guard: only act when items_count is a real settled number, not undefined/null
-            // (WC store emits many updates during hydration where items_count is not yet set).
-            .         'if(d&&typeof d.items_count==="number")applyState(d.items_count===0);'
+            .         'if(d&&typeof d.items_count==="number"){applyState(d.items_count===0)}'
+            .         'else if(d&&typeof d.itemsCount==="number"){applyState(d.itemsCount===0)}'
+            .         'else if(d&&Array.isArray(d.items)){applyState(d.items.length===0)}'
             .       '}catch(e){}'
             .     '});'
             .     'return true;'
             .   '}'
-            // Try immediately (wp.data may already be loaded), then retry on load.
-            .   'if(!subscribe()){'
-            .     'window.addEventListener("load",function(){subscribe()||setTimeout(subscribe,800);});'
+            // Strategy 2: MutationObserver on the filled-cart block
+            .   'function observeFilledBlock(){'
+            .     'var filled=document.querySelector(".wp-block-woocommerce-filled-cart-block");'
+            .     'if(!filled)return;'
+            .     'function check(){'
+            .       'var h=filled.style.display==="none"||filled.hidden||!filled.offsetParent;'
+            .       'applyState(h);'
+            .     '}'
+            .     'new MutationObserver(check).observe(filled,{attributes:true,attributeFilter:["style","class","hidden"]});'
+            // Also observe the parent for React child replacements
+            .     'if(filled.parentElement){'
+            .       'new MutationObserver(function(){'
+            .         'var f=document.querySelector(".wp-block-woocommerce-filled-cart-block");'
+            .         'if(!f){applyState(true);return}'
+            .         'applyState(f.style.display==="none"||f.hidden||!f.offsetParent);'
+            .       '}).observe(filled.parentElement,{childList:true,subtree:true,attributes:true});'
+            .     '}'
             .   '}'
+            // Boot: try data store immediately, retry on load; start observer on load
+            .   'if(!subscribe()){'
+            .     'window.addEventListener("load",function(){subscribe()||setTimeout(subscribe,800)});'
+            .   '}'
+            .   'if(document.readyState==="complete"){observeFilledBlock()}'
+            .   'else{window.addEventListener("load",observeFilledBlock)}'
             . '})();'
             . '</script>';
 
@@ -1472,6 +1487,36 @@ final class Module implements ModuleInterface
                  . '</div>';
 
         return $heading . $wrapped . $style . $script . $block_content;
+    }
+
+    /**
+     * render_block filter — rewrites the "Anmelden" login link inside the WooCommerce
+     * checkout block so it points to our custom login page (/log-in/) instead of
+     * the default wp-login.php URL.
+     */
+    public function filterWooCheckoutBlock(string $block_content, array $block): string
+    {
+        if (($block['blockName'] ?? '') !== 'woocommerce/checkout') {
+            return $block_content;
+        }
+
+        $login_url = esc_url(home_url('/log-in/'));
+
+        // Replace the href on the checkout login-prompt anchor.
+        $block_content = preg_replace(
+            '/(<a[^>]+class="[^"]*wc-block-checkout__login-prompt[^"]*"[^>]+href=")[^"]*(")/i',
+            '$1' . $login_url . '$2',
+            $block_content
+        );
+
+        // Also cover the reversed attribute order (href before class).
+        $block_content = preg_replace(
+            '/(<a[^>]+href=")[^"]*("[^>]+class="[^"]*wc-block-checkout__login-prompt[^"]*")/i',
+            '$1' . $login_url . '$2',
+            $block_content
+        );
+
+        return $block_content;
     }
 
     /**
@@ -1766,6 +1811,72 @@ final class Module implements ModuleInterface
     // -------------------------------------------------------------------------
 
     /**
+     * Fix logo alignment and spacing via output buffering so the overrides are
+     * applied as inline styles — necessary for Gmail and other clients that
+     * strip <head> CSS entirely.
+     *
+     * Captures the WooCommerce email header HTML and rewrites the inline
+     * style/align attributes on #template_header_image directly.
+     */
+    public function fixEmailHeaderInlineStyles($email_heading, $email): void
+    {
+        if (!$email || !in_array($email->id, self::BRANDED_EMAIL_IDS, true)) {
+            return;
+        }
+
+        ob_start();
+        // The header template has already started output; we capture what
+        // follows (the rest of the header) and patch it on ob_end_clean via
+        // a shutdown-style filter on the full email content instead.
+        // Use woocommerce_mail_content to rewrite the final HTML.
+        add_filter('woocommerce_mail_content', [$this, 'rewriteEmailHeaderLogoInline']);
+    }
+
+    /**
+     * Rewrite inline styles on the logo <td> and its <p> to force centering.
+     * Runs once per email via woocommerce_mail_content.
+     */
+    public function rewriteEmailHeaderLogoInline(string $content): string
+    {
+        // Remove this filter immediately so it only runs once per email.
+        remove_filter('woocommerce_mail_content', [$this, 'rewriteEmailHeaderLogoInline']);
+
+        // Center the <td id="template_header_image"> — replace its padding style, add text-align.
+        $content = preg_replace(
+            '/(<td\s+id=["\']template_header_image["\'][^>]*style=["\'])([^"\']*?)(["\'])/i',
+            '$1$2 text-align: center;$3',
+            $content
+        );
+
+        // Center the <p> inside it and remove left alignment.
+        $content = preg_replace(
+            '/(<td\s+id=["\']template_header_image["\'].*?<p\s[^>]*style=["\'])([^"\']*?)(["\'])/is',
+            '$1text-align: center; margin: 0 auto;$3',
+            $content
+        );
+
+        // Remove align="left" attribute on the <p>.
+        $content = preg_replace(
+            '/(<td\s+id=["\']template_header_image["\'].*?<p\s[^>]*)\balign=["\']left["\']/is',
+            '$1align="center"',
+            $content
+        );
+
+        // Add margin-bottom and remove margin-right on the <img> inside that <td>.
+        $content = preg_replace_callback(
+            '/(<td\s+id=["\']template_header_image["\'].*?<img\s[^>]*style=["\'])([^"\']*?)(["\'])/is',
+            function ($m) {
+                $style = preg_replace('/margin-right:\s*\d+px;?\s*/i', '', $m[2]);
+                $style = rtrim($style, '; ') . '; margin-bottom: 10px; margin-right: 0;';
+                return $m[1] . $style . $m[3];
+            },
+            $content
+        );
+
+        return $content;
+    }
+
+    /**
      * Inject brand-colour CSS into the "Abgeschlossene Bestellung" customer email.
      *
      * WooCommerce collects this CSS into a <style> block placed in the email <head>.
@@ -1811,6 +1922,11 @@ final class Module implements ModuleInterface
             #template_header                      { background-color: #e91e8c !important; }
             #template_header h1,
             #template_header p                    { color: #ffffff !important; }
+
+            /* Logo alignment + spacing */
+            #template_header_image                { text-align: center !important; }
+            #template_header_image p              { text-align: center !important; margin: 0 auto !important; }
+            #template_header_image p img          { margin-bottom: 10px !important; margin-right: 0 !important; }
 
             /* Section headings */
             h2                                    { color: #e91e8c !important; }
@@ -1893,9 +2009,9 @@ final class Module implements ModuleInterface
                         <tr>
                             <td width="44" valign="middle" style="padding-right:14px;">
                                 <div style="width:44px;height:44px;border-radius:50%;
-                                            background:#e91e8c;text-align:center;
-                                            line-height:44px;font-size:22px;">
-                                    <span style="color:#fff;"><?php echo $icon_char; ?></span>
+                                            background:#e91e8c;font-size:22px;
+                                            display:flex;align-items:center;justify-content:center;">
+                                    <span style="color:#fff;display:flex;align-items:center;justify-content:center;height:100%;"><?php echo $icon_char; ?></span>
                                 </div>
                             </td>
                             <td valign="middle">

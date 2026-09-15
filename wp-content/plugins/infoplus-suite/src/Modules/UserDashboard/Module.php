@@ -34,11 +34,22 @@ final class Module implements ModuleInterface
 
         // Register shortcode for full profile settings form
         add_shortcode('infoplus_profile_settings', [$this, 'renderProfileSettings']);
+
+        // Register Elementor widgets
+        add_action('elementor/widgets/register', [$this, 'registerWidgets']);
+
+        // Skip WordPress logout confirmation page — log out immediately
+        add_action('login_form_logout', [$this, 'skipLogoutConfirmation']);
     }
 
     private function assetUrl(string $path): string
     {
         return INFOPLUS_SUITE_URL . 'src/Modules/UserDashboard/Assets/' . ltrim($path, '/');
+    }
+
+    private function isLoginPage(): bool
+    {
+        return is_page('log-in') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/log-in') !== false);
     }
 
     public function enqueueFrontend(): void
@@ -69,6 +80,20 @@ final class Module implements ModuleInterface
             'accountUrl' => home_url('/account'),
             'logoutUrl' => wp_logout_url(home_url()),
         ]);
+
+        // On the login/register page, redirect to login form after successful registration
+        if (!is_user_logged_in() && $this->isLoginPage()) {
+            wp_add_inline_script('jquery', '
+                jQuery(function($) {
+                    var $msg = $(".eael-register-form-wrapper .eael-form-msg.valid");
+                    if ($msg.length) {
+                        setTimeout(function() {
+                            window.location.href = "' . esc_url(home_url('/log-in/')) . '";
+                        }, 2000);
+                    }
+                });
+            ');
+        }
 
         // Only load dashboard scripts if user is logged in
         if (!is_user_logged_in()) {
@@ -922,5 +947,41 @@ final class Module implements ModuleInterface
     {
         // Force redirect to /account for all WooCommerce logins
         return home_url('/account');
+    }
+
+    /**
+     * Register Elementor widgets
+     */
+    public function registerWidgets($widgets_manager): void
+    {
+        wp_register_style(
+            'infoplus-user-stat-card',
+            $this->assetUrl('user-stat-card.css'),
+            [],
+            Plugin::VERSION
+        );
+
+        require_once __DIR__ . '/Widgets/UserStatCard.php';
+        $widgets_manager->register(new Widgets\UserStatCard());
+    }
+
+    /**
+     * Skip the WordPress "Do you really want to log out?" confirmation page.
+     * This fires before the nonce check, so it works even with expired nonces
+     * (e.g. from cached pages).
+     */
+    public function skipLogoutConfirmation(): void
+    {
+        // If the user is already logged out, just redirect
+        if (!is_user_logged_in()) {
+            wp_safe_redirect(home_url());
+            exit;
+        }
+
+        wp_logout();
+
+        $redirect = !empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : home_url();
+        wp_safe_redirect($redirect);
+        exit;
     }
 }

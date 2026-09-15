@@ -652,26 +652,33 @@ class ModelSelector extends Widget_Base
     private function renderModelCards($product, $settings): void
     {
         $product_id = $product->get_id();
-        $variations = $product->get_available_variations();
-        $models = [];
         $show_info_button = $settings['show_info_button'] === 'yes';
         $info_behavior = $settings['info_button_behavior'];
-        
-        // Group variations by model
-        foreach ($variations as $variation) {
-            $model_slug = $variation['attributes']['attribute_pa_model'] ?? '';
-            if (!$model_slug) continue;
-            
-            if (!isset($models[$model_slug])) {
-                $models[$model_slug] = [
-                    'slug' => $model_slug,
-                    'min_price' => PHP_FLOAT_MAX,
+
+        // Build model data using direct DB queries (fast for products with many variations)
+        global $wpdb;
+        $children = $product->get_children();
+        $models = [];
+
+        if (!empty($children)) {
+            $ids_placeholder = implode(',', array_map('intval', $children));
+
+            $rows = $wpdb->get_results(
+                "SELECT pm_model.meta_value AS model_slug, MIN(CAST(pm_price.meta_value AS DECIMAL(10,2))) AS min_price
+                 FROM {$wpdb->posts} p
+                 INNER JOIN {$wpdb->postmeta} pm_model ON p.ID = pm_model.post_id AND pm_model.meta_key = 'attribute_pa_model'
+                 LEFT JOIN {$wpdb->postmeta} pm_price ON p.ID = pm_price.post_id AND pm_price.meta_key = '_price'
+                 WHERE p.ID IN ({$ids_placeholder})
+                   AND p.post_status = 'publish'
+                   AND pm_model.meta_value != ''
+                 GROUP BY pm_model.meta_value"
+            );
+
+            foreach ($rows as $row) {
+                $models[$row->model_slug] = [
+                    'slug' => $row->model_slug,
+                    'min_price' => (float) $row->min_price,
                 ];
-            }
-            
-            $price = (float) $variation['display_price'];
-            if ($price < $models[$model_slug]['min_price']) {
-                $models[$model_slug]['min_price'] = $price;
             }
         }
         

@@ -289,7 +289,7 @@
 
     // Handle Elementor frontend init (for preview mode)
     $(window).on('elementor/frontend/init', function() {
-        if (typeof elementorFrontend !== 'undefined') {
+        if (typeof elementorFrontend !== 'undefined' && elementorFrontend.hooks) {
             elementorFrontend.hooks.addAction('frontend/element_ready/infoplus-user-orders-grid.default', function($element) {
                 UserOrders.initialized = false;
                 UserOrders.init();

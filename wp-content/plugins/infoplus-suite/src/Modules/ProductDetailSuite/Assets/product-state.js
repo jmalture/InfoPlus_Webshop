@@ -33,7 +33,7 @@
         init: function() {
             if (this.productData) {
                 this.buildAvailableAttributes();
-                
+
                 // Pre-populate selectedAttributes with ALL variation attribute keys
                 // so they always exist (prevents matching with missing keys)
                 if (this.productData.attributes) {
@@ -46,14 +46,64 @@
                     }.bind(this));
                 }
             }
-            
+
             // Listen for WooCommerce variation events
             this.bindWooCommerceEvents();
 
-            // Pre-select the default variation if configured in admin
-            this.applyDefaultVariation();
+            // If variations were deferred (too many for inline), load via REST
+            if (this.productData && this.productData._variationsDeferred) {
+                console.log('[InfoplusState] Variations deferred — loading via REST...');
+                this.emit('variations:loading', {});
+                this.loadDeferredVariations();
+            } else {
+                // Pre-select the default variation if configured in admin
+                this.applyDefaultVariation();
+            }
 
             console.log('[InfoplusState] Initialized', this.productData, 'attributes:', this.selectedAttributes);
+        },
+
+        /**
+         * Load variations via REST API for products with many variants.
+         * Once loaded, re-runs initialization steps that depend on variation data.
+         */
+        loadDeferredVariations: function() {
+            var self = this;
+            var productId = this.productData.id;
+            var restUrl = (window.infoplusProductConfig && window.infoplusProductConfig.restUrl)
+                ? window.infoplusProductConfig.restUrl
+                : '/wp-json/infoplus/v1/';
+
+            $.getJSON(restUrl + 'product/' + productId + '/variations')
+                .done(function(response) {
+                    var variations = response.variations || [];
+                    if (variations.length) {
+                        self.productData.variations = variations;
+                        console.log('[InfoplusState] Deferred variations loaded:', variations.length);
+
+                        // Rebuild available attributes now that we have variation data
+                        self.buildAvailableAttributes();
+
+                        // Emit event so widgets can update (e.g. remove skeleton states)
+                        self.emit('variations:loaded', {
+                            count: variations.length,
+                            availableAttributes: self.availableAttributes
+                        });
+
+                        // Apply default variation. If the model selector already
+                        // picked a model (before variations arrived), reset it so
+                        // setModel() → applyModelDefault() runs with real data.
+                        var currentModel = self.selectedModel;
+                        if (currentModel) {
+                            self.selectedModel = null; // reset so setModel() doesn't bail
+                        }
+                        self.applyDefaultVariation();
+                    }
+                })
+                .fail(function(xhr) {
+                    console.error('[InfoplusState] Failed to load deferred variations:', xhr.statusText);
+                    self.emit('variations:loaded', { count: 0, error: true });
+                });
         },
 
         /**
@@ -261,7 +311,13 @@
         },
 
         /**
-         * Build available attribute options based on current selections
+         * Build available attribute options based on current selections.
+         *
+         * WooCommerce stores variation attribute keys with an "attribute_" prefix
+         * (e.g. "attribute_pa_format") while our selectedAttributes and the dropdown
+         * widgets use the bare "pa_*" form.  This function normalises everything to
+         * bare keys so that availableAttributes matches what updateAvailableOptions()
+         * expects from the dropdown widgets' data-attribute values.
          */
         buildAvailableAttributes: function() {
             if (!this.productData || !this.productData.variations) {
@@ -270,41 +326,45 @@
             }
 
             const variations = this.productData.variations;
-            const currentSelections = this.selectedAttributes;
-            
-            // Get all attribute keys
-            const attributeKeys = new Set();
+            const currentSelections = this.selectedAttributes; // keys: 'pa_model', 'pa_format', …
+
+            // Collect all bare attribute keys (strip "attribute_" prefix from WC keys)
+            const bareKeys = new Set();
             variations.forEach(v => {
-                Object.keys(v.attributes || {}).forEach(key => attributeKeys.add(key));
+                Object.keys(v.attributes || {}).forEach(key => {
+                    bareKeys.add(key.replace('attribute_', ''));
+                });
             });
-            
+
             this.availableAttributes = {};
-            
-            attributeKeys.forEach(attrKey => {
-                // Find which values are available for this attribute
-                // given the current selections of other attributes
+
+            bareKeys.forEach(bareKey => {
+                // WC variation attribute key for this attribute
+                const prefixedKey = 'attribute_' + bareKey;
                 const availableValues = new Set();
-                
+
                 variations.forEach(variation => {
-                    // Check if this variation matches all other selected attributes
+                    // Check if this variation matches all OTHER currently-selected attributes
                     let matches = true;
-                    
+
                     Object.entries(currentSelections).forEach(([selectedAttr, selectedVal]) => {
-                        if (selectedAttr === attrKey) return; // Skip the attribute we're checking
-                        if (!selectedVal) return; // Skip unselected attributes
-                        
-                        const variationVal = variation.attributes[selectedAttr];
+                        if (selectedAttr === bareKey) return; // skip the attr we're computing for
+                        if (!selectedVal) return; // skip attributes not yet selected
+
+                        // Look up using the prefixed key that WC uses in variation.attributes
+                        const variationVal = variation.attributes['attribute_' + selectedAttr];
                         if (variationVal && variationVal !== selectedVal) {
                             matches = false;
                         }
                     });
-                    
-                    if (matches && variation.attributes[attrKey]) {
-                        availableValues.add(variation.attributes[attrKey]);
+
+                    if (matches && variation.attributes[prefixedKey]) {
+                        availableValues.add(variation.attributes[prefixedKey]);
                     }
                 });
-                
-                this.availableAttributes[attrKey] = Array.from(availableValues);
+
+                // Store under the bare key so dropdown widgets (data-attribute="pa_format") can look it up
+                this.availableAttributes[bareKey] = Array.from(availableValues);
             });
         },
 

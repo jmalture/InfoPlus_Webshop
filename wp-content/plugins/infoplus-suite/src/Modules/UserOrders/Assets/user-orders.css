@@ -233,7 +233,8 @@
 }
 
 .infoplus-order-btn-secondary:hover {
-    background: rgba(233, 30, 140, 0.05);
+    background: #e91e8c !important;
+    color: #fff !important;
 }
 
 /* No Results Message */

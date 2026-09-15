@@ -296,7 +296,7 @@
 
     // Re-initialize for Elementor editor
     $(window).on('elementor/frontend/init', function() {
-        if (window.elementorFrontend) {
+        if (window.elementorFrontend && window.elementorFrontend.hooks) {
             elementorFrontend.hooks.addAction('frontend/element_ready/infoplus-product-image.default', function($element) {
                 ProductImage.initWidget($element.find('.infoplus-product-image'));
             });

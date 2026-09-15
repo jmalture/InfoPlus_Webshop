@@ -318,7 +318,7 @@ class VariationDropdowns extends Widget_Base
 
                 <div class="infoplus-dropdown__trigger" tabindex="0" role="combobox" aria-expanded="false">
                     <span class="infoplus-dropdown__selected">
-                        <img class="infoplus-dropdown__selected-image" src="" alt="" />
+                        <img class="infoplus-dropdown__selected-image litespeed-no-lazy" src="" alt="" data-no-lazy="1" loading="eager" />
                         <span class="infoplus-dropdown__selected-text"><?php echo esc_html($placeholder); ?></span>
                         <?php if ($show_info): ?>
                             <button class="infoplus-dropdown__selected-info" type="button" aria-label="<?php esc_attr_e('More info', 'infoplus-suite'); ?>">
@@ -337,6 +337,7 @@ class VariationDropdowns extends Widget_Base
                     <?php foreach ($terms_data as $term): ?>
                         <div class="infoplus-dropdown__option"
                             data-value="<?php echo esc_attr($term['slug']); ?>"
+                            data-image="<?php echo esc_url($term['image_url']); ?>"
                             data-tooltip="<?php echo esc_attr($term['tooltip']); ?>"
                             data-modal-content="<?php echo esc_attr($term['modal_content']); ?>"
                             role="option">

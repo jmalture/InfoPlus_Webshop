@@ -233,8 +233,8 @@
             const value = $option.data('value');
             const text = $option.find('.infoplus-dropdown__option-text').text();
             const $image = $option.find('.infoplus-dropdown__option-image');
-            const imageSrc = $image.length ? $image.attr('src') : null;
-            
+            const imageSrc = $option.data('image') || ($image.length ? ($image.attr('data-src') || $image.attr('src')) : null) || null;
+
             console.log('[InfoplusDropdowns] Selecting option:', value);
             
             // Update visual state
@@ -324,8 +324,8 @@
             const tooltip = $option.data('tooltip');
             const modalContent = $option.data('modal-content');
             const $image = $option.find('.infoplus-dropdown__option-image');
-            const imageSrc = $image.length ? $image.attr('src') : null;
-            
+            const imageSrc = $option.data('image') || ($image.length ? ($image.attr('data-src') || $image.attr('src')) : null) || null;
+
             // Find or create modal
             let $modal = $('.infoplus-info-modal');
             
@@ -387,7 +387,7 @@
 
     // Re-initialize for Elementor editor
     $(window).on('elementor/frontend/init', function() {
-        if (window.elementorFrontend) {
+        if (window.elementorFrontend && window.elementorFrontend.hooks) {
             elementorFrontend.hooks.addAction('frontend/element_ready/infoplus-variation-dropdowns.default', function($element) {
                 VariationDropdowns.initWidget($element.find('.infoplus-variation-dropdowns'));
             });
