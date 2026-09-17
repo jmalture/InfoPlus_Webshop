@@ -1,0 +1,24 @@
+<html>
+<body>
+    <h1>Synchronization Report</h1>
+    <p>Start time: <?= date('Y-m-d H:i:s') ?></p>
+
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Status</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($result as $entry): ?>
+                <tr>
+                    <td><?= htmlspecialchars($entry['product_id']) ?></td>
+                    <td><?= htmlspecialchars($entry['result']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</body>
+</html>
