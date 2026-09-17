@@ -1,9 +1,10 @@
-# Infoplus Suite — Plugin Documentation
+# Infoplus Suite: Plugin Documentation
 
-> **Version:** 0.9.93
+> **Version:** 0.9.111 (plugin header), internal cache-bust constant `Plugin::VERSION` = 0.10.25
 > **Author:** JM (Alture / Infoplus)
 > **License:** GPL-2.0-or-later
-> **Last Updated:** 2026-03-20
+> **Last Updated:** 2026-09-17 (matches production, git commit `f01aca6`)
+> **Related docs:** `PIPELINE.md` (system overview), `UPGRADE-ROADMAP.md` (planned work), `CLAUDE.md` (project brief), `reference/README.md` (InfoplusAPI and legacy plugins)
 
 ---
 
@@ -21,18 +22,21 @@
    - 4.6 [UserDashboard](#46-userdashboard)
    - 4.7 [UserOrders](#47-userorders)
    - 4.8 [ElementorUserAvatar](#48-elementoruseravatar)
+   - 4.9 [Custom404](#49-custom404)
 5. [Module Dependency Map](#5-module-dependency-map)
 6. [REST API Endpoints](#6-rest-api-endpoints)
 7. [WooCommerce Meta Keys](#7-woocommerce-meta-keys)
 8. [Conventions & Patterns](#8-conventions--patterns)
-9. [Anfrage Popup — Data Injection Pattern](#9-anfrage-popup--data-injection-pattern)
-10. [Admin Meta Box — "Infoplus Suite"](#10-admin-meta-box--infoplus-suite)
+9. [Anfrage Popup: Data Injection Pattern](#9-anfrage-popup-data-injection-pattern)
+10. [Admin Meta Box: "Infoplus Suite"](#10-admin-meta-box-infoplus-suite)
 11. [Per-Model Default Variations](#11-per-model-default-variations)
 12. [WDP Bulk Prices API Interception](#12-wdp-bulk-prices-api-interception)
-13. [Model Switching — Single-Trigger WooCommerce Sync](#13-model-switching--single-trigger-woocommerce-sync)
+13. [Model Switching: Single-Trigger WooCommerce Sync](#13-model-switching-single-trigger-woocommerce-sync)
 14. [Two-Way Qty / Price Table Sync](#14-two-way-qty--price-table-sync)
 15. [Cart Page Styling (WooCommerce Blocks)](#15-cart-page-styling-woocommerce-blocks)
 16. [Known Issues & Incomplete Features](#16-known-issues--incomplete-features)
+17. [Large Products: Deferred Variations and Caching](#17-large-products-deferred-variations-and-caching)
+18. [Changes from 0.9.93 to 0.9.111](#18-changes-from-0993-to-09111)
 
 ---
 
@@ -47,8 +51,12 @@
 - User dashboard with profile management, order history, and avatar uploads
 - Custom Elementor widgets and dynamic tags for frontend display
 - B2B user tier support (Shoppers, Resellers, Partners)
+- Branded cart, checkout, empty-cart, thank-you page and order emails (WooCommerce Blocks)
+- Branded 404 page
 
 **Tech stack:** WordPress, WooCommerce, Elementor Pro, ACF, PHP 7.4+, jQuery, REST API.
+
+**Companion plugin:** the separate **InfoplusAPI** plugin (author Vaclav Rezabek, copy in `reference/infoplus_api/`) owns the REST routes under `infoplus/v1` that talk to editor.infoplus.de. The Suite's IkonaIFE module depends on it. A merge into the Suite is planned. See `PIPELINE.md`.
 
 **Brand accent color:** `#e91e8c` (pink), used across all custom UI.
 
@@ -60,14 +68,22 @@
 
 ```
 infoplus-suite/
-├── infoplus-suite.php          # Plugin entry point
+├── infoplus-suite.php          # Plugin entry point (header Version 0.9.111)
 ├── composer.json                # PSR-4 autoloader config
+├── PLUGIN-DOCUMENTATION.md      # This file
+├── PIPELINE.md                  # End-to-end system overview (all four plugins)
+├── UPGRADE-ROADMAP.md           # Planned refactors R-01 to R-12 with status
+├── CLAUDE.md                    # Short project brief for AI-assisted sessions
+├── FEATURE-*.md                 # Four older feature briefs (model gallery, order panel, order types, dropdown height)
 ├── assets/                      # Plugin-level assets (icons, logos)
 │   ├── ikona-icon.ico
 │   ├── ikona-icon.png
 │   └── logo-ikona.jpg
+├── reference/                   # NOT deployed. Lineage copies, see reference/README.md
+│   ├── infoplus_api/            # Live InfoplusAPI plugin (secrets moved to wp-config constants)
+│   └── legacy/                  # The two predecessor plugins (inactive on production)
 └── src/
-    ├── Plugin.php               # Main plugin orchestrator
+    ├── Plugin.php               # Main plugin orchestrator, Plugin::VERSION = 0.10.25
     ├── Admin/
     │   └── Dashboard.php        # WP Admin menu page + tab renderer
     ├── Contracts/
@@ -75,12 +91,13 @@ infoplus-suite/
     └── Modules/
         ├── EditorLinkSettings/  # Settings tab (admin UI)
         ├── IkonaIFE/            # Product sync dashboard (admin UI)
-        ├── WooProductVariationFields/  # WooCommerce product meta fields
-        ├── WooSingleProductAddons/     # Frontend product page scripts + file uploads
-        ├── ProductDetailSuite/         # Elementor widgets for product pages
-        ├── UserDashboard/              # User profile + auth management
-        ├── UserOrders/                 # Order display + Elementor widgets
-        └── ElementorUserAvatar/        # User avatar dynamic tag
+        ├── WooProductVariationFields/  # Backup save of IFE meta + REST exposure
+        ├── WooSingleProductAddons/     # Frontend product page scripts + file uploads + AJAX cart
+        ├── ProductDetailSuite/         # Elementor widgets for product pages (six widgets)
+        ├── UserDashboard/              # User profile + auth management + UserStatCard widget
+        ├── UserOrders/                 # Orders, thank-you page, cart/checkout styling, emails
+        ├── ElementorUserAvatar/        # User avatar dynamic tag
+        └── Custom404/                  # Branded 404 page
 ```
 
 ### 2.2 Module System
@@ -95,7 +112,7 @@ interface ModuleInterface {
 }
 ```
 
-All modules are instantiated in `Plugin.php → registerModules()`. Each module's `register()` method is called unconditionally — all modules run in the background.
+All nine modules are instantiated in `Plugin.php → registerModules()` in this order: WooSingleProductAddons, WooProductVariationFields, EditorLinkSettings, IkonaIFE, ElementorUserAvatar, UserDashboard, UserOrders, ProductDetailSuite, Custom404. Each module's `register()` method is called unconditionally. There is no try/catch around instantiation and no way to disable a single module without editing code (roadmap items R-05 and R-11).
 
 ### 2.3 Admin Dashboard Tabs
 
@@ -122,10 +139,12 @@ The admin page is registered under **IKONA IFE** in the WP sidebar (position 56)
 
 `boot()` runs in order:
 
-1. **`defineConstants()`** — Sets `INFOPLUS_SUITE_FILE`, `INFOPLUS_SUITE_PATH`, `INFOPLUS_SUITE_URL`
-2. **`registerModules()`** — Instantiates all 8 modules, calls `register()` on each
-3. **`registerAdmin()`** — Passes visible modules to `Dashboard`, registers the admin page
-4. **`registerHooks()`** — Loads text domain for i18n
+1. **`defineConstants()`**: sets `INFOPLUS_SUITE_FILE`, `INFOPLUS_SUITE_PATH`, `INFOPLUS_SUITE_URL`
+2. **`registerModules()`**: instantiates all 9 modules, calls `register()` on each
+3. **`registerAdmin()`**: passes visible modules to `Dashboard`, registers the admin page
+4. **`registerHooks()`**: loads text domain `infoplus-suite` from `languages/` on `init` (the directory does not exist in the repo, so no translations load)
+
+`Plugin::VERSION` (currently `0.10.25`) is the cache-bust string most modules append to their asset URLs. It is independent of the plugin header version (`0.9.111`). See Section 8.
 
 ### `src/Admin/Dashboard.php`
 
@@ -223,12 +242,20 @@ Provides a full-featured product sync dashboard in WP Admin. Displays all WooCom
 1. Page loads → dashboard.php renders skeleton
 2. JS fetches GET /infoplus-suite/v1/products (proxied through SyncController)
 3. SyncController calls SyncService::fetchProductsWithSyncStatus()
-4. SyncService fetches from internal REST: /infoplus/v1/products (Ikona plugin endpoint)
+4. SyncService does wp_remote_get() against its own site: rest_url('infoplus/v1/products').
+   That route is registered by the InfoplusAPI plugin (reference/infoplus_api/entities/Products.php),
+   which reads the custom tables infoplus_products and infoplus_synchronizations.
+   Result is cached in the transient infoplus_products_cache for 60 seconds.
 5. Products rendered in JS table with search/filter/sort
-6. User clicks Sync → JS calls GET /infoplus/v1/products/synchronization?productId=X (EXTERNAL Ikona API)
+6. User clicks Sync → JS calls GET /infoplus/v1/products/synchronization?productId=X
+   (InfoplusAPI route; it calls editor.infoplus.de/smp/infoplus/updateProduct server-side)
 7. On success → JS calls POST /infoplus-suite/v1/products/{id}/sync-result (saves to WP)
 8. SyncService saves timestamps and IDs to post_meta
 ```
+
+Config passed to `dashboard.js` (`Module::renderDashboard`): `proxyUrl`, `syncApiUrl`, `saveSyncUrl`, `nonce` (`wp_rest`), `loadAsync`, plus the i18n strings.
+
+Two legacy admin-ajax actions still exist in `SyncController` (`wp_ajax_infoplus_sync_all`, `wp_ajax_infoplus_sync_product`, nonce action `infoplus_sync`). `dashboard.js` does not call them.
 
 #### REST Endpoints (namespace: `infoplus-suite/v1`)
 
@@ -246,7 +273,7 @@ Provides a full-featured product sync dashboard in WP Admin. Displays all WooCom
 | GET | `/infoplus/v1/products/synchronization` | Sync all products |
 | GET | `/infoplus/v1/products/synchronization?productId=X` | Sync single product |
 
-These hit the **Ikona IFE plugin** endpoints (separate plugin), not Infoplus Suite endpoints.
+These hit the **InfoplusAPI plugin** endpoints (separate plugin, copy in `reference/infoplus_api/`), not Infoplus Suite endpoints. The route has `permission_callback => '__return_true'` on the InfoplusAPI side, so it is public.
 
 #### Sync Status Values
 
@@ -260,24 +287,30 @@ These hit the **Ikona IFE plugin** endpoints (separate plugin), not Infoplus Sui
 
 **Sync buttons are temporarily disabled** to prevent breaking products on the IFE end. The click handlers in `dashboard.js` are commented out. The Sync All button is visually disabled (grayed out). Individual sync buttons have a no-op click handler. All sync functions (`handleSyncAll`, `syncProduct`, etc.) remain intact and untouched.
 
+Re-checked 2026-09-17 against `dashboard.js` lines 88 to 103: still disabled. No change in the 0.9.93 to 0.9.111 diff.
+
 ---
 
 ### 4.3 WooProductVariationFields
 
 > **Slug:** `product-variation-fields`  
-> **Purpose:** Adds custom IFE/IBE meta fields to WooCommerce product edit pages.  
+> **Purpose:** Backup save handler for the IFE/IBE meta fields and REST exposure of `_ife_*` meta.  
 > **Has admin tab:** No (runs in background)
 
 #### What it does
 
-Adds an **IBE/IFE** tab to the WooCommerce product data panel (visible only for variable products). Stores IFE-related metadata on products that the sync system and editor link generation depend on.
+Historically this module added an **IBE/IFE** tab to the WooCommerce product data panel. That tab is gone (see Section 10). The module now only:
+
+1. Saves the IBE/IFE POST fields on `woocommerce_process_product_meta` as a backup to the "Infoplus Suite" meta box save. Since 0.9.111 the three locked fields (`ife_uuid`, `ife_unique_text_name`, `ife_print_api_id`) are only written when the current user has `manage_options`. The hidden fields, `infoplus_min_quantity` and `infoplus_delivery_days` are saved for any user who can edit the product.
+2. Deletes the legacy keys `_ife_product_bg_image` and `_ife_overlay_frame_image` on every save.
+3. Exposes all `_ife_*` meta on the WooCommerce Products REST response.
 
 #### Files
 
 | File | Role |
 |------|------|
-| `Module.php` | Registers WooCommerce product data tab, renders fields, saves meta, exposes fields to REST API. |
-| `Assets/admin-fields.js` | Media uploader support for admin fields. |
+| `Module.php` | Backup save of IFE meta, legacy key cleanup, REST exposure. |
+| `Assets/admin-fields.js` | Media uploader support for admin fields. Not enqueued anywhere in the current code (grep for `admin-fields.js` finds no PHP reference). Dead file. |
 
 #### Product Meta Fields
 
@@ -291,7 +324,7 @@ Adds an **IBE/IFE** tab to the WooCommerce product data panel (visible only for 
 | `_ife_preview_images` | *(hidden)* | Hidden | Array of preview image URLs (JSON) |
 | `_ife_template_zip` | *(hidden)* | Hidden | Template ZIP URL |
 
-All visible fields are **read-only** with lock icons — they're managed by the IFE sync system.
+The three visible fields render read-only with a lock button in the "Infoplus Suite" meta box (Section 10). Since 0.9.111 an administrator (`manage_options`) can click the lock to unlock and edit them; for other roles the button is disabled. They are normally written by the IFE sync (InfoplusAPI writes `_ife_uuid` directly in `start_single_synchronization`).
 
 #### REST API Integration
 
@@ -319,12 +352,12 @@ Enqueues multiple frontend scripts on product pages that handle variation filter
 
 | File | Role |
 |------|------|
-| `Module.php` | Script enqueueing, REST endpoints for file uploads, cart/order integration hooks, product context JSON output, editor settings injection. |
+| `Module.php` | Script enqueueing, REST endpoints for file uploads, cart/order integration hooks, product context JSON output, editor settings injection, AJAX add-to-cart, model image in cart and order line items. |
 | `Assets/variation-filter.js` | Filters available variations based on selected attributes. |
-| `Assets/elementor-bulk-calculator.js` | Calculates and displays bulk pricing tiers. |
+| `Assets/elementor-bulk-calculator.js` | Legacy Elementor bulk calculator (`#qty_value`, `#bulk_table`). Since 0.9.111 it no longer renders its own price grid. It syncs its qty with `infoplusProductState` (`qty:changed`, `source: 'calculator'`), emits `minqty:changed`, and hides the qty row for requestable models. |
 | `Assets/custom-model-dropdown.js` | Custom styled model dropdown behavior. |
 | `Assets/product-gallery-sizer.js` | Handles product gallery image sizing/layout. |
-| `Assets/variation-editor-link.js` | Updates the "Open Editor" button URL when a variation is selected. |
+| `Assets/variation-editor-link.js` | Updates the "Open Editor" button URL when a variation is selected. Since 0.9.111 it handles `requestable_with_variants` like `requestable` and pulses the active button (`infoplus-anfrage-pulse--long`, 3.1 s). |
 | `Assets/sonderkontur-upload-toggle.js` | Toggle UI for the Sonderkontur file upload area. |
 | `Assets/sonderkontur-upload.css` | Styling for the upload UI. |
 | `Assets/sonderkontur-admin.css` | Admin order page styling for uploaded files display. |
@@ -364,9 +397,21 @@ A temporary file storage system using WP transients (24h TTL) keyed by WooCommer
 4. On `woocommerce_checkout_create_order_line_item` → files saved to order item meta (`_sonderkontur_files`)
 5. On `woocommerce_after_order_itemmeta` → files displayed in admin order view with download links
 
+#### AJAX add to cart (`infoplus_add_to_cart`)
+
+`ajaxAddToCart()` is registered on `wp_ajax_infoplus_add_to_cart` and `wp_ajax_nopriv_infoplus_add_to_cart`. It reads `product_id`, `variation_id`, `quantity` and `model_image_url` from POST, resolves the variation attributes from the variation object and calls `WC()->cart->add_to_cart()`. The only caller in the repo is `variation-editor-link.js` (the legacy Elementor button flow for the `buyable` order type). There is no nonce or referer check in this handler (see Section 16).
+
+#### Model image in cart and orders
+
+`model_image_url` is stored as cart item data `_infoplus_model_image_url`, copied to the order line item meta of the same name on `woocommerce_checkout_create_order_line_item`, and used by `cartItemModelImage()` (`woocommerce_cart_item_thumbnail`) and `orderItemModelImage()` (`woocommerce_order_item_thumbnail`). The OrderDetails widget reads the same order item meta.
+
+#### Product context JSON (0.9.111 change)
+
+`outputProductContextJson()` builds `window.currentProduct` / `window.allWooVariations`. It no longer calls `get_available_variations()`. It reads the child IDs and one `postmeta` query for four hardcoded attribute keys: `attribute_pa_model`, `attribute_pa_format`, `attribute_pa_befestigung`, `attribute_pa_oberflache`. Products with other attribute names will show empty values here.
+
 #### Cross-module usage
 
-- Reads **EditorLinkSettings** via static methods for editor URL config
+- Reads **EditorLinkSettings** via static methods for editor URL config (guarded by `class_exists`)
 - Reads **WooProductVariationFields** meta (`_ife_uuid`) for editor URL generation
 
 ---
@@ -376,38 +421,45 @@ A temporary file storage system using WP transients (24h TTL) keyed by WooCommer
 > **Slug:** `product-detail-suite`
 > **Purpose:** Custom Elementor widgets for product detail pages with shared state management.
 > **Has admin tab:** No (runs in background)
-> **Version:** 1.0.58
+> **Version:** 1.1.0 (`Module::VERSION`, used for this module's asset cache busting and for the product data transient key)
 
 #### What it does
 
-Provides five custom Elementor widgets that work together through a shared JavaScript state system (`product-state.js`) to create an integrated product configuration experience. Also adds the consolidated "Infoplus Suite" admin meta box (replaces the old IBE/IFE WooCommerce product tab) with three tabs: Attribute Overrides, IBE/IFE, and Default Variation.
+Provides six custom Elementor widgets that work together through a shared JavaScript state system (`product-state.js`) to create an integrated product configuration experience. Also adds the consolidated "Infoplus Suite" admin meta box (replaces the old IBE/IFE WooCommerce product tab) with three tabs: Attribute Overrides, IBE/IFE, and Default Variation.
+
+Since 0.9.111 the module also has a performance path for products with many variations: product data is cached in a transient, variations above a threshold are loaded by REST after page load, and several builders use direct `$wpdb` queries instead of `get_available_variations()`. See Section 17.
 
 #### Files
 
 | File | Role |
 |------|------|
-| `Module.php` | Widget registration, REST endpoints, admin/frontend asset enqueueing, product data building, product state output, WDP bulk prices API interception via `rest_pre_dispatch`. |
+| `Module.php` | Widget registration, REST endpoints, admin/frontend asset enqueueing, product data building (full and "lite"), product state output with transient cache, cache invalidation on product save, `woocommerce_ajax_variation_threshold` filter, WDP bulk prices API interception via `rest_pre_dispatch` with transient cache. |
 | **Widgets/** | |
-| `Widgets/ModelSelector.php` | Elementor widget: visual model selector (card grid with images, names, prices). |
-| `Widgets/VariationDropdowns.php` | Elementor widget: attribute dropdown selectors that update based on model selection. |
-| `Widgets/ProductImage.php` | Elementor widget: dynamic product image that changes with variation selection. |
+| `Widgets/ModelSelector.php` | Elementor widget: visual model selector (card grid with images, names, prices). Since 0.9.111 `renderModelCards()` computes min price per model with one SQL query over child variations instead of `get_available_variations()`. |
+| `Widgets/VariationDropdowns.php` | Elementor widget: attribute dropdown selectors that update based on model selection. Since 0.9.111 each option carries `data-image`, and the selected image tag has `loading="eager"`, `data-no-lazy="1"` and class `litespeed-no-lazy` to stop lazy-load plugins from blanking it. |
+| `Widgets/ProductImage.php` | Elementor widget: dynamic product image that changes with variation selection. Since 0.9.111 the initial gallery is resolved from the product's `pa_model` terms, not from variations. |
 | `Widgets/ProductOrderPanel.php` | Elementor widget: quantity selector, inline bulk price grid, price display (Einzelpreis + Gesamtpreis), action buttons (Editor / Anfrage / Cart). |
 | `Widgets/BulkPriceTable.php` | Elementor widget: standalone bulk price table with clickable tier cells. |
+| `Widgets/ProductInfoBox.php` | **New in 0.9.111.** Elementor widget `infoplus-product-info-box`: rows for SKU of the selected variation, minimum order quantity and delivery time. Controls: heading, per-row show/hide, SKU label, unit text, default delivery days (15), prefix/suffix, icons and colors, typography. Server side it reads `_infoplus_min_quantity` and `_infoplus_delivery_days`. |
 | **Fields/** | |
 | `Fields/AttributeTermFields.php` | Adds image, tooltip, and modal content fields to WooCommerce attribute term edit pages. |
-| `Fields/ProductAttributeImages.php` | **Main admin meta box "Infoplus Suite"** — three tabs: Attribute Overrides (per-product attribute images + order type per model term), IBE/IFE (UUID, Print API, Mindestanzahl, Lieferzeit), Default Variation (per-model cascading dropdowns). |
+| `Fields/ProductAttributeImages.php` | **Main admin meta box "Infoplus Suite"**, three tabs: Attribute Overrides (per-product attribute images + order type per model term), IBE/IFE (UUID, Print API, Mindestanzahl, Lieferzeit), Default Variation (per-model cascading dropdowns). |
 | **Assets/** | |
-| `Assets/product-state.js` | **Central state manager** — event bus + shared qty, `setQty()`, `applyModelDefault()`. Events: `model:changed`, `variation:found`, `variation:notfound`, `variation:reset`, `attribute:changed`, `qty:changed`. |
+| `Assets/product-state.js` | **Central state manager**: event bus + shared qty, `setQty()`, `applyModelDefault()`, `loadDeferredVariations()`. Events: `model:changed`, `variation:found`, `variation:notfound`, `variation:reset`, `attribute:changed`, `qty:changed`, `minqty:changed`, `variations:loading`, `variations:loaded`. |
+| `Assets/product-info-box.js` | **New in 0.9.111.** ProductInfoBox widget: writes the SKU on `variation:found` ("Kein SKU" when the variation has none), clears it on `variation:notfound` / `variation:reset`, updates the min qty on `minqty:changed`, re-applies after `variations:loaded`. |
 | `Assets/model-selector.js` | Model selector widget frontend logic. |
 | `Assets/variation-dropdowns.js` | Variation dropdowns frontend logic. |
 | `Assets/product-image.js` | Product image widget frontend logic. |
 | `Assets/product-order-panel.js` | ProductOrderPanel widget: qty buttons, inline bulk grid, price display, button state, AJAX cart. |
 | `Assets/product-order-panel.css` | ProductOrderPanel widget styles. |
-| `Assets/bulk-price-table.js` | BulkPriceTable widget: renders price tiers, handles cell clicks → `setQty()`, updates active cell on `qty:changed`. |
-| `Assets/bulk-price-table.css` | BulkPriceTable widget styles. |
-| `Assets/product-detail-suite.css` | Shared CSS variables and base styles for all widgets. |
-| `Assets/admin-product-attribute-images.js` | Admin JS for the "Infoplus Suite" meta box: tab switching, per-model default variation cascading dropdowns, attribute filtering. |
-| `Assets/admin-product-attribute-images.css` | Admin styles for the meta box. |
+| `Assets/bulk-price-table.js` | BulkPriceTable widget: renders price tiers, handles cell clicks → `setQty()`, updates active cell on `qty:changed`. Since 0.9.111 it has three display states: grid (prices found), hidden (model is `requestable` or `requestable_with_variants`, or no variation selected), and a frosted "no prices" overlay with placeholder cells and the text "Für diese Variante sind noch keine Staffelpreise hinterlegt" (variation selected but no tiers or no SKU). |
+| `Assets/bulk-price-table.css` | BulkPriceTable widget styles, including `.ibpt-no-prices-lock` overlay and `.ibpt-placeholder-cell`. |
+| `Assets/product-order-panel.js` (0.9.111 additions) | Effective minimum qty: `state.productMinQty` is the product meta value, `state.minQty` is raised to the first bulk tier's `from` when higher (`applyBulkMinQty`), and reset when no tiers exist. Emits `minqty:changed`. Active buttons get `infoplus-btn--pulsing`. Error hint auto-hides after 5 s (was 2 s). |
+| `Assets/product-detail-suite.css` | Shared CSS variables and base styles for all widgets. Since 0.9.111 also the `.ip-variations-loading` shimmer for deferred variations and the `.ip-info-box__*` styles. |
+| `Assets/admin-product-attribute-images.js` | Admin JS for the "Infoplus Suite" meta box: tab switching, per-model default variation cascading dropdowns, attribute filtering. Since 0.9.111 also the lock/unlock toggle for the IBE/IFE fields (`.infoplus-ife-lock-btn`, strings from `infoplusI18n`). |
+| `Assets/admin-product-attribute-images.css` | Admin styles for the meta box, including the lock button states. |
+| `Assets/admin-variation-fields.js`, `.css` | Enqueued by `enqueueAdminAssets()` on the product edit screen. Companion of the deprecated `Fields/VariationFields.php`. |
+| `Fields/VariationFields.php` | Deprecated and empty. The file says it can be deleted. Not instantiated. |
 
 #### Elementor Widget Category
 
@@ -442,16 +494,32 @@ Key methods:
 | `setAttribute(attr, value)` | Sets one attribute, rebuilds available attrs, emits `attribute:changed`, syncs to WC |
 | `setQty(qty, source)` | Sets shared qty, emits `qty:changed`. `source` defaults to `'external'`; panel passes `'panel'` to prevent echo |
 | `applyModelDefault(slug)` | Batch-writes per-model default variation attributes without intermediate WC syncs |
-| `syncToWooCommerce()` | Sets all WC form `<select>` values silently, triggers change once on the last — prevents WC intermediate resets |
+| `syncToWooCommerce()` | Sets all WC form `<select>` values silently, triggers change once on the last, prevents WC intermediate resets |
 | `findMatchingVariation()` | Requires ALL variation-type attributes selected; emits `variation:found` or `variation:notfound` |
+| `loadDeferredVariations()` (0.9.111) | When `productData._variationsDeferred` is true, fetches `GET {restUrl}product/{id}/variations`, stores the result in `productData.variations`, rebuilds available attributes, emits `variations:loaded`, resets `selectedModel` so `setModel()` re-runs with real data, then `applyDefaultVariation()`. Emits `variations:loading` before the request. On failure emits `variations:loaded` with `error: true`. |
+| `buildAvailableAttributes()` (0.9.111) | Normalises WooCommerce's `attribute_pa_*` keys to bare `pa_*` keys so `availableAttributes` matches the dropdown widgets' `data-attribute` values. |
+
+Additional events since 0.9.111:
+
+| Event | Emitted by | Payload |
+|-------|-----------|---------|
+| `minqty:changed` | `product-order-panel.js` (`applyBulkMinQty`, `resetMinQty`), `elementor-bulk-calculator.js` | `{ minQty }` |
+| `variations:loading` | `product-state.js` | `{}` |
+| `variations:loaded` | `product-state.js` | `{ count, availableAttributes }` or `{ count: 0, error: true }` |
+| `qty:changed` with `source: 'calculator'` | `elementor-bulk-calculator.js` | `{ qty, source }`; the calculator ignores events with its own source |
+
+`variation-dropdowns.js` listens to `attribute:changed` and visually selects the option when the value was set programmatically (for example by `applyModelDefault`). It also adds `ip-variations-loading` to the widget between `variations:loading` and `variations:loaded`. `pulseActionButton()` pulses `#anfrage` for requestable types and `#editor` / `.infoplus-btn--editor` / `.infoplus-btn--cart` otherwise.
 
 #### REST Endpoints (namespace: `infoplus/v1`)
 
 | Method | Route | Permission | Purpose |
 |--------|-------|------------|---------|
 | GET | `/product/{id}/detail` | Public | Full product data with custom fields, variations, models, attributes |
-| GET | `/products/prices` | Public | Bulk price tiers for a SKU — **intercepted** via `rest_pre_dispatch` before WDP plugin handles it (see Section 12) |
+| GET | `/product/{id}/variations` | Public | **New in 0.9.111.** Lightweight variation list (`id`, `sku`, `price`, `is_in_stock`, `is_purchasable: true`, `attributes`, `image`) built by `buildVariationsDataLite()` from three `$wpdb` queries. Used by `loadDeferredVariations()`. Returns 404 for non-variable products. |
+| GET | `/products/prices` | Public | Bulk price tiers for a SKU. The route itself is registered by InfoplusAPI; the Suite **intercepts** it via `rest_pre_dispatch` (see Section 12). Result cached in transient `infoplus_prices_{md5(sku)}` for 24 h. |
 | GET | `/attribute-terms/{attribute}` | Public | Attribute terms with images, tooltips, modal content |
+
+`wp_localize_script` passes `window.infoplusProductConfig = { restUrl: rest_url('infoplus/v1/'), nonce, ajaxUrl }`. `loadDeferredVariations()` falls back to the hardcoded path `/wp-json/infoplus/v1/` when the config object is missing.
 
 #### Frontend Global Variable
 
@@ -466,8 +534,11 @@ window.infoplusProductData = {
   delivery_days,             // from _infoplus_delivery_days
   default_variation_id,      // legacy single default (int|null)
   model_default_variations,  // per-model defaults map: { "slug": variation_id, ... } | null
+  _variationsDeferred,       // 0.9.111: true when variations were NOT embedded (see Section 17)
 }
 ```
+
+When the product has more than 200 child variations (`Module::VARIATION_AJAX_THRESHOLD`), `outputProductState()` uses `buildProductDataLite()`: `variations` is `[]`, `models` comes from `buildModelsDataLite()` (one SQL query over child `_price` and `attribute_pa_model` meta plus `pa_model` terms), and `_variationsDeferred` is `true`. The same constant is returned from the `woocommerce_ajax_variation_threshold` filter so WooCommerce also stops embedding its own variation JSON for such products. The whole JSON is cached in the transient `infoplus_pd_{product_id}_{Module::VERSION}` for 12 hours and deleted on `woocommerce_after_product_object_save` (product and parent of a variation).
 
 #### Term Meta Keys
 
@@ -485,6 +556,12 @@ window.infoplusProductData = {
 | `_infoplus_model_description` | Model description |
 | `_infoplus_model_tooltip` | Model tooltip |
 
+These three keys are read in `Module::buildVariationsData()` only. Nothing in the current code writes them (the writer was the deprecated `Fields/VariationFields.php`). Whether production still has values is unverified.
+
+#### Per-product attribute override keys
+
+`Fields/ProductAttributeImages.php` stores per-product overrides on the parent product with the pattern `_infoplus_attr_{type}_{attribute_slug}_{term_slug}`, where `attribute_slug` is the taxonomy name without the `pa_` prefix. Types: `image`, `gallery`, `tooltip`, `modal`, `hide_image`, `hide_tooltip`, `hide_modal`, `order_type`. Example: `_infoplus_attr_order_type_model_alu`. `getTermGalleryUrls()` resolves gallery, then single image, then the global term image. `getTermOrderType()` validates against the four allowed order types and falls back to `editable`.
+
 #### Cross-module usage
 
 - Reads **EditorLinkSettings** via `generateEditorUrl()` for editor links
@@ -501,24 +578,39 @@ window.infoplusProductData = {
 
 #### What it does
 
-Provides REST API endpoints for user profile management, handles login/logout redirects to a custom `/account` page (instead of WooCommerce's `/my-account`), includes a login guard shortcode, and provides a dropdown menu script for the frontend navigation.
+Provides REST API endpoints for user profile management, handles login/logout redirects to a custom `/account` page (instead of WooCommerce's `/my-account`), includes a login guard shortcode and a full profile settings form shortcode, registers the UserStatCard Elementor widget, and provides a dropdown menu script for the frontend navigation.
 
 #### Files
 
 | File | Role |
 |------|------|
-| `Module.php` | REST endpoints, login redirect filters, shortcode, frontend scripts. |
+| `Module.php` | REST endpoints, login/logout redirects, two shortcodes, Elementor widget registration, frontend scripts. |
+| `Widgets/UserStatCard.php` | **New in 0.9.111.** Elementor widget `infoplus-user-stat-card` ("User Stat Cards", category `infoplus-product`). A repeater of cards, each with a data source, label, icon and colors, rendered as a CSS grid (`.ip-stat-grid`). |
+| `Assets/user-stat-card.css` | **New in 0.9.111.** Grid and card styles for the widget. Registered as `infoplus-user-stat-card` in `registerWidgets()`. |
 | `Assets/user-dashboard.js` | Frontend JS for profile management API calls. |
 | `Assets/menu-dropdown.js` | Navigation dropdown menu behavior (login/register/account/logout links). |
 | `Assets/menu-dropdown.css` | Dropdown menu styling. |
-| *(Also contains copies of ProductDetailSuite assets — likely legacy/duplicate)* | |
+| `Assets/admin-*.{js,css}`, `model-selector.js`, `product-detail-suite.css`, `product-image.js`, `product-state.js`, `variation-dropdowns.js` | Copies of ProductDetailSuite assets. Never enqueued by this module. Some copies drifted in 0.9.111 (they received the same `elementorFrontend.hooks` guard and image fix as the originals) but `product-state.js` did not receive the deferred-loading code. Roadmap R-02 (still open). |
+
+#### UserStatCard data sources
+
+| `data_source` value | Value shown |
+|---------------------|-------------|
+| `orders_total` | Count of the current user's orders in statuses pending, processing, on-hold, completed, cancelled, refunded, failed |
+| `orders_processing` | Count with status `wc-processing` |
+| `orders_completed` | Count with status `wc-completed` |
+| `total_spent` | `wc_get_customer_total_spent()` formatted as `1.234,56 EUR` |
+| `projects_total`, `shared_projects` | Placeholder, always `0`. Labelled "(Platzhalter)" in the admin. The InfoplusAPI `customerdashboard` route has the project count logic that this could use after the merge. |
+| `custom` | Static text from the `custom_value` control |
+
+Logged-out viewers (for example the Elementor editor preview) get demo values.
 
 #### REST Endpoints (namespace: `infoplus/v1`)
 
 | Method | Route | Permission | Purpose |
 |--------|-------|------------|---------|
-| GET | `/user/profile` | Logged in | Get current user profile data |
-| POST | `/user/profile` | Logged in | Update name, email, company |
+| GET | `/user/profile` | Logged in | Returns legacy fields (`user_name`, `user_email`, `user_company`, `avatar_url`) plus `first_name`, `last_name`, `phone`, `company`, `vat_id`, `address_1`, `address_2`, `postcode`, `city`, `country` |
+| POST | `/user/profile` | Logged in | Updates name and email via `wp_update_user`, the WooCommerce `billing_*` user meta, `infoplus_vat_id`, and `infoplus_company` (kept for backward compatibility). Accepts `user_company` as a legacy alias of `company`. |
 | POST | `/user/password` | Logged in | Change password (requires current) |
 | POST | `/user/avatar` | Logged in | Upload avatar image (JPG/PNG/GIF, 5MB max) |
 
@@ -527,17 +619,27 @@ Provides REST API endpoints for user profile management, handles login/logout re
 | Meta Key | Description |
 |----------|-------------|
 | `infoplus_user_avatar` | Attachment ID of custom avatar |
-| `infoplus_company` | Company name |
+| `infoplus_company` | Company name (legacy; `billing_company` is preferred when reading) |
+| `infoplus_vat_id` | VAT ID |
+| `billing_first_name`, `billing_last_name`, `billing_company`, `billing_phone`, `billing_address_1`, `billing_address_2`, `billing_postcode`, `billing_city`, `billing_country` | Standard WooCommerce billing meta, written by the profile endpoint so checkout auto-fills |
 
 #### Login Flow
 
-- `login_redirect` and `woocommerce_login_redirect` filters redirect all logins to `/account`
-- `template_redirect` catches logged-in users visiting `/log-in` and redirects to `/account`
+- `login_redirect` and `woocommerce_login_redirect` filters (priority 999) redirect all logins to `/account`
+- `template_redirect` → `redirectLoggedInUsers()` sends logged-in users who open `/log-in` to `/account`
+- `template_redirect` → `redirectGuestUsers()` sends guests who open `/account` to `/log-in/`
+- `login_form_logout` → `skipLogoutConfirmation()` (0.9.111) logs the user out before WordPress shows its "Do you really want to log out?" page, then redirects to `redirect_to` or home. This runs before the nonce check on purpose, so stale logout links from cached pages still work.
+- On the login page for guests, an inline script (0.9.111) watches for the Essential Addons register form success message (`.eael-register-form-wrapper .eael-form-msg.valid`) and reloads `/log-in/` after 2 seconds.
 - Elementor editor/preview mode is excluded from redirects
 
-#### Shortcode
+Hardcoded page paths in this module: `/account`, `/log-in`, `/log-in/?eael-register=1`.
 
-`[infoplus_login_guard]` — Shows a styled "Login Required" message with redirect button for non-authenticated users. Returns empty for logged-in users.
+#### Shortcodes
+
+| Shortcode | Purpose |
+|-----------|---------|
+| `[infoplus_login_guard]` | Styled "Login Required" message with a redirect button for guests. Returns empty for logged-in users. |
+| `[infoplus_profile_settings]` | Full profile form (name, email, phone, company, VAT ID, billing address with a country `<select>` from `WC()->countries->get_countries()`, password change, avatar upload). Saves through the profile endpoints above. This replaces the plan that Section 16 of the 0.9.93 documentation listed as "not started". |
 
 #### Frontend JS Variables
 
@@ -556,17 +658,17 @@ window.infoplusUserDashboard = { restUrl, nonce, currentUserId }
 
 #### What it does
 
-The most feature-rich frontend module. Provides complete order management for customers: order list widget, order detail widget, custom URL routing (`/order/123/`), Elementor Loop Grid integration, 8 dynamic tags for order data, and a fully custom WooCommerce Thank You page.
+The most feature-rich frontend module. Provides complete order management for customers: order list widget, order detail widget, custom URL routing (`/order/123/`), Elementor Loop Grid integration (query ID `infoplus_user_orders`, post type `shop_order`), 8 dynamic tags for order data, and a fully custom WooCommerce Thank You page. It also owns everything that styles the WooCommerce Blocks cart and checkout, the custom empty-cart overlay, and the branded customer emails.
 
 #### Files
 
 | File | Role |
 |------|------|
-| `Module.php` | REST endpoints, rewrite rules, template routing, Thank You page rendering, widget/tag registration. |
+| `Module.php` | REST endpoints, rewrite rules, template routing, Thank You page rendering, widget/tag registration, cart/checkout inline styles, empty-cart overlay, checkout login link rewrite, email branding. |
 | `ElementorLoopIntegration.php` | Integrates with Elementor Loop Grid to use orders as a custom data source. |
 | **Widgets/** | |
-| `Widgets/UserOrdersGrid.php` | Elementor widget: displays order list in a card grid with search/filter. |
-| `Widgets/OrderDetails.php` | Elementor widget: displays single order details (reads from URL query var). |
+| `Widgets/UserOrdersGrid.php` | Elementor widget: displays order list in a card grid with search/filter. Since 0.9.111 the `wc_get_orders` call passes an explicit status list (pending, processing, on-hold, completed, cancelled, refunded, failed) so draft/checkout-draft orders are excluded. |
+| `Widgets/OrderDetails.php` | Elementor widget: displays single order details (reads from URL query var). Item image: order item meta `_infoplus_model_image_url` first, then the product image at size `medium`, shown in a 120x60 box with `object-fit: contain` (2:1 ratio for 300x150 badge products). Since 0.9.111 it ships a full A4 print stylesheet (`@media print`): hides header, footer, back button, actions and images; compact three-column customer grid; suppresses link URLs. |
 | **DynamicTags/** | |
 | `DynamicTags/OrderTagBase.php` | Abstract base class for all order dynamic tags. |
 | `DynamicTags/OrderNumber.php` | Dynamic tag: `{order_number}` |
@@ -578,10 +680,27 @@ The most feature-rich frontend module. Provides complete order management for cu
 | `DynamicTags/OrderPaymentMethod.php` | Dynamic tag: `{order_payment_method}` |
 | `DynamicTags/OrderViewUrl.php` | Dynamic tag: `{order_view_url}` |
 | **Assets/** | |
-| `Assets/user-orders.js` | Frontend JS for order interactions. |
-| `Assets/user-orders.css` | Order display styling. |
+| `Assets/user-orders.js` | Frontend JS for order interactions. Enqueued for logged-in users with `window.infoplusUserOrders`. |
+| `Assets/user-orders.css` | Order display styling. Enqueued for logged-in users only. |
+| `Assets/woo-pages.css` | **New in 0.9.111** (631 lines). External stylesheet for WooCommerce Blocks cart, checkout and thank-you pages. Enqueued for everyone (guests included) when `is_cart()`, `is_checkout()` or `is_wc_endpoint_url('order-received')`. Sections: design tokens, base font, cart (items panel, 2:1 item images, qty badge, sidebar, totals, coupon, proceed button), checkout steps, floating-label form inputs, address card, radio accordion options (shipping, payment, saved addresses), payment section, place order button, notices, classic shortcode fallback. |
+| `Assets/cart-qty-fix.js` | **New in 0.9.111.** Vanilla JS on cart and checkout. Reads `wp.data.select('wc/store/cart').getCartData().items` and appends a `.ip-cart-qty-badge` ("× qty") to each product name in cart rows (only when the native quantity selector is not visible) and in the checkout order summary. Re-runs on store changes and DOM mutations. The file comment calls it a temporary solution. |
 | `test-orders.php` | Debug shortcode template. |
 | `test-orders-advanced.php` | Advanced debug template. |
+
+#### Cart, checkout and empty cart (WooCommerce Blocks)
+
+| Hook | Method | What it does |
+|------|--------|--------------|
+| `wp_head` | `enqueueCartStyles()` | Inline `<style>` on `is_cart()` (Section 15) |
+| `wp_head` | `enqueueCheckoutStyles()` | Inline `<style id="infoplus-checkout-styles">` on `is_checkout()`: viewport fill (`min-height: calc(100vh - 684px)`) and checkout tweaks |
+| `render_block` | `filterWooCartBlock()` | For `woocommerce/cart`: wraps the block, adds a custom empty-cart overlay and a script that shows it when the cart becomes empty. Two strategies since 0.9.111: `wp.data` subscription on `wc/store/cart` (checks `items_count`, then `itemsCount`, then `items.length`) and a `MutationObserver` on `.wp-block-woocommerce-filled-cart-block`. |
+| `render_block` | `filterWooCheckoutBlock()` | **New in 0.9.111.** For `woocommerce/checkout`: rewrites the `href` of `.wc-block-checkout__login-prompt` to `/log-in/` (two regexes for either attribute order). |
+| `woocommerce_cart_is_empty` | `renderEmptyCartContent()` | Classic empty-cart hook: branded layout with links to `/namensschilder/`, `/account/`, `/log-in/` |
+| `wp_enqueue_scripts` | `enqueueStyles()` | See asset table above |
+
+#### Branded customer emails
+
+`brandOrderEmailStyles()` (`woocommerce_email_styles`) appends brand CSS and `renderOrderEmailBanner()` (`woocommerce_email_before_order_table`) prints a banner for the emails listed in `BRANDED_EMAIL_IDS`: `customer_processing_order` and `customer_completed_order`. The 0.9.111 diff only changed the banner icon markup to flexbox centering.
 
 #### REST Endpoints (namespace: `infoplus/v1`)
 
@@ -624,6 +743,11 @@ Registers `infoplus-orders` group containing all 8 order dynamic tags.
 |-----------|---------|
 | `[infoplus_test_orders]` | Debug: shows user info and raw order data |
 | `[infoplus_order_received]` | Manual placement of Thank You content |
+| `[infoplus_empty_cart]` | Manual placement of the empty-cart layout. Returns an empty string when the cart has items. |
+
+#### Thank You page (0.9.111 changes)
+
+The title hide rule is now `body.woocommerce-order-received .entry-title` instead of a page-ID specific selector. Cards lost their borders and shadows, item images use size `medium`, and the primary color falls back to `#e91e8c` when the Elementor global is missing.
 
 ---
 
@@ -649,7 +773,7 @@ Registers a custom Elementor dynamic tag for user profile images and filters Wor
 The `get_avatar_url` filter checks these user meta keys in order:
 
 1. `user_profile_picture` (User Profile Picture plugin)
-2. `infoplus_user_avatar` (Infoplus custom — set by UserDashboard module)
+2. `infoplus_user_avatar` (Infoplus custom, set by UserDashboard module)
 3. `wp_user_avatar` (WP User Avatar plugin)
 4. `basic_user_avatar` (Simple Local Avatars)
 5. `simple_local_avatar` (Simple Local Avatars)
@@ -663,6 +787,44 @@ Each value is checked as: attachment ID → URL string → array with `url` key 
 
 ---
 
+### 4.9 Custom404
+
+> **Slug:** `custom-404`  
+> **Purpose:** Branded 404 page injected into the theme's layout.  
+> **Has admin tab:** No (runs in background)  
+> **Added:** commit `6b0d87f` (before 0.9.93, not documented until 0.9.111)
+
+#### What it does
+
+The theme renders its own 404 markup without `the_content()`, so a content filter cannot replace it. The module therefore:
+
+1. On `wp`, if `is_404()` and not in Elementor preview/editor, hooks `wp_head` and `wp_footer`.
+2. `injectHideStyles()` (`wp_head`) prints a `<style id="ip404-hide">` that hides `.page-header`, `.page-content`, `.entry-header`, `.widget_search` and `.search-form` on `body.error404` and removes main padding.
+3. `injectContent()` (`wp_footer`) prints a hidden `#ip404-mount` block with the branded UI, its `<style id="ip404-styles">`, and an inline script that moves the block to the first match of `main#content.site-main`, `main.site-main`, `#main`, `#content`, `.site-main`, `main`, then shows it. The script also measures header and footer height (fallback 83 px and 601 px) and sets `min-height` on `.ip404-wrap` so the page fills the viewport.
+4. `wp_title` and `pre_get_document_title` return the string `404`, an en dash, `Seite nicht gefunden` on 404 pages.
+
+#### Content
+
+Hero card with "404" and "Diese Seite existiert nicht", a tips card ("SO GEHT'S WEITER") and action buttons. Links depend on login state:
+
+| Target | URL | Shown to |
+|--------|-----|----------|
+| Startseite | `home_url('/')` | all |
+| Namensschilder | `home_url('/namensschilder/')` | all |
+| Dashboard | `home_url('/account/')` | logged in |
+| Anmelden | `home_url('/log-in/')` | guests |
+| Registrieren | `home_url('/log-in/')?eael-register=1` | guests |
+
+All strings are hardcoded German. Colors use `--e-global-color-primary` with `#e91e8c` fallback.
+
+#### Files
+
+| File | Role |
+|------|------|
+| `Module.php` | Everything (hooks, CSS, HTML, JS are all inline in this one file). No assets folder. |
+
+---
+
 ## 5. Module Dependency Map
 
 ```
@@ -672,23 +834,35 @@ EditorLinkSettings ◄──── WooSingleProductAddons (reads editor URL conf
        └──── ProductDetailSuite ─┘ (reads editor URL + product UUID)
                     ▲
                     │
-WooProductVariationFields (provides _ife_uuid, _ife_print_api_id meta)
+WooProductVariationFields (backup save of _ife_uuid, _ife_print_api_id meta)
        ▲
        │
-IkonaIFE (SyncService writes to these meta keys during sync)
+IkonaIFE ──► InfoplusAPI plugin (external, reference/infoplus_api/)
+   SyncService reads /infoplus/v1/products from it,
+   dashboard.js calls /infoplus/v1/products/synchronization on it,
+   InfoplusAPI writes _ife_uuid and calls editor.infoplus.de
 
 UserDashboard ────► ElementorUserAvatar (shares infoplus_user_avatar meta key)
+UserDashboard (UserStatCard) reads WooCommerce orders directly
 
-UserOrders (standalone — reads WooCommerce order data directly)
+UserOrders (reads WooCommerce order data directly; OrderDetails reads
+            _infoplus_model_image_url written by WooSingleProductAddons)
+
+ProductDetailSuite (rest_pre_dispatch) ──► overrides InfoplusAPI's
+            /infoplus/v1/products/prices handler
+
+Custom404 (standalone)
 ```
 
-**No circular dependencies.** EditorLinkSettings is the most depended-upon module.
+**No circular dependencies inside the Suite.** EditorLinkSettings is the most depended-upon module. Three Suite modules share hardcoded page paths with each other (`/account`, `/log-in`, `/namensschilder`): UserDashboard, UserOrders and Custom404.
 
 ---
 
 ## 6. REST API Endpoints
 
-### Namespace: `infoplus-suite/v1` (Internal plugin endpoints)
+Regenerated 2026-09-17 from every `register_rest_route` call in `src/` and `reference/infoplus_api/`.
+
+### Namespace: `infoplus-suite/v1` (Suite only, `IkonaIFE/SyncController.php`)
 
 | Method | Route | Module | Auth |
 |--------|-------|--------|------|
@@ -697,7 +871,7 @@ UserOrders (standalone — reads WooCommerce order data directly)
 | GET | `/products/{id}/sync-status` | IkonaIFE | manage_woocommerce |
 | POST | `/products/clear-cache` | IkonaIFE | manage_woocommerce |
 
-### Namespace: `infoplus/v1` (Shared endpoints)
+### Namespace: `infoplus/v1`, routes registered by the Suite
 
 | Method | Route | Module | Auth |
 |--------|-------|--------|------|
@@ -707,20 +881,40 @@ UserOrders (standalone — reads WooCommerce order data directly)
 | POST | `/user/avatar` | UserDashboard | logged_in |
 | GET | `/orders` | UserOrders | logged_in |
 | GET | `/orders/{id}` | UserOrders | logged_in |
-| POST | `/sonderkontur/upload` | WooSingleProductAddons | public |
+| POST | `/sonderkontur/upload` | WooSingleProductAddons | public (`__return_true`) |
 | GET | `/sonderkontur/files` | WooSingleProductAddons | public |
 | DELETE | `/sonderkontur/files/{index}` | WooSingleProductAddons | public |
 | POST | `/sonderkontur/clear` | WooSingleProductAddons | public |
 | GET | `/product/{id}/detail` | ProductDetailSuite | public |
+| GET | `/product/{id}/variations` | ProductDetailSuite (new in 0.9.111) | public |
 | GET | `/attribute-terms/{attribute}` | ProductDetailSuite | public |
-| GET | `/products/prices?sku=X` | ProductDetailSuite (intercepted via `rest_pre_dispatch`) | public |
 
-### External (Ikona IFE plugin — NOT part of Infoplus Suite)
+Not a registered route but effectively a Suite endpoint: `GET /infoplus/v1/products/prices?sku=X` is answered by `ProductDetailSuite\Module::interceptBulkPricesRoute()` on `rest_pre_dispatch` before the InfoplusAPI handler runs (Section 12).
 
-| Method | Route | Called By |
-|--------|-------|----------|
-| GET | `/infoplus/v1/products` | IkonaIFE SyncService (server-side) |
-| GET | `/infoplus/v1/products/synchronization` | IkonaIFE dashboard.js (client-side) |
+### Namespace: `infoplus/v1`, routes registered by InfoplusAPI (separate plugin, `reference/infoplus_api/`)
+
+| Method | Route | File | Auth | Notes |
+|--------|-------|------|------|-------|
+| GET | `/products` | `entities/Products.php` | none declared (public, WordPress logs a `_doing_it_wrong` notice) | Read by Suite `SyncService::fetchProducts()`. Builds the product list with sync state from `infoplus_products` and `infoplus_synchronizations` tables. |
+| GET | `/products/prices?sku=` | `entities/Products.php` | `__return_true` | Reads `wp_wdp_rules`. Shadowed by the Suite interception. |
+| GET | `/products/variants?productId=` | `entities/Products.php` | `__return_true` | Variants for a product |
+| GET | `/products/synchronization[?productId=]` | `entities/Products.php` | `__return_true` | Runs the sync against `editor.infoplus.de/smp/infoplus/updateProduct`, writes `_ife_uuid`, emails a report to the hardcoded recipient list. Called by Suite `dashboard.js` (handlers currently disabled). |
+| GET | `/cart/updateCart` | `entities/Cart.php` | `__return_true` | Editor cart entry: adds a product/variant to the WooCommerce cart with `display`, `project_id`, `ife_price`, `ife_thumbnail_url`, optional coupon, then redirects to a hardcoded cart URL. |
+| GET | `/cart/testing?sku=` | `entities/Cart.php` | `__return_true` | Test endpoint |
+| GET | `/testing` | `InforplusAPI.php` | none declared | Returns the current user object |
+| GET | `/customerdashboard?id=` | `modules/CustomerDashboard.php` | none declared | Project count from `editor.infoplus.de/smp/infoplus/getProjects` plus order count for a customer ID passed in the query string |
+| GET | `/customerdashboard/orders?customerId=` | `modules/CustomerDashboard.php` | none declared | Orders for a customer ID |
+| GET | `/customerdashboard/orders/detailed?orderId=` | `modules/CustomerDashboard.php` | none declared | Order detail |
+| GET | `/customerdashboard/events?customerId=` | `modules/CustomerDashboard.php` | none declared | Customer events from the editor |
+
+`validate_api_key()` in `InforplusAPI.php` compares the `Authorization` header with `Bearer INFOPLUS_API_KEY`, but no route uses it as `permission_callback` in the reference copy. All InfoplusAPI routes are therefore public. InfoplusAPI also sends `Access-Control-Allow-Origin: *` on every REST response.
+
+### admin-ajax actions
+
+| Action | Module | Nonce |
+|--------|--------|-------|
+| `infoplus_add_to_cart` (priv and nopriv) | WooSingleProductAddons | none |
+| `infoplus_sync_all`, `infoplus_sync_product` | IkonaIFE (legacy, unused by the dashboard) | `infoplus_sync` |
 
 ---
 
@@ -744,11 +938,19 @@ UserOrders (standalone — reads WooCommerce order data directly)
 | `_infoplus_model_image_id` | ProductDetailSuite | Custom model image (on variations) |
 | `_infoplus_model_description` | ProductDetailSuite | Model description (on variations) |
 | `_infoplus_model_tooltip` | ProductDetailSuite | Model tooltip (on variations) |
-| `_infoplus_min_quantity` | ProductDetailSuite (IBE/IFE tab) | Minimum order quantity — exposed as `productData.min_quantity` |
-| `_infoplus_delivery_days` | ProductDetailSuite (IBE/IFE tab) | Delivery days — exposed as `productData.delivery_days` |
+| `_infoplus_min_quantity` | ProductDetailSuite (IBE/IFE tab) | Minimum order quantity, exposed as `productData.min_quantity` |
+| `_infoplus_delivery_days` | ProductDetailSuite (IBE/IFE tab) | Delivery days, exposed as `productData.delivery_days` |
 | `_infoplus_default_variation_id` | ProductDetailSuite (Default Variation tab) | Legacy single default variation ID (int) |
 | `_infoplus_model_default_variations` | ProductDetailSuite (Default Variation tab) | JSON map `{"model-slug": variation_id}` for per-model defaults |
-| `_infoplus_order_type_{term_slug}` | ProductDetailSuite (Attribute Overrides tab) | Order type per `pa_model` term: `editable`, `requestable`, `requestable_with_variants`, `buyable` |
+| `_infoplus_attr_order_type_{attr}_{term}` | ProductDetailSuite (Attribute Overrides tab) | Order type per `pa_model` term: `editable`, `requestable`, `requestable_with_variants`, `buyable`. `attr` is the taxonomy without `pa_`. The 0.9.93 documentation wrote this key as `_infoplus_order_type_{term_slug}`, which was wrong. |
+| `_infoplus_attr_image_{attr}_{term}` | ProductDetailSuite (Attribute Overrides tab) | Per-product override image (attachment ID) for a term |
+| `_infoplus_attr_gallery_{attr}_{term}` | ProductDetailSuite (Attribute Overrides tab) | Per-product gallery for a term |
+| `_infoplus_attr_tooltip_{attr}_{term}`, `_infoplus_attr_modal_{attr}_{term}` | ProductDetailSuite (Attribute Overrides tab) | Per-product tooltip / modal text |
+| `_infoplus_attr_hide_image_{attr}_{term}`, `_infoplus_attr_hide_tooltip_{attr}_{term}`, `_infoplus_attr_hide_modal_{attr}_{term}` | ProductDetailSuite (Attribute Overrides tab) | Per-product hide flags |
+| `_ife_product_bg_image`, `_ife_overlay_frame_image` | nobody (WooProductVariationFields deletes them on save) | Legacy keys, cleanup only |
+| `min_quantity` | nobody in the Suite | Read by InfoplusAPI `getProducts()` (`$product->get_meta('min_quantity')`). The Suite uses `_infoplus_min_quantity` instead, so InfoplusAPI never sees the Suite's value. |
+
+Regenerated 2026-09-17 by grepping the quoted key strings in `src/`.
 
 ### Term Meta (on product attribute terms)
 
@@ -763,13 +965,49 @@ UserOrders (standalone — reads WooCommerce order data directly)
 | Key | Set By | Description |
 |-----|--------|-------------|
 | `infoplus_user_avatar` | UserDashboard | Avatar attachment ID |
-| `infoplus_company` | UserDashboard | Company name |
+| `infoplus_company` | UserDashboard | Company name (legacy, still written for backward compatibility) |
+| `infoplus_vat_id` | UserDashboard | VAT ID |
+| `billing_first_name`, `billing_last_name`, `billing_company`, `billing_phone`, `billing_address_1`, `billing_address_2`, `billing_postcode`, `billing_city`, `billing_country` | UserDashboard | WooCommerce standard billing fields, written by `POST /user/profile` |
 
-### Order Item Meta
+### Cart Item Data and Order Item Meta
 
 | Key | Set By | Description |
 |-----|--------|-------------|
-| `_sonderkontur_files` | WooSingleProductAddons | Array of uploaded file data |
+| `_sonderkontur_files` | WooSingleProductAddons | Array of uploaded file data (order item meta) |
+| `_infoplus_model_image_url` | WooSingleProductAddons (`ajaxAddToCart`) | Model image URL. Cart item data, copied to order item meta at checkout. Read by cart/order thumbnail filters and by the OrderDetails widget. |
+| `display`, `project_id`, `ife_price`, `ife_thumbnail_url`, `infoplus_unique` | InfoplusAPI (`woocommerce_add_cart_item_data`, `/cart/updateCart`) | Editor line items: display name, IFE project UUID, unit price from the editor, thumbnail. The first four are copied to order item meta at checkout. |
+
+### Order Meta (InfoplusAPI)
+
+| Key | Set By | Description |
+|-----|--------|-------------|
+| `order_attempts` | InfoplusAPI `new_order_action()` | Retry counter for posting the order to `editor.infoplus.de/processOrder` |
+
+### Options (wp_options)
+
+| Key | Set By | Description |
+|-----|--------|-------------|
+| `infoplus_editor_base_desktop_url`, `infoplus_editor_base_mobile_url`, `infoplus_editor_theme_id`, `infoplus_editor_cart_entry_path`, `infoplus_editor_back_path`, `infoplus_editor_bearer_token` | EditorLinkSettings (settings group `infoplus_editor_link_settings`) | See 4.1 |
+| `infoplus_flush_rewrite_rules` | UserOrders | One-shot flag; when set, `registerRewriteRules()` flushes rewrite rules and deletes it |
+
+### Transients
+
+| Key | Set By | TTL | Invalidation |
+|-----|--------|-----|--------------|
+| `infoplus_products_cache` | IkonaIFE SyncService | 60 s | `POST /infoplus-suite/v1/products/clear-cache` |
+| `infoplus_pd_{product_id}_{ProductDetailSuite VERSION}` | ProductDetailSuite `outputProductState()` | 12 h | `woocommerce_after_product_object_save` for the product or the parent of a saved variation; a VERSION bump changes the key |
+| `infoplus_prices_{md5(sku)}` | ProductDetailSuite `interceptBulkPricesRoute()` | 24 h | none (WDP rule edits are not seen for up to 24 h) |
+| Sonderkontur upload storage (key from `getStorageKey()`, session cookie or IP+UA hash) | WooSingleProductAddons | 24 h | `cleanupOldTransients()` on `wp_scheduled_delete` |
+
+### Custom database tables (InfoplusAPI, not created by the Suite)
+
+| Table | Used by | Notes |
+|-------|---------|-------|
+| `infoplus_products` | InfoplusAPI `Products.php`, `Cart.php`, `ifeConnector.php` | Maps WooCommerce product/variation IDs (`woocommerce_ref_id`) to IFE UUIDs (`ife_id`), with `type`, `parent`, `modified`. No `wp_` prefix. |
+| `infoplus_synchronizations` | InfoplusAPI `Products.php` | One row per sync run (`startTime`, `endTime`, type, product). No `wp_` prefix. |
+| `{prefix}wdp_rules` | InfoplusAPI `Products.php`, Suite `getBulkPricesBySku()` | Advanced Dynamic Pricing rules table. The Suite uses `$wpdb->prefix . 'wdp_rules'` and guards with `SHOW TABLES LIKE`; InfoplusAPI hardcodes `wp_wdp_rules`. |
+
+No code in the repo creates these tables (no `dbDelta`, no activation hook). How they were created on production is unverified.
 
 ---
 
@@ -777,10 +1015,20 @@ UserOrders (standalone — reads WooCommerce order data directly)
 
 ### Version & Cache Busting
 
-- Plugin version: `Plugin::VERSION` in `src/Plugin.php`
-- Module-level versions: e.g., `IkonaIFE\Module::VERSION`, `ProductDetailSuite\Module::VERSION`
-- All asset URLs use version parameter for cache busting
-- **After any JS/CSS change:** bump the relevant VERSION constant and hard refresh (`Ctrl+Shift+R`)
+There are two version numbers plus two module constants. Verified 2026-09-17:
+
+| Value | Where | Current | Used for |
+|-------|-------|---------|----------|
+| Plugin header `Version:` | `infoplus-suite.php` | `0.9.111` | What WordPress shows in the plugin list. Not used in code. |
+| `Plugin::VERSION` | `src/Plugin.php` | `0.10.25` | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders, and the "Infoplus Suite" meta box admin assets (which append `.7`). |
+| `ProductDetailSuite\Module::VERSION` | `src/Modules/ProductDetailSuite/Module.php` | `1.1.0` | Cache-bust for all ProductDetailSuite frontend and admin assets, and part of the product data transient key. |
+| `IkonaIFE\Module::VERSION` | `src/Modules/IkonaIFE/Module.php` | `1.0.4` | Cache-bust for the sync dashboard assets. |
+
+Rules:
+
+- **After any JS/CSS change** in WooSingleProductAddons, UserDashboard or UserOrders: bump `Plugin::VERSION` and hard refresh (`Ctrl+Shift+R`).
+- **After any change in ProductDetailSuite assets or in the shape of `infoplusProductData`**: bump `ProductDetailSuite\Module::VERSION`. This also invalidates every `infoplus_pd_*` transient because the version is part of the key.
+- The plugin header version is bumped by hand at release time. The two numbers have drifted (0.9.111 vs 0.10.25) and there is no rule that ties them together. Roadmap R-08 proposes a single source of truth.
 
 ### Naming
 
@@ -814,11 +1062,11 @@ UserOrders (standalone — reads WooCommerce order data directly)
 
 ---
 
-## 9. Anfrage Popup — Data Injection Pattern
+## 9. Anfrage Popup: Data Injection Pattern
 
 ### Overview
 
-The "Anfrage" (inquiry) call-to-action is an **Elementor popup** triggered by the Anfrage button in the `ProductOrderPanel` widget. Because the popup is not in the DOM until opened, standard jQuery selectors fail — the solution is a script that listens for the Elementor popup event.
+The "Anfrage" (inquiry) call-to-action is an **Elementor popup** triggered by the Anfrage button in the `ProductOrderPanel` widget. Because the popup is not in the DOM until opened, standard jQuery selectors fail, the solution is a script that listens for the Elementor popup event.
 
 ### Why a script attached to the popup form
 
@@ -845,8 +1093,8 @@ The popup container is identified by the CSS class **`.sonderwuche_popup`** (app
 
 ### Data sources
 
-- `window.infoplusProductData` — injected by `ProductDetailSuite/Module.php` on `woocommerce_after_single_product`
-- `window.infoplusProductState` — shared event bus from `product-state.js`; exposes `.selectedModel` (slug) and `.selectedAttributes` (object of `pa_*` key to term slug)
+- `window.infoplusProductData`, injected by `ProductDetailSuite/Module.php` on `woocommerce_after_single_product`
+- `window.infoplusProductState`, shared event bus from `product-state.js`; exposes `.selectedModel` (slug) and `.selectedAttributes` (object of `pa_*` key to term slug)
 
 ### Order type: requestable_with_variants
 
@@ -866,28 +1114,28 @@ The 4th order type is the primary consumer of the variant fields. When a model h
 | `requestable_with_variants` | Anfrage mit Varianten | Anfrage only | Yes |
 | `buyable` | Buyable (Warenkorb) | Cart only | No |
 
-### ⚠ Adding a new order type — required checklist
+### ⚠ Adding a new order type: required checklist
 
 When adding a new order type value, **four separate whitelists** must all be updated or the new value will silently fall back to `'editable'` on reload (the save works, but the read discards the unknown value). Missing any one of these was the cause of the `requestable_with_variants` persistence bug.
 
 | # | File | Location | What to update |
 |---|---|---|---|
-| 1 | `Fields/ProductAttributeImages.php` | `renderTermFields()` — local `$allowed_order_types` variable | Add new value to the array used to validate the saved DB value before pre-selecting the dropdown |
-| 2 | `Fields/ProductAttributeImages.php` | `saveMetaBox()` — `$allowed` variable in the `META_KEY_ORDER_TYPE` branch | Add new value to the array used to sanitize the submitted POST value before saving |
-| 3 | `Fields/ProductAttributeImages.php` | `getTermOrderType()` — `$allowed` variable | Add new value to the array used when reading the type for frontend data output |
-| 4 | `Fields/ProductAttributeImages.php` | `renderTermFields()` — the `<select>` HTML | Add a new `<option value="...">` element visible to the admin |
+| 1 | `Fields/ProductAttributeImages.php` | `renderTermFields()`, local `$allowed_order_types` variable | Add new value to the array used to validate the saved DB value before pre-selecting the dropdown |
+| 2 | `Fields/ProductAttributeImages.php` | `saveMetaBox()`, `$allowed` variable in the `META_KEY_ORDER_TYPE` branch | Add new value to the array used to sanitize the submitted POST value before saving |
+| 3 | `Fields/ProductAttributeImages.php` | `getTermOrderType()`, `$allowed` variable | Add new value to the array used when reading the type for frontend data output |
+| 4 | `Fields/ProductAttributeImages.php` | `renderTermFields()`, the `<select>` HTML | Add a new `<option value="...">` element visible to the admin |
 
 Additionally update:
 
-- `Assets/product-order-panel.js` → `applyOrderType()` — add button visibility logic for the new type
-- `Assets/product-order-panel.js` → `applyVariationState()` — **required, see below**
+- `Assets/product-order-panel.js` → `applyOrderType()`, add button visibility logic for the new type
+- `Assets/product-order-panel.js` → `applyVariationState()`, **required, see below**
 - `PLUGIN-DOCUMENTATION.md` → update the order types summary table above
 
 ### ⚠ applyVariationState() must handle every order type explicitly
 
-`applyVariationState()` in `product-order-panel.js` is called by multiple downstream event handlers (`variation:reset`, `variation:notfound`, `attribute:changed`). These events can fire synchronously after model selection — for example, WooCommerce fires `reset_data` inside `syncToWooCommerce()`, which chains into `variation:reset`, which calls `applyVariationState()`.
+`applyVariationState()` in `product-order-panel.js` is called by multiple downstream event handlers (`variation:reset`, `variation:notfound`, `attribute:changed`). These events can fire synchronously after model selection, for example, WooCommerce fires `reset_data` inside `syncToWooCommerce()`, which chains into `variation:reset`, which calls `applyVariationState()`.
 
-**If a new order type has no explicit branch in `applyVariationState()`, those downstream events can silently leave the buttons in a broken state** — even though `applyOrderType()` ran correctly and showed the right buttons a moment earlier.
+**If a new order type has no explicit branch in `applyVariationState()`, those downstream events can silently leave the buttons in a broken state**, even though `applyOrderType()` ran correctly and showed the right buttons a moment earlier.
 
 The rule: **every order type must have an explicit case in both `applyOrderType()` AND `applyVariationState()`**.
 
@@ -898,11 +1146,11 @@ The rule: **every order type must have an explicit case in both `applyOrderType(
 | `requestable_with_variants` | Show Anfrage + pulse | Re-enforce Anfrage visible + pulsing (no variation needed) |
 | `buyable` | Show Cart | Enable/disable Cart based on variation validity |
 
-For types where the button is always enabled (requestable family), `applyVariationState()` must **re-enforce** the visible + pulsing state rather than do nothing — this is the defensive pattern that prevents any subsequent event from leaving the button hidden.
+For types where the button is always enabled (requestable family), `applyVariationState()` must **re-enforce** the visible + pulsing state rather than do nothing, this is the defensive pattern that prevents any subsequent event from leaving the button hidden.
 
 ---
 
-## 10. Admin Meta Box — "Infoplus Suite"
+## 10. Admin Meta Box: "Infoplus Suite"
 
 ### Overview
 
@@ -914,7 +1162,7 @@ The product admin page has a single **"Infoplus Suite"** meta box (registered by
 |-----|---------|
 | **Attribute Overrides** | Per-product attribute images (override global term images); order type per `pa_model` term |
 | **IBE/IFE** | UUID (read-only), Print API ID (read-only), Mindestanzahl (`_infoplus_min_quantity`), Lieferzeit (`_infoplus_delivery_days`) |
-| **Default Variation** | Per-model cascading dropdowns — each `pa_model` term gets its own attribute selectors; see Section 11 |
+| **Default Variation** | Per-model cascading dropdowns, each `pa_model` term gets its own attribute selectors; see Section 11 |
 
 ### Tab Switching
 
@@ -955,7 +1203,7 @@ The tab renders one bordered card per `pa_model` term on the product. Each card 
 - One `<select>` per non-model variation-type attribute, labeled with the attribute name
 - A hidden `<input name="_infoplus_model_default_variations[slug]">` that holds the resolved variation ID
 
-**Cascading filtering**: The `filterModelDefaultSelects($section)` function in `admin-product-attribute-images.js` rebuilds each select's `<option>` list from a snapshot (`modelDefaultAllOptions`) captured at page load, keeping only values that appear in at least one variation for that model given the other current selections. This prevents "Keine passende Variation gefunden" states — every visible combination is guaranteed to exist.
+**Cascading filtering**: The `filterModelDefaultSelects($section)` function in `admin-product-attribute-images.js` rebuilds each select's `<option>` list from a snapshot (`modelDefaultAllOptions`) captured at page load, keeping only values that appear in at least one variation for that model given the other current selections. This prevents "Keine passende Variation gefunden" states, every visible combination is guaranteed to exist.
 
 **Initialization order**: `initModelDefaultAttrOptions()` (captures original options) runs before `initModelDefaultVariationDropdowns()` (pre-populates from saved data and triggers initial filtering).
 
@@ -971,7 +1219,7 @@ Page load / model switch
     → syncToWooCommerce()               // single WC trigger (see Section 13)
 ```
 
-`applyModelDefault()` writes directly to `this.selectedAttributes` (bypassing `setAttribute()`) to avoid per-attribute `syncToWooCommerce()` calls. This is the critical batch-write pattern — calling `setAttribute()` per attribute would trigger WC's `reset_data` event repeatedly between each write.
+`applyModelDefault()` writes directly to `this.selectedAttributes` (bypassing `setAttribute()`) to avoid per-attribute `syncToWooCommerce()` calls. This is the critical batch-write pattern, calling `setAttribute()` per attribute would trigger WC's `reset_data` event repeatedly between each write.
 
 ### Fallback
 
@@ -990,13 +1238,17 @@ If `model_default_variations` is null or a given model has no entry, `applyModel
 
 ### Problem
 
-The `GET /infoplus/v1/products/prices?sku=X` endpoint was originally registered by the AlgolPlus WDP (Advanced Dynamic Pricing) plugin. New WDP pricing rules store WooCommerce **product/variation IDs** in the filter's `value` array instead of SKU strings, so the legacy handler returned `[]` for any SKU that used the newer rule format.
+The `GET /infoplus/v1/products/prices?sku=X` endpoint is registered by the **InfoplusAPI** plugin (`reference/infoplus_api/entities/Products.php`, `get_bulk_price_rules_for_product()`), which reads the AlgolPlus WDP (Advanced Dynamic Pricing) rules table `wp_wdp_rules`. The 0.9.93 documentation attributed the route to the WDP plugin itself; the code shows it is InfoplusAPI. New WDP pricing rules store WooCommerce **product/variation IDs** in the filter's `value` array instead of SKU strings, so the InfoplusAPI handler returned `[]` for any SKU that used the newer rule format.
 
 Adding a competing `rest_api_init` route causes a "Route already registered" conflict since both plugins share the `infoplus/v1` namespace with the same path.
 
+Since 0.9.111 the intercepted result is cached in the transient `infoplus_prices_{md5(sku)}` for 24 hours. There is no invalidation hook, so a changed WDP rule can take up to a day to show on the product page unless the transient is deleted by hand.
+
+After the InfoplusAPI merge the interception can become a normal route registration and the InfoplusAPI handler can be dropped.
+
 ### Solution: `rest_pre_dispatch` interception
 
-`Module::interceptBulkPricesRoute()` is hooked to the `rest_pre_dispatch` filter at priority 10. WordPress calls this filter before dispatching to any registered route handler. Returning a non-null value short-circuits dispatch entirely — the WDP handler never runs.
+`Module::interceptBulkPricesRoute()` is hooked to the `rest_pre_dispatch` filter at priority 10. WordPress calls this filter before dispatching to any registered route handler. Returning a non-null value short-circuits dispatch entirely, the WDP handler never runs.
 
 ```php
 add_filter('rest_pre_dispatch', [$this, 'interceptBulkPricesRoute'], 10, 3);
@@ -1033,11 +1285,11 @@ Helper that `unserialize()`s the `bulk_adjustments` column and maps the nested `
 
 ### Table availability guard
 
-Before querying, `getBulkPricesBySku` does `SHOW TABLES LIKE '{$table}'` — returns `[]` silently if the WDP plugin is not installed.
+Before querying, `getBulkPricesBySku` does `SHOW TABLES LIKE '{$table}'`, returns `[]` silently if the WDP plugin is not installed.
 
 ---
 
-## 13. Model Switching — Single-Trigger WooCommerce Sync
+## 13. Model Switching: Single-Trigger WooCommerce Sync
 
 ### Problem
 
@@ -1049,7 +1301,7 @@ The old `syncToWooCommerce()` called `.trigger('change')` on each select individ
 
 `syncToWooCommerce()` now operates in two passes:
 
-**Pass 1 — silent writes:**
+**Pass 1, silent writes:**
 ```js
 Object.entries(this.selectedAttributes).forEach(([attr, value]) => {
     const $select = $form.find(`select[name="${attr.replace('pa_', 'attribute_pa_')}"]`);
@@ -1060,7 +1312,7 @@ Object.entries(this.selectedAttributes).forEach(([attr, value]) => {
 });
 ```
 
-**Pass 2 — single trigger on the last select:**
+**Pass 2, single trigger on the last select:**
 ```js
 if ($lastSelect) {
     $lastSelect.trigger('change');
@@ -1083,7 +1335,7 @@ setModel(slug)
   6. syncToWooCommerce()       ← single WC sync with complete state
 ```
 
-`applyModelDefault()` does NOT call `syncToWooCommerce()` itself — the call in step 6 fires once after all defaults are applied.
+`applyModelDefault()` does NOT call `syncToWooCommerce()` itself, the call in step 6 fires once after all defaults are applied.
 
 ---
 
@@ -1122,7 +1374,7 @@ Each `.infoplus-bulk-row` now carries a `data-from` attribute (set in `buildBulk
 ```js
 if (data.source !== 'panel' && data.qty !== state.currentQty) { setQty(data.qty); }
 ```
-The `data.qty !== state.currentQty` equality check blocked updates when the clicked tier's minimum happened to equal the current qty (e.g., clicking the lowest "ab 1 Stück" row when qty was already 1). This guard was removed — the `source !== 'panel'` check alone is sufficient to prevent echo loops.
+The `data.qty !== state.currentQty` equality check blocked updates when the clicked tier's minimum happened to equal the current qty (e.g., clicking the lowest "ab 1 Stück" row when qty was already 1). This guard was removed, the `source !== 'panel'` check alone is sufficient to prevent echo loops.
 
 ### Direction 2: Changing qty input → updates active tier highlight
 
@@ -1135,15 +1387,23 @@ user types / clicks +/− in ProductOrderPanel
   → panel's own highlightActiveTier($panel) already ran inside setQty()
 ```
 
-BulkPriceTable's listener intentionally has no source filter — it updates on every `qty:changed` regardless of origin.
+BulkPriceTable's listener intentionally has no source filter, it updates on every `qty:changed` regardless of origin.
 
 ### Script load order dependency
 
 Both widgets initialize on `$(document).ready()`. WordPress enqueues `product-order-panel.js` before `bulk-price-table.js` (registration order in `enqueueFrontendAssets`). The panel's `qty:changed` listener is therefore registered first. When `setQty` in the panel emits with `source: 'panel'`, the panel's own listener skips it (source check), and BulkPriceTable's listener (registered second) processes it correctly.
 
-### ⚠ Status
+### Third participant since 0.9.111: the legacy bulk calculator
 
-The two-way sync fix was applied in v1.0.58 but **has not yet been verified in the browser**. See Section 16.
+`WooSingleProductAddons/Assets/elementor-bulk-calculator.js` (the old `#qty_value` / `#bulk_table` Elementor layout) now takes part in the same bus. Its `apply(qty)` writes `infoplusProductState.currentQty` and emits `qty:changed` with `source: 'calculator'`; it listens to `qty:changed` from any other source and applies the qty without re-emitting. It also emits `minqty:changed` after loading tiers. It no longer renders its own price grid.
+
+### Effective minimum quantity since 0.9.111
+
+`product-order-panel.js` keeps two values: `productMinQty` (from `_infoplus_min_quantity`, via the widget's data attribute) and `minQty` (effective). When bulk tiers arrive and the first tier's `from` is higher than the product minimum, `applyBulkMinQty()` raises `minQty`, clamps the current qty up, disables the minus button and emits `qty:changed` (source `panel`) plus `minqty:changed`. When no tiers exist, `resetMinQty()` restores the product value. The ProductInfoBox widget shows the effective value.
+
+### Status
+
+The code state as of 0.9.111 is confirmed by reading `product-order-panel.js`: `.infoplus-bulk-row` carries `data-from` (line 112) and the `qty:changed` listener checks only `data.source !== 'panel'` (line 307, with a comment explaining why the equality guard is gone). Browser verification is still unverified from the repository. See Section 16.
 
 ---
 
@@ -1166,7 +1426,11 @@ The WooCommerce Blocks cart (`/cart/`) renders with default WordPress button sty
 
 ### Location
 
-`src/Modules/UserOrders/Module.php` — `enqueueCartStyles()` method.
+`src/Modules/UserOrders/Module.php`, `enqueueCartStyles()` method.
+
+### Since 0.9.111: `woo-pages.css` and `cart-qty-fix.js`
+
+Most cart and checkout styling now lives in the external stylesheet `UserOrders/Assets/woo-pages.css` (see 4.7), enqueued for guests and logged-in users on cart, checkout and the order-received endpoint. The inline `enqueueCartStyles()` and `enqueueCheckoutStyles()` blocks still exist alongside it. `cart-qty-fix.js` adds a "× qty" badge to product names where the native quantity selector is hidden.
 
 ### Translations note
 
@@ -1175,17 +1439,21 @@ WooCommerce Blocks loads its UI strings ("Estimated total", "Add coupons", "Proc
 1. WP Admin → Updates → Update WooCommerce (de_DE) translation
 2. If strings still appear in English: install Loco Translate or "Say What?" plugin and map the strings manually (text domain: `woo-gutenberg-products-block`)
 
-### ⚠ Known issue
+### Known issue (as reported in 0.9.93)
 
-The WooCommerce Blocks **checkout** page (`/checkout/`) shows an infinite-loading skeleton even with items in the cart. No network errors and nothing in `debug.log`. The cart styles are not the cause. Root cause not yet identified. See Section 16.
+The WooCommerce Blocks **checkout** page (`/checkout/`) showed an infinite-loading skeleton even with items in the cart. See Section 16 for the current status.
 
 ---
 
 ## 16. Known Issues & Incomplete Features
 
-### ⚠ WooCommerce Blocks Checkout — Infinite Loading Skeleton
+Every entry was re-checked against the 0.9.111 code on 2026-09-17. Status values: **still open**, **fixed**, **unverifiable**.
 
-**Status: NOT FIXED**
+### WooCommerce Blocks Checkout: Infinite Loading Skeleton
+
+**Status: unverifiable from the code.** Nothing in the 0.9.93 to 0.9.111 diff addresses a checkout hydration problem, and no commit message mentions it. The same period added a lot of checkout work that only makes sense against a rendering checkout (`woo-pages.css` checkout sections, `filterWooCheckoutBlock()`, `cart-qty-fix.js` on the order summary), so the page evidently renders on production now. Whether the original cause was a plugin conflict, a session issue or something else is not recorded anywhere in the repo. Original notes kept below.
+
+**Original status (0.9.93): NOT FIXED**
 
 **Symptom:** `/checkout/` page with items in cart shows a skeleton/loading state indefinitely. The checkout block content never renders. No JavaScript errors in console, no errors in `debug.log`, no failed network requests.
 
@@ -1194,15 +1462,17 @@ The WooCommerce Blocks **checkout** page (`/checkout/`) shows an infinite-loadin
 **Suspected area:** WooCommerce Blocks hydration/initialization issue, possibly a conflict with another plugin or a missing nonce/session for the Store API. Needs dedicated debugging session with browser network tab open while checking for `wc/store/v1/cart` requests and their response status.
 
 **Files to investigate:**
-- `src/Modules/UserOrders/Module.php` — `enqueueCartStyles()` (confirm no unintended CSS that hides the checkout content)
+- `src/Modules/UserOrders/Module.php`, `enqueueCartStyles()` (confirm no unintended CSS that hides the checkout content)
 - Browser console → Application → Cookies (check `woocommerce_session_*` exists)
 - Network tab → filter by `/wc/store/v1/` (check for 4xx/5xx responses)
 
 ---
 
-### ⚠ Two-Way Qty / Price Table Sync — Unverified
+### Two-Way Qty / Price Table Sync
 
-**Status: IMPLEMENTED, NOT YET BROWSER-TESTED**
+**Status: code confirmed in 0.9.111, browser verification unverifiable from the repo.** All three changes listed below are present in the current `product-order-panel.js` and `bulk-price-table.css`. The code was further extended after 0.9.93 (effective min qty, calculator participation, see Section 14), which means it has been worked on in the browser since, but no test record exists in the repo.
+
+**Original status (0.9.93): IMPLEMENTED, NOT YET BROWSER-TESTED**
 
 The fix was applied in v1.0.58 (see Section 14). The changes are:
 1. `.infoplus-bulk-row` elements now have `data-from` attribute and a delegated click handler that calls `infoplusProductState.setQty(from)`
@@ -1212,15 +1482,17 @@ The fix was applied in v1.0.58 (see Section 14). The changes are:
 **To verify:**
 1. Open a product page with a variation that has WDP pricing rules
 2. Wait for the bulk price grid to load in the panel
-3. Click a tier row — qty input should update and price should recalculate
-4. Type a qty in the input — the active row in the grid should highlight the correct tier
+3. Click a tier row, qty input should update and price should recalculate
+4. Type a qty in the input, the active row in the grid should highlight the correct tier
 5. If BulkPriceTable widget is also on the page: clicking its cells should also update the panel qty
 
 ---
 
-### ⚠ Extended Profile Settings Form — Not Implemented
+### Extended Profile Settings Form
 
-**Status: PLANNED, NOT STARTED**
+**Status: fixed (implemented).** `UserDashboard/Module.php` registers `[infoplus_profile_settings]` (`renderProfileSettings()`), `GET /user/profile` returns the extended fields, `POST /user/profile` writes the `billing_*` meta and `infoplus_vat_id`, and the country select uses `WC()->countries->get_countries()`. This matches the plan below point by point. Whether the Elementor page was switched to the shortcode widget is a site configuration question, unverifiable from the repo. Original plan kept for reference.
+
+**Original status (0.9.93): PLANNED, NOT STARTED**
 
 A plan exists to replace the Elementor Form widget on the "Einstellungen" account tab with a shortcode `[infoplus_profile_settings]` that renders a complete profile editing form including:
 - First name, last name, email, phone
@@ -1236,3 +1508,102 @@ The full implementation plan is stored in the Claude plan file. Key decisions:
 - Country field uses `WC()->countries->get_countries()` for the `<select>` options
 - JS populates all fields from the existing `GET /user/profile` endpoint (which needs to be extended to return the new fields)
 - The user must swap the Elementor Form widget for an Elementor Shortcode widget containing `[infoplus_profile_settings]`
+
+---
+
+### New findings from the 0.9.111 documentation pass (2026-09-17)
+
+Observed while reading the code. None of these has been fixed; they are listed so they are not lost.
+
+| # | Where | Finding | Status |
+|---|-------|---------|--------|
+| 1 | `WooSingleProductAddons/Module.php` `ajaxAddToCart()` | No nonce or referer check on the `infoplus_add_to_cart` admin-ajax action (priv and nopriv). Any site can trigger adds to a visitor's cart. | still open |
+| 2 | `ProductDetailSuite/Module.php` `interceptBulkPricesRoute()` | Transient `infoplus_prices_{md5(sku)}` (24 h) has no invalidation. WDP rule edits are invisible for up to a day. | still open |
+| 3 | `WooSingleProductAddons/Module.php` `outputProductContextJson()` | Variation attribute keys are hardcoded (`pa_model`, `pa_format`, `pa_befestigung`, `pa_oberflache`). Products using other attributes get empty values in `window.allWooVariations`. | still open |
+| 4 | `ProductDetailSuite/Assets/product-state.js` `loadDeferredVariations()` | Falls back to the literal `/wp-json/infoplus/v1/` when `infoplusProductConfig` is missing. Breaks on sites without pretty permalinks or with a custom REST prefix. | still open |
+| 5 | `ProductDetailSuite/Module.php` `buildVariationsData()` | Reads `_infoplus_model_image_id`, `_infoplus_model_description`, `_infoplus_model_tooltip` which nothing writes any more (`Fields/VariationFields.php` is deprecated and empty). Dead reads or stale data. | still open |
+| 6 | `UserDashboard/Assets/` | Nine duplicated ProductDetailSuite files, never enqueued. They partially drifted in 0.9.111. Roadmap R-02. | still open |
+| 7 | `WooProductVariationFields/Assets/admin-fields.js` | Not enqueued by any PHP. Dead file. | still open |
+| 8 | `reference/infoplus_api/InforplusAPI.php` `validate_api_key()` | Defined but not used by any route. `INFOPLUS_API_KEY` currently protects nothing; every InfoplusAPI route is public. Contradicts `reference/README.md`, which says the key "validates incoming requests to /infoplus/v1/*". | still open |
+| 9 | `reference/infoplus_api/entities/Cart.php` `update_cart()` | Redirect base URL is hardcoded to `https://navajowhite-rhinoceros-679020.hostingersite.com/cart`, which is a Hostinger staging host, not the production domain. Whether production has a different value is unverified (the reference copy is stated to be the live copy). | still open |
+| 10 | `reference/infoplus_api/entities/Products.php` `getProducts()` | Uses `$woocomerce_product->id` (undefined variable) when calling `get_variants_for_product_internal_by_id()`, and reads `min_quantity` meta that the Suite never writes. | still open |
+| 11 | `reference/infoplus_api/InforplusAPI.php` `try_order_action_again()` | Uses undefined `$tries` and `$testing_order`; retry scheduling calls `as_schedule_single_action` without checking Action Scheduler exists. | still open |
+| 12 | `reference/infoplus_api/entities/Products.php` | Email recipient for sync reports is hardcoded (`vr@alture.io`); order retry alerts in `InforplusAPI.php` go to the same address. | still open |
+| 13 | InfoplusAPI custom tables | `infoplus_products` and `infoplus_synchronizations` have no `wp_` prefix and no creating code in either plugin. | unverifiable how they were created |
+| 14 | `Plugin.php` `registerHooks()` | Loads the text domain from `languages/`, which does not exist. Harmless, but R-09 will need the directory. | still open |
+| 15 | Section 12 of the 0.9.93 docs | Attributed `/products/prices` to the WDP plugin. It is InfoplusAPI. Corrected in this version. | fixed (docs) |
+| 16 | Section 7 of the 0.9.93 docs | Order type meta key was documented as `_infoplus_order_type_{term}`. Real key is `_infoplus_attr_order_type_{attr}_{term}`. Corrected in this version. | fixed (docs) |
+| 17 | `Custom404/Module.php` and `UserOrders/Module.php` | Both hardcode `calc(100vh - 684px)` from measured header (83 px) and footer (601 px) heights. A theme change breaks the layout silently. | still open |
+
+---
+
+## 17. Large Products: Deferred Variations and Caching
+
+Added in 0.9.111 (`ProductDetailSuite\Module::VERSION` 1.1.0) to stop product pages with 1000+ variations from timing out.
+
+### Threshold
+
+`Module::VARIATION_AJAX_THRESHOLD = 200`. Counted with `count($product->get_children())` in `outputProductState()`. The same value is returned from the `woocommerce_ajax_variation_threshold` filter so WooCommerce's own `variations_form` also switches to AJAX for these products.
+
+### Page load
+
+```
+outputProductState()
+  transient infoplus_pd_{id}_{VERSION} hit?  → echo cached JSON
+  miss:
+    children > 200 → buildProductDataLite()   variations: [], models via buildModelsDataLite(), _variationsDeferred: true
+    else           → buildProductData()       full variations (get_available_variations() called once, reused by models)
+    cache JSON for 12 h
+```
+
+`buildProductDataLite()` still includes `attributes` (from `buildAttributesData()`) so dropdowns render immediately. `buildModelsDataLite()` gets min price and count per model from one SQL query over child `_price` / `attribute_pa_model` meta and takes names, tooltips and gallery from the `pa_model` terms.
+
+### After load
+
+```
+product-state.js init()
+  productData._variationsDeferred?
+    yes → emit variations:loading
+          GET {restUrl}product/{id}/variations
+          → productData.variations = response.variations
+          → buildAvailableAttributes()
+          → emit variations:loaded { count, availableAttributes }
+          → if a model was already selected, reset selectedModel and re-run
+          → applyDefaultVariation()
+    no  → applyDefaultVariation()
+```
+
+`variation-dropdowns.js` adds `ip-variations-loading` (shimmer, pointer-events none) to the widget between the two events. `product-info-box.js` re-applies the SKU after `variations:loaded`.
+
+### REST endpoint
+
+`GET /infoplus/v1/product/{id}/variations` → `getProductVariations()` → `buildVariationsDataLite()`. Three `$wpdb` queries over the child IDs: core meta (`_sku`, `_price`, `_stock_status`, `_thumbnail_id`), all `attribute_%` meta, and published status. Returns `{ success, variations: [...] }`. Unpublished children are skipped. `is_purchasable` is always `true` in the lite shape.
+
+### Other direct-query paths added in 0.9.111
+
+| Where | Replaced | With |
+|-------|----------|------|
+| `ModelSelector::renderModelCards()` | loop over `get_available_variations()` | one `GROUP BY attribute_pa_model` query with `MIN(_price)` |
+| `ProductImage` initial gallery | loop over variations for the first model | `wc_get_product_terms($id, 'pa_model')` |
+| `WooSingleProductAddons::outputProductContextJson()` | `get_available_variations()` then `wc_get_product()` per child | one `postmeta` query for four attribute keys |
+
+### Invalidation
+
+`invalidateProductCache()` on `woocommerce_after_product_object_save` deletes `infoplus_pd_{id}_{VERSION}` for the saved product and for its parent when the saved object is a variation. Bumping `Module::VERSION` orphans old transients (they expire after 12 h).
+
+---
+
+## 18. Changes from 0.9.93 to 0.9.111
+
+Summary of `git diff 40ce2e5 f01aca6` (38 files, 3234 insertions, 432 deletions). Work from April to September 2026, synced from production in one commit, so there is no per-feature history.
+
+| Area | Change |
+|------|--------|
+| Repo | `.gitattributes` (LF normalisation), `.gitignore` |
+| Versions | header 0.9.93 → 0.9.111, `Plugin::VERSION` → 0.10.25, ProductDetailSuite 1.0.58 → 1.1.0 |
+| ProductDetailSuite | New ProductInfoBox widget and JS. Deferred variation loading, product data transient, lite builders, `/product/{id}/variations` route, prices transient (Section 17). Admin lock buttons for the IBE/IFE fields (admins only). `data-image` on dropdown options, lazy-load opt-out on the selected image. Bulk price table overlay states. Effective min qty in the order panel. `pulseActionButton()` in dropdowns. `attribute:changed` now selects the option visually. `elementorFrontend.hooks` guards in all widget scripts. |
+| WooSingleProductAddons | Direct-query product context JSON. Bulk calculator joins the state bus and stops rendering its own grid. Editor link script handles `requestable_with_variants` and pulses buttons. |
+| WooProductVariationFields | Locked IFE fields saved only for `manage_options`. |
+| UserDashboard | UserStatCard widget and CSS. Logout without confirmation page. Registration success redirect script. Copies of ProductDetailSuite assets partly updated. |
+| UserOrders | `woo-pages.css` (cart, checkout, thank-you) for all users, `cart-qty-fix.js`, checkout login link rewrite, empty-cart detection with MutationObserver fallback, thank-you page restyle, OrderDetails print stylesheet and 2:1 item images, UserOrdersGrid explicit status list, email banner icon markup. |
+| Custom404 | No change in this diff (existed since `6b0d87f`, documented for the first time in 4.9). |
