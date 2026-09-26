@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Infoplus Suite
  * Description: Modular WooCommerce enhancements (Single Product Addons, Product Variation Fields, etc).
- * Version:     0.9.111
+ * Version:     0.9.112
  * Author:      JM
  * License:     GPL-2.0-or-later
  */

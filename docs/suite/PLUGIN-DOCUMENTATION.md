@@ -31,6 +31,7 @@
 10. [Admin Meta Box: "Infoplus Suite"](#10-admin-meta-box-infoplus-suite)
 11. [Per-Model Default Variations](#11-per-model-default-variations)
 12. [WDP Bulk Prices API Interception](#12-wdp-bulk-prices-api-interception)
+    - [12a. Catalog Import](#12a-catalog-import-woocommerce--katalog-import)
 13. [Model Switching: Single-Trigger WooCommerce Sync](#13-model-switching-single-trigger-woocommerce-sync)
 14. [Two-Way Qty / Price Table Sync](#14-two-way-qty--price-table-sync)
 15. [Cart Page Styling (WooCommerce Blocks)](#15-cart-page-styling-woocommerce-blocks)
@@ -1262,10 +1263,11 @@ Resolution strategy (falls through to next level if no match found):
 
 1. `wc_get_product_id_by_sku($sku)` → `$variation_id` (int)
 2. `wp_get_post_parent_id($variation_id)` → `$parent_id` (int)
-3. Queries `wp_wdp_rules` WHERE `enabled = 1` ORDER BY `priority`
+3. Queries `wp_wdp_rules` WHERE `enabled = 1 AND deleted = 0` ORDER BY `priority` (rules deleted in the WDP admin stay in the table with `deleted = 1`)
 4. For each rule: deserializes `filters` column, looks for a filter object whose `value` array contains **any of**: the SKU string, `(string)$variation_id`, or `(string)$parent_id`
 5. For the first matching rule: deserializes `bulk_adjustments`, maps `ranges` array to `[{from, to, value}]`
 6. Normalizes `to >= 99000` to `''` (open-ended / display as "500+")
+7. `toDisplayPrices()` converts each `value` with `wc_get_price_to_display()` on the variation, so the response is what the shop displays (incl. MwSt. when prices are entered net and shown incl. tax). All three consumers (order panel, Bulk Price Table widget, Elementor bulk calculator) show the response as-is.
 
 ### Response format
 
@@ -1286,6 +1288,31 @@ Helper that `unserialize()`s the `bulk_adjustments` column and maps the nested `
 ### Table availability guard
 
 Before querying, `getBulkPricesBySku` does `SHOW TABLES LIKE '{$table}'`, returns `[]` silently if the WDP plugin is not installed.
+
+---
+
+## 12a. Catalog Import (WooCommerce → Katalog-Import)
+
+Module `src/Modules/CatalogImport/`. Imports the client's SKU Excel (via `import-mapping/build_mapping.py` → `build_import.py` → `import.csv`, kept outside the repo next to the Excel) into the variable products.
+
+| File | Role |
+|---|---|
+| `Module.php` | Admin page, AJAX `infoplus_catalog_plan` / `_step` / `_reset`, plan storage in `uploads/infoplus-catalog-import/` (web access denied) |
+| `CsvReader.php` | Parses and validates the `;` CSV (no WP calls, CLI-testable) |
+| `Planner.php` | Dry run: compares CSV with the site, read-only |
+| `Runner.php` | Applies the plan in phases, one small batch per AJAX request, resumable |
+| `PriceRules.php` | Builds WDP `single_item` bulk rules (one per distinct tier set, SKU filter, `price__fixed`, priority 0, title prefix `[Katalog] `) |
+| `TermIndex.php` | Finds attribute terms by normalised name (`×`→`x`, entities, case) before creating new ones |
+
+**Rules of the import:** the CSV is the source of truth for the products it names (`parent_id`). Variations of those products that are not in the CSV are deleted, including variations without SKU. Other products are not touched. Existing bulk rules are replaced only if every SKU in them belongs to the catalog (or exists nowhere on the site); rules with conditions, role discounts or non-SKU filters (e.g. „Händlerrabatt“) stay.
+
+**Phases:** `attributes` (creates missing `pa_*`, e.g. `pa_fenster`) → `terms` → `parents` (sets variation attributes in CSV order, keeps non-variation attributes) → `variations` (25 per request) → `deletes` (50) → `rules` (100) → `finalize`.
+
+**Finalize:** sets `woocommerce_prices_include_tax = no` (CSV prices are net) with display incl. tax, repairs `_infoplus_model_default_variations` / `_infoplus_default_variation_id` that point at deleted variations, syncs variable prices, clears `infoplus_prices_*` transients, purges LiteSpeed.
+
+**Options:** `infoplus_catalog_import_state` (progress, log, errors), `infoplus_catalog_import_summary` (dry-run numbers and result, readable via SQL for checks).
+
+Minimum order per variation needs no extra meta: the order panel raises the minimum to the first tier's `from` (see `product-order-panel.js`).
 
 ---
 

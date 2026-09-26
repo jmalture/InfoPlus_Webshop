@@ -1,0 +1,11 @@
+.ipci .ipci-intro { max-width: 820px; }
+.ipci .ipci-card { background: #fff; border: 1px solid #c3c4c7; padding: 16px 20px; margin: 16px 0; max-width: 980px; }
+.ipci .ipci-card h2 { margin-top: 0; }
+.ipci .ipci-table { max-width: 900px; margin-bottom: 12px; }
+.ipci .ipci-table th { width: 320px; }
+.ipci .ipci-list { list-style: disc; margin-left: 20px; }
+.ipci .spinner { float: none; vertical-align: middle; }
+.ipci .ipci-bar { height: 14px; background: #f0f0f1; border-radius: 7px; overflow: hidden; max-width: 600px; }
+.ipci .ipci-bar span { display: block; height: 100%; width: 0; background: #2271b1; transition: width .3s; }
+.ipci .ipci-phase { margin: 6px 0 0; }
+.ipci .ipci-log { max-height: 320px; overflow: auto; background: #f6f7f7; padding: 10px; white-space: pre-wrap; }

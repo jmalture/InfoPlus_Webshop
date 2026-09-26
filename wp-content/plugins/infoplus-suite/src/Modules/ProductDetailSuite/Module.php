@@ -408,7 +408,7 @@ final class Module implements ModuleInterface
 
         // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $rules = $wpdb->get_results(
-            "SELECT filters, bulk_adjustments FROM {$table} WHERE enabled = 1 ORDER BY priority ASC, id ASC"
+            "SELECT filters, bulk_adjustments FROM {$table} WHERE enabled = 1 AND deleted = 0 ORDER BY priority ASC, id ASC"
         );
 
         foreach ($rules as $rule) {
@@ -431,12 +431,35 @@ final class Module implements ModuleInterface
                     || ($parent_id    > 0 && in_array((string) $parent_id,    $str_values, true));
 
                 if ($matched) {
-                    return $this->parseWdpRanges($rule->bulk_adjustments);
+                    return $this->toDisplayPrices(
+                        $this->parseWdpRanges($rule->bulk_adjustments),
+                        $variation_id > 0 ? wc_get_product($variation_id) : null
+                    );
                 }
             }
         }
 
         return [];
+    }
+
+    /**
+     * WDP stores tier prices as entered (net when prices are entered excl. tax).
+     * Convert them to what the shop shows, so the tier table and order panel match
+     * the cart (incl. MwSt. when "display prices in the shop" is incl. tax).
+     */
+    private function toDisplayPrices(array $ranges, $product): array
+    {
+        if (!$product instanceof \WC_Product || !function_exists('wc_get_price_to_display')) {
+            return $ranges;
+        }
+        foreach ($ranges as &$range) {
+            if ($range['value'] !== '' && is_numeric($range['value'])) {
+                $display = wc_get_price_to_display($product, ['price' => (float) $range['value'], 'qty' => 1]);
+                $range['value'] = (string) round((float) $display, wc_get_price_decimals());
+            }
+        }
+        unset($range);
+        return $ranges;
     }
 
     /**
