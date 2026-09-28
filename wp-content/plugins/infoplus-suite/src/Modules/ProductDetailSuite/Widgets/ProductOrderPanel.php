@@ -80,8 +80,8 @@ class ProductOrderPanel extends Widget_Base
         $this->add_control('price_suffix_text', [
             'label'       => __('Price Suffix Text', 'infoplus-suite'),
             'type'        => Controls_Manager::TEXT,
-            'default'     => __('Alle Preise zzgl. MwSt., zzgl. Versandkosten', 'infoplus-suite'),
-            'placeholder' => __('Alle Preise zzgl. MwSt., zzgl. Versandkosten', 'infoplus-suite'),
+            'default'     => __('Alle Preise inkl. MwSt., zzgl. Versandkosten', 'infoplus-suite'),
+            'placeholder' => __('Alle Preise inkl. MwSt., zzgl. Versandkosten', 'infoplus-suite'),
         ]);
 
         $this->add_control('editor_btn_text', [
