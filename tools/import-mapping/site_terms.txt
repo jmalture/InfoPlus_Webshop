@@ -1,0 +1,109 @@
+pa_befestigung|Anstecknadel
+pa_befestigung|Anstecknadel & Metallklammern
+pa_befestigung|Broschennadel
+pa_befestigung|Broschennadel & Metallklammern
+pa_befestigung|DUOMAG Magnetsystem
+pa_befestigung|Duomag-Plus Magnet (extra stark)
+pa_befestigung|DUOMAG-Plus Magnetsystem
+pa_befestigung|Infomag-Magnet (drehsicher & extra stark)
+pa_befestigung|Infomag-Magnet (drehsicher)
+pa_befestigung|Kombi-Clip
+pa_befestigung|Krokodilklemme
+pa_befestigung|PROMAG Magnetsystem
+pa_befestigung|Promag-S Magnet
+pa_befestigung|Promag-S Magnet & Metallklammern
+pa_befestigung|Sicherheits-Anstecknadel
+pa_farbe|Coating silber
+pa_farbe|Gold geb./Schwarz
+pa_farbe|Schwarz matt
+pa_farbe|Schwarz/Weiß
+pa_farbe|Silber geb./Schwarz
+pa_farbe|Silber gebürstet
+pa_farbe|Silber matt
+pa_farbe|Weiß
+pa_farbe|Weiß/Schwarz
+pa_flachenfarbe|Silber
+pa_flachenfarbe|Weiß
+pa_format|50-100 mm x 15-50 mm (bis 50 cm²)
+pa_format|50-70 mm x 15-25 mm (bis 18 cm²)
+pa_format|50-75 mm x 15-40 mm (bis 30 cm²)
+pa_format|60x25 mm
+pa_format|60x15 mm
+pa_format|60x20 mm
+pa_format|60x22 mm
+pa_format|65x18 mm oval (Logo links)
+pa_format|65x18 mm rechteckig (Logo links)
+pa_format|65x18 mm rechteckig (Logo oben)
+pa_format|66x26 mm
+pa_format|67x35 mm (S)
+pa_format|67x42 mm (M)
+pa_format|68x22 mm
+pa_format|68x28 mm
+pa_format|69x26 mm
+pa_format|69x30 mm
+pa_format|69x31,5 mm
+pa_format|69x34 mm
+pa_format|69x34 mm (S)
+pa_format|69x39 mm (M)
+pa_format|69x40 mm
+pa_format|70x20 mm
+pa_format|70x25 mm
+pa_format|70x25 mm (gewölbt)
+pa_format|75x25 mm
+pa_format|75x25 mm (gewölbt)
+pa_format|75x30 mm
+pa_format|75x32 mm
+pa_format|75x32 mm / 75x32 mm + Sonderkontur
+pa_format|75x35 mm
+pa_format|75x35 mm / 75x35 mm + Sonderkontur
+pa_format|78x32 mm
+pa_format|84x47 mm
+pa_frontscheibe|Acrylglas
+pa_frontscheibe|Polykarbonat
+pa_holzart|Ahorn
+pa_holzart|Bambus
+pa_holzart|Eiche
+pa_holzart|Kirsche
+pa_holzart|Walnuss
+pa_model|Anfragemodell
+pa_model|Bestellung Modell
+pa_model|Comfort Namensschild
+pa_model|Digitaldruck Namensschilder
+pa_model|Druck
+pa_model|Druck & Sonderkontur
+pa_model|Editor-Modell
+pa_model|Exklusiv Namensschild
+pa_model|Komplette Selbstbeschriftung
+pa_model|Lasergravur
+pa_model|Lasergravur (100% kratzfest)
+pa_model|Lasergravur & Sonderkontur
+pa_model|Logo gedruckt / Name zur Selbstbeschriftung
+pa_model|Logo gedruckt & Sonderkontur / Name zur Selbstbeschriftung
+pa_model|Logo lasergraviert / Name zur Selbstbeschriftung
+pa_model|Logo lasergraviert & Sonderkontur / Name zur Selbstbeschriftung
+pa_model|Logo links / Name zur Selbstbeschriftung
+pa_model|Logo oben / Name zur Selbstbeschriftung
+pa_model|Untereloxaldruck (100% kratzfest)
+pa_oberflache|Edelstahl-Look
+pa_oberflache|Schwarz matt
+pa_oberflache|Silber matt
+pa_oberflache|Weiß (Thermolack)
+pa_tragerfarbe|Anthrazit
+pa_tragerfarbe|bio (kompostierbar)
+pa_tragerfarbe|Blau transparent
+pa_tragerfarbe|Chrom glanz (galvanisiert)
+pa_tragerfarbe|Chrom matt (galvanisiert)
+pa_tragerfarbe|Coating gold (lackiert)
+pa_tragerfarbe|Coating silber
+pa_tragerfarbe|Coating silber (lackiert)
+pa_tragerfarbe|Dunkelblau
+pa_tragerfarbe|Gold glanz (galvanisiert)
+pa_tragerfarbe|Gold matt (galvanisiert)
+pa_tragerfarbe|Grau transluzent
+pa_tragerfarbe|Klar transparent
+pa_tragerfarbe|Lichtgrau
+pa_tragerfarbe|Rot
+pa_tragerfarbe|Rot transparent
+pa_tragerfarbe|Schwarz
+pa_tragerfarbe|Weiß
+pa_tragerfarbe|Weiß transluzent

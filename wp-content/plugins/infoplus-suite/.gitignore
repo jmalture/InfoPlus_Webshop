@@ -5,3 +5,7 @@
 Thumbs.db
 .claude/
 .vscode/
+
+# catalog import: generated output and build artifacts
+/import-mapping/import.csv
+/import-mapping/dist/
