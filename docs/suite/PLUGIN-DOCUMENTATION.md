@@ -1293,7 +1293,7 @@ Before querying, `getBulkPricesBySku` does `SHOW TABLES LIKE '{$table}'`, return
 
 ## 12a. Catalog Import (WooCommerce → Katalog-Import)
 
-Module `src/Modules/CatalogImport/`. Imports the client's SKU Excel (via `import-mapping/build_mapping.py` → `build_import.py` → `import.csv`; scripts and mapping tables live in `import-mapping/`, the Excel and the generated `import.csv` stay out of git — run `python import-mapping/build_mapping.py "<path to Excel>"`) into the variable products.
+Module `src/Modules/CatalogImport/`. Imports the client's SKU Excel (via `import-mapping/build_mapping.py` → `build_import.py` → `import.csv`; scripts and mapping tables live in `import-mapping/`, the Excel and the generated `import.csv` stay out of git; run `python import-mapping/build_mapping.py "<path to Excel>"`) into the variable products.
 
 | File | Role |
 |---|---|

@@ -4,16 +4,17 @@ WordPress plugin for the Infoplus nameplate shop (Namensschilder). PHP 7.4+, Woo
 
 ## State of the repo
 
-- `main` matches production byte for byte at commit `f01aca6` (2026-09-17). Later commits are documentation only.
+- `main` matches production byte for byte at commit `f01aca6` (2026-09-17). Later commits on `main` are documentation only.
+- Branch `feature/catalog-import` (0.9.113) adds the CatalogImport module and the `import-mapping/` pipeline. Deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com), not on production. Status in `import-mapping/WORK-ORDER.md`.
 - Production history from April to September 2026 was synced in one commit (`3179bb5`), so `git log` does not explain individual features from that period. `PLUGIN-DOCUMENTATION.md` Section 18 summarises them.
 - No deploy tooling, CI config, build step or tests in the repo. Composer install is not needed (PSR-4 fallback autoloader in `infoplus-suite.php`). How files reach production is not recorded here (unverified).
 
 ## Repo layout
 
 ```
-infoplus-suite.php        entry point, plugin header (Version: 0.9.111)
+infoplus-suite.php        entry point, plugin header (Version: 0.9.111 on main, 0.9.113 on feature/catalog-import)
 composer.json             PSR-4 map Infoplus\Suite\ => src/, nothing else
-src/Plugin.php            orchestrator, Plugin::VERSION (0.10.25), registers the nine modules
+src/Plugin.php            orchestrator, Plugin::VERSION (0.10.25), registers the nine modules (ten on feature/catalog-import)
 src/Admin/Dashboard.php   WP Admin menu "IKONA IFE" (slug infoplus-suite), renders the visible module tabs
 src/Contracts/ModuleInterface.php   slug(), label(), register()
 src/Modules/<Name>/Module.php       one module each, see below
@@ -25,9 +26,11 @@ PLUGIN-DOCUMENTATION.md   module reference, REST routes, meta keys, known issues
 PIPELINE.md               end-to-end flows across all four plugins, merge reconciliation list
 UPGRADE-ROADMAP.md        R-01 to R-15 with status lines
 FEATURE-*.md              four older feature briefs, historical
+DATA-IMPORT-PLAN.md       original proposal for the catalog import (2026-09-18), historical
+import-mapping/           feature/catalog-import only: Excel -> catalog_mapping.csv -> import.csv, plus WORK-ORDER.md
 ```
 
-Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFields`, `EditorLinkSettings` (admin tab), `IkonaIFE` (admin tab), `ElementorUserAvatar`, `UserDashboard`, `UserOrders`, `ProductDetailSuite`, `Custom404`.
+Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFields`, `EditorLinkSettings` (admin tab), `IkonaIFE` (admin tab), `ElementorUserAvatar`, `UserDashboard`, `UserOrders`, `ProductDetailSuite`, `Custom404`. On `feature/catalog-import` also `CatalogImport` (WooCommerce → Katalog-Import, last).
 
 ## Two version numbers and cache busting
 
