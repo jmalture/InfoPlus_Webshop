@@ -48,15 +48,16 @@ Expected: 2,322 rows · 21 products · 305 updated · 2,017 created · 0 moved �
 - [x] 4.1 [Honza] Confirm backup from 0.1 exists, then press Apply and leave the tab open until 100 %
 - [x] 4.2 [check · Claude] (done: 0 errors, counts per product = CSV, 628 rules, rule 17 ok, VAT net, 20/20 SKUs' tier prices = Excel × 1.19) Over MCP: variation count per product = CSV count; 0 of the 803 SKUs left; every SKU has a price rule; spot-check 20 SKUs' tier prices against the Excel; rule 17 still enabled; `woocommerce_prices_include_tax = no`
 - [x] 4.3 [check · Claude] Atlantis + AluContur pages: prices = Excel net × 1.19, tiers and min. qty correct, models/order types/defaults intact. Found 2 template issues → 4.5, 4.6
-- [ ] 4.5 [Claude, needs OK] Elementor template 2190: add Fenster + Frontscheibe to the variation dropdowns (customers can't choose them yet)
-- [ ] 4.6 [Claude, needs OK] Price note says "zzgl. MwSt." (template text widget + order panel default) → "inkl. MwSt., zzgl. Versandkosten"
+- [x] 4.5 [Claude] (done 2026-09-28, verified 2026-10-03) Elementor template 2190: add Fenster + Frontscheibe to the variation dropdowns (customers can't choose them yet)
+- [x] 4.6 [Claude] (done 2026-09-28 in the template, plugin default in v0.9.113; verified 2026-10-03) Price note says "zzgl. MwSt." (template text widget + order panel default) → "inkl. MwSt., zzgl. Versandkosten"
 - [ ] 4.4 [check · Honza] Walk through the shop yourself: model galleries/images, texts, add to cart, cart total with VAT
 
 ## Phase 5: Follow-ups (deferred on purpose)
 
 - [ ] 5.1 [Honza] Order mode per model (Editor / Warenkorb / Anfrage) and delivery days per line
 - [ ] 5.2 [Honza] Variation images for new variations / new models
-- [ ] 5.3 [Honza] Publish the draft parent products once they look right
+- [x] 5.3 [Honza] Publish the draft parent products once they look right (all 21 published on staging 2026-10-03 for the client walkthrough)
+- [x] 5.8 [Claude] Header mega menu (template 17): 21 product tiles in 6 columns, linked to the product pages. Mobile popup (141): new WP menu "Mobile Menu" with the same 21 products, submenu opens in place. 7 tiles use the WooCommerce placeholder image (Image, Classic, Top, Business, Quadro, Prestige, Chalk Board) until real images exist (5.2)
 - [ ] 5.4 [Honza + Claude] Decide on products outside the Excel: "Alucontur Untereloxaldruck" (2544), "Magnete 3er Set" (13944), "3D Product View" (2853), "Test dummy product pk" (6982), "Exklusiv (Individuelle Form)" (2691) — the importer leaves them alone
 - [ ] 5.5 [Honza + Claude] Later Excel updates: rerun `build_mapping.py` then `build_import.py`, upload `import.csv`, dry run, apply
 - [ ] 5.6 [Honza + Claude] Merge `feature/catalog-import` into main once staging is signed off; production rollout is a separate work order
