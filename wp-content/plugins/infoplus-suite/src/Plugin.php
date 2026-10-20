@@ -27,6 +27,7 @@ final class Plugin
     public function boot(): void
     {
         $this->defineConstants();
+        require_once INFOPLUS_SUITE_PATH . 'src/template-functions.php';
         $this->registerModules();
         $this->registerAdmin();
         $this->registerHooks();

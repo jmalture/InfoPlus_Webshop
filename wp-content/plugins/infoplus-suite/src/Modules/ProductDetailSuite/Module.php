@@ -14,6 +14,7 @@ namespace Infoplus\Suite\Modules\ProductDetailSuite;
 
 use Infoplus\Suite\Contracts\ModuleInterface;
 use Infoplus\Suite\Plugin;
+use Infoplus\Suite\View;
 
 if (!defined('ABSPATH')) exit;
 
@@ -42,8 +43,13 @@ final class Module implements ModuleInterface
         // Register widget category
         add_action('elementor/elements/categories_registered', [$this, 'registerWidgetCategory']);
 
-        // Enqueue frontend assets
+        // Register frontend assets everywhere, enqueue them globally on product pages
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendAssets']);
+
+        // Tell the View renderer which handles each component needs (on-demand enqueue)
+        foreach (Components::ASSETS as $component => $handles) {
+            View::registerAssets($component, $handles['scripts'], $handles['styles']);
+        }
 
         // Enqueue admin assets
         add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
@@ -123,105 +129,57 @@ final class Module implements ModuleInterface
     }
 
     /**
-     * Enqueue frontend assets
+     * Register frontend assets on every front-end request so components can
+     * enqueue them on demand (View::render), then enqueue them globally on
+     * single product pages exactly as before.
      */
     public function enqueueFrontendAssets(): void
     {
+        $this->registerFrontendAssets();
+
         if (!is_product()) {
             return;
         }
 
+        // Same handles, same order as before the View renderer existed.
+        // The live Elementor product template relies on this global enqueue.
+        wp_enqueue_script('infoplus-product-state');
+        wp_enqueue_script('infoplus-model-selector');
+        wp_enqueue_script('infoplus-variation-dropdowns');
+        wp_enqueue_script('infoplus-product-image');
+        wp_enqueue_script('infoplus-product-order-panel');
+        wp_enqueue_style('infoplus-product-detail-suite');
+        wp_enqueue_style('infoplus-product-order-panel');
+        wp_enqueue_script('infoplus-bulk-price-table');
+        wp_enqueue_script('infoplus-product-info-box');
+        wp_enqueue_style('infoplus-bulk-price-table');
+    }
+
+    /**
+     * Register (not enqueue) all frontend handles of this module.
+     */
+    private function registerFrontendAssets(): void
+    {
         $ver = self::VERSION;
         $assetUrl = $this->assetUrl();
 
         // Main state management and communication JS
-        wp_enqueue_script(
-            'infoplus-product-state',
-            $assetUrl . 'product-state.js',
-            ['jquery'],
-            $ver,
-            true
-        );
+        wp_register_script('infoplus-product-state', $assetUrl . 'product-state.js', ['jquery'], $ver, true);
 
-        // Model selector widget JS
-        wp_enqueue_script(
-            'infoplus-model-selector',
-            $assetUrl . 'model-selector.js',
-            ['jquery', 'infoplus-product-state'],
-            $ver,
-            true
-        );
+        // Widget JS
+        wp_register_script('infoplus-model-selector', $assetUrl . 'model-selector.js', ['jquery', 'infoplus-product-state'], $ver, true);
+        wp_register_script('infoplus-variation-dropdowns', $assetUrl . 'variation-dropdowns.js', ['jquery', 'infoplus-product-state'], $ver, true);
+        wp_register_script('infoplus-product-image', $assetUrl . 'product-image.js', ['jquery', 'infoplus-product-state'], $ver, true);
+        wp_register_script('infoplus-product-order-panel', $assetUrl . 'product-order-panel.js', ['jquery', 'infoplus-product-state'], $ver, true);
+        wp_register_script('infoplus-bulk-price-table', $assetUrl . 'bulk-price-table.js', ['jquery', 'infoplus-product-state'], $ver, true);
+        wp_register_script('infoplus-product-info-box', $assetUrl . 'product-info-box.js', ['jquery', 'infoplus-product-state'], $ver, true);
 
-        // Variation dropdowns widget JS
-        wp_enqueue_script(
-            'infoplus-variation-dropdowns',
-            $assetUrl . 'variation-dropdowns.js',
-            ['jquery', 'infoplus-product-state'],
-            $ver,
-            true
-        );
+        // Styles
+        wp_register_style('infoplus-product-detail-suite', $assetUrl . 'product-detail-suite.css', [], $ver);
+        wp_register_style('infoplus-product-order-panel', $assetUrl . 'product-order-panel.css', ['infoplus-product-detail-suite'], $ver);
+        wp_register_style('infoplus-bulk-price-table', $assetUrl . 'bulk-price-table.css', ['infoplus-product-detail-suite'], $ver);
 
-        // Product image widget JS
-        wp_enqueue_script(
-            'infoplus-product-image',
-            $assetUrl . 'product-image.js',
-            ['jquery', 'infoplus-product-state'],
-            $ver,
-            true
-        );
-
-        // Product order panel widget JS
-        wp_enqueue_script(
-            'infoplus-product-order-panel',
-            $assetUrl . 'product-order-panel.js',
-            ['jquery', 'infoplus-product-state'],
-            $ver,
-            true
-        );
-
-        // Main stylesheet
-        wp_enqueue_style(
-            'infoplus-product-detail-suite',
-            $assetUrl . 'product-detail-suite.css',
-            [],
-            $ver
-        );
-
-        // Product order panel widget CSS
-        wp_enqueue_style(
-            'infoplus-product-order-panel',
-            $assetUrl . 'product-order-panel.css',
-            ['infoplus-product-detail-suite'],
-            $ver
-        );
-
-        // Bulk price table widget JS
-        wp_enqueue_script(
-            'infoplus-bulk-price-table',
-            $assetUrl . 'bulk-price-table.js',
-            ['jquery', 'infoplus-product-state'],
-            $ver,
-            true
-        );
-
-        // Product info box widget JS
-        wp_enqueue_script(
-            'infoplus-product-info-box',
-            $assetUrl . 'product-info-box.js',
-            ['jquery', 'infoplus-product-state'],
-            $ver,
-            true
-        );
-
-        // Bulk price table widget CSS
-        wp_enqueue_style(
-            'infoplus-bulk-price-table',
-            $assetUrl . 'bulk-price-table.css',
-            ['infoplus-product-detail-suite'],
-            $ver
-        );
-
-        // Localize script with REST URL and nonce
+        // Localize script with REST URL and nonce (printed only when the handle is enqueued)
         wp_localize_script('infoplus-product-state', 'infoplusProductConfig', [
             'restUrl' => rest_url('infoplus/v1/'),
             'nonce' => wp_create_nonce('wp_rest'),
