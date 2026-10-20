@@ -5,6 +5,8 @@
  * without WooCommerce). Override with infoplus-suite/inquiry-email.php.
  *
  * Inline styles only: e-mail clients ignore style sheets. Tables for layout.
+ * Colours follow the shop e-mails of the Infoplus theme: grey section
+ * headings, magenta only for links and the button.
  *
  * $args:
  * - audience (string) team|customer
@@ -24,7 +26,8 @@ $p     = (array) ($r['product'] ?? []);
 $name  = trim(($c['first_name'] ?? '') . ' ' . ($c['last_name'] ?? ''));
 $th    = 'style="padding:8px 12px 8px 0;text-align:left;vertical-align:top;font-weight:600;color:#4A4E53;width:38%;border-bottom:1px solid #DEDEE9"';
 $td    = 'style="padding:8px 0;text-align:left;vertical-align:top;color:#191B1C;border-bottom:1px solid #DEDEE9"';
-$h     = 'style="margin:28px 0 8px;font-size:16px;line-height:1.3;color:#9E0056;text-transform:uppercase;letter-spacing:1px"';
+$h     = 'style="margin:28px 0 8px;font-size:14px;line-height:1.3;font-weight:700;color:#4A4E53;text-transform:uppercase;letter-spacing:1px"';
+$is_contact = ($r['variant'] ?? '') === 'contact';
 $rows  = static function (array $pairs) use ($th, $td): void {
     echo '<table cellspacing="0" cellpadding="0" border="0" width="100%" style="width:100%;border-collapse:collapse;border:0">';
     foreach ($pairs as $pair) {
@@ -92,7 +95,7 @@ $contact = [
         <?php
         printf(
             /* translators: 1: name, 2: company */
-            esc_html__('Neue Anfrage von %1$s%2$s.', 'infoplus-suite'),
+            $is_contact ? esc_html__('Neue Nachricht über das Kontaktformular von %1$s%2$s.', 'infoplus-suite') : esc_html__('Neue Anfrage von %1$s%2$s.', 'infoplus-suite'),
             '<strong>' . esc_html($name) . '</strong>', // phpcs:ignore WordPress.Security.EscapeOutput
             !empty($c['company']) ? ' (' . esc_html($c['company']) . ')' : '' // phpcs:ignore WordPress.Security.EscapeOutput
         );
@@ -109,14 +112,14 @@ $contact = [
         printf(esc_html__('Guten Tag %s,', 'infoplus-suite'), esc_html($name));
         ?>
     </p>
-    <p style="margin:0 0 16px"><?php esc_html_e('vielen Dank für Ihre Anfrage. Sie ist bei uns eingegangen und hat die folgende Referenznummer:', 'infoplus-suite'); ?></p>
-    <p style="margin:0 0 16px;font-size:22px;font-weight:700;letter-spacing:.5px;color:#191B1C"><?php echo esc_html($r['reference']); ?></p>
+    <p style="margin:0 0 16px"><?php echo $is_contact ? esc_html__('vielen Dank für Ihre Nachricht. Sie ist bei uns eingegangen und hat die folgende Referenznummer:', 'infoplus-suite') : esc_html__('vielen Dank für Ihre Anfrage. Sie ist bei uns eingegangen und hat die folgende Referenznummer:', 'infoplus-suite'); ?></p>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 20px;border-collapse:separate"><tr><td style="padding:10px 16px;background:#EFEFF6;border-radius:10px;font-size:22px;font-weight:700;letter-spacing:.5px;color:#191B1C"><?php echo esc_html($r['reference']); ?></td></tr></table>
     <p style="margin:0 0 8px"><strong><?php esc_html_e('So geht es weiter:', 'infoplus-suite'); ?></strong> <?php echo esc_html((string) $args['next_text']); ?></p>
     <p style="margin:0 0 8px"><?php esc_html_e('Wenn Sie etwas ergänzen möchten, antworten Sie einfach auf diese E-Mail und nennen Sie die Referenznummer.', 'infoplus-suite'); ?></p>
 <?php endif; ?>
 
 <?php if ($project) : ?>
-    <h2 <?php echo $h; // phpcs:ignore WordPress.Security.EscapeOutput ?>><?php echo $team ? esc_html__('Projekt', 'infoplus-suite') : esc_html__('Ihre Angaben', 'infoplus-suite'); ?></h2>
+    <h2 <?php echo $h; // phpcs:ignore WordPress.Security.EscapeOutput ?>><?php echo $team ? ($is_contact ? esc_html__('Anliegen', 'infoplus-suite') : esc_html__('Projekt', 'infoplus-suite')) : esc_html__('Ihre Angaben', 'infoplus-suite'); ?></h2>
     <?php $rows($project); ?>
 <?php endif; ?>
 

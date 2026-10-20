@@ -103,6 +103,7 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
                 </span>
             </label>
 
+            <?php ob_start(); ?>
             <div class="ip-inq__field" data-ip-inq-files-field>
                 <span class="ip-inq__label" id="<?php echo esc_attr($p); ?>-files-label"><?php esc_html_e('Dateien', 'infoplus-suite'); ?> <?php echo $opt; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
                 <div class="ip-inq__drop" data-ip-inq-drop>
@@ -126,6 +127,8 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
                 <p class="ip-inq__error" id="<?php echo esc_attr($p); ?>-files-err" data-ip-inq-error="files" hidden></p>
             </div>
 
+            <?php $files_html = (string) ob_get_clean(); ?>
+            <?php ob_start(); ?>
             <div class="ip-inq__field">
                 <label class="ip-inq__label" for="<?php echo esc_attr($p); ?>-message">
                     <?php esc_html_e('Ihre Nachricht', 'infoplus-suite'); ?>
@@ -138,6 +141,12 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
                     placeholder="<?php echo $variant === 'contact' ? esc_attr__('Wie können wir Ihnen helfen?', 'infoplus-suite') : esc_attr__('Zum Beispiel: Sonderkontur in Form unseres Logos, ca. 60 x 25 mm, mit Magnet. Text zweizeilig: Name und Abteilung.', 'infoplus-suite'); ?>"></textarea>
                 <p class="ip-inq__error" id="<?php echo esc_attr($p); ?>-message-err" data-ip-inq-error="message" hidden></p>
             </div>
+
+            <?php $message_html = (string) ob_get_clean(); ?>
+            <?php
+            // Kontakt page (contact variant): the message comes first, files are the extra.
+            echo $variant === 'contact' ? $message_html . $files_html : $files_html . $message_html; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
+            ?>
 
             <label class="ip-inq__switch" data-ip-inq-only="product">
                 <input type="checkbox" role="switch" name="samples" value="1">
@@ -153,7 +162,7 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
             <h3 class="ip-inq__step-title" id="<?php echo esc_attr($p); ?>-s2" tabindex="-1">
                 <span class="ip-sr"><?php esc_html_e('Schritt 2 von 2:', 'infoplus-suite'); ?> </span><?php esc_html_e('Ihre Kontaktdaten', 'infoplus-suite'); ?>
             </h3>
-            <p class="ip-inq__note"><?php esc_html_e('Mit * markierte Felder brauchen wir für das Angebot.', 'infoplus-suite'); ?></p>
+            <p class="ip-inq__note"><span data-ip-inq-only="product"><?php esc_html_e('Mit * markierte Felder brauchen wir für das Angebot.', 'infoplus-suite'); ?></span><span data-ip-inq-only="contact"><?php esc_html_e('Mit * markierte Felder brauchen wir für die Antwort.', 'infoplus-suite'); ?></span></p>
 
             <div class="ip-inq__field">
                 <label class="ip-inq__label" for="<?php echo esc_attr($p); ?>-company"><?php esc_html_e('Firma', 'infoplus-suite'); ?> <span class="ip-inq__opt"><?php esc_html_e('empfohlen', 'infoplus-suite'); ?></span></label>
@@ -179,10 +188,10 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
             <div class="ip-inq__field">
                 <label class="ip-inq__label" for="<?php echo esc_attr($p); ?>-phone"><?php esc_html_e('Telefon', 'infoplus-suite'); ?> <?php echo $opt; // phpcs:ignore WordPress.Security.EscapeOutput ?></label>
                 <input class="ip-inq__input" type="tel" name="phone" id="<?php echo esc_attr($p); ?>-phone" autocomplete="tel" maxlength="40" value="<?php echo esc_attr($pre['phone']); ?>" aria-describedby="<?php echo esc_attr($p); ?>-phone-hint <?php echo esc_attr($p); ?>-phone-err">
-                <p class="ip-inq__hint" id="<?php echo esc_attr($p); ?>-phone-hint"><?php esc_html_e('Für schnelle Rückfragen zu Ihrem Projekt.', 'infoplus-suite'); ?></p>
+                <p class="ip-inq__hint" id="<?php echo esc_attr($p); ?>-phone-hint"><span data-ip-inq-only="product"><?php esc_html_e('Für schnelle Rückfragen zu Ihrem Projekt.', 'infoplus-suite'); ?></span><span data-ip-inq-only="contact"><?php esc_html_e('Wenn wir Sie lieber anrufen sollen.', 'infoplus-suite'); ?></span></p>
                 <p class="ip-inq__error" id="<?php echo esc_attr($p); ?>-phone-err" data-ip-inq-error="phone" hidden></p>
             </div>
-            <fieldset class="ip-inq__group">
+            <fieldset class="ip-inq__group" data-ip-inq-only="product">
                 <legend class="ip-inq__label"><?php esc_html_e('Lieferort', 'infoplus-suite'); ?> <?php echo $opt; // phpcs:ignore WordPress.Security.EscapeOutput ?></legend>
                 <div class="ip-inq__row ip-inq__row--plz">
                     <div class="ip-inq__field">
@@ -217,7 +226,8 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
                 <label class="ip-inq__consent">
                     <input type="checkbox" name="privacy" value="1" required aria-describedby="<?php echo esc_attr($p); ?>-privacy-err">
                     <span>
-                        <?php esc_html_e('Ich bin einverstanden, dass meine Angaben zur Bearbeitung dieser Anfrage gespeichert und für Rückfragen genutzt werden.', 'infoplus-suite'); ?>
+                        <span data-ip-inq-only="product"><?php esc_html_e('Ich bin einverstanden, dass meine Angaben zur Bearbeitung dieser Anfrage gespeichert und für Rückfragen genutzt werden.', 'infoplus-suite'); ?></span>
+                        <span data-ip-inq-only="contact"><?php esc_html_e('Ich bin einverstanden, dass meine Angaben zur Bearbeitung meiner Nachricht gespeichert und für Rückfragen genutzt werden.', 'infoplus-suite'); ?></span>
                         <?php if ($args['privacy_url'] !== '') : ?>
                             <a href="<?php echo esc_url($args['privacy_url']); ?>" target="_blank" rel="noopener"><?php esc_html_e('Datenschutzerklärung', 'infoplus-suite'); ?><span class="ip-sr"> <?php esc_html_e('(öffnet in neuem Tab)', 'infoplus-suite'); ?></span></a>
                         <?php endif; ?>
@@ -238,7 +248,10 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
                 <circle class="ip-inq__check-ring" cx="32" cy="32" r="29" fill="none" stroke-width="3"/>
                 <path class="ip-inq__check-mark" d="M19 33.5l9 9 17-19" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h3 class="ip-inq__done-title" id="<?php echo esc_attr($p); ?>-done" tabindex="-1"><?php esc_html_e('Vielen Dank, Ihre Anfrage ist eingegangen', 'infoplus-suite'); ?></h3>
+            <h3 class="ip-inq__done-title" id="<?php echo esc_attr($p); ?>-done" tabindex="-1">
+                <span data-ip-inq-only="product"><?php esc_html_e('Vielen Dank, Ihre Anfrage ist eingegangen', 'infoplus-suite'); ?></span>
+                <span data-ip-inq-only="contact"><?php esc_html_e('Vielen Dank, Ihre Nachricht ist eingegangen', 'infoplus-suite'); ?></span>
+            </h3>
             <p class="ip-inq__ref"><?php esc_html_e('Ihre Referenznummer', 'infoplus-suite'); ?> <strong data-ip-inq-ref></strong></p>
             <p class="ip-inq__done-mail" data-ip-inq-done-mail hidden><?php esc_html_e('Eine Bestätigung ist unterwegs an', 'infoplus-suite'); ?> <strong data-ip-inq-done-email></strong>.</p>
             <div class="ip-inq__next">
@@ -257,7 +270,7 @@ $req = '<span class="ip-inq__req" aria-hidden="true">*</span>';
         <div class="ip-inq__nav">
             <button type="button" class="ip-btn ip-btn--ghost ip-inq__back" data-ip-inq-back hidden><?php echo $icon('back'); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?><?php esc_html_e('Zurück', 'infoplus-suite'); ?></button>
             <button type="button" class="ip-btn ip-inq__next-btn" data-ip-inq-next><?php esc_html_e('Weiter', 'infoplus-suite'); ?><?php echo $icon('arrow'); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?></button>
-            <button type="submit" class="ip-btn ip-inq__submit" data-ip-inq-submit hidden><span data-ip-label><?php esc_html_e('Anfrage senden', 'infoplus-suite'); ?></span><?php echo $icon('send'); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?></button>
+            <button type="submit" class="ip-btn ip-inq__submit" data-ip-inq-submit hidden><span data-ip-label data-label-product="<?php esc_attr_e('Anfrage senden', 'infoplus-suite'); ?>" data-label-contact="<?php esc_attr_e('Nachricht senden', 'infoplus-suite'); ?>"><?php echo $variant === 'contact' ? esc_html__('Nachricht senden', 'infoplus-suite') : esc_html__('Anfrage senden', 'infoplus-suite'); ?></span><?php echo $icon('send'); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?></button>
             <button type="button" class="ip-btn ip-inq__close-btn" data-ip-inq-close hidden><?php esc_html_e('Schließen', 'infoplus-suite'); ?></button>
         </div>
     </div>

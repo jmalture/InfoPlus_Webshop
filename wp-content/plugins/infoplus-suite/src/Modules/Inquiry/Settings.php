@@ -32,6 +32,7 @@ final class Settings
             'max_files'       => 10,
             'attach_limit_mb' => 10,
             'success_text'    => 'Wir prüfen Ihre Anfrage und melden uns innerhalb von 24 Stunden mit einem Angebot.',
+            'success_text_contact' => 'Wir lesen Ihre Nachricht und melden uns innerhalb von 24 Stunden bei Ihnen.',
             'customer_mail'   => true,
             'privacy_page'    => 0,
         ];
@@ -116,10 +117,15 @@ final class Settings
         return $url;
     }
 
-    public static function successText(): string
+    /**
+     * "So geht es weiter" text. The contact variant (Kontakt page) has its own
+     * text, because the product text promises an offer.
+     */
+    public static function successText(string $variant = 'product'): string
     {
-        $text = trim((string) self::get('success_text'));
-        return $text !== '' ? $text : self::defaults()['success_text'];
+        $key = $variant === 'contact' ? 'success_text_contact' : 'success_text';
+        $text = trim((string) self::get($key));
+        return $text !== '' ? $text : (string) self::defaults()[$key];
     }
 
     /**
@@ -139,6 +145,7 @@ final class Settings
             'max_files'       => max(1, min(20, absint($post['max_files'] ?? 10))),
             'attach_limit_mb' => max(0, min(self::MAX_UPLOAD_CAP_MB, absint($post['attach_limit_mb'] ?? 10))),
             'success_text'    => sanitize_textarea_field(wp_unslash($post['success_text'] ?? '')),
+            'success_text_contact' => sanitize_textarea_field(wp_unslash($post['success_text_contact'] ?? '')),
             'customer_mail'   => !empty($post['customer_mail']),
             'privacy_page'    => absint($post['privacy_page'] ?? 0),
         ];
@@ -229,6 +236,13 @@ final class Settings
                             <td>
                                 <textarea id="ip-inq-success" name="success_text" rows="3"><?php echo esc_textarea((string) $s['success_text']); ?></textarea>
                                 <p class="description"><?php esc_html_e('Erscheint nach dem Absenden und in der Bestätigungs-E-Mail. Leer: Standardtext.', 'infoplus-suite'); ?></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="ip-inq-success-contact"><?php esc_html_e('„So geht es weiter“ (Kontaktseite)', 'infoplus-suite'); ?></label></th>
+                            <td>
+                                <textarea id="ip-inq-success-contact" name="success_text_contact" rows="3"><?php echo esc_textarea((string) $s['success_text_contact']); ?></textarea>
+                                <p class="description"><?php esc_html_e('Für Nachrichten über das Formular der Kontaktseite. Leer: Standardtext.', 'infoplus-suite'); ?></p>
                             </td>
                         </tr>
                         <tr>

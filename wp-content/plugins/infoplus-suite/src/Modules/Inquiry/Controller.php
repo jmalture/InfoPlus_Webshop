@@ -198,7 +198,7 @@ final class Controller
 
         $response = [
             'reference' => $record['reference'],
-            'message'   => Settings::successText(),
+            'message'   => Settings::successText((string) $record['variant']),
             'email'     => $record['contact']['email'],
         ];
         set_transient('infoplus_inq_done_' . $tkey, $response, Token::MAX_AGE);

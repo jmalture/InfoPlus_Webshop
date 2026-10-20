@@ -90,7 +90,7 @@ final class Module implements ModuleInterface
             'countries'    => $countries,
             'base_country' => $base,
             'privacy_url'  => Settings::privacyUrl(),
-            'success_text' => Settings::successText(),
+            'success_text' => Settings::successText($variant),
             'max_bytes'    => Settings::maxUploadBytes(),
             'extensions'   => Files::extensions(),
             'config'       => self::clientConfig(),

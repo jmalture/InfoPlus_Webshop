@@ -53,7 +53,7 @@ final class Mailer
             /* translators: 1: reference, 2: product or "Kontakt", 3: company or name */
             __('Neue Anfrage %1$s: %2$s (%3$s)', 'infoplus-suite'),
             $record['reference'],
-            $product !== '' ? $product : __('Allgemeine Anfrage', 'infoplus-suite'),
+            $product !== '' ? $product : (($record['variant'] ?? '') === 'contact' ? __('Kontaktformular', 'infoplus-suite') : __('Allgemeine Anfrage', 'infoplus-suite')),
             $c['company'] !== '' ? $c['company'] : $name
         );
 
@@ -82,11 +82,12 @@ final class Mailer
             'admin_url'  => admin_url('post.php?post=' . $post_id . '&action=edit'),
             'file_links' => $attach ? [] : Admin::fileLinks($post_id, $record['files']),
             'attached'   => $attach,
-            'next_text'  => Settings::successText(),
+            'next_text'  => Settings::successText((string) ($record['variant'] ?? 'product')),
         ]);
 
         $headers = ['Reply-To: ' . self::address($name, (string) $c['email'])];
-        $sent = self::send($to, $subject, __('Neue Anfrage', 'infoplus-suite') . ' ' . $record['reference'], $body, $headers, $attachments);
+        $heading = (($record['variant'] ?? '') === 'contact' ? __('Neue Nachricht', 'infoplus-suite') : __('Neue Anfrage', 'infoplus-suite')) . ' ' . $record['reference'];
+        $sent = self::send($to, $subject, $heading, $body, $headers, $attachments);
 
         foreach ($attachments as $a) {
             if (strpos($a, get_temp_dir()) === 0) {
@@ -112,11 +113,12 @@ final class Mailer
         $body = View::capture('inquiry-email', [
             'audience'  => 'customer',
             'record'    => $record,
-            'next_text' => Settings::successText(),
+            'next_text' => Settings::successText((string) ($record['variant'] ?? 'product')),
         ]);
         $team = Settings::recipients();
         $headers = $team ? ['Reply-To: ' . $team[0]] : [];
-        $sent = self::send([(string) $c['email']], $subject, __('Vielen Dank für Ihre Anfrage', 'infoplus-suite'), $body, $headers, []);
+        $heading = ($record['variant'] ?? '') === 'contact' ? __('Vielen Dank für Ihre Nachricht', 'infoplus-suite') : __('Vielen Dank für Ihre Anfrage', 'infoplus-suite');
+        $sent = self::send([(string) $c['email']], $subject, $heading, $body, $headers, []);
         return ['sent' => $sent, 'time' => gmdate('c'), 'to' => (string) $c['email']];
     }
 
