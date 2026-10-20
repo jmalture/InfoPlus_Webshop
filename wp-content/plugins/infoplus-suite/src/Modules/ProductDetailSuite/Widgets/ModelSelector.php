@@ -18,6 +18,8 @@ use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Border;
+use Infoplus\Suite\View;
+use Infoplus\Suite\Modules\ProductDetailSuite\Components;
 
 if (!defined('ABSPATH')) exit;
 
@@ -578,16 +580,17 @@ class ModelSelector extends Widget_Base
     }
 
     /**
-     * Render widget output on the frontend
+     * Render widget output on the frontend.
+     * Markup lives in templates/model-selector.php (View::render).
      */
     protected function render(): void
     {
         $settings = $this->get_settings_for_display();
-        
+
         // Check if we're on a product page
         global $product;
-        
-        // For editor preview, try to get a sample product
+
+        // For editor preview, try to get a sample product (sets the global, as before)
         if (!$product || !is_a($product, 'WC_Product')) {
             if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
                 // Try to get any variable product for preview
@@ -596,175 +599,23 @@ class ModelSelector extends Widget_Base
                     'limit' => 1,
                     'status' => 'publish',
                 ]);
-                
+
                 if (!empty($products)) {
                     $product = $products[0];
                 }
             }
         }
 
-        // Wrapper classes
-        $wrapper_class = 'infoplus-model-selector';
-        $wrapper_class .= ' infoplus-model-selector--' . esc_attr($settings['layout']);
-        
-        ?>
-        <?php 
-        $show_info = $settings['show_info_button'] === 'yes';
-        $sync_product_image = $settings['sync_product_image'] === 'yes';
-        ?>
-        <div class="<?php echo esc_attr($wrapper_class); ?>" 
-             data-info-behavior="<?php echo esc_attr($settings['info_button_behavior']); ?>"
-             data-show-price="<?php echo esc_attr($settings['show_price']); ?>"
-             data-show-info="<?php echo esc_attr($show_info ? 'yes' : 'no'); ?>"
-             data-sync-product-image="<?php echo esc_attr($sync_product_image ? 'yes' : 'no'); ?>">
-            
-            <?php if ($settings['show_title'] === 'yes' && !empty($settings['title'])): ?>
-                <h3 class="infoplus-model-selector__title"><?php echo esc_html($settings['title']); ?></h3>
-            <?php endif; ?>
-            
-            <div class="infoplus-model-selector__list">
-                <?php if ($product && $product->is_type('variable')): ?>
-                    <?php $this->renderModelCards($product, $settings); ?>
-                <?php else: ?>
-                    <div class="infoplus-model-selector__placeholder">
-                        <p><?php esc_html_e('This widget requires a variable product.', 'infoplus-suite'); ?></p>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-        
-        <!-- Info Modal Template -->
-        <div class="infoplus-info-modal" style="display: none;">
-            <div class="infoplus-info-modal__backdrop"></div>
-            <div class="infoplus-info-modal__content">
-                <button class="infoplus-info-modal__close" type="button">&times;</button>
-                <div class="infoplus-info-modal__image"></div>
-                <h4 class="infoplus-info-modal__title"></h4>
-                <div class="infoplus-info-modal__description"></div>
-            </div>
-        </div>
-        <?php
-    }
-
-    /**
-     * Render model cards
-     */
-    private function renderModelCards($product, $settings): void
-    {
-        $product_id = $product->get_id();
-        $show_info_button = $settings['show_info_button'] === 'yes';
-        $info_behavior = $settings['info_button_behavior'];
-
-        // Build model data using direct DB queries (fast for products with many variations)
-        global $wpdb;
-        $children = $product->get_children();
-        $models = [];
-
-        if (!empty($children)) {
-            $ids_placeholder = implode(',', array_map('intval', $children));
-
-            $rows = $wpdb->get_results(
-                "SELECT pm_model.meta_value AS model_slug, MIN(CAST(pm_price.meta_value AS DECIMAL(10,2))) AS min_price
-                 FROM {$wpdb->posts} p
-                 INNER JOIN {$wpdb->postmeta} pm_model ON p.ID = pm_model.post_id AND pm_model.meta_key = 'attribute_pa_model'
-                 LEFT JOIN {$wpdb->postmeta} pm_price ON p.ID = pm_price.post_id AND pm_price.meta_key = '_price'
-                 WHERE p.ID IN ({$ids_placeholder})
-                   AND p.post_status = 'publish'
-                   AND pm_model.meta_value != ''
-                 GROUP BY pm_model.meta_value"
-            );
-
-            foreach ($rows as $row) {
-                $models[$row->model_slug] = [
-                    'slug' => $row->model_slug,
-                    'min_price' => (float) $row->min_price,
-                ];
-            }
-        }
-        
-        // Render each model card
-        $first = true;
-        foreach ($models as $model_slug => $model_data) {
-            $term = get_term_by('slug', $model_slug, 'pa_model');
-            if (!$term) continue;
-            
-            // Get model image from gallery (first image) with fallback to single image, then global
-            $gallery_images = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermGalleryUrls(
-                $product_id, 
-                'pa_model', 
-                $model_slug
-            );
-            $model_image_url = !empty($gallery_images) ? $gallery_images[0]['url'] : '';
-            
-            // Fallback to placeholder
-            if (!$model_image_url) {
-                $model_image_url = wc_placeholder_img_src('woocommerce_thumbnail');
-            }
-            
-            // Get tooltip/modal content using override system
-            $tooltip = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermTooltip(
-                $product_id, 
-                'pa_model', 
-                $model_slug
-            );
-            $modal_content = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermModalContent(
-                $product_id, 
-                'pa_model', 
-                $model_slug
-            );
-            
-            // Card classes
-            $card_classes = ['infoplus-model-selector__card'];
-            if ($first) {
-                $card_classes[] = 'is-active';
-                $first = false;
-            }
-            
-            // Only add tooltip class if info button is OFF and tooltip exists
-            $has_tooltip_content = !empty(trim($tooltip));
-            if (!$show_info_button && $has_tooltip_content) {
-                $card_classes[] = 'infoplus-show-tooltip';
-            }
-            
-            ?>
-            <div class="<?php echo esc_attr(implode(' ', $card_classes)); ?>" 
-                 data-model="<?php echo esc_attr($model_slug); ?>"
-                 data-model-image="<?php echo esc_url($model_image_url); ?>"
-                 <?php if (!$show_info_button && $has_tooltip_content): ?>
-                 data-tooltip="<?php echo esc_attr($tooltip); ?>"
-                 <?php endif; ?>
-                 data-modal-content="<?php echo esc_attr($modal_content); ?>">
-                
-                <div class="infoplus-model-selector__image">
-                    <img src="<?php echo esc_url($model_image_url); ?>" 
-                         alt="<?php echo esc_attr($term->name); ?>" 
-                         loading="lazy" />
-                    
-                    <?php if ($show_info_button && ($has_tooltip_content || !empty(trim($modal_content)))): ?>
-                        <button class="infoplus-model-selector__info-btn" 
-                                type="button"
-                                <?php if ($info_behavior === 'tooltip' && $has_tooltip_content): ?>
-                                data-tooltip="<?php echo esc_attr($tooltip); ?>"
-                                <?php endif; ?>
-                                aria-label="<?php esc_attr_e('More information', 'infoplus-suite'); ?>">
-                            <span>i</span>
-                        </button>
-                    <?php endif; ?>
-                </div>
-                
-                <div class="infoplus-model-selector__content">
-                    <span class="infoplus-model-selector__name"><?php echo esc_html($term->name); ?></span>
-                    
-                    <?php if ($settings['show_price'] === 'yes' && $model_data['min_price'] < PHP_FLOAT_MAX): ?>
-                        <span class="infoplus-model-selector__price">
-                            <?php echo esc_html__('from', 'infoplus-suite'); ?> 
-                            <?php echo wc_price($model_data['min_price']); ?>
-                        </span>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <?php
-        }
+        View::render('model-selector', Components::modelSelector($product, [
+            'context'              => View::CONTEXT_ELEMENTOR,
+            'title'                => $settings['title'],
+            'show_title'           => $settings['show_title'],
+            'show_price'           => $settings['show_price'],
+            'show_info_button'     => $settings['show_info_button'],
+            'info_button_behavior' => $settings['info_button_behavior'],
+            'sync_product_image'   => $settings['sync_product_image'],
+            'layout'               => $settings['layout'],
+        ]));
     }
 
     /**
