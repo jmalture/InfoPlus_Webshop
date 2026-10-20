@@ -688,7 +688,10 @@ class OrderDetails extends Widget_Base
         // Get the order
         $order = wc_get_order($order_id);
 
-        if (!$order) {
+        // Only the customer who placed the order (or a shop manager) may see it.
+        // A foreign order gets the same "not found" message, so order IDs cannot be probed.
+        $is_owner = $order && (int) $order->get_customer_id() === get_current_user_id();
+        if (!$order || (!$is_owner && !current_user_can('manage_woocommerce'))) {
             echo '<div class="infoplus-order-not-found">';
             echo '<p>' . esc_html($settings['not_found_message']) . '</p>';
             echo '</div>';
