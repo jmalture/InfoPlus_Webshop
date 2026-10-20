@@ -14,7 +14,7 @@ WordPress plugin for the Infoplus nameplate shop (Namensschilder). PHP 7.4+, Woo
 ```
 infoplus-suite.php        entry point, plugin header (Version: 0.9.111 on main, 0.9.113 on feature/catalog-import)
 composer.json             PSR-4 map Infoplus\Suite\ => src/, nothing else
-src/Plugin.php            orchestrator, Plugin::VERSION (0.10.26 on feature/view-renderer, 0.10.25 before), registers the nine modules (ten on feature/catalog-import)
+src/Plugin.php            orchestrator, Plugin::VERSION (0.10.27 on feature/view-renderer, 0.10.25 before), registers the nine modules (ten on feature/catalog-import)
 src/Admin/Dashboard.php   WP Admin menu "IKONA IFE" (slug infoplus-suite), renders the visible module tabs
 src/Contracts/ModuleInterface.php   slug(), label(), register()
 src/Modules/<Name>/Module.php       one module each, see below
@@ -37,7 +37,7 @@ Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFi
 | Where | Value | Meaning |
 |-------|-------|---------|
 | `infoplus-suite.php` header | 0.9.111 | What WordPress shows. Bumped by hand at release. Not used in code. |
-| `Plugin::VERSION` in `src/Plugin.php` | 0.10.26 (0.10.25 before feature/view-renderer) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. |
+| `Plugin::VERSION` in `src/Plugin.php` | 0.10.27 (0.10.25 before feature/view-renderer) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. |
 | `ProductDetailSuite\Module::VERSION` | 1.1.1 (1.1.0 before feature/view-renderer) | Cache-bust for ProductDetailSuite assets and part of the transient key `infoplus_pd_{product_id}_{VERSION}`. |
 | `IkonaIFE\Module::VERSION` | 1.0.4 | Cache-bust for the sync dashboard assets. |
 

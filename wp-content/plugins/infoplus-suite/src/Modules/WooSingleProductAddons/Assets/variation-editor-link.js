@@ -9,6 +9,17 @@
  *   requestable → show #anfrage only; #editor hidden
  *   buyable     → show #editor (as add-to-cart trigger) only; #anfrage hidden; disabled until variation found
  *
+ * Theme buy form (since Plugin::VERSION 0.10.27): when the page renders
+ * form[data-ip-buy-form] (classic theme, template-parts/product/actions.php),
+ * "buyable" does NOT turn #editor into the admin-ajax infoplus_add_to_cart
+ * trigger. #editor and #anfrage are hidden and the theme shows its own
+ * WooCommerce add-to-cart form (standard POST, WC_Form_Handler). Pages without
+ * that form (the Elementor template) keep the ajax behaviour below.
+ *
+ * The resolved order type is published as infoplusProductState.orderType and
+ * emitted as 'ordertype:changed' ({ orderType, model }), so the theme does not
+ * have to repeat the lookup (including the Sonderkontur slug fallback).
+ *
  * Depends on: jQuery, window.infoplusEditorSettings, window.infoplusProductState (optional)
  */
 (function ($, w, d) {
@@ -23,6 +34,7 @@
   var ANFRAGE_SEL       = '#anfrage, [data-ip-action="inquiry"]';
   var LABEL_SEL         = '.elementor-button-text, [data-ip-label]';
   var QTY_SEL           = '#qty_value, [data-ip-qty="value"]';
+  var BUY_FORM_SEL      = 'form[data-ip-buy-form]';
   var ERROR_CLASS       = 'infoplus-btn-error-msg';
   var DISABLED_CLASS    = 'infoplus-btn-disabled';
   var HIDDEN_CLASS      = 'infoplus-btn-hidden';
@@ -37,6 +49,11 @@
 
   function isEditMode() {
     return !!(w.elementorFrontend && w.elementorFrontend.isEditMode && w.elementorFrontend.isEditMode());
+  }
+
+  /** Classic theme page with its own add-to-cart form for "buyable" models. */
+  function hasBuyForm() {
+    return $(BUY_FORM_SEL).length > 0;
   }
 
   function getEditorSettings() {
@@ -290,15 +307,27 @@
 
   // ── Order type visibility logic ───────────────────────────────────────────
 
+  function publishOrderType(orderType) {
+    var ps = w.infoplusProductState;
+    if (!ps) return;
+    ps.orderType = orderType;
+    if (typeof ps.emit === 'function') {
+      ps.emit('ordertype:changed', { orderType: orderType, model: ps.selectedModel || null });
+    }
+  }
+
   function applyOrderType(orderType) {
     if (isEditMode()) return;
 
     currentOrderType = orderType;
+    publishOrderType(orderType);
 
     var $editor  = $(EDITOR_WRAP_SEL);
     var $anfrage = $(ANFRAGE_SEL);
+    var $buyForm = $(BUY_FORM_SEL);
 
     if ($editor.length) removeError($editor);
+    if ($buyForm.length) removeError($buyForm);
 
     if (orderType === 'editable') {
       $editor.removeClass(HIDDEN_CLASS);
@@ -321,6 +350,15 @@
       $editor.addClass(HIDDEN_CLASS);
       $anfrage.removeClass(HIDDEN_CLASS);
       pulseButton($anfrage);
+
+    } else if (orderType === 'buyable' && $buyForm.length) {
+      // Theme page: the theme's add-to-cart form is the action. Leave the
+      // editor link as a plain (disabled, hidden) editor link.
+      $editor.addClass(HIDDEN_CLASS);
+      $anfrage.addClass(HIDDEN_CLASS);
+      disableEditorBtn();
+      restoreEditorLabel();
+      if (variationNotFound) showError($buyForm, KOMBINATION_TEXT);
 
     } else if (orderType === 'buyable') {
       $editor.removeClass(HIDDEN_CLASS);
@@ -352,8 +390,12 @@
         pulseButton($editor);
       }
     } else if (currentOrderType === 'buyable') {
-      enableEditorAsCart();
-      pulseButton($editor);
+      if (hasBuyForm()) {
+        removeError($(BUY_FORM_SEL)); // The theme enables its own submit button.
+      } else {
+        enableEditorAsCart();
+        pulseButton($editor);
+      }
     }
     // requestable: nothing to do for #editor
   }
@@ -363,7 +405,9 @@
     variationNotFound = true;
     var $editor = $(EDITOR_WRAP_SEL);
 
-    if (currentOrderType === 'editable' || currentOrderType === 'buyable') {
+    if (currentOrderType === 'buyable' && hasBuyForm()) {
+      showError($(BUY_FORM_SEL), KOMBINATION_TEXT);
+    } else if (currentOrderType === 'editable' || currentOrderType === 'buyable') {
       disableEditorBtn();
       if ($editor.length) showError($editor, KOMBINATION_TEXT);
     }
@@ -374,6 +418,7 @@
     variationNotFound = false;
     var $editor = $(EDITOR_WRAP_SEL);
     if ($editor.length) removeError($editor);
+    if (hasBuyForm()) removeError($(BUY_FORM_SEL));
 
     if (currentOrderType === 'editable' || currentOrderType === 'buyable') {
       disableEditorBtn();
@@ -487,7 +532,7 @@
         variationNotFound = false;
         var $editor = $(EDITOR_WRAP_SEL);
         if ($editor.length) removeError($editor);
-        if (isSonderkonturBySlug()) {
+        if (isSonderkonturBySlug() && !hasBuyForm()) {
           enableEditorAsCart();
         } else if (editorUrl) {
           enableEditorUrl(editorUrl);
@@ -507,7 +552,7 @@
         var variationId = $form.find('input.variation_id').val();
         if (variationId) {
           variationIsValid = true;
-          if (isSonderkonturBySlug()) {
+          if (isSonderkonturBySlug() && !hasBuyForm()) {
             enableEditorAsCart();
           } else if (editorUrl) {
             enableEditorUrl(editorUrl);

@@ -44,7 +44,13 @@ final class Module implements ModuleInterface
         // AJAX add to cart handler (for buyable order type button)
         add_action('wp_ajax_infoplus_add_to_cart', [$this, 'ajaxAddToCart']);
         add_action('wp_ajax_nopriv_infoplus_add_to_cart', [$this, 'ajaxAddToCart']);
-        
+
+        // Buy form of the classic theme: a standard WooCommerce add-to-cart POST
+        // (WC_Form_Handler::add_to_cart_action) marked with the field infoplus_buy_form.
+        // Both callbacks return early for every other add-to-cart request.
+        add_filter('woocommerce_add_to_cart_validation', [$this, 'validateBuyForm'], 20, 5);
+        add_filter('woocommerce_add_cart_item_data', [$this, 'addBuyFormCartItemData'], 20, 3);
+
         // Show model image in cart/checkout instead of product image
         add_filter('woocommerce_cart_item_thumbnail', [$this, 'cartItemModelImage'], 10, 3);
         
@@ -763,6 +769,134 @@ final class Module implements ModuleInterface
         } else {
             wp_send_json_error(['message' => 'Fehler beim Hinzufügen zum Warenkorb'], 400);
         }
+    }
+
+    /**
+     * POST field that marks the classic theme's buy form (template-parts/product/actions.php
+     * in the infoplus theme). The form posts add-to-cart, product_id, variation_id,
+     * attribute_pa_* and quantity to the product permalink, so WooCommerce's own form
+     * handler adds the line: validation filters, cart item data filters of every plugin,
+     * notices and the "redirect to cart" setting all apply.
+     */
+    public const BUY_FORM_FIELD = 'infoplus_buy_form';
+
+    /** True only for an add-to-cart POST from the theme's buy form (never for admin-ajax). */
+    private function isBuyFormRequest(): bool
+    {
+        if (wp_doing_ajax()) {
+            return false;
+        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- WooCommerce's add-to-cart form has no nonce either.
+        return !empty($_POST[self::BUY_FORM_FIELD]) && isset($_POST['add-to-cart']);
+    }
+
+    /**
+     * Model (pa_model term slug) of the line being added: the variation's own value,
+     * else the posted attribute_pa_model (variations set to "any" model).
+     */
+    private function buyFormModelSlug(int $variation_id): string
+    {
+        $slug      = '';
+        $variation = $variation_id ? wc_get_product($variation_id) : null;
+        if ($variation && $variation->is_type('variation')) {
+            $attrs = $variation->get_variation_attributes();
+            $slug  = (string) ($attrs['attribute_pa_model'] ?? '');
+        }
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if ($slug === '' && isset($_POST['attribute_pa_model']) && is_scalar($_POST['attribute_pa_model'])) {
+            $slug = sanitize_title(wp_unslash((string) $_POST['attribute_pa_model']));
+        }
+        return $slug;
+    }
+
+    /**
+     * Order type of a model on a product, as the product page shows it: the
+     * Attribute Overrides value (_infoplus_attr_order_type_model_{slug}), plus the
+     * Sonderkontur fallback of variation-editor-link.js (an "editable" model whose
+     * slug contains "sonderkontur" is treated as "buyable").
+     */
+    public static function resolveOrderType(int $product_id, string $model_slug): string
+    {
+        $class = '\Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages';
+        if ($model_slug === '' || !class_exists($class)) {
+            return 'editable';
+        }
+        $type = $class::getTermOrderType($product_id, 'pa_model', $model_slug);
+        if ($type === 'editable' && stripos($model_slug, 'sonderkontur') !== false) {
+            $type = 'buyable';
+        }
+        return $type;
+    }
+
+    /** First gallery image of the model, the same URL as infoplusProductData.models[].image_url. */
+    private static function modelImageUrl(int $product_id, string $model_slug): string
+    {
+        $class = '\Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages';
+        if ($model_slug === '' || !class_exists($class)) {
+            return '';
+        }
+        $gallery = $class::getTermGalleryUrls($product_id, 'pa_model', $model_slug);
+        return !empty($gallery[0]['url']) ? (string) $gallery[0]['url'] : '';
+    }
+
+    /**
+     * woocommerce_add_to_cart_validation (priority 20, after the plugins at 10).
+     * Buy form only: a model whose order type is not "buyable" cannot be put into the
+     * cart from the product page (the page shows no cart button for it). Products
+     * without a model attribute are not checked. Filter
+     * infoplus_suite_buy_form_check_order_type (bool, default true) turns the check off.
+     */
+    public function validateBuyForm($passed, $product_id, $quantity, $variation_id = 0, $variations = [])
+    {
+        if (!$passed || !$this->isBuyFormRequest() || !$variation_id) {
+            return $passed; // No variation: WooCommerce adds its own "choose product options" notice.
+        }
+        if (!apply_filters('infoplus_suite_buy_form_check_order_type', true, (int) $product_id, (int) $variation_id)) {
+            return $passed;
+        }
+
+        $product_id = (int) $product_id;
+        $model_slug = $this->buyFormModelSlug((int) $variation_id);
+        if ($model_slug === '') {
+            return $passed;
+        }
+
+        $type = self::resolveOrderType($product_id, $model_slug);
+        if ($type !== 'buyable') {
+            $term = get_term_by('slug', $model_slug, 'pa_model');
+            $name = $term ? $term->name : $model_slug;
+            wc_add_notice(
+                sprintf(
+                    /* translators: %s: model name */
+                    __('Das Modell „%s“ kann nicht direkt in den Warenkorb gelegt werden. Bitte gestalten Sie es im Editor oder senden Sie uns eine Anfrage.', 'infoplus-suite'),
+                    esc_html($name)
+                ),
+                'error'
+            );
+            return false;
+        }
+
+        return $passed;
+    }
+
+    /**
+     * woocommerce_add_cart_item_data (priority 20). Buy form only: adds what the old
+     * admin-ajax handler (ajaxAddToCart) put into the cart line and WooCommerce's own
+     * form handler does not, the model image (_infoplus_model_image_url). The URL is
+     * resolved on the server from the model of the variation, not taken from the
+     * request. Sonderkontur files are attached by attachFilesToCart() on the same
+     * filter for both paths, so nothing else is needed here.
+     */
+    public function addBuyFormCartItemData($cart_item_data, $product_id, $variation_id)
+    {
+        if (!$this->isBuyFormRequest() || !is_array($cart_item_data) || !empty($cart_item_data['_infoplus_model_image_url'])) {
+            return $cart_item_data;
+        }
+        $url = self::modelImageUrl((int) $product_id, $this->buyFormModelSlug((int) $variation_id));
+        if ($url !== '') {
+            $cart_item_data['_infoplus_model_image_url'] = esc_url_raw($url);
+        }
+        return $cart_item_data;
     }
 
     /**
