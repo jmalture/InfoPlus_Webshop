@@ -35,15 +35,36 @@ jQuery(function($) {
         return false;
     }
 
+    /*
+     * Element lookup. The Elementor template marks its widgets with CSS IDs
+     * (#qty_value, #qty_minus, #qty_plus, #Stuckpreis_value h2,
+     * #Gesamtpreis_value h2, #Mindestanzahl_value). A classic theme can use
+     * the same IDs or data attributes: data-ip-qty="value|minus|plus|
+     * unit-price|total-price|min" and data-ip-qty-row on the row container.
+     */
+    var SEL_VALUE = '#qty_value, [data-ip-qty="value"]';
+    var SEL_MINUS = '#qty_minus, [data-ip-qty="minus"]';
+    var SEL_PLUS  = '#qty_plus, [data-ip-qty="plus"]';
+    var SEL_PIECE = '#Stuckpreis_value h2, [data-ip-qty="unit-price"]';
+    var SEL_TOTAL = '#Gesamtpreis_value h2, [data-ip-qty="total-price"]';
+    var SEL_MIN   = '#Mindestanzahl_value, [data-ip-qty="min"]';
+
+    /** The qty row: [data-ip-qty-row] in a theme, else the Elementor container around #qty_value. */
+    function getQtyRow() {
+        var $row = $('[data-ip-qty-row]');
+        if ($row.length) return $row;
+        return $('#qty_value').closest('.e-con');
+    }
+
     /** Hide the entire qty row (buttons + input). */
     function hideQtyRow() {
-        var $qtyRow = $('#qty_value').closest('.e-con');
+        var $qtyRow = getQtyRow();
         if ($qtyRow.length) $qtyRow.hide();
     }
 
     /** Show the qty row. */
     function showQtyRow() {
-        var $qtyRow = $('#qty_value').closest('.e-con');
+        var $qtyRow = getQtyRow();
         if ($qtyRow.length) $qtyRow.show();
     }
 
@@ -79,8 +100,8 @@ jQuery(function($) {
 
     function updateIndividualAndTotalPrice(qty) {
         let price  = getBulkPriceForQty(lastBreaks, qty);
-        let $piece = $('#Stuckpreis_value h2');
-        let $total = $('#Gesamtpreis_value h2');
+        let $piece = $(SEL_PIECE);
+        let $total = $(SEL_TOTAL);
 
         console.log('[BulkCalculator] Updating prices for qty:', qty, 'price:', price);
 
@@ -98,7 +119,7 @@ jQuery(function($) {
         minQty = Number.isFinite(min) ? min : 1;
         maxQty = Number.isFinite(max) ? max : 99999;
 
-        const $val = $('#qty_value');
+        const $val = $(SEL_VALUE);
         if (!$val.length) return;
 
         let current = parseInt($val.val(), 10);
@@ -121,9 +142,9 @@ jQuery(function($) {
     }
 
     function setQtyControlsEnabled(enabled) {
-        const $minus = $('#qty_minus');
-        const $plus  = $('#qty_plus');
-        const $val   = $('#qty_value');
+        const $minus = $(SEL_MINUS);
+        const $plus  = $(SEL_PLUS);
+        const $val   = $(SEL_VALUE);
 
         $minus.add($plus).prop('disabled', !enabled).attr('aria-disabled', !enabled)
               .toggleClass('qty-disabled', !enabled);
@@ -135,8 +156,8 @@ jQuery(function($) {
 
     // --- +/- Button State Management ---
     function updateButtonStates(qty) {
-        const $minus = $('#qty_minus');
-        const $plus  = $('#qty_plus');
+        const $minus = $(SEL_MINUS);
+        const $plus  = $(SEL_PLUS);
 
         $minus.prop('disabled', qty <= minQty).toggleClass('qty-limit-reached', qty <= minQty);
         $plus.prop('disabled', qty >= maxQty).toggleClass('qty-limit-reached', qty >= maxQty);
@@ -148,8 +169,8 @@ jQuery(function($) {
         let $msg = $('#qty-limit-message');
         if (!$msg.length) {
             // Insert after the qty wrapper parent (contains -, input, +)
-            var $wrapper = $('#qty_value').closest('.elementor-widget-container, .qty-wrapper, [class*="qty"]');
-            if (!$wrapper.length) $wrapper = $('#qty_plus').parent();
+            var $wrapper = $(SEL_VALUE).closest('[data-ip-qty-controls], .elementor-widget-container, .qty-wrapper, [class*="qty"]');
+            if (!$wrapper.length) $wrapper = $(SEL_PLUS).parent();
             $msg = $('<div id="qty-limit-message"></div>').insertAfter($wrapper);
         }
         $msg.stop(true).attr('class', 'qty-limit-msg qty-limit-msg--' + type)
@@ -175,9 +196,9 @@ jQuery(function($) {
 
     // --- Qty Wrapper Wire-up ---
     function wireQtyWrapper() {
-        const $minus = $('#qty_minus');
-        const $plus  = $('#qty_plus');
-        const $val   = $('#qty_value');
+        const $minus = $(SEL_MINUS);
+        const $plus  = $(SEL_PLUS);
+        const $val   = $(SEL_VALUE);
 
         if (!$minus.length || !$plus.length || !$val.length) {
             console.log('[BulkCalculator] Qty controls not found');
@@ -342,7 +363,7 @@ jQuery(function($) {
             }
 
             // Set qty to min and refresh prices
-            const $val = $('#qty_value');
+            const $val = $(SEL_VALUE);
             if ($val.length) {
                 $val.val(finalMin).attr('aria-valuenow', finalMin);
                 updateIndividualAndTotalPrice(finalMin);
@@ -350,7 +371,7 @@ jQuery(function($) {
             }
 
             // Update minimum quantity display if it exists
-            $('#Mindestanzahl_value').text(finalMin);
+            $(SEL_MIN).text(finalMin);
 
         }).fail(function(xhr, status, error) {
             console.error('[BulkCalculator] API error:', error);
@@ -447,7 +468,8 @@ jQuery(function($) {
             '}' +
             /* Button limit state */
             '#qty_minus.qty-limit-reached,' +
-            '#qty_plus.qty-limit-reached {' +
+            '#qty_plus.qty-limit-reached,' +
+            '[data-ip-qty].qty-limit-reached {' +
                 'opacity: 0.35;' +
                 'cursor: not-allowed;' +
             '}' +
@@ -482,8 +504,8 @@ jQuery(function($) {
         updateIndividualAndTotalPrice(1);
 
         // Set initial zeros
-        let $piece = $('#Stuckpreis_value h2');
-        let $total = $('#Gesamtpreis_value h2');
+        let $piece = $(SEL_PIECE);
+        let $total = $(SEL_TOTAL);
         animateText($piece, '0,00 €', v => prevPieceValue = v);
         animateText($total, '0,00 €', v => prevTotalValue = v);
 

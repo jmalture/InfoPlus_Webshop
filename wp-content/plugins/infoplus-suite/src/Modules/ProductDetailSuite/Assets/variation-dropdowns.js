@@ -713,12 +713,14 @@
                 }
             }
 
+            // Elementor template: Button widgets with CSS ID anfrage / editor.
+            // Classic theme: any element with data-ip-action="inquiry" / "editor".
             var $btn;
             if (orderType === 'requestable' || orderType === 'requestable_with_variants') {
-                $btn = $('#anfrage .elementor-button, .infoplus-btn--anfrage');
+                $btn = $('#anfrage .elementor-button, .infoplus-btn--anfrage, [data-ip-action="inquiry"]');
             } else {
                 // editable or buyable — pulse the main action button
-                $btn = $('#editor .elementor-button, .infoplus-btn--editor, .infoplus-btn--cart');
+                $btn = $('#editor .elementor-button, .infoplus-btn--editor, .infoplus-btn--cart, [data-ip-action="editor"]');
             }
 
             if (!$btn.length) return;

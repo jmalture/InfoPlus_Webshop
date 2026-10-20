@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) exit;
 final class Module implements ModuleInterface
 {
     /** @var string Module version */
-    public const VERSION = '1.1.0';
+    public const VERSION = '1.1.1';
 
     public function slug(): string
     {

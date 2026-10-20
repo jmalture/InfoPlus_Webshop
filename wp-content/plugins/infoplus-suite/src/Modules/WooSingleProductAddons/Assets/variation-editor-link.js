@@ -14,9 +14,15 @@
 (function ($, w, d) {
   'use strict';
 
-  var EDITOR_WRAP_SEL   = '#editor';
-  var EDITOR_ANCHOR_SEL = '#editor .elementor-button';
-  var ANFRAGE_SEL       = '#anfrage';
+  // Elementor template: Button widgets with CSS ID editor / anfrage (the ID sits
+  // on the widget wrapper, the link is .elementor-button inside it).
+  // Classic theme: the link itself carries data-ip-action="editor" / "inquiry"
+  // and its label is the child [data-ip-label].
+  var EDITOR_WRAP_SEL   = '#editor, [data-ip-action="editor"]';
+  var EDITOR_ANCHOR_SEL = '#editor .elementor-button, a[data-ip-action="editor"]';
+  var ANFRAGE_SEL       = '#anfrage, [data-ip-action="inquiry"]';
+  var LABEL_SEL         = '.elementor-button-text, [data-ip-label]';
+  var QTY_SEL           = '#qty_value, [data-ip-qty="value"]';
   var ERROR_CLASS       = 'infoplus-btn-error-msg';
   var DISABLED_CLASS    = 'infoplus-btn-disabled';
   var HIDDEN_CLASS      = 'infoplus-btn-hidden';
@@ -60,7 +66,7 @@
   // ── Pulse animation helper ───────────────────────────────────────────────
 
   function pulseButton($wrap) {
-    var $btn = $wrap.find('.elementor-button');
+    var $btn = $wrap.find('.elementor-button').add($wrap.filter('[data-ip-action]'));
     if (!$btn.length) return;
     var cls = 'infoplus-anfrage-pulse--long';
     $btn.removeClass('infoplus-anfrage-pulse infoplus-anfrage-pulse--long');
@@ -101,7 +107,7 @@
     $wrap.removeClass(DISABLED_CLASS).attr('aria-disabled', 'false');
     $anchor.removeClass(DISABLED_CLASS);
     // Restore original text if it was overridden
-    var $text = $anchor.find('.elementor-button-text');
+    var $text = $anchor.find(LABEL_SEL);
     if ($text.length && $text.data('original-text')) {
       $text.text($text.data('original-text'));
       $text.removeData('original-text');
@@ -111,7 +117,7 @@
   function setEditorAsCartLabel() {
     var $anchor = $(EDITOR_ANCHOR_SEL);
     if (!$anchor.length) return;
-    var $text = $anchor.find('.elementor-button-text');
+    var $text = $anchor.find(LABEL_SEL);
     if ($text.length) {
       if (!$text.data('original-text')) {
         $text.data('original-text', $text.text());
@@ -123,7 +129,7 @@
   function restoreEditorLabel() {
     var $anchor = $(EDITOR_ANCHOR_SEL);
     if (!$anchor.length) return;
-    var $text = $anchor.find('.elementor-button-text');
+    var $text = $anchor.find(LABEL_SEL);
     if ($text.length && $text.data('original-text')) {
       $text.text($text.data('original-text'));
       $text.removeData('original-text');
@@ -138,7 +144,7 @@
     $anchor.attr('href', '#add-to-cart').removeAttr('target rel');
     $wrap.removeClass(DISABLED_CLASS).attr('aria-disabled', 'false');
     $anchor.removeClass(DISABLED_CLASS);
-    var $text = $anchor.find('.elementor-button-text');
+    var $text = $anchor.find(LABEL_SEL);
     if ($text.length) {
       if (!$text.data('original-text')) {
         $text.data('original-text', $text.text());
@@ -184,10 +190,10 @@
     }
 
     // Get quantity (bulk calculator uses #qty_value, WooCommerce uses input.qty)
-    var qty = parseInt($('#qty_value').val()) || parseInt($('input.qty, input[name="quantity"]').val()) || 1;
+    var qty = parseInt($(QTY_SEL).first().val()) || parseInt($('input.qty, input[name="quantity"]').val()) || 1;
 
     // Disable button while processing
-    var $text = $anchor.find('.elementor-button-text');
+    var $text = $anchor.find(LABEL_SEL);
     var origText = $text.text();
     $text.text('Wird hinzugefügt...');
     $anchor.addClass(DISABLED_CLASS);

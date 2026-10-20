@@ -582,12 +582,17 @@
     $(function() {
         window.infoplusProductState.init();
 
-        // Make Anfrage form product field readonly (handles Elementor popups too)
+        // Make Anfrage form product field readonly (handles Elementor popups too).
+        // #form-field-product is the Elementor Pro form field; a theme form marks
+        // its product field with data-ip-field="product".
         function makeProductFieldReadonly() {
-            var $productField = $('#form-field-product');
-            if ($productField.length && !$productField.attr('readonly')) {
-                $productField.attr('readonly', true);
-            }
+            var $productField = $('#form-field-product, [data-ip-field="product"]');
+            $productField.each(function() {
+                var $field = $(this);
+                if (!$field.attr('readonly')) {
+                    $field.attr('readonly', true);
+                }
+            });
         }
 
         // Try immediately (for inline forms)
@@ -595,6 +600,12 @@
 
         // Re-check when Elementor popup opens
         $(document).on('elementor/popup/show', function() {
+            setTimeout(makeProductFieldReadonly, 100);
+        });
+
+        // Re-check when a theme inquiry modal opens. The theme dispatches
+        // document.dispatchEvent(new CustomEvent('infoplus:inquiry-open', { detail: {...} })).
+        document.addEventListener('infoplus:inquiry-open', function() {
             setTimeout(makeProductFieldReadonly, 100);
         });
 

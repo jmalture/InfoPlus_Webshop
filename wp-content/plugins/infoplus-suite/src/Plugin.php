@@ -16,7 +16,7 @@ use Infoplus\Suite\Modules\CatalogImport\Module as CatalogImportModule;
 
 final class Plugin
 {
-    public const VERSION = '0.10.25';
+    public const VERSION = '0.10.26';
 
     private string $file;
     private array $modules = [];
