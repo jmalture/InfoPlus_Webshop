@@ -411,3 +411,104 @@ add_filter( 'render_block_woocommerce/cart', function ( $html ) {
 		'>New in store<'                  => '>Neu im Shop<',
 	) );
 } );
+
+/* ── B2B: order reference / PO number at checkout ───────────────────────── */
+
+/** Field ID of the optional "Ihre Bestellreferenz / PO-Nummer" (WooCommerce additional checkout field). */
+const IP_SHOP_PO_FIELD = 'infoplus/po-number';
+
+/** Maximum length of the order reference. */
+const IP_SHOP_PO_MAX = 50;
+
+/*
+ * DESIGN.md, "Cart and checkout": an optional "Ihre Bestellreferenz /
+ * PO-Nummer" field, shown on invoice and order e-mail.
+ *
+ * Registered through WooCommerce's additional checkout fields API
+ * (woocommerce_register_additional_checkout_field, WooCommerce 8.9+, Checkout
+ * block only). Location "order": the field renders in the block's "Zusätzliche
+ * Bestellinformationen" section (checkout-additional-information-block, which
+ * the checkout markup in woocommerce/checkout-block.html contains). WooCommerce
+ * itself saves it as order meta "_wc_other/infoplus/po-number" and shows it
+ * with its label in the admin order screen, on the order confirmation and in
+ * the order e-mails (WC_Emails::order_meta / customer details). The PDF
+ * invoice gets it from the hook below. A no-op where the function does not
+ * exist (older WooCommerce, WooCommerce inactive).
+ */
+add_action( 'woocommerce_init', function () {
+	if ( ! function_exists( 'woocommerce_register_additional_checkout_field' ) ) {
+		return;
+	}
+	try {
+		woocommerce_register_additional_checkout_field( array(
+			'id'                => IP_SHOP_PO_FIELD,
+			'label'             => 'Ihre Bestellreferenz / PO-Nummer',
+			'optionalLabel'     => 'Ihre Bestellreferenz / PO-Nummer (optional)',
+			'location'          => 'order',
+			'type'              => 'text',
+			'required'          => false,
+			'attributes'        => array(
+				'maxLength'    => IP_SHOP_PO_MAX,
+				'autocomplete' => 'off',
+			),
+			'sanitize_callback' => function ( $value ) {
+				$value = trim( sanitize_text_field( (string) $value ) );
+				return function_exists( 'mb_substr' ) ? mb_substr( $value, 0, IP_SHOP_PO_MAX ) : substr( $value, 0, IP_SHOP_PO_MAX );
+			},
+			'validate_callback' => function ( $value ) {
+				$length = function_exists( 'mb_strlen' ) ? mb_strlen( (string) $value ) : strlen( (string) $value );
+				if ( $length > IP_SHOP_PO_MAX ) {
+					/* translators: %d: maximum number of characters */
+					return new WP_Error( 'infoplus_po_number_length', sprintf( __( 'Die Bestellreferenz darf höchstens %d Zeichen lang sein.', 'infoplus' ), IP_SHOP_PO_MAX ) );
+				}
+			},
+		) );
+	} catch ( \Throwable $e ) {
+		// Registration refused (e.g. the ID exists already): the checkout works without the field.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			error_log( 'Infoplus theme: PO number field not registered: ' . $e->getMessage() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+		}
+	}
+} );
+
+/** The order reference of an order, '' when none was entered. */
+function ip_shop_po_number( $order ) {
+	if ( ! $order instanceof WC_Order ) {
+		return '';
+	}
+	$value = '';
+	$class = '\Automattic\WooCommerce\Blocks\Domain\Services\CheckoutFields';
+	if ( class_exists( '\Automattic\WooCommerce\Blocks\Package' ) && class_exists( $class ) ) {
+		try {
+			$value = \Automattic\WooCommerce\Blocks\Package::container()->get( $class )->get_field_from_object( IP_SHOP_PO_FIELD, $order, 'other' );
+		} catch ( \Throwable $e ) {
+			$value = '';
+		}
+	}
+	if ( '' === (string) $value ) {
+		$value = $order->get_meta( '_wc_other/' . IP_SHOP_PO_FIELD );
+	}
+	return trim( (string) $value );
+}
+
+/*
+ * PDF Invoices & Packing Slips for WooCommerce (WP Overnight, 5.16.3 on
+ * staging): its Simple template fires wpo_wcpdf_after_order_data inside the
+ * order data table (invoice and packing slip), the same place the plugin adds
+ * its own due date row. One more row with the reference. Filter
+ * ip_shop_po_pdf_documents to choose the document types.
+ */
+add_action( 'wpo_wcpdf_after_order_data', function ( $document_type = null, $order = null ) {
+	if ( ! in_array( $document_type, (array) apply_filters( 'ip_shop_po_pdf_documents', array( 'invoice', 'packing-slip' ) ), true ) ) {
+		return;
+	}
+	$po = ip_shop_po_number( $order );
+	if ( '' === $po ) {
+		return;
+	}
+	printf(
+		'<tr class="po-number"><th>%s</th><td>%s</td></tr>',
+		esc_html__( 'Bestellreferenz:', 'infoplus' ),
+		esc_html( $po )
+	);
+}, 10, 2 );
