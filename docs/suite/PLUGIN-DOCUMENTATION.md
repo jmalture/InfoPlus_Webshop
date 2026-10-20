@@ -38,6 +38,7 @@
 16. [Known Issues & Incomplete Features](#16-known-issues--incomplete-features)
 17. [Large Products: Deferred Variations and Caching](#17-large-products-deferred-variations-and-caching)
 18. [Changes from 0.9.93 to 0.9.111](#18-changes-from-0993-to-09111)
+19. [Theme Renderer](#19-theme-renderer)
 
 ---
 
@@ -1561,6 +1562,7 @@ Observed while reading the code. None of these has been fixed; they are listed s
 | 15 | Section 12 of the 0.9.93 docs | Attributed `/products/prices` to the WDP plugin. It is InfoplusAPI. Corrected in this version. | fixed (docs) |
 | 16 | Section 7 of the 0.9.93 docs | Order type meta key was documented as `_infoplus_order_type_{term}`. Real key is `_infoplus_attr_order_type_{attr}_{term}`. Corrected in this version. | fixed (docs) |
 | 17 | `Custom404/Module.php` and `UserOrders/Module.php` | Both hardcode `calc(100vh - 684px)` from measured header (83 px) and footer (601 px) heights. A theme change breaks the layout silently. | still open |
+| 18 | `ProductDetailSuite/Widgets/VariationDropdowns.php` `renderDropdowns()` (up to `feature/catalog-import`) | Read `$info_behavior`, a local variable of `render()`, so the option info buttons never got `data-tooltip` and PHP logged "Undefined variable" once per option. Since `feature/view-renderer` the template keeps the old output on purpose (`$option_info_tooltip_attr = false`) without the warning. `variation-dropdowns.js` falls back to the option's own `data-tooltip`. See Section 19. | kept as is, warning gone |
 
 ---
 
@@ -1634,3 +1636,136 @@ Summary of `git diff 40ce2e5 f01aca6` (38 files, 3234 insertions, 432 deletions)
 | UserDashboard | UserStatCard widget and CSS. Logout without confirmation page. Registration success redirect script. Copies of ProductDetailSuite assets partly updated. |
 | UserOrders | `woo-pages.css` (cart, checkout, thank-you) for all users, `cart-qty-fix.js`, checkout login link rewrite, empty-cart detection with MutationObserver fallback, thank-you page restyle, OrderDetails print stylesheet and 2:1 item images, UserOrdersGrid explicit status list, email banner icon markup. |
 | Custom404 | No change in this diff (existed since `6b0d87f`, documented for the first time in 4.9). |
+
+---
+
+## 19. Theme Renderer
+
+Added on branch `feature/view-renderer` (based on `feature/catalog-import`). Not deployed.
+
+### Why
+
+The product page components of ProductDetailSuite used to print their markup inside the Elementor widgets' `render()`. A classic PHP theme could not show them without Elementor. The split is now: the Suite owns the shop logic and the markup of its components, the theme owns layout and design. The Elementor widgets still exist and print the same markup, so the current Elementor product template keeps working until the theme switch.
+
+### View::render
+
+`Infoplus\Suite\View` (`src/View.php`) is the one entry point.
+
+| Method | What it does |
+|--------|--------------|
+| `View::render(string $component, array $args = []): void` | Finds the template, sets `$args['context']` to `theme` when the caller did not pass one, runs the filter `infoplus_suite_view_args`, enqueues the component's assets and includes the template. |
+| `View::capture(string $component, array $args = []): string` | Same as `render()`, returns the markup instead of printing it. |
+| `View::locate(string $component): string` | Theme first: `locate_template('infoplus-suite/{component}.php')`, so a child theme beats its parent. Then the plugin file `templates/{component}.php`. Filter `infoplus_suite_locate_template`. Returns an empty string when nothing is found. |
+| `View::registerAssets(string $component, array $scripts, array $styles): void` | Declares which registered handles a component needs. Called by `ProductDetailSuite\Module::register()` from `Components::ASSETS`. |
+| `View::enqueue(string $component): void` | Enqueues those handles if they are registered. A theme may call it early, for example in `wp_enqueue_scripts`, to get the styles into the head. |
+
+Rules for templates, the same idea as `wc_get_template()`:
+
+- The template gets one variable, `$args`. There is no `extract()`. It is included inside a static closure, so `$this` is not available.
+- The template must escape everything it prints. Prices come from `wc_price()`, which returns escaped markup. Icon markup goes through `Infoplus\Suite\Icons::kses()`.
+- Component names must match `[a-z0-9][a-z0-9_-]*`. Anything else is rejected with `_doing_it_wrong()`.
+- `$args['context']` is `elementor` when a widget renders and `theme` otherwise. The default templates do not branch on it. It is there so an override can, if ever needed.
+
+A theme overrides a component by copying the plugin template to `{theme}/infoplus-suite/{component}.php`. The override also applies when the Elementor widget renders, because both paths go through `View::render()`.
+
+### Components and templates
+
+| Component | Template | Data builder | Widget | Root element |
+|-----------|----------|--------------|--------|--------------|
+| `model-selector` | `templates/model-selector.php` | `Components::modelSelector()` | ModelSelector | `.infoplus-model-selector.ip-c-model-selector` |
+| `variation-dropdowns` | `templates/variation-dropdowns.php` | `Components::variationDropdowns()` | VariationDropdowns | `.infoplus-variation-dropdowns.ip-c-variation-dropdowns` |
+| `product-image` | `templates/product-image.php` | `Components::productImage()` | ProductImage | `.infoplus-product-image.ip-c-product-image` |
+| `product-info-box` | `templates/product-info-box.php` | `Components::productInfoBox()` | ProductInfoBox | `.ip-info-box.ip-c-product-info-box` |
+| `bulk-price-table` | `templates/bulk-price-table.php` | `Components::bulkPriceTable()` | BulkPriceTable | `.infoplus-bulk-price-table.ip-c-bulk-price-table` |
+
+`ProductDetailSuite\Components` (`src/Modules/ProductDetailSuite/Components.php`) holds the defaults (the widget content control defaults, in `*Defaults()` methods) and the shop logic that used to sit in the widgets: the model card query, term images and tooltips, the first model gallery, SKU and meta lookups, and the clamps of the bulk table. Each builder merges the passed args over the defaults, turns switch values into booleans (`'yes'`, `true`, `1` and `'1'` count as on) and adds the data keys the template needs. The full list of args is in the comment at the top of each template.
+
+ProductOrderPanel is still registered but unused on the product template. It was not ported and renders as before.
+
+Each widget's `render()` now does three things: keep the Elementor editor fallback (a sample product when there is no global `$product`, unchanged, including that three widgets assign it to the global as before), map `get_settings_for_display()` to the same arg keys, and call `View::render()` with `context` set to `elementor`. BulkPriceTable passes the editor state as `is_preview`, which makes the template print the static demo tiers. Style controls with Elementor `selectors` stay in the widgets and keep working through Elementor's generated CSS.
+
+### Helper functions for themes
+
+Defined in `src/template-functions.php`, loaded by `Plugin::boot()` right after the constants. Each one is wrapped in `function_exists()`, so a theme can replace it. `$product` accepts a `WC_Product`, a product ID, or `null` for the global `$product`. Missing args fall back to the defaults.
+
+```php
+infoplus_suite_model_selector($product = null, array $args = []): void
+infoplus_suite_variation_dropdowns($product = null, array $args = []): void
+infoplus_suite_product_image($product = null, array $args = []): void
+infoplus_suite_product_info_box($product = null, array $args = []): void
+infoplus_suite_bulk_price_table($product = null, array $args = []): void
+```
+
+Example in a theme's `woocommerce/single-product.php`:
+
+```php
+infoplus_suite_product_image();
+infoplus_suite_model_selector(null, ['title' => '', 'show_price' => false]);
+infoplus_suite_variation_dropdowns(null, ['attributes_to_show' => [], 'info_button_behavior' => 'modal']);
+infoplus_suite_product_info_box();
+infoplus_suite_bulk_price_table();
+```
+
+The bulk price table does not use `$product` on the server. Its tiers are loaded in the browser by `bulk-price-table.js` for the selected variation SKU. The parameter exists for a uniform signature and is passed to the template.
+
+### Assets
+
+`ProductDetailSuite\Module::enqueueFrontendAssets()` now registers every frontend handle on each frontend request (same handles, same files, same `Module::VERSION`), including the `infoplusProductConfig` localisation. On single product pages (`is_product()`) it still enqueues the same handles in the same order as before. `View::render()` enqueues a component's handles when it renders, which matters only outside product pages. Handles per component are in `Components::ASSETS` and match the widgets' `get_script_depends()` and `get_style_depends()`.
+
+All component scripts depend on `product-state.js`, which reads `window.infoplusProductData`. That object is printed by `Module::outputProductState()` on `woocommerce_after_single_product`. A theme that renders the components outside the normal WooCommerce single product template must make sure that hook still fires, otherwise the components render but stay inert.
+
+### Restyling from the theme
+
+Every component root has the class `ip-c-{component}` and the attribute `data-ip-component="{component}"`, next to its existing classes. Key inner parts have `ip-c-{component}__{part}` classes, listed in the comment at the top of each template:
+
+| Component | Parts |
+|-----------|-------|
+| model-selector | `__title`, `__options`, `__option`, `__image`, `__info`, `__label`, `__price`, `__modal` |
+| variation-dropdowns | `__row`, `__label`, `__trigger`, `__options`, `__option`, `__image` |
+| product-image | `__main`, `__image`, `__fullscreen`, `__gallery`, `__thumb`, `__lightbox` |
+| product-info-box | `__heading`, `__rows`, `__row`, `__icon`, `__label`, `__value` |
+| bulk-price-table | `__skeleton`, `__table`, and in the editor preview `__cell`, `__label`, `__qty`, `__price` |
+
+Elements built later by JavaScript carry only the old classes, not the `ip-c-*` ones: the price cells of `bulk-price-table.js`, the thumbnails rebuilt by `product-image.js`, the info modal and tooltip created by `model-selector.js` and `variation-dropdowns.js`, and the lock overlays. Target those by their `infoplus-*` or `ibpt-*` classes.
+
+Each template header also lists CSS custom properties (prefixes `--ip-ms-`, `--ip-vd-`, `--ip-pi-`, `--ip-ib-`, `--ip-bt-`) with the widget control defaults. They are a naming contract for the theme. The plugin CSS does not read them; the theme stylesheet maps them onto the `ip-c-*` classes. No design CSS was added to the plugin. Two properties the plugin CSS already reads are `--infoplus-dropdown-image-height` and `--infoplus-dropdown-image-width`.
+
+Some rules in `product-detail-suite.css` only match inside Elementor: lines 134, 135, 179 to 182 (model selector info button) and 414, 415, 457 to 460 (dropdown option info button) use `.elementor-widget-infoplus-*` or `.elementor-element` as ancestor. Without Elementor those info buttons fall back to the lower specificity base rules, so the theme should style `.ip-c-model-selector__info` and the option info buttons itself.
+
+### Icons
+
+`Infoplus\Suite\Icons` (`src/Icons.php`) replaces Elementor's `Icons_Manager` in the theme path. `Icons::svg('box')` and `Icons::svg('clock')` return inline SVG of the Font Awesome Free 5 solid icons that the ProductInfoBox widget uses by default, so the pictograms are the same. No icon had to change. The filter `infoplus_suite_icons` adds more shapes. `Icons::kses()` runs `wp_kses()` with an allow list for `<i>` font icons and plain inline SVG.
+
+In the Elementor path the ProductInfoBox widget still renders the chosen icon with `Icons_Manager::render_icon()` (only for visible rows, as before) and passes the markup as `icon_min_order_html` and `icon_delivery_html`. The template prints that markup through `Icons::kses()`. An uploaded custom SVG icon that uses elements outside the allow list (for example gradients or `<style>`) would lose those parts. The staging template uses the default icons (checked on 2026-10-20).
+
+### How the output was verified
+
+A PHP CLI harness outside the repo stubs the WordPress, WooCommerce and Elementor functions the widgets call. It uses the real `wp-includes/kses.php` from WordPress 6.9. For 34 scenarios (staging settings read from template 2190, control defaults, toggles off, editor mode without product, simple product, missing settings, hostile strings) it renders each widget once with the old `render()` from `feature/catalog-import` and once with the new widget. After removing the added `ip-c-*` classes and `data-ip-component` attributes, the output is byte for byte identical for all five components, including the three markup shapes `Icons_Manager` can produce (font `<i>`, inline `<svg>`, `<svg><use>`). The template files keep the old indentation for that reason. The old VariationDropdowns run logged "Undefined variable $info_behavior" warnings (Section 16, finding 18); the new run logs none.
+
+### JavaScript that depends on Elementor DOM
+
+Not changed in this branch. The default templates work without Elementor because every component script also boots on document ready from its `infoplus-*` root class. The dependencies below either do nothing outside Elementor or point at elements that only the Elementor template has. Proposed replacements use data attributes so the theme can mark its own elements.
+
+| File and line | Dependency | Effect without Elementor | Proposed replacement |
+|---------------|------------|--------------------------|----------------------|
+| `model-selector.js:262` to `264` | `elementor/frontend/init` and `elementorFrontend.hooks` `frontend/element_ready/infoplus-model-selector.default` | Editor re-init only. No effect on the front end, the document ready boot at line 257 covers it. | Keep as optional. Boot from `[data-ip-component="model-selector"]`. |
+| `variation-dropdowns.js:718` | `$('#anfrage .elementor-button, .infoplus-btn--anfrage')`: the Anfrage button is an Elementor Button widget with CSS ID `anfrage` | The pulse on requestable models finds no button unless the theme uses `.infoplus-btn--anfrage`. | `[data-ip-action="anfrage"]` on the theme's Anfrage button. |
+| `variation-dropdowns.js:721` | `$('#editor .elementor-button, .infoplus-btn--editor, .infoplus-btn--cart')`: Elementor Button widget with CSS ID `editor` | The pulse on editable and buyable models finds no button unless the theme uses the fallback classes. | `[data-ip-action="editor"]` and `[data-ip-action="cart"]`. |
+| `variation-dropdowns.js:778` to `780` | `elementorFrontend.hooks` `infoplus-variation-dropdowns.default` | Editor re-init only. | Keep as optional. Boot from `[data-ip-component="variation-dropdowns"]`. |
+| `product-image.js:402` to `404` | `elementorFrontend.hooks` `infoplus-product-image.default` | Editor re-init only. The lightbox lookup at line 197 needs the lightbox to stay the next sibling of the root, which the template keeps. | Keep as optional. Boot from `[data-ip-component="product-image"]`. Long term, `data-ip-lightbox` on the root pointing at the lightbox. |
+| `product-info-box.js:63` to `65` | `elementorFrontend.hooks` `infoplus-product-info-box.default` | Editor re-init only. | Keep as optional. Boot from `[data-ip-component="product-info-box"]`. |
+| `bulk-price-table.js:78` to `80` | `elementorFrontend.isEditMode()` decides between the PHP demo grid and the live table | Returns false without Elementor, which is correct. | `data-ip-preview="yes"` printed by the template when `is_preview` is true. |
+| `product-state.js:587` | `#form-field-product`: the product field of the Elementor Pro Anfrage form | No readonly product field unless the theme form uses that ID. | `[data-ip-field="product"]` on the theme form field. |
+| `product-state.js:597` | `elementor/popup/show` event to re-run the readonly fix | Never fires. The MutationObserver fallback at line 601 still runs. | A Suite event such as `infoplus:anfrage-open` fired by the theme's modal. |
+| `product-order-panel.js:36` | `elementorFrontend.isEditMode()` | Returns false, correct. Widget is unused. | `data-ip-preview`. |
+| `product-order-panel.js:493` | `querySelector('#anfrage')` as the scroll target of the Anfrage button | No scroll unless the theme has `#anfrage`. Widget is unused. | `[data-ip-target="anfrage"]`. |
+| `product-order-panel.js:686` to `697` | Boots through `elementorFrontend.hooks` when `elementorFrontend` exists, and directly only when it does not | On a non Elementor page with Elementor still active the panel may never boot (unverified). Widget is unused. | Always boot on document ready from `[data-ip-component]`, keep the hook for the editor. |
+
+Related, outside `ProductDetailSuite/Assets/`: the qty row of the legacy bulk calculator, `WooSingleProductAddons/Assets/elementor-bulk-calculator.js`, finds its elements by Elementor widget CSS IDs (`#qty_value`, `#qty_minus`, `#qty_plus`, `#Stuckpreis_value h2`, `#Gesamtpreis_value h2`, `#Mindestanzahl_value`, `#qty-limit-message`) and hides the row with `$('#qty_value').closest('.e-con')` (lines 40 and 46) and `.closest('.elementor-widget-container, ...')` (line 151). A theme quantity row needs either the same IDs or a port to data attributes such as `data-ip-qty="value"`, `data-ip-qty="minus"`, `data-ip-qty="plus"` and `data-ip-qty-row` on the row container.
+
+### Risks before deploying this branch on staging
+
+- Frontend handles are now registered on every frontend page, and `infoplusProductConfig` (including a `wp_rest` nonce) is built on every request. It is printed only where the script is enqueued.
+- Pages other than product pages that contain one of the five widgets now load the component scripts. This includes the Elementor editor preview of the product template, where `is_product()` is false and the scripts did not load before. The scripts' editor hooks were written for that case, but this has not been tested in the editor (unverified).
+- A theme override in `{theme}/infoplus-suite/` also replaces the markup of the Elementor widgets.
+- No JavaScript or CSS file changed, so `Module::VERSION` was not bumped and the product data transients stay valid.
