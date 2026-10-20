@@ -1,0 +1,130 @@
+/* Infoplus shared layer: fonts, tokens, base, layout, shared components.
+   Mobile first: base rules are the phone, min-width queries add layout.
+   Breakpoints from the Elementor kit (viewport_md 768, viewport_lg 1101):
+   768 = tablet, 1101 = desktop. Use only these two.
+   Token values come from the Elementor kit (post 5), exported in _legacy/kit/. */
+
+/* ── Fonts (self-hosted, OFL licence in assets/fonts/) ─────────────────── */
+@font-face { font-family: "Archivo Narrow"; src: url(../fonts/archivo-narrow-var.woff2) format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap }
+@font-face { font-family: "Archivo Narrow"; src: url(../fonts/archivo-narrow-var-italic.woff2) format("woff2"); font-weight: 400 700; font-style: italic; font-display: swap }
+/* Narrow fallback so text width barely moves while the web font loads. */
+@font-face { font-family: "Archivo Narrow Fallback"; src: local("Arial Narrow"), local("Roboto Condensed"), local("Arial"); size-adjust: 92%; ascent-override: 98%; descent-override: 26%; line-gap-override: 0% }
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  /* Kit colours (names as in Elementor) */
+  --c-primary: #E6007E;          /* Primary */
+  --c-secondary: #9E0056;        /* Secondary, also hover of primary */
+  --c-text: #191B1C;             /* Text */
+  --c-white: #FFFFFF;            /* Accent "White" */
+  --c-grey-100: #EFEFF6;         /* Very Light Grey */
+  --c-grey-200: #DEDEE9;         /* Light Grey */
+  --c-grey-700: #4A4E53;         /* Dark Grey */
+  --c-grey-800: #35393D;         /* Very Dark Grey */
+
+  /* Semantic */
+  --surface-page: var(--c-white);
+  --surface-alt: var(--c-grey-100);
+  --surface-dark: var(--c-grey-800);
+  --text-primary: var(--c-text);
+  --text-secondary: var(--c-grey-700);
+  --text-on-dark: var(--c-white);
+  --border: var(--c-grey-200);
+  --c-primary-tint: #FDEBF4;     /* primary at ~8% on white: icon tiles, hover, selected (DESIGN.md) */
+  --shadow-1: 0 12px 24px -12px rgb(25 27 28 / .18), 0 0 0 1px rgb(25 27 28 / .04);
+  --shadow-2: 0 30px 60px -20px rgb(25 27 28 / .28), 0 0 0 1px rgb(25 27 28 / .06);
+  --radius-card: 16px;
+  --radius-panel: 22px;
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --accent: var(--c-primary);
+  --accent-hover: var(--c-secondary);
+  --focus: var(--c-primary);
+
+  /* Type: kit styles Mega Heading / Heading / Subheading / Text / Badge */
+  --font: "Archivo Narrow", "Archivo Narrow Fallback", "Arial Narrow", sans-serif;
+  --fs-mega: 36px;     /* desktop 64 */
+  --fs-heading: 32px;  /* tablet 48, desktop 52 */
+  --fs-sub: 24px;      /* desktop 32 */
+  --fs-text: 20px;
+  --fs-badge: 16px;
+  --fs-small: 14px;
+  --type-mega: 700 var(--fs-mega)/1.2 var(--font);
+  --type-heading: 500 var(--fs-heading)/1.2 var(--font);
+  --type-sub: 500 var(--fs-sub)/1.2 var(--font);
+  --type-text: 400 var(--fs-text)/1.3 var(--font);
+  --type-badge: 600 var(--fs-badge)/1.2 var(--font);
+  --type-small: 400 var(--fs-small)/1.35 var(--font);
+
+  /* Space and layout */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
+  --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px;
+  --layout-max: 1400px;          /* kit container_width */
+  --layout-margin: 16px;
+  --section-gap: var(--space-12);
+  --header-h: 64px;
+
+  /* Geometry and motion */
+  --radius: 4px;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --dur-ui: 200ms;
+}
+@media (min-width: 768px) {
+  :root { --fs-heading: 48px; --layout-margin: 32px }
+}
+@media (min-width: 1101px) {
+  :root { --fs-mega: 64px; --fs-heading: 52px; --fs-sub: 32px; --layout-margin: 48px; --section-gap: var(--space-24); --header-h: 83px }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-ui: 0ms }
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + var(--space-4)) }
+body { margin: 0; background: var(--surface-page); color: var(--text-primary); font: var(--type-text); text-wrap: pretty; overflow-wrap: break-word }
+body.ip-locked { overflow: hidden }
+h1, h2, h3, h4, p, ul, ol, figure, dl, dd, blockquote { margin: 0 }
+h1 { font: var(--type-mega) }
+h2 { font: var(--type-heading) }
+h3 { font: var(--type-sub) }
+a { color: inherit }
+img, video, svg { display: block; max-width: 100% }
+img, video { height: auto }
+button, input, select, textarea { font: inherit; color: inherit }
+button { cursor: pointer }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+.ip-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0 }
+.ip-skip { position: absolute; left: var(--space-4); top: -100px; z-index: 1000; padding: var(--space-2) var(--space-4); background: var(--surface-page) }
+.ip-skip:focus { top: var(--space-4) }
+
+/* ── Layout ─────────────────────────────────────────────────────────────── */
+.ip-shell { max-width: calc(var(--layout-max) + 2 * var(--layout-margin)); margin-inline: auto; padding-inline: var(--layout-margin) }
+.ip-page { padding-block: var(--space-8) var(--section-gap) }
+.ip-section + .ip-section { margin-top: var(--section-gap) }
+.ip-prose > * + * { margin-top: 1em }
+.ip-prose h2, .ip-prose h3 { margin-top: 1.5em }
+
+/* ── Shared components ──────────────────────────────────────────────────── */
+.ip-badge { font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase }
+.ip-btn { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-6); border: 0; border-radius: 10px; background: var(--accent); color: var(--c-white); font: var(--type-badge); text-decoration: none; transition: background-color var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease) }
+.ip-btn:hover { background: var(--accent-hover) }
+.ip-btn:active { transform: translateY(1px) }
+.ip-btn--ghost { background: var(--c-white); color: var(--text-primary); box-shadow: inset 0 0 0 1px var(--border) }
+.ip-btn--ghost:hover { background: var(--c-primary-tint) }
+
+/* Section head (DESIGN.md 2): kicker, heading with optional magenta second half, subline. */
+.ip-kicker { font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase; color: var(--c-secondary) }
+.ip-head { display: grid; gap: var(--space-3); max-width: 60ch }
+.ip-head em { font-style: normal; color: var(--accent) }
+.ip-sub { color: var(--text-secondary) }
+
+/* Card and panel surfaces (DESIGN.md 1). */
+.ip-card { background: var(--c-white); border: 1px solid var(--border); border-radius: var(--radius-card); transition: transform var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease) }
+a.ip-card:hover, .ip-card--link:hover { transform: translateY(-2px); box-shadow: var(--shadow-1) }
+.ip-panel { background: var(--c-white); border-radius: var(--radius-panel); box-shadow: var(--shadow-2) }
+
+/* Icon tile and pill (DESIGN.md 3, 5). */
+.ip-tile { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: var(--c-primary-tint); color: var(--accent); flex: none; transition: transform 350ms var(--ease-spring) }
+.ip-tile .ip-icon { width: 22px; height: 22px }
+:hover > .ip-tile { transform: rotate(-8deg) scale(1.06) }
+.ip-pill { display: inline-flex; align-items: center; min-height: 20px; padding: 0 7px; border-radius: 999px; background: var(--c-primary-tint); color: var(--c-secondary); font-size: 12px; font-weight: 700; line-height: 1 }.ip-icon { width: 1em; height: 1em; flex: none }
