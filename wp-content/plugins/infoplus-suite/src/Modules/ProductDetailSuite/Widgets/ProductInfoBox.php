@@ -19,6 +19,8 @@ namespace Infoplus\Suite\Modules\ProductDetailSuite\Widgets;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
+use Infoplus\Suite\View;
+use Infoplus\Suite\Modules\ProductDetailSuite\Components;
 
 if (!defined('ABSPATH')) exit;
 
@@ -244,79 +246,54 @@ class ProductInfoBox extends Widget_Base
 
     // ── Render ─────────────────────────────────────────────────────────────────
 
+    /**
+     * Render widget output on the frontend.
+     * Markup lives in templates/product-info-box.php (View::render).
+     */
     protected function render(): void
     {
         $s = $this->get_settings_for_display();
 
-        // Get live product data
-        $product_data = null;
-        $sku = '';
-        $min_qty = 1;
-        $delivery_days = (int) ($s['delivery_default_days'] ?? 15);
+        global $product;
+        $p = $product;
 
-        if (function_exists('wc_get_product')) {
-            global $product;
-            $p = $product;
-
-            // Editor fallback
-            if ((!$p || !is_a($p, 'WC_Product')) && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
-                $products = wc_get_products(['type' => 'variable', 'limit' => 1, 'status' => 'publish']);
-                $p = !empty($products) ? $products[0] : null;
-            }
-
-            if ($p) {
-                $sku = $p->get_sku();
-                $meta_min = (int) get_post_meta($p->get_id(), '_infoplus_min_quantity', true);
-                if ($meta_min > 0) $min_qty = $meta_min;
-                $meta_delivery = (int) get_post_meta($p->get_id(), '_infoplus_delivery_days', true);
-                if ($meta_delivery > 0) $delivery_days = $meta_delivery;
-            }
+        // Editor fallback (local only, the global is not changed)
+        if ((!$p || !is_a($p, 'WC_Product')) && \Elementor\Plugin::$instance->editor->is_edit_mode()) {
+            $products = wc_get_products(['type' => 'variable', 'limit' => 1, 'status' => 'publish']);
+            $p = !empty($products) ? $products[0] : null;
         }
 
-        $heading = $s['heading'] ?? '';
-        ?>
-        <div class="ip-info-box">
-            <?php if ($heading) : ?>
-                <div class="ip-info-box__heading"><?php echo esc_html($heading); ?></div>
-            <?php endif; ?>
+        View::render('product-info-box', Components::productInfoBox($p, [
+            'context'               => View::CONTEXT_ELEMENTOR,
+            'heading'               => $s['heading'] ?? '',
+            'show_sku'              => $s['show_sku'],
+            'sku_label'             => $s['sku_label'],
+            'show_min_order'        => $s['show_min_order'],
+            'min_order_unit'        => $s['min_order_unit'],
+            'show_delivery'         => $s['show_delivery'],
+            'delivery_default_days' => $s['delivery_default_days'] ?? 15,
+            'delivery_prefix'       => $s['delivery_prefix'],
+            'delivery_suffix'       => $s['delivery_suffix'],
+            'icon_min_order_color'  => $s['icon_min_order_color'],
+            'icon_delivery_color'   => $s['icon_delivery_color'],
+            // Elementor icon markup, rendered only for visible rows, as before
+            // (Icons_Manager output may depend on what it rendered earlier).
+            'icon_min_order_html'   => $s['show_min_order'] === 'yes' ? $this->iconMarkup($s['icon_min_order']) : '',
+            'icon_delivery_html'    => $s['show_delivery'] === 'yes' ? $this->iconMarkup($s['icon_delivery']) : '',
+        ]));
+    }
 
-            <div class="ip-info-box__rows">
-                <?php if ($s['show_sku'] === 'yes') : ?>
-                    <div class="ip-info-box__row ip-info-box__row--sku">
-                        <span class="ip-info-box__text">
-                            <span class="ip-info-box__sku-label"><?php echo esc_html($s['sku_label']); ?></span>
-                            <span class="ip-info-box__sku-value"><?php echo esc_html($sku ?: '—'); ?></span>
-                        </span>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($s['show_min_order'] === 'yes') : ?>
-                    <div class="ip-info-box__row ip-info-box__row--min-order">
-                        <span class="ip-info-box__icon" style="color:<?php echo esc_attr($s['icon_min_order_color']); ?>">
-                            <?php \Elementor\Icons_Manager::render_icon($s['icon_min_order'], ['aria-hidden' => 'true']); ?>
-                        </span>
-                        <span class="ip-info-box__text">
-                            <span class="ip-info-box__min-qty"><?php echo esc_html($min_qty); ?></span>
-                            <?php echo esc_html($s['min_order_unit']); ?>
-                        </span>
-                    </div>
-                <?php endif; ?>
-
-                <?php if ($s['show_delivery'] === 'yes') : ?>
-                    <div class="ip-info-box__row ip-info-box__row--delivery">
-                        <span class="ip-info-box__icon" style="color:<?php echo esc_attr($s['icon_delivery_color']); ?>">
-                            <?php \Elementor\Icons_Manager::render_icon($s['icon_delivery'], ['aria-hidden' => 'true']); ?>
-                        </span>
-                        <span class="ip-info-box__text">
-                            <?php echo esc_html($s['delivery_prefix']); ?>
-                            <span class="ip-info-box__delivery-days"><?php echo esc_html($delivery_days); ?></span>
-                            <?php echo esc_html($s['delivery_suffix']); ?>
-                        </span>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php
+    /**
+     * Markup of an Elementor ICONS control value, as Icons_Manager prints it.
+     */
+    private function iconMarkup($icon): string
+    {
+        if (!is_array($icon)) {
+            return '';
+        }
+        ob_start();
+        \Elementor\Icons_Manager::render_icon($icon, ['aria-hidden' => 'true']);
+        return (string) ob_get_clean();
     }
 
     protected function content_template(): void

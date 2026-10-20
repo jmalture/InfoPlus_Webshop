@@ -59,3 +59,17 @@ if (!function_exists('infoplus_suite_product_image')) {
         View::render('product-image', Components::productImage($product, $args));
     }
 }
+
+if (!function_exists('infoplus_suite_product_info_box')) {
+    /**
+     * Render the product info box (SKU, minimum order quantity, delivery time).
+     *
+     * @param WC_Product|int|null $product Product, product ID, or null for the global $product.
+     * @param array               $args    See templates/product-info-box.php. Defaults:
+     *                                     Components::productInfoBoxDefaults().
+     */
+    function infoplus_suite_product_info_box($product = null, array $args = []): void
+    {
+        View::render('product-info-box', Components::productInfoBox($product, $args));
+    }
+}

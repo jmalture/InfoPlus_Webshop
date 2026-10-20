@@ -427,6 +427,75 @@ final class Components
         return [];
     }
 
+    // ── product-info-box ────────────────────────────────────────────────────
+
+    /**
+     * Defaults of the product info box (ProductInfoBox widget content controls).
+     * Icons are names for Infoplus\Suite\Icons::svg(); the *_html keys take
+     * ready markup instead (the widget passes Elementor's icon markup there).
+     */
+    public static function productInfoBoxDefaults(): array
+    {
+        return [
+            'heading'               => 'Informationen:',
+            'show_sku'              => true,
+            'sku_label'             => 'SKU:',
+            'show_min_order'        => true,
+            'min_order_unit'        => 'Stück',
+            'show_delivery'         => true,
+            'delivery_default_days' => 15,
+            'delivery_prefix'       => 'max.',
+            'delivery_suffix'       => 'Arbeitstage',
+            'icon_min_order'        => 'box',
+            'icon_min_order_color'  => '#22c55e',
+            'icon_min_order_html'   => null,
+            'icon_delivery'         => 'clock',
+            'icon_delivery_color'   => '#f59e0b',
+            'icon_delivery_html'    => null,
+        ];
+    }
+
+    /**
+     * Final template args for templates/product-info-box.php.
+     *
+     * Adds: product, sku, min_qty (meta _infoplus_min_quantity, default 1),
+     * delivery_days (meta _infoplus_delivery_days, default delivery_default_days).
+     *
+     * @param \WC_Product|int|null $product
+     */
+    public static function productInfoBox($product = null, array $args = []): array
+    {
+        $args = self::merge(self::productInfoBoxDefaults(), $args);
+
+        foreach (['show_sku', 'show_min_order', 'show_delivery'] as $key) {
+            $args[$key] = self::flag($args[$key]);
+        }
+        foreach (['heading', 'sku_label', 'min_order_unit', 'delivery_prefix', 'delivery_suffix',
+                  'icon_min_order', 'icon_min_order_color', 'icon_delivery', 'icon_delivery_color'] as $key) {
+            $args[$key] = is_scalar($args[$key]) ? (string) $args[$key] : '';
+        }
+
+        $sku           = '';
+        $min_qty       = 1;
+        $delivery_days = (int) ($args['delivery_default_days'] ?? 15);
+
+        $product = self::resolveProduct($product);
+        if ($product) {
+            $sku = $product->get_sku();
+            $meta_min = (int) get_post_meta($product->get_id(), '_infoplus_min_quantity', true);
+            if ($meta_min > 0) $min_qty = $meta_min;
+            $meta_delivery = (int) get_post_meta($product->get_id(), '_infoplus_delivery_days', true);
+            if ($meta_delivery > 0) $delivery_days = $meta_delivery;
+        }
+
+        $args['product']       = $product;
+        $args['sku']           = (string) $sku;
+        $args['min_qty']       = $min_qty;
+        $args['delivery_days'] = $delivery_days;
+
+        return $args;
+    }
+
     /**
      * Merge args over defaults. Unknown keys are kept for theme overrides.
      */
