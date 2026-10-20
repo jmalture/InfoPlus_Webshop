@@ -1,6 +1,6 @@
 /* Shared behaviour, vanilla, deferred: dialogs (mobile drawer and any other
    [data-ip-open] dialog), drawer submenus, the Namensschilder mega menu
-   disclosure and the sticky header state. One IIFE: helper names must stay
+   disclosure, the account quick menu and the sticky header state. One IIFE: helper names must stay
    unique inside it. jQuery is on the page for WooCommerce; not used here. */
 (function () {
   'use strict';
@@ -94,6 +94,11 @@
       clearTimeout(megaTimer);
       if (open === isMegaOpen()) return;
       if (open) placeMega();
+      if (open) {
+        // One floating panel at a time: close the account menu.
+        var acctItem = doc.querySelector('[data-ip-account].is-open');
+        if (acctItem) { acctItem.classList.remove('is-open'); var ab = acctItem.querySelector('[aria-expanded]'); if (ab) ab.setAttribute('aria-expanded', 'false'); }
+      }
       mega.classList.toggle('is-open', open);
       megaBtn.setAttribute('aria-expanded', String(open));
     };
@@ -149,6 +154,64 @@
 
     window.addEventListener('resize', function () { if (isMegaOpen()) placeMega(); }, { passive: true });
     desktop.addEventListener('change', function (e) { if (!e.matches) setMega(false); });
+  }
+
+  /* ── Account quick menu (inc/account-menu.php): disclosure button; click or tap on any
+     device, mouse hover on desktop with the mega menu's intent delay. Escape closes and
+     returns focus to the button; a click outside or focus leaving closes it. ── */
+  var acct = doc.querySelector('[data-ip-account]');
+  var acctBtn = acct && acct.querySelector('button[aria-controls]');
+  var acctPanel = acctBtn && doc.getElementById(acctBtn.getAttribute('aria-controls'));
+
+  if (acctPanel) {
+    var acctTimer = 0;
+    var acctHoverAt = 0;
+    var acctFine = window.matchMedia('(hover: hover) and (pointer: fine)');
+    var acctOpen = function () { return acct.classList.contains('is-open'); };
+    var setAcct = function (open) {
+      clearTimeout(acctTimer);
+      if (open === acctOpen()) return;
+      if (open) {
+        // One floating panel at a time: close the mega menu.
+        var megaItem = doc.querySelector('[data-ip-mega].is-open');
+        if (megaItem) { megaItem.classList.remove('is-open'); var mb = megaItem.querySelector('[aria-expanded]'); if (mb) mb.setAttribute('aria-expanded', 'false'); }
+      }
+      acct.classList.toggle('is-open', open);
+      acctBtn.setAttribute('aria-expanded', String(open));
+    };
+    var acctHover = function (e) { return e.pointerType === 'mouse' && acctFine.matches && desktop.matches; };
+
+    acctBtn.addEventListener('click', function () {
+      if (acctOpen() && Date.now() - acctHoverAt < 400) return; // hover just opened it
+      setAcct(!acctOpen());
+    });
+    acct.addEventListener('pointerenter', function (e) {
+      if (!acctHover(e)) return;
+      clearTimeout(acctTimer);
+      if (acctOpen()) return;
+      acctTimer = setTimeout(function () { acctHoverAt = Date.now(); setAcct(true); }, 120);
+    });
+    acct.addEventListener('pointerleave', function (e) {
+      if (!acctHover(e)) return;
+      clearTimeout(acctTimer);
+      if (!acctOpen()) return;
+      acctTimer = setTimeout(function () {
+        if (!acctPanel.contains(doc.activeElement)) setAcct(false);
+      }, 250);
+    });
+    acct.addEventListener('focusout', function (e) {
+      if (e.relatedTarget && !acct.contains(e.relatedTarget)) setAcct(false);
+    });
+    doc.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !acctOpen()) return;
+      var inside = acct.contains(doc.activeElement);
+      setAcct(false);
+      if (inside) acctBtn.focus();
+    });
+    doc.addEventListener('click', function (e) {
+      if (acctOpen() && !acct.contains(e.target)) setAcct(false);
+    });
+    desktop.addEventListener('change', function (e) { if (!e.matches) setAcct(false); });
   }
 
   /* ── Sticky header state: .is-stuck once the page has scrolled ── */

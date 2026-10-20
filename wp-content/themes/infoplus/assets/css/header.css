@@ -443,6 +443,102 @@
   .ip-nav__count, .ip-card-img { transition: none }
 }
 
+/* ── Account quick menu (inc/account-menu.php, site.js) ──────────────────── */
+/* Same layering as the mega menu: a floating .ip-panel under the icon, the
+   transparent top padding bridges the pointer from the icon to the panel. */
+.ip-account { position: relative; display: flex }
+.ip-header__account[aria-expanded="true"] { background: var(--c-primary-tint); color: var(--accent) }
+.ip-account__panel {
+  --ip-bridge: calc((var(--header-h) - 44px) / 2);
+  position: absolute;
+  top: calc(100% - 4px);
+  right: -12px;
+  z-index: 2;
+  width: min(360px, calc(100vw - 2 * var(--layout-margin)));
+  padding-top: calc(var(--ip-bridge) + 10px);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 220ms ease, transform 300ms var(--ease), visibility 0s linear 300ms;
+}
+.ip-account.is-open .ip-account__panel,
+html:not(.js) .ip-account:focus-within .ip-account__panel {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition: opacity 220ms ease, transform 300ms var(--ease), visibility 0s;
+}
+.ip-account__box { position: relative; padding: var(--space-4) }
+.ip-account__box::before {               /* caret under the icon */
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 27px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--c-white);
+  box-shadow: -1px -1px 0 rgb(25 27 28 / .06);
+  transform: rotate(45deg);
+}
+
+.ip-acct { display: grid; gap: var(--space-3); font: 400 16px/1.35 var(--font) }
+.ip-acct__intro { color: var(--text-secondary); font-size: 16px }
+.ip-acct__login { justify-content: center }
+.ip-acct__head { display: flex; align-items: center; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: 1px solid var(--border) }
+.ip-acct__who { display: grid; gap: 2px; min-width: 0 }
+.ip-acct__name { font: 600 18px/1.25 var(--font); overflow-wrap: anywhere }
+.ip-acct__company { color: var(--text-secondary); font-size: 15px; overflow-wrap: anywhere }
+.ip-acct__status { margin-inline-start: auto }
+.ip-acct__orders { display: grid; gap: var(--space-2) }
+.ip-acct__label { font: 600 13px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-acct__list, .ip-acct__links { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none }
+.ip-acct__order { display: flex; align-items: center; gap: var(--space-1) }
+.ip-acct__order-link {
+  display: flex; flex: 1; align-items: center; justify-content: space-between; gap: var(--space-3); min-width: 0;
+  margin-inline: calc(-1 * var(--space-2)); padding: var(--space-2);
+  border-radius: 12px; color: inherit; text-decoration: none;
+  transition: background-color var(--ip-dur) var(--ease);
+}
+.ip-acct__order-link:hover { background: var(--c-grey-100) }
+.ip-acct__order-main { display: grid; gap: 2px; min-width: 0 }
+.ip-acct__order-no { font-weight: 600 }
+.ip-acct__order-date { color: var(--text-secondary); font-size: 14px }
+.ip-acct__order-side { display: grid; justify-items: end; gap: 4px; text-align: end }
+.ip-acct__order-total { font-weight: 600; white-space: nowrap }
+.ip-acct__order-total small, .ip-acct__order-total .includes_tax { display: none }
+.ip-acct .ip-status { padding: 2px 8px 2px 6px; font-size: 13px }
+.ip-acct__invoice {
+  display: inline-grid; place-items: center; flex: none; width: 40px; height: 40px;
+  border-radius: 50%; color: var(--text-secondary);
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-acct__invoice:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-acct__invoice .ip-icon { width: 20px; height: 20px }
+.ip-acct__all { display: inline-flex; align-items: center; gap: 4px; justify-self: start; color: var(--c-secondary); font: 600 15px/1.3 var(--font); text-decoration: none }
+.ip-acct__all:hover { text-decoration: underline; text-underline-offset: 3px }
+.ip-acct__all .ip-icon { width: 16px; height: 16px }
+.ip-acct__empty { color: var(--text-secondary); font-size: 15px }
+.ip-acct__links { padding-top: var(--space-2); border-top: 1px solid var(--border) }
+.ip-acct__link {
+  display: flex; align-items: center; gap: 10px;
+  margin-inline: calc(-1 * var(--space-2)); padding: var(--space-2);
+  border-radius: 10px; color: var(--text-primary); font: 600 16px/1.3 var(--font); text-decoration: none;
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-acct__link .ip-icon { width: 20px; height: 20px; color: var(--text-secondary); transition: color var(--ip-dur) var(--ease) }
+.ip-acct__link:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-acct__link:hover .ip-icon { color: var(--c-secondary) }
+.ip-acct__sep { margin-top: 2px; padding-top: 2px; border-top: 1px solid var(--border) }
+.ip-acct--panel .ip-acct__links:first-child { border-top: 0; padding-top: 0 }
+.ip-acct--drawer .ip-acct__links:not(:first-child) { border-top: 0 }
+/* In the drawer: the menu sits under its row; padding like the other submenus. */
+.ip-drawer__account { padding: 0 0 var(--space-4) }
+.ip-drawer__item--account { border-bottom: 0 }
+@media (prefers-reduced-motion: reduce) {
+  .ip-account__panel, .ip-account.is-open .ip-account__panel { transition: none }
+}
+
 /* ── Tablet ─────────────────────────────────────────────────────────────── */
 @media (min-width: 768px) {
   .ip-drawer { width: 440px }

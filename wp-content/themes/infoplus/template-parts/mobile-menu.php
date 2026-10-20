@@ -80,6 +80,22 @@ $ip_args = wp_parse_args( $args ?? array(), array(
 				</ul>
 			</nav>
 		<?php endif; ?>
+
+		<?php if ( function_exists( 'ip_account_menu_enabled' ) && ip_account_menu_enabled() ) : ?>
+			<?php // The account quick menu (inc/account-menu.php) as a drawer submenu: tap only, no hover. ?>
+			<div class="ip-drawer__item ip-drawer__item--account">
+				<div class="ip-drawer__row">
+					<a class="ip-drawer__link" href="<?php echo esc_url( $ip_args['account']['url'] ); ?>"><?php echo esc_html( $ip_args['account']['label'] ); ?></a>
+					<button type="button" class="ip-drawer__sub-toggle" aria-expanded="false" aria-controls="ip-drawer-account">
+						<span class="ip-sr"><?php echo esc_html( sprintf( /* translators: %s: menu item */ __( 'Untermenü %s', 'infoplus' ), $ip_args['account']['label'] ) ); ?></span>
+						<?php echo ip_icon( 'chevron' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+					</button>
+				</div>
+				<div class="ip-drawer__sub ip-drawer__account" id="ip-drawer-account">
+					<?php get_template_part( 'template-parts/account-menu', null, array( 'id' => 'ip-acct-drawer', 'context' => 'drawer' ) ); ?>
+				</div>
+			</div>
+		<?php endif; ?>
 	</div>
 
 	<div class="ip-drawer__foot">

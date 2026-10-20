@@ -223,6 +223,9 @@ a.ip-reach:hover .ip-reach__value { color: var(--c-secondary) }
 html:not(.js) .ip-js-only { display: none !important }
 .ip-muted { color: var(--text-secondary) }
 /* Order status: neutral pill, the coloured dot is extra; the text names the status. */
+/* Avatar (account aside, header account menu): uploaded picture or initials. */
+.ip-avatar { --size: 56px; display: inline-grid; place-items: center; flex: none; width: var(--size); height: var(--size); border-radius: 50%; overflow: hidden; background: var(--c-primary-tint); color: var(--c-secondary); font: 700 calc(var(--size) * .36)/1 var(--font); letter-spacing: .5px }
+.ip-avatar__img { width: 100%; height: 100%; object-fit: cover }
 .ip-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; background: var(--c-grey-100); color: var(--text-primary); font: 600 14px/1.25 var(--font); white-space: nowrap }
 .ip-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ip-status, #6B7075); flex: none }
 .ip-status--pending, .ip-status--on-hold { --ip-status: #C2410C }

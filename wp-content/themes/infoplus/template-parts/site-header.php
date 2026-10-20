@@ -358,9 +358,23 @@ $ip_mega_id = 'ip-mega-panel';
 		<div class="ip-header__tools">
 			<?php ip_header_search_form( 'ip-search-header' ); ?>
 
-			<a class="ip-header__icon ip-header__account" href="<?php echo esc_url( $ip_account['url'] ); ?>" aria-label="<?php echo esc_attr( $ip_account['label'] ); ?>">
-				<?php echo ip_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
-			</a>
+			<?php if ( function_exists( 'ip_account_menu_enabled' ) && ip_account_menu_enabled() ) : ?>
+				<?php // Account quick menu (inc/account-menu.php): disclosure button, panel opens on click and, with a mouse, on hover (site.js). ?>
+				<div class="ip-account" data-ip-account>
+					<button type="button" class="ip-header__icon ip-header__account" aria-expanded="false" aria-controls="ip-account-panel" aria-label="<?php echo esc_attr( is_user_logged_in() ? __( 'Mein Konto, Menü', 'infoplus' ) : __( 'Anmelden, Menü', 'infoplus' ) ); ?>">
+						<?php echo ip_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+					</button>
+					<div class="ip-account__panel" id="ip-account-panel">
+						<div class="ip-account__box ip-panel">
+							<?php get_template_part( 'template-parts/account-menu', null, array( 'id' => 'ip-acct-panel', 'context' => 'panel' ) ); ?>
+						</div>
+					</div>
+				</div>
+			<?php else : ?>
+				<a class="ip-header__icon ip-header__account" href="<?php echo esc_url( $ip_account['url'] ); ?>" aria-label="<?php echo esc_attr( $ip_account['label'] ); ?>">
+					<?php echo ip_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+				</a>
+			<?php endif; ?>
 		</div>
 
 		<a class="ip-header__icon ip-cart" href="<?php echo esc_url( ip_header_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Warenkorb', 'infoplus' ); ?>">
