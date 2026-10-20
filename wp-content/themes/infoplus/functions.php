@@ -25,4 +25,5 @@ require IP_DIR . '/inc/icons.php';
 require IP_DIR . '/inc/navigation.php';
 require IP_DIR . '/inc/woocommerce.php';
 require IP_DIR . '/inc/shop.php';
+require IP_DIR . '/inc/product.php';
 require IP_DIR . '/inc/assets.php';
