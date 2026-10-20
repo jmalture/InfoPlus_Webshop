@@ -1,12 +1,18 @@
 <?php
 /**
- * Staffelpreise, quantity and prices. The Suite fills and drives all of it:
- * bulk-price-table.js loads the tiers for the selected variation SKU,
- * elementor-bulk-calculator.js (WooSingleProductAddons) wires the stepper,
+ * Step "Menge": Staffelpreise, quantity and prices. The Suite fills and drives
+ * all of it: bulk-price-table.js loads the tiers for the selected variation
+ * SKU, elementor-bulk-calculator.js (WooSingleProductAddons) wires the stepper,
  * clamps the quantity to the minimum, writes Einzelpreis / Gesamtpreis and
  * hides the row ([data-ip-qty-row]) for models that are only requestable.
  * The IDs qty_value / qty_minus / qty_plus are the ones the old Elementor
  * widgets had; the data-ip-qty attributes are what the Suite looks for since 0.10.26.
+ *
+ * The tier caption says net or gross exactly as WooCommerce is configured
+ * (ip_product_tax_label()). The Einzelpreis / Gesamtpreis pair stays here for
+ * the Suite to write into. In the step layout the summary card shows the same
+ * values and the tax note (assets/js/product.js reads them from here), so the
+ * pair and the note are visually hidden there (product.css, .ip-step--qty).
  *
  * $args:
  * - product (WC_Product)
@@ -19,12 +25,14 @@ $ip_product = $args['product'] ?? null;
 if ( ! $ip_product instanceof WC_Product ) {
 	return;
 }
+$ip_tax = ip_product_tax_label();
 ?>
 <div class="ip-buy">
 	<?php
 	if ( ! empty( $args['suite'] ) ) {
+		echo '<div class="ip-buy__tiers" data-ip-tiers>';
+		echo '<p class="ip-buy__caption">' . esc_html( ip_product_text( 'tiers_caption' ) ) . ( $ip_tax ? ' <span class="ip-buy__tax">(' . esc_html( $ip_tax ) . ')</span>' : '' ) . '</p>';
 		// Widget 75affe8. Two columns, as the widget default.
-		echo '<div class="ip-buy__tiers">';
 		infoplus_suite_bulk_price_table( $ip_product, array(
 			'columns'      => 2,
 			'ab_label'     => ip_product_text( 'ab_label' ),
@@ -50,6 +58,7 @@ if ( ! $ip_product instanceof WC_Product ) {
 			</div>
 		</div>
 
+		<?php // No live region here: the summary card announces the changed total once (product.js). ?>
 		<dl class="ip-buy__prices">
 			<div class="ip-buy__price">
 				<dt><?php echo esc_html( ip_product_text( 'unit_label' ) ); ?></dt>
@@ -57,10 +66,10 @@ if ( ! $ip_product instanceof WC_Product ) {
 			</div>
 			<div class="ip-buy__price ip-buy__price--total">
 				<dt><?php echo esc_html( ip_product_text( 'total_label' ) ); ?></dt>
-				<dd data-ip-qty="total-price" aria-live="polite"><?php echo esc_html( ip_product_text( 'price_zero' ) ); ?></dd>
+				<dd data-ip-qty="total-price"><?php echo esc_html( ip_product_text( 'price_zero' ) ); ?></dd>
 			</div>
 		</dl>
 	</div>
 
-	<p class="ip-buy__note"><?php echo esc_html( ip_product_text( 'price_note' ) ); ?></p>
+	<p class="ip-buy__note"><?php echo esc_html( ip_product_price_note() ); ?></p>
 </div>

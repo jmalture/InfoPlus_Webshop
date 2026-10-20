@@ -103,7 +103,7 @@
 .ip-product__summary { display: contents }
 .ip-product__head { order: -1; display: grid; gap: var(--space-3) }
 .ip-product__media { min-width: 0 }
-.ip-product__config { display: grid; gap: var(--space-8); min-width: 0 }
+.ip-product__config { display: grid; gap: var(--space-6); min-width: 0 }
 
 @media (min-width: 1101px) {
   .ip-product__grid { grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); gap: var(--space-16); align-items: start }
@@ -153,6 +153,43 @@
 
 .ip-product__fallback-image { aspect-ratio: 4 / 3; display: grid; place-items: center; border-radius: var(--radius-card); background: var(--c-grey-100) }
 .ip-product__fallback-image img { max-height: 100%; width: auto; object-fit: contain }
+
+/* ── Configurator steps (summary.php, states from product.js) ─────────────
+   A titled block per step, separated by a hairline. The badge shows the
+   number, or a check once the step is done; the status slot on the right
+   shows the chosen value (done), the Suite's lock message (locked) or its
+   "Kombination nicht verfügbar" (error). Colour is never the only signal:
+   done adds the check and the value, locked / error add their text. */
+.ip-step { display: grid; gap: var(--space-4); min-width: 0 }
+.ip-step + .ip-step { padding-top: var(--space-6); border-top: 1px solid var(--border) }
+.ip-step[hidden] { display: none }
+.ip-step__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin: 0; font: 600 20px/1.25 var(--font) }
+.ip-step__badge {
+  position: relative; display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px;
+  border: 1.5px solid var(--c-grey-200); border-radius: 999px; background: var(--c-white);
+  color: var(--text-primary); font: 700 15px/1 var(--font); font-variant-numeric: tabular-nums;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-step__badge .ip-icon { position: absolute; width: 18px; height: 18px; stroke-width: 2.25; opacity: 0; transform: scale(.6); transition: opacity var(--dur-ui) var(--ease), transform 300ms var(--ease-spring, var(--ease)) }
+.ip-step__title { min-width: 0 }
+.ip-step__status { flex: 1 1 12rem; min-width: 0; color: var(--text-secondary); font: 400 16px/1.35 var(--font); text-align: right }
+.ip-step__value { overflow-wrap: anywhere }
+.ip-step[data-ip-step-state="done"] .ip-step__badge { border-color: var(--c-primary-tint); background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-step[data-ip-step-state="done"] .ip-step__num { opacity: 0 }
+.ip-step[data-ip-step-state="done"] .ip-step__badge .ip-icon { opacity: 1; transform: none }
+.ip-step[data-ip-step-state="done"] .ip-step__status { color: var(--text-primary); font-weight: 600 }
+.ip-step[data-ip-step-state="locked"] .ip-step__status,
+.ip-step[data-ip-step-state="error"] .ip-step__status { color: var(--c-secondary); font-weight: 600 }
+.ip-step[data-ip-step-state="error"] .ip-step__badge { border-color: var(--c-secondary) }
+.ip-step__body { min-width: 0 }
+/* "Menge" before the selection is complete: a short note instead of an empty stepper. */
+.ip-step__wait { display: none; margin: 0; color: var(--text-secondary); font: 400 16px/1.4 var(--font) }
+.ip-step--qty.is-waiting .ip-step__wait { display: block }
+.ip-step--qty.is-waiting .ip-buy { display: none }
+@media (max-width: 767px) {
+  .ip-step__head { font-size: 19px }
+  .ip-step__status { flex-basis: 100%; padding-left: calc(30px + var(--space-3)); text-align: left }
+}
 
 /* ── Model selector (component model-selector) ──────────────────────────── */
 .ip-product .ip-c-model-selector__title {
@@ -237,6 +274,17 @@
 .ip-product .infoplus-dropdown__option-text { color: inherit; font: 400 17px/1.25 var(--font) }
 .ip-product .ip-c-variation-dropdowns__image { border-radius: 6px !important; object-fit: contain; background: var(--c-grey-100) }
 
+/* Options that exist for the model but not with the current selection (product.js:
+   .ip-opt-off, aria-disabled). Faded with the reason, not hidden; not selectable. */
+.ip-product .ip-c-variation-dropdowns__option.ip-opt-off { flex-wrap: wrap; cursor: not-allowed }
+.ip-product .ip-c-variation-dropdowns__option.ip-opt-off:hover { background: none }
+.ip-product .ip-c-variation-dropdowns__option.ip-opt-off > :not(.ip-opt-reason):not(.infoplus-dropdown__option-info) { opacity: .45 }
+.ip-product .ip-c-variation-dropdowns__option.ip-opt-off .infoplus-dropdown__option-text { text-decoration: line-through; text-decoration-color: rgb(25 27 28 / .35) }
+.ip-opt-reason { display: none }
+.ip-product .ip-opt-off .ip-opt-reason { display: block; flex-basis: 100%; color: var(--text-secondary); font: 400 14px/1.3 var(--font) }
+.ip-product .ip-opt-off:has(.ip-c-variation-dropdowns__image) .ip-opt-reason { padding-left: calc(var(--infoplus-dropdown-image-width, 42px) + var(--space-3)) }
+.ip-product .ip-c-variation-dropdowns__option:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px }
+
 /* Info buttons in the options and in the trigger (plugin: !important). */
 .ip-product .infoplus-dropdown .infoplus-dropdown__option-info,
 .ip-product .infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info {
@@ -304,6 +352,12 @@
 .ip-product .ip-c-bulk-price-table .ibpt-no-prices-lock__message { color: var(--c-secondary); font: 600 17px/1.3 var(--font) }
 @media (min-width: 1101px) { .ip-product .ip-c-bulk-price-table .ibpt-cell { padding: 10px 14px } }
 
+/* Caption above the tiers: net or gross as configured (ip_product_tax_label()). */
+.ip-buy__tiers { display: grid; gap: var(--space-2) }
+.ip-buy__caption { margin: 0; color: var(--text-secondary); font: 400 15px/1.3 var(--font) }
+/* The Suite hides the tier grid for requestable models; the caption goes with it. */
+.ip-buy__tiers:has(.ibpt-grid[style*="none"]):has(.ibpt-skeleton[style*="none"]) .ip-buy__caption { display: none }
+
 /* Quantity stepper and prices ([data-ip-qty-row], driven by the Suite bulk calculator). */
 .ip-buy__row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4) var(--space-6) }
 .ip-qty { display: grid; gap: var(--space-2) }
@@ -341,6 +395,12 @@
 .ip-buy__price dd { margin: 0; font: 600 20px/1.2 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap }
 .ip-buy__price--total dd { font-size: 26px; font-weight: 700 }
 .ip-buy__note { color: var(--text-secondary); font: var(--type-small) }
+/* In the step layout the summary card shows unit price, total and the tax note
+   (product.js reads them from here), so the Suite's output stays in the DOM only. */
+/* The step heading already says "Menge"; the field label stays for screen readers. */
+.ip-step--qty .ip-buy__prices, .ip-step--qty .ip-buy__note, .ip-step--qty .ip-qty__label {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
 
 /* ── Action buttons: #editor, buy form, #anfrage (actions.php) ──────────
    data-ip-order-type on .ip-actions (product.js): editable | buyable | requestable.
@@ -348,7 +408,7 @@
    shows the buy form for buyable models. Each type has its own label, icon and
    hint line, so the states differ without relying on colour. */
 .ip-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3) }
-.ip-actions__btn { justify-content: center; min-height: 56px; padding-inline: var(--space-6); border-radius: 12px; font: 600 19px/1.1 var(--font); text-align: center }
+.ip-actions__btn { justify-content: center; min-height: 54px; padding-inline: var(--space-5, 20px); border-radius: 12px; font: 600 18px/1.1 var(--font); text-align: center }
 .ip-actions__btn .ip-icon { flex: none; width: 22px; height: 22px; transition: transform var(--dur-ui) var(--ease) }
 .ip-actions__btn:hover .ip-icon--arrow { transform: translateX(3px) }
 .ip-actions__btn.infoplus-btn-disabled { opacity: 1; background: var(--c-grey-200); color: var(--text-secondary); box-shadow: none }
@@ -363,10 +423,9 @@
 .ip-actions__btn--cart.infoplus-btn-disabled { pointer-events: auto; cursor: not-allowed }
 .ip-actions__btn--cart.is-busy { cursor: progress; opacity: .85 }
 /* Requestable models: the inquiry is the only action, so it becomes the primary button. */
-.ip-actions[data-ip-order-type="requestable"] .ip-actions__btn--inquiry,
-.ip-actions__btn--editor.infoplus-btn-hidden ~ .ip-actions__btn--inquiry { background: var(--accent); color: var(--c-white); box-shadow: none }
-.ip-actions[data-ip-order-type="requestable"] .ip-actions__btn--inquiry:hover,
-.ip-actions__btn--editor.infoplus-btn-hidden ~ .ip-actions__btn--inquiry:hover { background: var(--accent-hover) }
+/* Editable and buyable keep it as the secondary (ghost) button next to the main action. */
+.ip-actions[data-ip-order-type="requestable"] .ip-actions__btn--inquiry { background: var(--accent); color: var(--c-white); box-shadow: none }
+.ip-actions[data-ip-order-type="requestable"] .ip-actions__btn--inquiry:hover { background: var(--accent-hover) }
 .ip-actions__hint { grid-column: 1 / -1; margin: 0; color: var(--text-secondary); font: var(--type-small) }
 .ip-actions__hint:empty { display: none }
 .ip-actions .infoplus-btn-error-msg { grid-column: 1 / -1; margin: 0; color: var(--c-secondary); font: 600 15px/1.3 var(--font); text-align: left }
@@ -378,6 +437,46 @@
 }
 .ip-actions .infoplus-anfrage-pulse { animation: ip-action-pulse .7s var(--ease) !important }
 .ip-actions .infoplus-anfrage-pulse--long { animation: ip-action-pulse .75s var(--ease) 4 !important }
+
+/* ── Summary card (order-summary.php) ───────────────────────────────────
+   Calm white panel with --shadow-1; magenta only on the main action. From
+   1101 px it is sticky in the right column: top below the header, bottom
+   above the viewport edge, so it stays in view while the steps scroll and
+   settles in place at the end of the column. */
+.ip-summary {
+  display: grid; gap: var(--space-4); padding: 18px 20px 20px;
+  border: 1px solid var(--border); border-radius: 20px; background: var(--c-white); box-shadow: var(--shadow-1);
+}
+@media (min-width: 768px) { .ip-summary { padding: 20px var(--space-6) var(--space-6) } }
+@media (min-width: 1101px) {
+  .ip-summary { position: sticky; top: calc(var(--header-h) + var(--space-4)); bottom: var(--space-4); z-index: 5 }
+}
+.ip-summary p { margin: 0 }
+.ip-summary__title { margin: 0; color: var(--text-secondary); font: 600 13px/1.2 var(--font); letter-spacing: 1.5px; text-transform: uppercase }
+/* Choice left, price right; the price block drops below on narrow cards. */
+.ip-summary__body { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-3) var(--space-6); margin-top: calc(-1 * var(--space-2)) }
+.ip-summary__choice { display: grid; gap: 2px; flex: 1 1 14rem; min-width: 0 }
+.ip-summary__model { font: 600 19px/1.25 var(--font) }
+.ip-summary__variant { color: var(--text-secondary); font: 400 16px/1.35 var(--font) }
+.ip-summary__variant:empty { display: none }
+.ip-summary__price { display: grid; justify-items: end; gap: 2px; flex: 0 1 auto; margin-left: auto; text-align: right }
+.ip-summary__price[hidden] { display: none }
+.ip-summary__total { font: 700 28px/1.1 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap }
+.ip-summary__unit { color: var(--text-secondary); font: 400 16px/1.3 var(--font); font-variant-numeric: tabular-nums }
+.ip-summary__unit [data-ip-sum="qty"] { color: var(--text-primary); font-weight: 600 }
+.ip-summary__unit-price { white-space: nowrap }
+.ip-summary__tax { color: var(--text-secondary); font: 400 14px/1.3 var(--font) }
+.ip-summary__tax a { color: inherit; text-underline-offset: 2px }
+.ip-summary__tax a:hover { color: var(--c-secondary) }
+.ip-summary .ip-actions { gap: var(--space-2) var(--space-3) }
+
+/* ── Facts under the main button (facts.php) ────────────────────────────── */
+.ip-facts { display: grid; gap: var(--space-3); margin: 0; padding: 0 var(--space-2); list-style: none }
+.ip-facts__row { display: flex; align-items: flex-start; gap: var(--space-3); color: var(--text-secondary); font: 400 16px/1.35 var(--font) }
+.ip-facts__row .ip-icon { flex: none; width: 20px; height: 20px; margin-top: 1px; color: var(--text-primary) }
+.ip-facts__row strong { color: var(--text-primary); font-weight: 600 }
+.ip-facts__row a { color: var(--text-primary); font-weight: 600; text-decoration: underline; text-decoration-color: var(--c-grey-200); text-underline-offset: 3px }
+.ip-facts__row a:hover { color: var(--c-secondary); text-decoration-color: currentColor }
 
 /* ── Info box (component product-info-box): icon-tile rows ──────────────── */
 .ip-product .ip-c-product-info-box { padding: var(--space-4) var(--space-4) var(--space-4) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-card) }
@@ -427,21 +526,25 @@
 .ip-request__cta .ip-icon { width: 22px; height: 22px; transition: transform var(--dur-ui) var(--ease) }
 .ip-request__cta .ip-btn:hover .ip-icon { transform: translateX(3px) }
 
-/* ── Sticky action bar (phones and tablets) ─────────────────────────────── */
+/* ── Sticky action bar (phones and tablets) ─────────────────────────────
+   Same data as the summary card (product.js renderBar): quantity and tier
+   price, total, and the main action. Calm white panel, magenta only on the button. */
 .ip-actionbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 9990;
   display: flex; align-items: center; gap: var(--space-4);
   min-height: var(--ip-actionbar-h); padding: 10px var(--layout-margin) calc(10px + env(safe-area-inset-bottom, 0px));
-  background: var(--c-white); box-shadow: 0 -16px 32px -20px rgb(25 27 28 / .3), 0 -1px 0 var(--border);
+  border-radius: 16px 16px 0 0; background: var(--c-white);
+  box-shadow: 0 -12px 24px -12px rgb(25 27 28 / .2), 0 0 0 1px rgb(25 27 28 / .05);
   transform: translateY(110%); transition: transform 300ms var(--ease), visibility 0s linear 300ms; visibility: hidden;
 }
 .ip-actionbar[hidden], .ip-actionbar.is-empty { display: none }
 .ip-actionbar.is-visible { transform: none; visibility: visible; transition-delay: 0s }
 .ip-actionbar__sum { display: grid; gap: 2px; min-width: 0; flex: 0 1 auto }
 .ip-actionbar__sum[hidden] { display: none }
-.ip-actionbar__label { color: var(--text-secondary); font: 400 13px/1.2 var(--font) }
-.ip-actionbar__value { overflow: hidden; font: 700 19px/1.2 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap; text-overflow: ellipsis }
-.ip-actionbar__qty { color: var(--text-secondary); font-size: 15px; font-weight: 400 }
+.ip-actionbar__meta { overflow: hidden; color: var(--text-secondary); font: 400 14px/1.2 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap; text-overflow: ellipsis }
+.ip-actionbar__meta:empty { display: none }
+.ip-actionbar__value { overflow: hidden; font: 700 20px/1.15 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap; text-overflow: ellipsis }
+.ip-actionbar__value[hidden] { display: none }
 .ip-actionbar__btn { flex: 1 1 auto; justify-content: center; min-height: 50px; margin-left: auto; padding-inline: var(--space-4); border-radius: 12px; font-size: 17px; text-align: center; white-space: nowrap }
 .ip-actionbar__sum:not([hidden]) + .ip-actionbar__btn { flex: 0 0 auto }
 .ip-actionbar__btn.is-disabled { background: var(--c-grey-200); color: var(--text-secondary) }
@@ -461,4 +564,5 @@
   .ip-product .ip-c-model-selector__option:hover { transform: none }
   .ip-actions .infoplus-anfrage-pulse, .ip-actions .infoplus-anfrage-pulse--long { animation: none !important }
   .ip-actionbar { transition: none }
+  .ip-step__badge, .ip-step__badge .ip-icon { transition: none }
 }

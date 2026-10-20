@@ -4,6 +4,11 @@
  * the selected model (Infoplus Suite, Attribute Overrides tab, meta
  * _infoplus_attr_order_type_model_{slug} on the product):
  *
+ * The inquiry (#anfrage) is always there (DESIGN.md: "a buyer with a special
+ * case never hits a dead end"): a secondary (ghost) button for editable and
+ * buyable models, the primary button for requestable ones. For buyable models
+ * this needs Suite 0.10.28, which keeps #anfrage visible next to the buy form.
+ *
  * - editable: "Produkt gestalten" (#editor, data-ip-action="editor") plus
  *   "Individuelle Anfrage". The Suite's variation-editor-link.js keeps the
  *   editor link disabled until a variation is found, then points it to the
@@ -20,6 +25,7 @@
  *   the Suite's product state and enables the button once a variation is found.
  *   The Suite (0.10.27+) sees form[data-ip-buy-form] and no longer turns
  *   #editor into its admin-ajax cart button (the Elementor page keeps that).
+ *   "Individuelle Anfrage" follows as the secondary button.
  * - requestable / requestable_with_variants: "Individuelle Anfrage" only
  *   (#anfrage, data-ip-action="inquiry"), shown as the primary button. For now
  *   it links to the Kontakt page with the product name (ip_product_inquiry_url()).

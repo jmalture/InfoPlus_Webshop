@@ -8,6 +8,15 @@
  * template-parts/product/*.php. Styles and script: assets/css/product.css and
  * assets/js/product.js (bundle "product" in inc/assets.php).
  *
+ * Right column (DESIGN.md, "E-shop UX for B2B buyers and resellers"): numbered
+ * steps "1 Modell", "2 {real attribute labels}", "3 Menge" (summary.php,
+ * purchase.php), the summary card with the main action (order-summary.php,
+ * actions.php; sticky from 1101 px), the facts under it (facts.php: lead time,
+ * shipping, payment, phone; each row only with a real source) and the info box.
+ * product.js drives step states, summary card and phone bar from one snapshot
+ * of the Suite product state. Prices are labelled net or gross from the
+ * WooCommerce tax settings (ip_product_tax_label()).
+ *
  * Division of labour: the Suite owns the shop logic, the component markup and
  * the scripts that drive them (product-state.js and friends, the bulk
  * calculator, the editor link). The theme owns layout, texts around the
@@ -179,7 +188,9 @@ function ip_product_texts() {
 			'unit_label'     => 'Einzelpreis',
 			'total_label'    => 'Gesamtpreis*',
 			'price_zero'     => '0,00 €',
-			'price_note'     => 'Alle Preise inkl. MwSt., zzgl. Versandkosten',
+			// Built from the WooCommerce tax settings by ip_product_price_note(); set a
+			// string here (filter ip_product_texts) only to override that.
+			'price_note'     => '',
 			// Buttons #editor (c0deeb0) and #anfrage (3d00462).
 			'editor_label'   => 'Produkt gestalten',
 			'editor_sr'      => '(öffnet den Online-Editor in einem neuen Tab)',
@@ -209,6 +220,34 @@ function ip_product_texts() {
 			'delivery_pre'   => 'max.',
 			'delivery_post'  => 'Arbeitstage',
 			'ab_label'       => 'ab',
+			// Configurator steps (summary.php). The title of step 2 is built from the
+			// product's real attribute labels (ip_product_options_step_title()); 'step_options'
+			// is the fallback when the product uses none of the dropdown attributes.
+			'step_model'     => 'Modell',
+			'step_options'   => 'Format und Ausführung',
+			'step_qty'       => 'Menge',
+			'step_prefix'    => 'Schritt %d:',
+			'step_done'      => 'erledigt:',
+			'step_open'      => 'noch offen',
+			'tiers_caption'  => 'Staffelpreise pro Stück',
+			'qty_wait'       => 'Staffelpreise und Menge erscheinen, sobald Ihre Auswahl vollständig ist.',
+			// Unavailable dropdown options stay visible, faded, with this reason (product.js).
+			'unavailable'    => 'Mit Ihrer Auswahl nicht kombinierbar',
+			// Summary card (order-summary.php) and the phone bar.
+			'summary_title'  => 'Ihre Auswahl',
+			'summary_empty'  => 'Noch kein Modell gewählt',
+			'summary_unit'   => 'à',
+			'summary_live'   => 'Ihre Auswahl:',
+			// Facts under the main button (facts.php). Only rows with a real source render.
+			'facts_label'        => 'Lieferung und Service',
+			'fact_lead'          => 'Fertigungszeit',
+			'fact_lead_days'     => 'max. %d Arbeitstage',
+			'fact_delivery'      => 'Lieferzeit',
+			'fact_shipping'      => 'Versand per UPS',
+			'fact_shipping_link' => 'Laufzeiten und Kosten',
+			'fact_payment'       => 'Zahlung per',
+			'fact_or'            => 'oder',
+			'fact_help'          => 'Fragen? Persönliche Beratung',
 		) );
 	}
 	return $texts;
@@ -231,6 +270,162 @@ function ip_product_dropdown_attributes() {
 		'pa_befestigung', 'pa_farbe', 'pa_fenster', 'pa_flachenfarbe', 'pa_format',
 		'pa_frontscheibe', 'pa_holzart', 'pa_oberflache', 'pa_tragerfarbe',
 	) );
+}
+
+/**
+ * The dropdown attributes this product really uses for its variations, as
+ * taxonomy => label (the attribute names set in WooCommerce, e.g. "Format",
+ * "Befestigung"). pa_model is step 1, so it is left out.
+ *
+ * @return array<string,string>
+ */
+function ip_product_option_attributes( $product ) {
+	if ( ! $product instanceof WC_Product || ! $product->is_type( 'variable' ) ) {
+		return array();
+	}
+	// In the product's attribute order, which is the order the dropdowns render in.
+	$shown = ip_product_dropdown_attributes();
+	$out   = array();
+	foreach ( array_keys( $product->get_variation_attributes() ) as $taxonomy ) {
+		if ( 'pa_model' !== $taxonomy && in_array( $taxonomy, $shown, true ) ) {
+			$out[ $taxonomy ] = function_exists( 'wc_attribute_label' ) ? wc_attribute_label( $taxonomy, $product ) : $taxonomy;
+		}
+	}
+	return $out;
+}
+
+/** Title of step 2 from the real attribute labels: "Format", "Format und Befestigung", "Format, Farbe und Befestigung". */
+function ip_product_options_step_title( $product ) {
+	$labels = array_values( ip_product_option_attributes( $product ) );
+	if ( ! $labels ) {
+		return ip_product_text( 'step_options' );
+	}
+	$last = array_pop( $labels );
+	return $labels ? implode( ', ', $labels ) . ' und ' . $last : $last;
+}
+
+/**
+ * VAT wording exactly as WooCommerce is configured: "inkl. MwSt." when shop
+ * prices are displayed including tax (woocommerce_tax_display_shop = incl),
+ * "zzgl. MwSt." when displayed excluding tax, '' when taxes are off.
+ * Staging (read 2026-10-20): taxes on, prices entered net
+ * (woocommerce_prices_include_tax = no) and displayed incl. tax, so "inkl. MwSt.".
+ * The Staffelpreise from /infoplus/v1/products/prices are converted with
+ * wc_get_price_to_display() by the Suite, so they follow the same setting.
+ */
+function ip_product_tax_label() {
+	if ( ! function_exists( 'wc_tax_enabled' ) || ! wc_tax_enabled() ) {
+		return '';
+	}
+	$label = 'incl' === get_option( 'woocommerce_tax_display_shop' ) ? 'inkl. MwSt.' : 'zzgl. MwSt.';
+	return (string) apply_filters( 'ip_product_tax_label', $label );
+}
+
+/** "Alle Preise inkl. MwSt., zzgl. Versandkosten" from the settings, or the price_note text when one is set. */
+function ip_product_price_note() {
+	$note = (string) ip_product_text( 'price_note' );
+	if ( '' !== $note ) {
+		return $note;
+	}
+	$tax = ip_product_tax_label();
+	return $tax ? 'Alle Preise ' . $tax . ', zzgl. Versandkosten' : 'Alle Preise zzgl. Versandkosten';
+}
+
+/** URL of the "Versand/Express und Zahlung" page (2656 on staging), '' when it does not exist. */
+function ip_product_shipping_url() {
+	$id   = (int) apply_filters( 'ip_product_shipping_page', 2656 );
+	$page = $id ? get_post( $id ) : null;
+	if ( ! $page || 'page' !== $page->post_type || 'publish' !== $page->post_status ) {
+		$page = get_page_by_path( 'versand-zahlung', OBJECT, array( 'page' ) );
+	}
+	return ( $page && 'publish' === $page->post_status ) ? (string) get_permalink( $page ) : '';
+}
+
+/**
+ * Lead time row, from real data only, in this order:
+ * 1. product meta "fertigungszeit" (a number from an old ACF field; 15 on the 25
+ *    products that have it on staging), shown as "Fertigungszeit max. N
+ *    Arbeitstage", the wording of the old info box row (template 2190:
+ *    "max." + days + "Arbeitstage");
+ * 2. a Germanized delivery time term (taxonomy product_delivery_time), shown as
+ *    "Lieferzeit {term}" (staging has no terms, checked 2026-10-20);
+ * 3. the value of the Suite info box: meta _infoplus_delivery_days, else the info
+ *    box default of 15 days, which the old product page showed on every product.
+ * No source: null, and the row is left out. Filter ip_product_lead_time.
+ *
+ * @return array{label:string,value:string}|null
+ */
+function ip_product_lead_time( $product ) {
+	if ( ! $product instanceof WC_Product ) {
+		return null;
+	}
+	$id    = $product->get_id();
+	$days  = absint( get_post_meta( $id, 'fertigungszeit', true ) );
+	$terms = taxonomy_exists( 'product_delivery_time' ) ? get_the_terms( $id, 'product_delivery_time' ) : false;
+	$row   = null;
+	if ( $days > 0 ) {
+		$row = array( 'label' => ip_product_text( 'fact_lead' ), 'value' => sprintf( ip_product_text( 'fact_lead_days' ), $days ) );
+	} elseif ( is_array( $terms ) && $terms ) {
+		$row = array( 'label' => ip_product_text( 'fact_delivery' ), 'value' => $terms[0]->name );
+	} elseif ( ip_product_has_suite() ) {
+		$days = absint( get_post_meta( $id, '_infoplus_delivery_days', true ) );
+		$days = $days > 0 ? $days : (int) apply_filters( 'ip_product_lead_time_default_days', 15 );
+		if ( $days > 0 ) {
+			$row = array( 'label' => ip_product_text( 'fact_lead' ), 'value' => sprintf( ip_product_text( 'fact_lead_days' ), $days ) );
+		}
+	}
+	return apply_filters( 'ip_product_lead_time', $row, $product );
+}
+
+/**
+ * Payment methods the shop really offers: enabled gateways that report
+ * themselves available, with a short German name (the gateway title for
+ * unknown ones). Staging, 2026-10-20: "bacs" (title "Überweisung") and "cod"
+ * (title "Cash on delivery"); PayPal Payments is installed but not connected,
+ * Klarna has no settings, WooPayments is off. Filter ip_product_payment_names.
+ *
+ * @return string[]
+ */
+function ip_product_payment_methods() {
+	static $names = null;
+	if ( null !== $names ) {
+		return $names;
+	}
+	$names = array();
+	if ( ! function_exists( 'WC' ) || ! WC()->payment_gateways() ) {
+		return $names;
+	}
+	$map = apply_filters( 'ip_product_payment_names', array(
+		'bacs'                 => 'Überweisung',
+		'cod'                  => 'Nachnahme',
+		'cheque'               => 'Scheck',
+		'paypal'               => 'PayPal',
+		'ppcp-gateway'         => 'PayPal',
+		'klarna_payments'      => 'Klarna',
+		'woocommerce_payments' => 'Kreditkarte',
+		'invoice'              => 'Rechnung',
+	) );
+	foreach ( WC()->payment_gateways()->payment_gateways() as $id => $gateway ) {
+		if ( ! is_object( $gateway ) || 'yes' !== $gateway->enabled ) {
+			continue;
+		}
+		try {
+			if ( ! $gateway->is_available() ) {
+				continue;
+			}
+		} catch ( \Throwable $e ) {
+			continue;
+		}
+		$names[] = $map[ $id ] ?? trim( wp_strip_all_tags( (string) $gateway->get_title() ) );
+	}
+	$names = array_values( array_unique( array_filter( $names ) ) );
+	return $names;
+}
+
+/** "Überweisung oder Nachnahme", "A, B oder C". */
+function ip_product_join_or( array $items ) {
+	$last = array_pop( $items );
+	return $items ? implode( ', ', $items ) . ' ' . ip_product_text( 'fact_or' ) . ' ' . $last : (string) $last;
 }
 
 /**
@@ -334,6 +529,9 @@ function ip_product_icon( $name ) {
 		'gift'       => '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S10.5 3.5 8 4.5 9 8 12 8zM12 8s1.5-4.5 4-3.5S15 8 12 8z"/>',
 		'clipboard'  => '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/>',
 		'user-check' => '<circle cx="10" cy="8" r="4"/><path d="M3 21c1.3-3.6 3.9-5.5 7-5.5 1.3 0 2.5.3 3.5.9M15.5 19l2 2 4-4"/>',
+		'check'      => '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+		'truck'      => '<path d="M3 6h11v10H3zM14 9h4l3 3.5V16h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+		'wallet'     => '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/>',
 	);
 	if ( ! isset( $paths[ $name ] ) ) {
 		return function_exists( 'ip_icon' ) ? ip_icon( $name ) : '';
