@@ -18,6 +18,8 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
+use Infoplus\Suite\View;
+use Infoplus\Suite\Modules\ProductDetailSuite\Components;
 
 if (!defined('ABSPATH')) exit;
 
@@ -242,12 +244,17 @@ class VariationDropdowns extends Widget_Base
         return $attributes;
     }
 
+    /**
+     * Render widget output on the frontend.
+     * Markup lives in templates/variation-dropdowns.php (View::render).
+     */
     protected function render(): void
     {
         $settings = $this->get_settings_for_display();
 
         global $product;
 
+        // Editor preview: use any variable product (sets the global, as before)
         if (!$product || !is_a($product, 'WC_Product')) {
             if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
                 $products = wc_get_products(['type' => 'variable', 'limit' => 1, 'status' => 'publish']);
@@ -257,184 +264,14 @@ class VariationDropdowns extends Widget_Base
             }
         }
 
-        $attributes_to_show = $settings['attributes_to_show'] ?? [];
-        $exclude_model = $settings['exclude_model'] === 'yes';
-        $show_info = $settings['show_info_button'] === 'yes';
-        $info_behavior = $settings['info_button_behavior'];
-        $placeholder = $settings['placeholder_text'];
-
-?>
-        <div class="infoplus-variation-dropdowns"
-            data-show-info="<?php echo esc_attr($show_info ? 'yes' : 'no'); ?>"
-            data-info-behavior="<?php echo esc_attr($info_behavior); ?>"
-            data-placeholder="<?php echo esc_attr($placeholder); ?>">
-
-            <?php if ($product && $product->is_type('variable')): ?>
-                <?php $this->renderDropdowns($product, $attributes_to_show, $exclude_model, $show_info, $placeholder); ?>
-            <?php else: ?>
-                <div class="infoplus-variation-dropdowns__placeholder">
-                    <p><?php esc_html_e('This widget requires a variable product.', 'infoplus-suite'); ?></p>
-                </div>
-            <?php endif; ?>
-        </div>
-        <?php
-    }
-
-    private function renderDropdowns($product, $attributes_to_show, $exclude_model, $show_info, $placeholder): void
-    {
-        $product_id = $product->get_id();
-        $attributes = $product->get_variation_attributes();
-
-        foreach ($attributes as $attribute_name => $options) {
-            // Skip model if excluded
-            if ($exclude_model && $attribute_name === 'pa_model') {
-                continue;
-            }
-
-            // Filter by selected attributes if specified
-            if (!empty($attributes_to_show) && !in_array($attribute_name, $attributes_to_show)) {
-                continue;
-            }
-
-            $attribute_label = wc_attribute_label($attribute_name);
-            $attribute_slug = str_replace('pa_', '', $attribute_name);
-
-            // Get terms with custom fields (with product-level image overrides)
-            $terms_data = $this->getTermsData($attribute_name, $options, $product_id);
-
-            $has_images = false;
-            foreach ($terms_data as $term) {
-                if (!empty($term['image_url'])) {
-                    $has_images = true;
-                    break;
-                }
-            }
-
-        ?>
-            <div class="infoplus-dropdown"
-                 data-attribute="<?php echo esc_attr($attribute_name); ?>"
-                 data-has-images="<?php echo $has_images ? 'yes' : 'no'; ?>">
-                <label class="infoplus-dropdown__label"><?php echo esc_html($attribute_label); ?></label>
-
-                <div class="infoplus-dropdown__trigger" tabindex="0" role="combobox" aria-expanded="false">
-                    <span class="infoplus-dropdown__selected">
-                        <img class="infoplus-dropdown__selected-image litespeed-no-lazy" src="" alt="" data-no-lazy="1" loading="eager" />
-                        <span class="infoplus-dropdown__selected-text"><?php echo esc_html($placeholder); ?></span>
-                        <?php if ($show_info): ?>
-                            <button class="infoplus-dropdown__selected-info" type="button" aria-label="<?php esc_attr_e('More info', 'infoplus-suite'); ?>">
-                                <span>i</span>
-                            </button>
-                        <?php endif; ?>
-                    </span>
-                    <span class="infoplus-dropdown__arrow">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </span>
-                </div>
-
-                <div class="infoplus-dropdown__options" role="listbox" style="display: none;">
-                    <?php foreach ($terms_data as $term): ?>
-                        <div class="infoplus-dropdown__option"
-                            data-value="<?php echo esc_attr($term['slug']); ?>"
-                            data-image="<?php echo esc_url($term['image_url']); ?>"
-                            data-tooltip="<?php echo esc_attr($term['tooltip']); ?>"
-                            data-modal-content="<?php echo esc_attr($term['modal_content']); ?>"
-                            role="option">
-
-                            <?php if ($term['image_url']): ?>
-                                <img src="<?php echo esc_url($term['image_url']); ?>"
-                                    alt="<?php echo esc_attr($term['name']); ?>"
-                                    class="infoplus-dropdown__option-image" />
-                            <?php endif; ?>
-
-                            <span class="infoplus-dropdown__option-text"><?php echo esc_html($term['name']); ?></span>
-
-                            <?php
-                            $has_info = !empty(trim($term['tooltip'])) || !empty(trim($term['modal_content']));
-                            if ($show_info && $has_info):
-                            ?>
-                                <button class="infoplus-dropdown__option-info"
-                                    type="button"
-                                    <?php if ($info_behavior === 'tooltip' && !empty(trim($term['tooltip']))): ?>
-                                    data-tooltip="<?php echo esc_attr($term['tooltip']); ?>"
-                                    <?php endif; ?>
-                                    aria-label="<?php esc_attr_e('More info', 'infoplus-suite'); ?>">
-                                    <span>i</span>
-                                </button>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <!-- Hidden native select for form submission -->
-                <select name="attribute_<?php echo esc_attr($attribute_slug); ?>"
-                    class="infoplus-dropdown__native"
-                    style="display: none !important;">
-                    <option value=""><?php echo esc_html($placeholder); ?></option>
-                    <?php foreach ($terms_data as $term): ?>
-                        <option value="<?php echo esc_attr($term['slug']); ?>"><?php echo esc_html($term['name']); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-        <?php
-        }
-    }
-
-    private function getTermsData(string $taxonomy, array $option_slugs, int $product_id = 0): array
-    {
-        $terms_data = [];
-
-        foreach ($option_slugs as $slug) {
-            $term = get_term_by('slug', $slug, $taxonomy);
-
-            if (!$term) {
-                // Fallback for custom attributes
-                $terms_data[] = [
-                    'slug' => $slug,
-                    'name' => ucfirst($slug),
-                    'image_url' => '',
-                    'tooltip' => '',
-                    'modal_content' => '',
-                ];
-                continue;
-            }
-
-            // Use the override system (product-level first, then global)
-            if ($product_id > 0) {
-                $image_url = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermImageUrl(
-                    $product_id,
-                    $taxonomy,
-                    $slug
-                );
-                $tooltip = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermTooltip(
-                    $product_id,
-                    $taxonomy,
-                    $slug
-                );
-                $modal_content = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermModalContent(
-                    $product_id,
-                    $taxonomy,
-                    $slug
-                );
-            } else {
-                // Fallback to global term data
-                $image_id = get_term_meta($term->term_id, '_infoplus_term_image_id', true);
-                $image_url = $image_id ? wp_get_attachment_url($image_id) : '';
-                $tooltip = get_term_meta($term->term_id, '_infoplus_term_tooltip', true) ?: '';
-                $modal_content = get_term_meta($term->term_id, '_infoplus_term_modal_content', true) ?: $term->description;
-            }
-
-            $terms_data[] = [
-                'slug' => $term->slug,
-                'name' => $term->name,
-                'image_url' => $image_url,
-                'tooltip' => $tooltip,
-                'modal_content' => $modal_content,
-            ];
-        }
-
-        return $terms_data;
+        View::render('variation-dropdowns', Components::variationDropdowns($product, [
+            'context'              => View::CONTEXT_ELEMENTOR,
+            'attributes_to_show'   => $settings['attributes_to_show'] ?? [],
+            'exclude_model'        => $settings['exclude_model'],
+            'show_info_button'     => $settings['show_info_button'],
+            'info_button_behavior' => $settings['info_button_behavior'],
+            'placeholder_text'     => $settings['placeholder_text'],
+        ]));
     }
 
     protected function content_template(): void

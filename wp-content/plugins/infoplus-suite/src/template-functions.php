@@ -31,3 +31,17 @@ if (!function_exists('infoplus_suite_model_selector')) {
         View::render('model-selector', Components::modelSelector($product, $args));
     }
 }
+
+if (!function_exists('infoplus_suite_variation_dropdowns')) {
+    /**
+     * Render the variation attribute dropdowns (Format, Befestigung, ...).
+     *
+     * @param WC_Product|int|null $product Product, product ID, or null for the global $product.
+     * @param array               $args    See templates/variation-dropdowns.php. Defaults:
+     *                                     Components::variationDropdownsDefaults().
+     */
+    function infoplus_suite_variation_dropdowns($product = null, array $args = []): void
+    {
+        View::render('variation-dropdowns', Components::variationDropdowns($product, $args));
+    }
+}

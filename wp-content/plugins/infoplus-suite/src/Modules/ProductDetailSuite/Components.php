@@ -179,6 +179,143 @@ final class Components
         return $cards;
     }
 
+    // ── variation-dropdowns ─────────────────────────────────────────────────
+
+    /**
+     * Defaults of the variation dropdowns (VariationDropdowns widget content controls).
+     */
+    public static function variationDropdownsDefaults(): array
+    {
+        return [
+            'attributes_to_show'   => ['pa_format', 'pa_befestigung'], // empty array = all
+            'exclude_model'        => true,
+            'show_info_button'     => true,
+            'info_button_behavior' => 'tooltip', // 'tooltip' | 'modal'
+            'placeholder_text'     => __('Wähle eine Option', 'infoplus-suite'),
+        ];
+    }
+
+    /**
+     * Final template args for templates/variation-dropdowns.php.
+     *
+     * Adds: product, has_product (bool, variable product present), dropdowns
+     * (list of attribute, label, slug, has_images, terms; each term has slug,
+     * name, image_url, tooltip, modal_content).
+     *
+     * @param \WC_Product|int|null $product
+     */
+    public static function variationDropdowns($product = null, array $args = []): array
+    {
+        $args = self::merge(self::variationDropdownsDefaults(), $args);
+
+        $show = $args['attributes_to_show'];
+        if (!is_array($show)) {
+            $show = ($show === '' || $show === null) ? [] : (array) $show;
+        }
+        $args['attributes_to_show']   = $show;
+        $args['exclude_model']        = self::flag($args['exclude_model']);
+        $args['show_info_button']     = self::flag($args['show_info_button']);
+        $args['info_button_behavior'] = (string) $args['info_button_behavior'];
+        $args['placeholder_text']     = (string) $args['placeholder_text'];
+
+        $product = self::resolveProduct($product);
+        $args['product']     = $product;
+        $args['has_product'] = $product !== null && $product->is_type('variable');
+        $args['dropdowns']   = $args['has_product']
+            ? self::dropdowns($product, $args['attributes_to_show'], $args['exclude_model'])
+            : [];
+
+        return $args;
+    }
+
+    private static function dropdowns(\WC_Product $product, array $attributes_to_show, bool $exclude_model): array
+    {
+        $product_id = $product->get_id();
+        $dropdowns  = [];
+
+        foreach ($product->get_variation_attributes() as $attribute_name => $options) {
+            $attribute_name = (string) $attribute_name;
+
+            // Skip model if excluded
+            if ($exclude_model && $attribute_name === 'pa_model') {
+                continue;
+            }
+
+            // Filter by selected attributes if specified
+            if (!empty($attributes_to_show) && !in_array($attribute_name, $attributes_to_show)) {
+                continue;
+            }
+
+            // Terms with custom fields (with product-level image overrides)
+            $terms = self::termsData($attribute_name, (array) $options, $product_id);
+
+            $has_images = false;
+            foreach ($terms as $term) {
+                if (!empty($term['image_url'])) {
+                    $has_images = true;
+                    break;
+                }
+            }
+
+            $dropdowns[] = [
+                'attribute'  => $attribute_name,
+                'label'      => wc_attribute_label($attribute_name),
+                'slug'       => str_replace('pa_', '', $attribute_name),
+                'has_images' => $has_images,
+                'terms'      => $terms,
+            ];
+        }
+
+        return $dropdowns;
+    }
+
+    /**
+     * Term data for one attribute: product-level overrides first, then global term meta.
+     * Formerly VariationDropdowns::getTermsData().
+     */
+    private static function termsData(string $taxonomy, array $option_slugs, int $product_id = 0): array
+    {
+        $terms_data = [];
+
+        foreach ($option_slugs as $slug) {
+            $term = get_term_by('slug', $slug, $taxonomy);
+
+            if (!$term) {
+                // Fallback for custom attributes
+                $terms_data[] = [
+                    'slug' => $slug,
+                    'name' => ucfirst($slug),
+                    'image_url' => '',
+                    'tooltip' => '',
+                    'modal_content' => '',
+                ];
+                continue;
+            }
+
+            if ($product_id > 0) {
+                $image_url     = Fields\ProductAttributeImages::getTermImageUrl($product_id, $taxonomy, $slug);
+                $tooltip       = Fields\ProductAttributeImages::getTermTooltip($product_id, $taxonomy, $slug);
+                $modal_content = Fields\ProductAttributeImages::getTermModalContent($product_id, $taxonomy, $slug);
+            } else {
+                // Fallback to global term data
+                $image_id      = get_term_meta($term->term_id, '_infoplus_term_image_id', true);
+                $image_url     = $image_id ? wp_get_attachment_url($image_id) : '';
+                $tooltip       = get_term_meta($term->term_id, '_infoplus_term_tooltip', true) ?: '';
+                $modal_content = get_term_meta($term->term_id, '_infoplus_term_modal_content', true) ?: $term->description;
+            }
+
+            $terms_data[] = [
+                'slug' => $term->slug,
+                'name' => $term->name,
+                'image_url' => $image_url,
+                'tooltip' => $tooltip,
+                'modal_content' => $modal_content,
+            ];
+        }
+
+        return $terms_data;
+    }
+
     /**
      * Merge args over defaults. Unknown keys are kept for theme overrides.
      */
