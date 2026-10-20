@@ -727,3 +727,30 @@
     ready();
   }
 })();
+
+/* Reveal of the "Individuelle Anfrage" panel ([data-ip-reveal],
+   template-parts/product/details.php): cards rise in and the Sonderkontur
+   drawing draws itself once, when the panel scrolls into view. Only a panel
+   that starts below the fold is hidden first (.is-pending), so nothing that
+   is already on screen flashes. No IntersectionObserver or reduced motion:
+   nothing is hidden, the drawing shows finished (product.css). */
+(function () {
+  'use strict';
+  var els = document.querySelectorAll('[data-ip-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) { return; }
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) { return; }
+      entry.target.classList.add('is-in');
+      entry.target.classList.remove('is-pending');
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.2 });
+  Array.prototype.forEach.call(els, function (el) {
+    var r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight && r.bottom > 0) { return; } // On screen already: leave it as it is.
+    el.classList.add('is-pending');
+    io.observe(el);
+  });
+})();

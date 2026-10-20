@@ -505,14 +505,14 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .ip-product .ip-info-box__sku-label { font-weight: 400; color: var(--text-secondary) }
 .ip-product .ip-info-box__sku-value--no-sku { color: var(--c-secondary) }
 
-/* ── Description and "Individuelle Anfrage" cards ───────────────────────── */
+/* ── Description card and the "Individuelle Anfrage" panel ──────────────
+   One column: the description card, then the request as a wide panel
+   (Very Light Grey, white benefit cards, the Sonderkontur drawing on the
+   side). Areas: phone head / visual / list / cta; tablet head + visual, then
+   list and cta full width; desktop text column left, drawing right. */
 .ip-product__details { display: grid; gap: var(--space-6); margin-top: var(--section-gap) }
-@media (min-width: 1101px) {
-  .ip-product__details { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-8); align-items: start }
-  .ip-product__details > :only-child { grid-column: 1 / -1 }
-}
-.ip-product-desc, .ip-request { padding: var(--space-6) }
-@media (min-width: 768px) { .ip-product-desc, .ip-request { padding: var(--space-8) } }
+.ip-product-desc { padding: var(--space-6) }
+@media (min-width: 768px) { .ip-product-desc { padding: var(--space-8) } }
 
 .ip-product-desc__title, .ip-request__title { font: var(--type-sub); text-wrap: balance }
 .ip-product-desc__body { margin-top: var(--space-4); font: 400 18px/1.55 var(--font) }
@@ -520,18 +520,93 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .ip-product-desc__body li + li { margin-top: .3em }
 .ip-product-desc__body a { color: var(--c-secondary) }
 
-.ip-request { display: grid; gap: var(--space-6) }
-.ip-request__head { display: grid; gap: var(--space-2) }
+.ip-request {
+  display: grid; gap: var(--space-6);
+  grid-template-areas: "head" "visual" "list" "cta";
+  padding: var(--space-6); border-radius: var(--radius-panel); background: var(--surface-alt);
+}
+.ip-request__head { grid-area: head; display: grid; gap: var(--space-2); align-content: start; align-self: center; max-width: 60ch }
 .ip-request__head .ip-sub { font: 400 18px/1.45 var(--font) }
-.ip-request__list { display: grid; gap: var(--space-4); margin: 0; padding: 0; list-style: none }
-@media (min-width: 768px) and (max-width: 1100px) { .ip-request__list { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
-.ip-request__item { display: flex; align-items: center; gap: var(--space-3) }
-.ip-request__text { display: grid; gap: 2px }
+.ip-request__list { grid-area: list; display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none }
+.ip-request__item {
+  display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4);
+  border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--c-white);
+}
+.ip-request__text { display: grid; gap: 2px; min-width: 0 }
 .ip-request__text strong { font: 600 14px/1.2 var(--font); letter-spacing: 1px }
 .ip-request__text span { color: var(--text-secondary); font: 400 16px/1.3 var(--font) }
+.ip-request__cta { grid-area: cta }
 .ip-request__cta .ip-btn { min-height: 52px; font-size: 18px }
 .ip-request__cta .ip-icon { width: 22px; height: 22px; transition: transform var(--dur-ui) var(--ease) }
 .ip-request__cta .ip-btn:hover .ip-icon { transform: translateX(3px) }
+
+/* Drawing panel: white, faint dot grid like a cutting plotter's bed. */
+.ip-request__visual {
+  grid-area: visual; display: grid; place-items: center; padding: var(--space-4);
+  border: 1px solid var(--border); border-radius: var(--radius-card);
+  background: radial-gradient(circle, rgb(25 27 28 / .09) 1px, transparent 1.4px) 0 0 / 16px 16px, var(--c-white);
+}
+.ip-contour { width: 100%; max-width: 520px; height: auto; aspect-ratio: 320 / 216; overflow: visible }
+.ip-contour__std { fill: none; stroke: #C4C6D2; stroke-width: 1.5; stroke-dasharray: 6 5 }
+.ip-contour__fill { fill: var(--c-primary-tint) }
+.ip-contour__line { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round }
+.ip-contour__text rect { fill: var(--c-grey-800) }
+.ip-contour__text .ip-contour__text-sub { fill: #A4A7B2 }
+.ip-contour__slot { fill: none; stroke: #B8BAC6; stroke-width: 1.5; stroke-dasharray: 4 4; opacity: 0 }
+.ip-contour__logo path { fill: var(--accent) }
+.ip-contour__logo .ip-contour__logo-b { fill: var(--c-secondary); opacity: .85 }
+.ip-contour__nodes rect { fill: var(--c-white); stroke: var(--accent); stroke-width: 1.5 }
+.ip-contour__leader { fill: none; stroke: var(--c-secondary); stroke-width: 1.25 }
+.ip-contour__note { font: 600 13px/1 var(--font); letter-spacing: .5px; fill: var(--text-secondary) }
+.ip-contour__note--tag { fill: var(--c-secondary) }
+
+@media (min-width: 768px) {
+  .ip-request {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 300px); column-gap: var(--space-8); row-gap: var(--space-6);
+    grid-template-areas: "head visual" "list list" "cta cta";
+    padding: var(--space-8);
+  }
+  .ip-request__list { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+  .ip-request__item { flex-direction: column; align-items: flex-start; gap: var(--space-4); padding: var(--space-6) }
+}
+@media (min-width: 1101px) {
+  .ip-request {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--space-12);
+    grid-template-areas: "head visual" "list visual" "cta visual";
+    grid-template-rows: auto auto 1fr; align-items: start;
+    padding: var(--space-12);
+  }
+  .ip-request__head { align-self: start }
+  .ip-request__visual { align-self: stretch; padding: var(--space-8) }
+}
+
+/* Reveal (product.js marks the section .is-pending below the fold, then
+   .is-in when it scrolls into view). Plays once; without JS, or with reduced
+   motion, nothing is hidden and the drawing shows finished. */
+@media (prefers-reduced-motion: no-preference) {
+  .ip-request.is-pending :is(.ip-request__head, .ip-request__item, .ip-request__cta),
+  .ip-request.is-pending .ip-contour > * { opacity: 0 }
+  .ip-request.is-in :is(.ip-request__head, .ip-request__item, .ip-request__cta) { animation: ip-req-rise 520ms var(--ease) both }
+  .ip-request.is-in .ip-request__item { animation-delay: calc(140ms + var(--i, 0) * 70ms) }
+  .ip-request.is-in .ip-request__cta { animation-delay: 380ms }
+
+  .ip-request.is-in .ip-contour__std { animation: ip-req-fade 400ms var(--ease) both }
+  .ip-request.is-in .ip-contour__note--std { animation: ip-req-fade 400ms var(--ease) 150ms both }
+  .ip-request.is-in .ip-contour__slot { animation: ip-req-slot 1500ms var(--ease) 250ms both }
+  .ip-request.is-in .ip-contour__line { animation: ip-req-draw 1400ms cubic-bezier(.65, 0, .35, 1) 400ms both }
+  .ip-request.is-in .ip-contour__fill { animation: ip-req-fade 500ms var(--ease) 1500ms both }
+  .ip-request.is-in .ip-contour__nodes { animation: ip-req-fade 300ms var(--ease) 1650ms both }
+  .ip-request.is-in .ip-contour__logo { transform-box: fill-box; transform-origin: center; animation: ip-req-logo 650ms var(--ease) 1550ms both }
+  .ip-request.is-in .ip-contour__text { transform-box: fill-box; transform-origin: left center; animation: ip-req-type 600ms var(--ease) 1750ms both }
+  .ip-request.is-in .ip-contour__tag { animation: ip-req-fade 400ms var(--ease) 2100ms both }
+}
+@keyframes ip-req-rise { from { opacity: 0; transform: translateY(12px) } }
+@keyframes ip-req-fade { from { opacity: 0 } }
+@keyframes ip-req-draw { from { stroke-dasharray: 1; stroke-dashoffset: 1 } to { stroke-dasharray: 1; stroke-dashoffset: 0 } }
+/* The dashed "logo goes here" circle shows while the outline draws, then gives way to the logo. */
+@keyframes ip-req-slot { 0% { opacity: 0 } 20%, 70% { opacity: 1 } 100% { opacity: 0 } }
+@keyframes ip-req-logo { from { opacity: 0; transform: scale(.55) } }
+@keyframes ip-req-type { from { opacity: 0; transform: scaleX(.2) } }
 
 /* ── Sticky action bar (phones and tablets) ─────────────────────────────
    Same data as the summary card (product.js renderBar): quantity and tier
