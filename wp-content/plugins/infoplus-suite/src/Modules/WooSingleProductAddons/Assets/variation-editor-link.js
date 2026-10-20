@@ -12,9 +12,13 @@
  * Theme buy form (since Plugin::VERSION 0.10.27): when the page renders
  * form[data-ip-buy-form] (classic theme, template-parts/product/actions.php),
  * "buyable" does NOT turn #editor into the admin-ajax infoplus_add_to_cart
- * trigger. #editor and #anfrage are hidden and the theme shows its own
- * WooCommerce add-to-cart form (standard POST, WC_Form_Handler). Pages without
- * that form (the Elementor template) keep the ajax behaviour below.
+ * trigger. #editor is hidden and the theme shows its own WooCommerce
+ * add-to-cart form (standard POST, WC_Form_Handler). Pages without that form
+ * (the Elementor template) keep the ajax behaviour below.
+ *
+ * Since Plugin::VERSION 0.10.28 #anfrage stays visible for "buyable" models on
+ * pages with the buy form, so the inquiry is always available there (the theme
+ * shows it as a secondary button). The Elementor template still hides it.
  *
  * The resolved order type is published as infoplusProductState.orderType and
  * emitted as 'ordertype:changed' ({ orderType, model }), so the theme does not
@@ -354,8 +358,9 @@
     } else if (orderType === 'buyable' && $buyForm.length) {
       // Theme page: the theme's add-to-cart form is the action. Leave the
       // editor link as a plain (disabled, hidden) editor link.
+      // The inquiry stays available next to the buy form (0.10.28).
       $editor.addClass(HIDDEN_CLASS);
-      $anfrage.addClass(HIDDEN_CLASS);
+      $anfrage.removeClass(HIDDEN_CLASS);
       disableEditorBtn();
       restoreEditorLabel();
       if (variationNotFound) showError($buyForm, KOMBINATION_TEXT);

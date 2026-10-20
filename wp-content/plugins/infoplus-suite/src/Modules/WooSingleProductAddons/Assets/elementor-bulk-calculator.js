@@ -368,6 +368,12 @@ jQuery(function($) {
                 $val.val(finalMin).attr('aria-valuenow', finalMin);
                 updateIndividualAndTotalPrice(finalMin);
                 updateButtonStates(finalMin);
+                // Share the clamped quantity (0.10.28): the Staffelpreise table highlights
+                // the current tier from qty:changed and stayed on the old quantity before.
+                // source 'calculator': this script ignores its own event.
+                if (window.infoplusProductState && typeof window.infoplusProductState.setQty === 'function') {
+                    window.infoplusProductState.setQty(finalMin, 'calculator');
+                }
             }
 
             // Update minimum quantity display if it exists
