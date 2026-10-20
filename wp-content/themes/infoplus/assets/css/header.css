@@ -179,9 +179,9 @@
   border-radius: 2px;
   background: var(--accent);
 }
-.ip-nav__count { transition: transform 300ms var(--ease-spring) }
+.ip-nav__count { transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease) }
 .ip-nav__item--mega:hover .ip-nav__count,
-.ip-nav__item--mega.is-open .ip-nav__count { transform: scale(1.12) rotate(-8deg) }
+.ip-nav__item--mega.is-open .ip-nav__count { background: var(--accent); color: var(--c-white) }
 .ip-nav__toggle {
   display: inline-grid;
   place-items: center;
@@ -295,18 +295,21 @@
 }
 .ip-pcard:hover,
 .ip-pcard:focus-visible { background: var(--c-primary-tint) }
+/* The image is laid over the 4:3 box and fitted with contain, so a photo of
+   any proportion shows whole: nothing is cut at the edges. */
 .ip-pcard__thumb {
-  display: grid;
-  place-items: center;
+  position: relative;
+  display: block;
   aspect-ratio: 4 / 3;
-  padding: var(--space-2);
   border-radius: 12px;
   background: var(--c-grey-100);
   overflow: hidden;
 }
-.ip-card-img {
-  width: 100%;
-  height: 100%;
+.ip-pcard__thumb .ip-card-img {
+  position: absolute;
+  inset: var(--space-2);
+  width: calc(100% - 2 * var(--space-2));
+  height: calc(100% - 2 * var(--space-2));
   object-fit: contain;
   transition: transform 350ms var(--ease);
 }

@@ -149,6 +149,10 @@
 .ip-product .infoplus-product-image__thumb.is-active { border-color: var(--ip-pi-thumb-border-active); box-shadow: 0 0 0 1px var(--ip-pi-thumb-border-active) }
 
 .infoplus-lightbox { background: var(--ip-pi-lightbox-bg, rgb(25 27 28 / .94)) }
+/* The viewer lives inside the sticky gallery column, which is its own
+   stacking context. While it is open, lift the column above the header,
+   the configurator, the phone bar and the Kontakt tab. */
+body.infoplus-lightbox-open .ip-product__media { z-index: 10050 }
 .infoplus-lightbox__close, .infoplus-lightbox__prev, .infoplus-lightbox__next { border-radius: 14px }
 
 .ip-product__fallback-image { aspect-ratio: 4 / 3; display: grid; place-items: center; border-radius: var(--radius-card); background: var(--c-grey-100) }

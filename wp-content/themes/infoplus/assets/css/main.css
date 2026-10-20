@@ -164,7 +164,7 @@ a.ip-card:hover, .ip-card--link:hover { transform: translateY(-2px); box-shadow:
 /* Icon tile and pill (DESIGN.md 3, 5). */
 .ip-tile { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: var(--c-primary-tint); color: var(--accent); flex: none; transition: transform 350ms var(--ease-spring) }
 .ip-tile .ip-icon { width: 22px; height: 22px }
-:hover > .ip-tile { transform: rotate(-8deg) scale(1.06) }
+:hover > .ip-tile { transform: translateY(-2px) } /* No tilt: calm B2B motion (DESIGN.md 6). */
 .ip-pill { display: inline-flex; align-items: center; min-height: 20px; padding: 0 7px; border-radius: 999px; background: var(--c-primary-tint); color: var(--c-secondary); font-size: 12px; font-weight: 700; line-height: 1 }
 .ip-icon { width: 1em; height: 1em; flex: none }
 
