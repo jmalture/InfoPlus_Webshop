@@ -118,6 +118,7 @@ $ip_js_texts = array(
 	'done'        => ip_product_text( 'step_done' ),
 	'open'        => ip_product_text( 'step_open' ),
 	'preset'      => ip_product_text( 'step_preset' ),
+	'only'        => ip_product_text( 'step_only' ),
 	'unavailable' => ip_product_text( 'unavailable' ),
 	'empty'       => ip_product_text( 'summary_empty' ),
 	'unit'        => ip_product_text( 'summary_unit' ),

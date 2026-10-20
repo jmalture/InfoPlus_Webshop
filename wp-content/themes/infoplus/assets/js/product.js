@@ -28,8 +28,11 @@
    - ticks a step when the visitor chooses in it: a click, Enter or Space on a
      model card or option, the highlighted default included. The tick stays
      while that value stays; when the Suite changes it (a model change resets
-     the options to the model's defaults) the tick goes. Steps with a single
-     option for the chosen model are ticked on their own;
+     the options to the model's defaults) the tick goes. A step with a single
+     option for the chosen model is unticked on load like any other; when it
+     opens (flow, step bar or "Ändern") it shows "Nur diese Option verfügbar",
+     gets its tick at once and stays open above the next step without a tick,
+     which opens too (chain()); the next pick folds it;
    - moves on after a choice: the next step below without a tick, else the
      first one above, else Menge (stays open). Focus goes to that step's
      heading, the page scrolls only when the step is out of view. Arrow keys
@@ -152,7 +155,9 @@
   var liveText = '';
   var liveTimer = null;
 
-  var openKey = null;      // the expanded step
+  var openKey = null;      // the expanded step (the current choice)
+  var companions = [];     // one-option steps reached on the way to it, open and ticked above it
+  var chaining = false;    // chain() is ticking one-option steps (no re-entry from renderSteps)
   var settled = false;     // initial step decided
   var silentPick = false;  // a selection made by arrow keys: no "move on"
   var stepInfo = {};       // key -> { done, hidden } from the last render
@@ -503,13 +508,13 @@
     stepInfo = {};
     order.forEach(function (key) {
       var el = steps[key];
-      var info = { done: false, hidden: false, auto: false };
+      var info = { done: false, hidden: false, single: false };
       var sig = stepSig(key, s);
       if (ticks[key] !== undefined && ticks[key] !== sig) delete ticks[key];
       var ticked = ticks[key] !== undefined && sig !== '';
       if (key === 'model') {
-        info.auto = !!s.model && modelCards().length === 1;
-        info.done = ticked || info.auto;
+        info.single = modelCards().length === 1;
+        info.done = ticked;
         setStep(key, info.done ? 'done' : (s.model ? 'preset' : 'open'), s.modelName);
       } else if (key === 'qty') {
         // Requestable models have no quantity or price (the Suite hides the row): no step.
@@ -522,15 +527,16 @@
         var a = s.attrs[key] || { set: false, conflict: false, value: '', single: false };
         // The Suite locks the options of models that are only requestable: no attribute steps then.
         info.hidden = s.locked;
-        info.auto = a.set && a.single && !a.conflict;
-        info.done = (ticked || info.auto) && !a.conflict;
+        info.single = a.single && !a.conflict;
+        info.done = ticked && !a.conflict;
         if (s.locked) setStep(key, 'locked', '');
         else if (a.conflict) setStep(key, 'error', a.value, T.unavailable || '');
         else if (info.done) setStep(key, 'done', a.value);
         else if (a.set) setStep(key, 'preset', a.value);
         else setStep(key, 'open', '');
       }
-      el.classList.toggle('is-auto', info.auto);
+      // One option for the chosen model: "Nur diese Option verfügbar" in the open step (product.css).
+      el.classList.toggle('is-single', info.single);
       if (el.hidden !== info.hidden) el.hidden = info.hidden;
       stepInfo[key] = info;
     });
@@ -546,7 +552,7 @@
       setText(lockNote, s.locked ? s.lockText : '');
       lockNote.hidden = !s.locked || !s.lockText;
     }
-    if (folding && settled && openKey && stepInfo[openKey] && stepInfo[openKey].hidden) {
+    if (folding && settled && !chaining && openKey && stepInfo[openKey] && stepInfo[openKey].hidden) {
       // The open step went away (a requestable model): move on without stealing focus.
       openStep(nextStep(null), {});
     }
@@ -669,12 +675,48 @@
    * its heading (or to the summary card when no step is left), opts.reveal
    * scrolls it into view when needed, opts.instant skips the animation.
    */
+  function isOpen(key) {
+    return key === openKey || companions.indexOf(key) !== -1;
+  }
+
+  /**
+   * A one-option step counts as chosen once the visitor sees it: tick it (the
+   * Suite has preselected the only option; if not, select it) and go on to the
+   * next step without a tick. Several in a row stay open together, above the
+   * next real choice, until the visitor's next pick folds them.
+   */
+  function chain(key) {
+    var list = [];
+    var k = key;
+    chaining = true;
+    while (k && stepInfo[k] && stepInfo[k].single && list.indexOf(k) === -1) {
+      var sig = stepSig(k, snapshot());
+      if (sig === '') {
+        var only = k === 'model' ? modelCards()[0] : shownOptions(steps[k].querySelector('.infoplus-dropdown'))[0];
+        if (only) { silentPick = true; only.click(); silentPick = false; }
+      }
+      tick(k);
+      sync();
+      list.push(k);
+      var n = nextStep(k);
+      if (!n || n === k || isDone(n) && n !== 'qty') { k = null; break; }
+      k = n;
+    }
+    chaining = false;
+    if (!k && list.length) k = list.pop();
+    return { key: k, companions: list };
+  }
+
   function openStep(key, opts) {
     if (!folding) return;
     opts = opts || {};
     var changed = key !== openKey;
+    var c = settled ? chain(key) : { key: key, companions: [] };
+    var first = c.companions.length ? c.companions[0] : c.key;
+    key = c.key;
     openKey = key;
-    order.forEach(function (k) { setExpanded(k, k === key, !opts.instant && settled); });
+    companions = c.companions;
+    order.forEach(function (k) { setExpanded(k, isOpen(k), !opts.instant && settled); });
     renderNav();
     if (nav && key && navBtns[key]) {
       // Keep the current chip in view in the horizontally scrolling bar (phones), without moving the page.
@@ -687,12 +729,13 @@
         }
       }
     }
+    // Focus and scroll: the first step that opened (a one-option step reached on the way, else the choice).
     if (opts.focus) {
-      var target = key ? steps[key].querySelector('.ip-step__head') : summaryTitle;
+      var target = first ? steps[first].querySelector('.ip-step__head') : summaryTitle;
       if (target) target.focus({ preventScroll: true });
     }
     if (opts.reveal) {
-      var el = key ? steps[key] : summary;
+      var el = first ? steps[first] : summary;
       win.setTimeout(function () { reveal(el); }, changed && !reduceMotion ? 220 : 0);
     }
   }
@@ -729,8 +772,8 @@
     } else {
       key = nextStep(null);
     }
+    settled = true; // before openStep: a single model is a one-option step (chain())
     openStep(key, { instant: true });
-    settled = true;
   }
 
   /** A quantity set by the visitor (stepper, input, tier) ticks Menge; it stays open. */
@@ -742,17 +785,25 @@
   function enhanceSteps() {
     order.forEach(function (key) {
       var el = steps[key];
+      var body = el.querySelector('.ip-step__body');
+      if (body && key !== 'qty') {
+        // Shown by product.css while the step has a single option (.is-single).
+        var only = doc.createElement('p');
+        only.className = 'ip-step__only';
+        only.textContent = T.only || '';
+        body.insertBefore(only, body.firstChild);
+      }
       var barEl = el.querySelector('.ip-step__bar');
       // The whole folded line reopens the step; the "Ändern" button is the keyboard control.
       if (barEl) {
         barEl.addEventListener('click', function () {
-          if (key !== openKey) openStep(key, { focus: true, reveal: true });
+          if (!isOpen(key)) openStep(key, { focus: true, reveal: true });
         });
       }
       // A choice made by pointer, Enter or Space moves on. Capture phase: the Suite's
       // handlers stop propagation. Faded options and info buttons are left alone.
       el.addEventListener('click', function (e) {
-        if (!e.target.closest || key !== openKey) return;
+        if (!e.target.closest || !isOpen(key)) return;
         if (e.target.closest('.ip-c-model-selector__info, .infoplus-dropdown__option-info, .ip-opt-off')) return;
         if (!e.target.closest('.ip-c-model-selector__option, .infoplus-dropdown__option')) return;
         lastChoice = key;

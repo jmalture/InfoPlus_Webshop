@@ -214,6 +214,9 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 /* Lock message of a model that is only requestable, in place of the attribute steps. */
 .ip-step-lock { margin: var(--space-4) 0 0; padding: 12px 16px; border-radius: 12px; background: var(--c-primary-tint); color: var(--c-secondary); font: 600 16px/1.35 var(--font) }
 .ip-step-lock[hidden] { display: none }
+/* A step with a single option for the chosen model (product.js .is-single): the note above it. */
+.ip-step__only { display: none; margin: 0 0 var(--space-2); color: var(--text-secondary); font: 400 15px/1.35 var(--font) }
+.ip-step.is-single .ip-step__only { display: block }
 @media (max-width: 767px) {
   .ip-step__head { font-size: 19px }
   html:not(.js) .ip-step__status { flex-basis: 100%; padding-left: calc(30px + var(--space-3)); text-align: left }
