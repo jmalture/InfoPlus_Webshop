@@ -347,16 +347,33 @@
 .ip-buy__price--total dd { font-size: 26px; font-weight: 700 }
 .ip-buy__note { color: var(--text-secondary); font: var(--type-small) }
 
-/* ── Action buttons (#editor, #anfrage; states set by the Suite) ────────── */
+/* ── Action buttons: #editor, buy form, #anfrage (actions.php) ──────────
+   data-ip-order-type on .ip-actions (product.js): editable | buyable | requestable.
+   The Suite hides / disables #editor and #anfrage (infoplus-btn-*), product.js
+   shows the buy form for buyable models. Each type has its own label, icon and
+   hint line, so the states differ without relying on colour. */
 .ip-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3) }
 .ip-actions__btn { justify-content: center; min-height: 56px; padding-inline: var(--space-6); border-radius: 12px; font: 600 19px/1.1 var(--font); text-align: center }
-.ip-actions__btn .ip-icon { width: 22px; height: 22px; transition: transform var(--dur-ui) var(--ease) }
-.ip-actions__btn:hover .ip-icon { transform: translateX(3px) }
+.ip-actions__btn .ip-icon { flex: none; width: 22px; height: 22px; transition: transform var(--dur-ui) var(--ease) }
+.ip-actions__btn:hover .ip-icon--arrow { transform: translateX(3px) }
 .ip-actions__btn.infoplus-btn-disabled { opacity: 1; background: var(--c-grey-200); color: var(--text-secondary); box-shadow: none }
 .ip-actions__btn.infoplus-btn-hidden { display: none !important }
+.ip-actions__btn--inquiry .ip-icon { width: 20px; height: 20px }
+/* Buy form: one grid cell, the submit button fills it. */
+.ip-actions__form { display: grid; margin: 0 }
+.ip-actions__form[hidden] { display: none }
+.ip-actions__btn--cart { width: 100%; cursor: pointer }
+/* The Suite's .infoplus-btn-disabled sets pointer-events: none. The cart button stays
+   clickable, so a click with options missing explains itself (product.js). */
+.ip-actions__btn--cart.infoplus-btn-disabled { pointer-events: auto; cursor: not-allowed }
+.ip-actions__btn--cart.is-busy { cursor: progress; opacity: .85 }
 /* Requestable models: the inquiry is the only action, so it becomes the primary button. */
+.ip-actions[data-ip-order-type="requestable"] .ip-actions__btn--inquiry,
 .ip-actions__btn--editor.infoplus-btn-hidden ~ .ip-actions__btn--inquiry { background: var(--accent); color: var(--c-white); box-shadow: none }
+.ip-actions[data-ip-order-type="requestable"] .ip-actions__btn--inquiry:hover,
 .ip-actions__btn--editor.infoplus-btn-hidden ~ .ip-actions__btn--inquiry:hover { background: var(--accent-hover) }
+.ip-actions__hint { grid-column: 1 / -1; margin: 0; color: var(--text-secondary); font: var(--type-small) }
+.ip-actions__hint:empty { display: none }
 .ip-actions .infoplus-btn-error-msg { grid-column: 1 / -1; margin: 0; color: var(--c-secondary); font: 600 15px/1.3 var(--font); text-align: left }
 /* Pulse on model change (plugin keyframes use #E91E8C; brand magenta here). */
 @keyframes ip-action-pulse {

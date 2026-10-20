@@ -20,9 +20,14 @@
  * - No form.variations_form. The Elementor template never rendered one (checked
  *   on the staging Atlantis page, 2026-10-20). The Suite runs from its own state
  *   (window.infoplusProductData, product-state.js); every Suite use of the Woo
- *   form is guarded by "if the form exists". Add to cart for "buyable" models goes
- *   through the Suite's admin-ajax action infoplus_add_to_cart. The filter
- *   ip_product_variations_form turns the native form on (rendered hidden).
+ *   form is guarded by "if the form exists". The filter ip_product_variations_form
+ *   turns the native form on (rendered hidden).
+ * - Add to cart for "buyable" models: the old page used the Suite's admin-ajax
+ *   action infoplus_add_to_cart. This page renders a small WooCommerce
+ *   add-to-cart form instead (template-parts/product/actions.php, form.cart with
+ *   add-to-cart, variation_id, attribute_* and quantity), so the add goes through
+ *   WC_Form_Handler: validation filters, cart item data filters, notices and the
+ *   cart redirect setting apply. assets/js/product.js fills it from the Suite state.
  * - No woocommerce_single_product_summary. Elementor's template did not fire it
  *   either. On staging it would add Germanized price notes, PayPal / Klarna /
  *   WooPayments buttons and messaging, and Woo's JSON-LD. The filter
@@ -177,7 +182,16 @@ function ip_product_texts() {
 			'price_note'     => 'Alle Preise inkl. MwSt., zzgl. Versandkosten',
 			// Buttons #editor (c0deeb0) and #anfrage (3d00462).
 			'editor_label'   => 'Produkt gestalten',
+			'editor_sr'      => '(öffnet den Online-Editor in einem neuen Tab)',
 			'inquiry_label'  => 'Individuelle Anfrage',
+			// Buy form for "buyable" models (actions.php). The label is the one the Suite used.
+			'cart_label'     => 'In den Warenkorb',
+			'cart_busy'      => 'Wird hinzugefügt …',
+			'choose_options' => 'Bitte wählen Sie zuerst alle Optionen aus.',
+			// One line under the buttons per order type (data-ip-order-hint).
+			'hint_editable'    => 'Gestalten Sie Ihr Schild im Online-Editor. Von dort legen Sie es in den Warenkorb.',
+			'hint_buyable'     => 'Direkt bestellbar: Menge wählen und in den Warenkorb legen.',
+			'hint_requestable' => 'Dieses Modell fertigen wir auf Anfrage. Sie erhalten ein unverbindliches Angebot.',
 			// Section below the description (containers fcd96be, d809b0f, aa678ab).
 			'request_title'  => 'Individuelle Anfrage',
 			'request_text'   => 'Ihr Logo wird zum dreidimensionalen Hingucker – wir fertigen Ihre Wunschkontur präzise nach Ihren Vorgaben.',
@@ -276,6 +290,35 @@ function ip_product_inquiry_url( $product ) {
 }
 
 /**
+ * The selection of a buy form POST for this product, so product.js can restore
+ * it after Woo renders the page again (error notice, or success without the
+ * cart redirect). Null for every other request. Values are only echoed back
+ * into a data attribute, never trusted: Woo validates the POST itself.
+ *
+ * @return array{model:string,attributes:array<string,string>,variation:int,qty:int}|null
+ */
+function ip_product_buy_form_posted( $product ) {
+	// phpcs:disable WordPress.Security.NonceVerification.Missing -- read-only echo of Woo's own (nonce-less) add-to-cart POST.
+	if ( empty( $_POST['infoplus_buy_form'] ) || ! isset( $_POST['add-to-cart'] ) || absint( $_POST['add-to-cart'] ) !== $product->get_id() ) {
+		return null;
+	}
+	$attributes = array();
+	foreach ( $_POST as $key => $value ) {
+		if ( is_string( $key ) && 0 === strpos( $key, 'attribute_' ) && is_scalar( $value ) ) {
+			$attributes[ sanitize_title( substr( $key, 10 ) ) ] = sanitize_title( wp_unslash( (string) $value ) );
+		}
+	}
+	$posted = array(
+		'model'      => $attributes['pa_model'] ?? '',
+		'attributes' => $attributes,
+		'variation'  => isset( $_POST['variation_id'] ) ? absint( $_POST['variation_id'] ) : 0,
+		'qty'        => isset( $_POST['quantity'] ) ? max( 1, absint( $_POST['quantity'] ) ) : 1,
+	);
+	// phpcs:enable
+	return $posted;
+}
+
+/**
  * Outline icons used only on this page (24 px grid, 1.75 stroke, like
  * inc/icons.php). Falls back to ip_icon() for the shared set. Decorative.
  */
@@ -284,6 +327,8 @@ function ip_product_icon( $name ) {
 		'minus'      => '<path d="M5 12h14"/>',
 		'plus'       => '<path d="M12 5v14M5 12h14"/>',
 		'arrow'      => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+		'cart'       => '<path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/>',
+		'mail'       => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
 		'box'        => '<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
 		'tag'        => '<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.3"/>',
 		'gift'       => '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v8h14v-8M12 8v12M12 8S10.5 3.5 8 4.5 9 8 12 8zM12 8s1.5-4.5 4-3.5S15 8 12 8z"/>',

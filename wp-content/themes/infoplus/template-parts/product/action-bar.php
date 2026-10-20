@@ -2,10 +2,12 @@
 /**
  * Sticky action bar for phones and tablets (below 1101 px): Gesamtpreis and
  * quantity, plus the primary action. It mirrors the real buttons and does not
- * replace them: assets/js/product.js copies the label, the visible / disabled
- * state and the total from the configurator and forwards the click to the
- * button that is currently shown (#editor, or #anfrage for models that are
- * only requestable). It shows only while the real buttons are out of view.
+ * replace them: assets/js/product.js copies the label (aria-label with the
+ * full text), the disabled state and the total from the configurator and
+ * forwards the click to the button of the current order type: #editor
+ * (editable), the buy form's submit button (buyable, so the WooCommerce form
+ * posts as usual) or #anfrage (requestable). data-ip-kind on the bar button
+ * says which one. It shows only while the real buttons are out of view.
  * Hidden without JS (the attribute is removed by product.js).
  *
  * $args:
