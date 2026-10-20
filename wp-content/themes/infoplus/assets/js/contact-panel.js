@@ -1,10 +1,11 @@
 /*
  * Floating Kontakt panel (template-parts/contact-panel.php).
- * Behaviour of the old Elementor snippet 14273: the tab toggles the panel,
- * a click outside closes it. Added: Escape closes it (focus goes back to the
- * tab when it was inside), focus leaving the panel closes it, aria-expanded
- * follows the state. The panel width is fixed in CSS, so nothing is measured
- * here (the snippet measured it on load and on resize).
+ * Old behaviour (Elementor snippet 14273): the tab toggles the panel, a click
+ * outside closes it. Added: Escape and the close button close it and return
+ * focus to the tab; focus leaving the panel closes it; aria-expanded follows
+ * the state. On phones the panel is a bottom sheet covering part of the page,
+ * so opening moves focus into it; on desktop focus stays on the tab
+ * (disclosure pattern, the panel follows it in tab order).
  */
 (function () {
 	'use strict';
@@ -14,10 +15,11 @@
 		return;
 	}
 	var tab = root.querySelector('[data-ip-contact-toggle]');
-	var closeBtn = root.querySelector('[data-ip-contact-close]');
-	if (!tab) {
+	var panel = tab && document.getElementById(tab.getAttribute('aria-controls'));
+	if (!tab || !panel) {
 		return;
 	}
+	var sheet = window.matchMedia('(max-width: 767px)');
 
 	function isOpen() {
 		return root.classList.contains('is-open');
@@ -26,6 +28,9 @@
 	function setOpen(open, focusTab) {
 		root.classList.toggle('is-open', open);
 		tab.setAttribute('aria-expanded', open ? 'true' : 'false');
+		if (open && sheet.matches) {
+			panel.focus({ preventScroll: true });
+		}
 		if (!open && focusTab) {
 			tab.focus();
 		}
@@ -35,11 +40,11 @@
 		setOpen(!isOpen(), false);
 	});
 
-	if (closeBtn) {
-		closeBtn.addEventListener('click', function () {
+	root.querySelectorAll('[data-ip-contact-close]').forEach(function (el) {
+		el.addEventListener('click', function () {
 			setOpen(false, true);
 		});
-	}
+	});
 
 	document.addEventListener('click', function (event) {
 		if (isOpen() && !root.contains(event.target)) {

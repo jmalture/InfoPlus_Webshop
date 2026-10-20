@@ -40,6 +40,8 @@ function ip_setting_defaults() {
 			'kontakt_heading'              => 'Persönlich für Sie da',
 			'kontakt_intro'                => 'Stellen Sie Ihre Fragen einfach und bequem per Mail oder Fax!',
 			'kontakt_hours'                => "MO–DO | 8:00–17:00\nFR | 8:00–16:00",
+			'kontakt_form_label'           => 'Kontakt-Formular',
+			'kontakt_form_page'            => 3040,
 
 			// Tab "Footer".
 			'footer_logo'                  => $logo ? $logo : 85,
@@ -93,6 +95,23 @@ function ip_setting_ids( $name ) {
 		$value = explode( ',', $value );
 	}
 	return array_values( array_filter( array_map( 'absint', (array) $value ) ) );
+}
+
+/**
+ * URL of a page chosen in a post_object setting, or '' when the client
+ * cleared it. While the setting was never saved and the default page does
+ * not exist (yet), $fallback_path keeps the old link working.
+ */
+function ip_setting_page_url( $name, $fallback_path = '' ) {
+	$id = absint( ip_setting( $name ) );
+	if ( $id && 'publish' === get_post_status( $id ) ) {
+		return get_permalink( $id );
+	}
+	$defaults = ip_setting_defaults();
+	if ( $id && isset( $defaults[ $name ] ) && (int) $defaults[ $name ] === $id && $fallback_path ) {
+		return home_url( $fallback_path );
+	}
+	return '';
 }
 
 /** Escaped multi-line text: each line break becomes <br>. */
@@ -214,13 +233,13 @@ add_action( 'acf/init', function () {
 				'wrapper'      => array( 'width' => '50' ),
 			) ),
 			$f( 'kontakt_panel_show', 'true_false', 'Kontakt-Panel anzeigen', array(
-				'instructions' => 'Der rosa Reiter „Kontakt“ am rechten Bildschirmrand, der beim Klick Öffnungszeiten, Telefon und E-Mail ausklappt.',
+				'instructions' => 'Der Reiter „Kontakt“ am rechten Bildschirmrand (auf dem Handy ein runder Button unten rechts), der Öffnungszeiten, Telefon und E-Mail ausklappt.',
 				'ui'           => 1,
 				'ui_on_text'   => 'Ja',
 				'ui_off_text'  => 'Nein',
 			) ),
 			$f( 'kontakt_tab_label', 'text', 'Beschriftung des Reiters', array(
-				'instructions' => 'Auf dem Handy wird nur das Telefon-Symbol gezeigt; der Text bleibt für Screenreader erhalten.',
+				'instructions' => 'Auf dem Handy wird nur das Symbol gezeigt; der Text bleibt für Screenreader erhalten.',
 				'wrapper'      => array( 'width' => '33' ),
 			) ),
 			$f( 'kontakt_heading', 'text', 'Überschrift im Panel', array(
@@ -236,16 +255,29 @@ add_action( 'acf/init', function () {
 				'rows'         => 4,
 				'new_lines'    => '',
 			) ),
+			$f( 'kontakt_form_label', 'text', 'Button im Panel: Text', array(
+				'instructions' => 'Leer lassen, um den Button auszublenden.',
+				'wrapper'      => array( 'width' => '50' ),
+			) ),
+			$f( 'kontakt_form_page', 'post_object', 'Button im Panel: Ziel', array(
+				'instructions'  => 'Die Seite mit dem Kontaktformular.',
+				'post_type'     => array( 'page' ),
+				'return_format' => 'id',
+				'allow_null'    => 1,
+				'multiple'      => 0,
+				'ui'            => 1,
+				'wrapper'       => array( 'width' => '50' ),
+			) ),
 
 			$tab( 'footer', 'Footer' ),
 			$f( 'footer_logo', 'image', 'Logo im Footer', array(
-				'instructions'  => 'Wird 190 px breit angezeigt (Tablet und Handy 150 px) und verlinkt auf die Startseite.',
+				'instructions'  => 'Wird 170 px breit angezeigt (Handy 150 px) und verlinkt auf die Startseite.',
 				'return_format' => 'id',
 				'preview_size'  => 'medium',
 				'library'       => 'all',
 			) ),
 			$f( 'footer_info_title', 'text', 'Überschrift Spalte „Informationen“', array(
-				'instructions' => 'Wird in Großbuchstaben angezeigt. Die Links darunter pflegen Sie unter Design → Menüs (Position „Footer: Informationen“).',
+				'instructions' => 'Kleine Überschrift in Großbuchstaben. Die Links darunter pflegen Sie unter Design → Menüs (Position „Footer: Informationen“).',
 				'wrapper'      => array( 'width' => '33' ),
 			) ),
 			$f( 'footer_legal_title', 'text', 'Überschrift Spalte „Rechtliches“', array(
@@ -256,9 +288,10 @@ add_action( 'acf/init', function () {
 				'instructions' => 'Firmenname, Anschrift, Telefon, Fax und E-Mail kommen aus dem Reiter „Kontakt“.',
 				'wrapper'      => array( 'width' => '34' ),
 			) ),
-			$f( 'footer_legal_note', 'textarea', 'Hinweis unter „Rechtliches“', array(
-				'rows'      => 2,
-				'new_lines' => '',
+			$f( 'footer_legal_note', 'textarea', 'Vertrauenszeile unter dem Logo', array(
+				'instructions' => 'Ein kurzer, sachlicher Satz mit Symbol (z. B. für wen das Angebot ist). Nur echte Fakten, keine Werbeversprechen.',
+				'rows'         => 2,
+				'new_lines'    => '',
 			) ),
 			$f( 'footer_payment_title', 'text', 'Überschrift Zahlungsarten', array( 'wrapper' => array( 'width' => '33' ) ) ),
 			$f( 'footer_shipping_title', 'text', 'Überschrift Versand', array( 'wrapper' => array( 'width' => '33' ) ) ),
@@ -283,14 +316,14 @@ add_action( 'acf/init', function () {
 				'wrapper'      => array( 'width' => '50' ),
 			) ),
 			$f( 'footer_price_note', 'text', 'Preishinweis', array(
-				'instructions' => 'Rechts in der rosa Leiste ganz unten.',
+				'instructions' => 'In der Leiste ganz unten, hinter dem Copyright.',
 				'wrapper'      => array( 'width' => '50' ),
 			) ),
 			$f( 'footer_credit_text', 'text', 'Agentur-Hinweis: Text', array( 'wrapper' => array( 'width' => '25' ) ) ),
 			$f( 'footer_credit_name', 'text', 'Agentur-Hinweis: Name (verlinkt)', array( 'wrapper' => array( 'width' => '25' ) ) ),
 			$f( 'footer_credit_url', 'url', 'Agentur-Hinweis: Link', array( 'wrapper' => array( 'width' => '25' ) ) ),
 			$f( 'footer_credit_logo', 'image', 'Agentur-Hinweis: Logo', array(
-				'instructions'  => 'Klein (26 px) hinter dem Namen.',
+				'instructions'  => 'Klein (20 px) hinter dem Namen.',
 				'return_format' => 'id',
 				'preview_size'  => 'thumbnail',
 				'library'       => 'all',

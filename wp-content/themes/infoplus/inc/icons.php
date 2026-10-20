@@ -24,6 +24,7 @@ function ip_icon( $name, $label = '' ) {
 		'clock'   => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
 		'chevron' => '<path d="M9 6l6 6-6 6"/>',
 		'chat'    => '<path d="M4 5h16v11H8l-4 4z"/>',
+		'briefcase' => '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
 	);
 	if ( ! isset( $paths[ $name ] ) ) {
 		return '';
