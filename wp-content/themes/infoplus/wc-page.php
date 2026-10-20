@@ -10,7 +10,9 @@
  * built checkout page) is explained at ip_shop_wc_page_html().
  *
  * Order received / order pay are endpoints of the checkout page: same frame,
- * step 3, content from WooCommerce and the Infoplus Suite thank-you module.
+ * step 3. Order received renders the theme's woocommerce/checkout/thankyou.php
+ * (class ip-wc--received, styles in assets/css/order.css); the Infoplus Suite
+ * thank-you block is switched off there (inc/account.php).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -30,7 +32,7 @@ $ip_steps       = array(
 while ( have_posts() ) :
 	the_post();
 	?>
-	<div class="ip-wc ip-wc--<?php echo $ip_is_cart ? 'cart' : 'checkout'; ?><?php echo $ip_endpoint ? ' ip-wc--endpoint' : ''; ?>">
+	<div class="ip-wc ip-wc--<?php echo $ip_is_cart ? 'cart' : 'checkout'; ?><?php echo $ip_endpoint ? ' ip-wc--endpoint' : ''; ?><?php echo $ip_is_received && function_exists( 'ip_account_owns_thankyou' ) && ip_account_owns_thankyou() ? ' ip-wc--received' : ''; ?>">
 		<div class="ip-shell">
 			<header class="ip-wc__head">
 				<div class="ip-head">
