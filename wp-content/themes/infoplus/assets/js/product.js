@@ -153,6 +153,13 @@
     return el ? el.textContent.replace(/\s+/g, ' ').trim() : '';
   }
 
+  /** "Druck &amp; Sonderkontur" -> "Druck & Sonderkontur" (inert, never inserted as HTML). */
+  function decodeEntities(value) {
+    var ta = doc.createElement('textarea');
+    ta.innerHTML = value;
+    return ta.value;
+  }
+
   function dropdownRows() {
     return dropdowns ? Array.prototype.slice.call(dropdowns.querySelectorAll('.infoplus-dropdown[data-attribute]')) : [];
   }
@@ -168,12 +175,16 @@
   function snapshot() {
     var ps = state();
     var slug = ps ? ps.selectedModel : null;
+    // The rendered card label first: the names in the product data are stored
+    // HTML-escaped (WordPress term names, "Druck &amp; Sonderkontur").
     var modelName = '';
-    (productData().models || []).forEach(function (m) {
-      if (m.slug === slug) modelName = m.name || '';
-    });
-    if (!modelName && slug && modelWidget) {
+    if (slug && modelWidget) {
       modelName = text(modelWidget.querySelector('[data-model="' + cssEscape(slug) + '"] .ip-c-model-selector__label'));
+    }
+    if (!modelName) {
+      (productData().models || []).forEach(function (m) {
+        if (m.slug === slug) modelName = decodeEntities(m.name || '');
+      });
     }
 
     var locked = !!(dropdowns && dropdowns.classList.contains('is-requestable-locked'));

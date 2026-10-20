@@ -440,15 +440,17 @@
 
 /* ── Summary card (order-summary.php) ───────────────────────────────────
    Calm white panel with --shadow-1; magenta only on the main action. From
-   1101 px it is sticky in the right column: top below the header, bottom
-   above the viewport edge, so it stays in view while the steps scroll and
-   settles in place at the end of the column. */
+   1101 px wide and 900 px tall it is sticky in the right column: top below
+   the header, bottom above the viewport edge, so it stays in view while the
+   steps scroll and settles in place at the end of the column. On shorter
+   screens (most laptops) a stuck card would cover a third of the steps, so
+   there it stays in place at the end of the column. */
 .ip-summary {
   display: grid; gap: var(--space-4); padding: 18px 20px 20px;
   border: 1px solid var(--border); border-radius: 20px; background: var(--c-white); box-shadow: var(--shadow-1);
 }
 @media (min-width: 768px) { .ip-summary { padding: 20px var(--space-6) var(--space-6) } }
-@media (min-width: 1101px) {
+@media (min-width: 1101px) and (min-height: 900px) {
   .ip-summary { position: sticky; top: calc(var(--header-h) + var(--space-4)); bottom: var(--space-4); z-index: 5 }
 }
 .ip-summary p { margin: 0 }
