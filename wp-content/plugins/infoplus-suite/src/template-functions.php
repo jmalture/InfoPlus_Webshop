@@ -45,3 +45,17 @@ if (!function_exists('infoplus_suite_variation_dropdowns')) {
         View::render('variation-dropdowns', Components::variationDropdowns($product, $args));
     }
 }
+
+if (!function_exists('infoplus_suite_product_image')) {
+    /**
+     * Render the product image with zoom, gallery thumbnails and lightbox.
+     *
+     * @param WC_Product|int|null $product Product, product ID, or null for the global $product.
+     * @param array               $args    See templates/product-image.php. Defaults:
+     *                                     Components::productImageDefaults().
+     */
+    function infoplus_suite_product_image($product = null, array $args = []): void
+    {
+        View::render('product-image', Components::productImage($product, $args));
+    }
+}

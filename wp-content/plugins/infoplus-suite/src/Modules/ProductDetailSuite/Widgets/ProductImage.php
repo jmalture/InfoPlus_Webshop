@@ -15,6 +15,8 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
+use Infoplus\Suite\View;
+use Infoplus\Suite\Modules\ProductDetailSuite\Components;
 
 if (!defined('ABSPATH')) exit;
 
@@ -197,12 +199,17 @@ class ProductImage extends Widget_Base
         $this->end_controls_section();
     }
 
+    /**
+     * Render widget output on the frontend.
+     * Markup lives in templates/product-image.php (View::render).
+     */
     protected function render(): void
     {
         $settings = $this->get_settings_for_display();
-        
+
         global $product;
-        
+
+        // Editor preview: use any product (sets the global, as before)
         if (!$product || !is_a($product, 'WC_Product')) {
             if (\Elementor\Plugin::$instance->editor->is_edit_mode()) {
                 $products = wc_get_products(['limit' => 1, 'status' => 'publish']);
@@ -210,161 +217,14 @@ class ProductImage extends Widget_Base
             }
         }
 
-        $enable_zoom = $settings['enable_zoom'] === 'yes';
-        $zoom_scale = $settings['zoom_scale']['size'] ?? 2;
-        $enable_lightbox = $settings['enable_lightbox'] === 'yes';
-        $show_gallery = $settings['show_gallery'] === 'yes';
-        $gallery_position = $settings['gallery_position'];
-
-        $wrapper_class = 'infoplus-product-image';
-        $wrapper_class .= ' infoplus-product-image--gallery-' . $gallery_position;
-        
-        // Get images
-        $main_image_id = $product ? $product->get_image_id() : 0;
-        $main_image_url = $main_image_id ? wp_get_attachment_url($main_image_id) : wc_placeholder_img_src('woocommerce_single');
-        $main_image_full = $main_image_id ? wp_get_attachment_image_url($main_image_id, 'full') : $main_image_url;
-
-        $gallery_ids = $product ? $product->get_gallery_image_ids() : [];
-
-        // Get first model's full gallery for initial render
-        $first_gallery = $product ? $this->getFirstModelGallery($product) : [];
-
-        // If model has a gallery, use its first image as the main image
-        if (!empty($first_gallery)) {
-            $main_image_url  = $first_gallery[0]['url'];
-            $main_image_full = $first_gallery[0]['url'];
-        }
-        ?>
-        <div class="<?php echo esc_attr($wrapper_class); ?>"
-             data-enable-zoom="<?php echo esc_attr($enable_zoom ? 'yes' : 'no'); ?>"
-             data-zoom-scale="<?php echo esc_attr($zoom_scale); ?>"
-             data-enable-lightbox="<?php echo esc_attr($enable_lightbox ? 'yes' : 'no'); ?>">
-
-            <div class="infoplus-product-image__wrapper">
-                <!-- Main Image -->
-                <div class="infoplus-product-image__main" data-full-src="<?php echo esc_url($main_image_full); ?>">
-                    <img src="<?php echo esc_url($main_image_url); ?>"
-                         alt="<?php echo esc_attr($product ? $product->get_name() : 'Product'); ?>"
-                         class="infoplus-product-image__img" />
-
-                    <?php if ($enable_zoom): ?>
-                        <div class="infoplus-product-image__zoom-lens"></div>
-                    <?php endif; ?>
-
-                    <?php if ($enable_lightbox): ?>
-                        <button class="infoplus-product-image__fullscreen" type="button" aria-label="<?php esc_attr_e('View fullscreen', 'infoplus-suite'); ?>">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
-                            </svg>
-                        </button>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Gallery Thumbnails -->
-                <?php if ($show_gallery):
-                    // Build initial thumbnail list for the first model (gallery[1..n])
-                    // Falls back to WooCommerce gallery for non-model products
-                    $initial_thumbs = [];
-                    if (!empty($first_gallery) && count($first_gallery) > 1) {
-                        // Model gallery: show images after the first (main) one
-                        foreach (array_slice($first_gallery, 1) as $img) {
-                            $initial_thumbs[] = [
-                                'url'           => $img['url'],
-                                'thumbnail_url' => $img['thumbnail_url'],
-                            ];
-                        }
-                    } elseif (empty($first_gallery)) {
-                        // No model gallery — WooCommerce gallery fallback for non-model products
-                        foreach ($gallery_ids as $gid) {
-                            $gurl = wp_get_attachment_url($gid);
-                            if ($gurl) {
-                                $initial_thumbs[] = [
-                                    'url'           => $gurl,
-                                    'thumbnail_url' => wp_get_attachment_image_url($gid, 'thumbnail') ?: $gurl,
-                                ];
-                            }
-                        }
-                    }
-                    // Hide the row initially when there are no thumbnails (JS will show it on model change)
-                    $gallery_style = empty($initial_thumbs) ? ' style="display:none;"' : '';
-                ?>
-                    <div class="infoplus-product-image__gallery"<?php echo $gallery_style; ?>>
-                        <?php foreach ($initial_thumbs as $img): ?>
-                            <button class="infoplus-product-image__thumb"
-                                    type="button"
-                                    data-image-url="<?php echo esc_url($img['url']); ?>"
-                                    data-full-url="<?php echo esc_url($img['url']); ?>">
-                                <img src="<?php echo esc_url($img['thumbnail_url'] ?: $img['url']); ?>"
-                                     alt="" loading="lazy" />
-                            </button>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-        
-        <!-- Lightbox Template -->
-        <?php if ($enable_lightbox): ?>
-            <div class="infoplus-lightbox" style="display: none;">
-                <div class="infoplus-lightbox__backdrop"></div>
-                <div class="infoplus-lightbox__content">
-                    <button class="infoplus-lightbox__close" type="button" aria-label="<?php esc_attr_e('Close', 'infoplus-suite'); ?>">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                    <img src="" alt="" class="infoplus-lightbox__image" />
-                    <div class="infoplus-lightbox__nav">
-                        <button class="infoplus-lightbox__prev" type="button" aria-label="<?php esc_attr_e('Previous', 'infoplus-suite'); ?>">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
-                        </button>
-                        <button class="infoplus-lightbox__next" type="button" aria-label="<?php esc_attr_e('Next', 'infoplus-suite'); ?>">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="9 18 15 12 9 6"></polyline>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-        <?php
-    }
-
-    /**
-     * Get the full gallery for the first available model on this product.
-     * Returns an array of [ ['id', 'url', 'thumbnail_url'], … ] from the first model
-     * that has at least one gallery image. Returns empty array if no models or no images.
-     */
-    private function getFirstModelGallery($product): array
-    {
-        if (!$product || !$product->is_type('variable')) {
-            return [];
-        }
-
-        $product_id = $product->get_id();
-
-        // Get the first model term assigned to this product — no need to load all variations
-        $model_terms = wc_get_product_terms($product_id, 'pa_model', ['fields' => 'slugs']);
-        if (empty($model_terms)) {
-            return [];
-        }
-
-        foreach ($model_terms as $model_slug) {
-            $gallery = \Infoplus\Suite\Modules\ProductDetailSuite\Fields\ProductAttributeImages::getTermGalleryUrls(
-                $product_id,
-                'pa_model',
-                $model_slug
-            );
-
-            if (!empty($gallery)) {
-                return $gallery;
-            }
-        }
-
-        return [];
+        View::render('product-image', Components::productImage($product, [
+            'context'          => View::CONTEXT_ELEMENTOR,
+            'enable_zoom'      => $settings['enable_zoom'],
+            'zoom_scale'       => $settings['zoom_scale']['size'] ?? 2,
+            'enable_lightbox'  => $settings['enable_lightbox'],
+            'show_gallery'     => $settings['show_gallery'],
+            'gallery_position' => $settings['gallery_position'],
+        ]));
     }
 
     protected function content_template(): void

@@ -316,6 +316,117 @@ final class Components
         return $terms_data;
     }
 
+    // ── product-image ───────────────────────────────────────────────────────
+
+    /**
+     * Defaults of the product image (ProductImage widget content controls).
+     */
+    public static function productImageDefaults(): array
+    {
+        return [
+            'enable_zoom'      => true,
+            'zoom_scale'       => 2,
+            'enable_lightbox'  => true,
+            'show_gallery'     => true,
+            'gallery_position' => 'bottom', // 'bottom' | 'left' | 'right'
+        ];
+    }
+
+    /**
+     * Final template args for templates/product-image.php.
+     *
+     * Adds: product, product_name (alt text), main_image_url, main_image_full,
+     * initial_thumbs (list of url, thumbnail_url).
+     *
+     * @param \WC_Product|int|null $product
+     */
+    public static function productImage($product = null, array $args = []): array
+    {
+        $args = self::merge(self::productImageDefaults(), $args);
+
+        foreach (['enable_zoom', 'enable_lightbox', 'show_gallery'] as $key) {
+            $args[$key] = self::flag($args[$key]);
+        }
+        $args['zoom_scale']       = is_scalar($args['zoom_scale']) ? $args['zoom_scale'] : 2;
+        $args['gallery_position'] = (string) $args['gallery_position'];
+
+        $product = self::resolveProduct($product);
+        $args['product']      = $product;
+        $args['product_name'] = $product ? $product->get_name() : 'Product';
+
+        // Main image: product image, or placeholder
+        $main_image_id   = $product ? $product->get_image_id() : 0;
+        $main_image_url  = $main_image_id ? wp_get_attachment_url($main_image_id) : wc_placeholder_img_src('woocommerce_single');
+        $main_image_full = $main_image_id ? wp_get_attachment_image_url($main_image_id, 'full') : $main_image_url;
+
+        $gallery_ids = $product ? $product->get_gallery_image_ids() : [];
+
+        // First model's full gallery for the initial render
+        $first_gallery = $product ? self::firstModelGallery($product) : [];
+
+        // If the model has a gallery, its first image is the main image
+        if (!empty($first_gallery)) {
+            $main_image_url  = $first_gallery[0]['url'];
+            $main_image_full = $first_gallery[0]['url'];
+        }
+
+        // Initial thumbnails: model gallery[1..n], or the WooCommerce gallery for non-model products
+        $initial_thumbs = [];
+        if (!empty($first_gallery) && count($first_gallery) > 1) {
+            foreach (array_slice($first_gallery, 1) as $img) {
+                $initial_thumbs[] = [
+                    'url'           => $img['url'],
+                    'thumbnail_url' => $img['thumbnail_url'],
+                ];
+            }
+        } elseif (empty($first_gallery)) {
+            foreach ($gallery_ids as $gid) {
+                $gurl = wp_get_attachment_url($gid);
+                if ($gurl) {
+                    $initial_thumbs[] = [
+                        'url'           => $gurl,
+                        'thumbnail_url' => wp_get_attachment_image_url($gid, 'thumbnail') ?: $gurl,
+                    ];
+                }
+            }
+        }
+
+        $args['main_image_url']  = $main_image_url;
+        $args['main_image_full'] = $main_image_full;
+        $args['initial_thumbs']  = $initial_thumbs;
+
+        return $args;
+    }
+
+    /**
+     * Full gallery of the first model of this product that has gallery images:
+     * list of id, url, thumbnail_url. Empty when there are no models or images.
+     * Formerly ProductImage::getFirstModelGallery().
+     */
+    private static function firstModelGallery(\WC_Product $product): array
+    {
+        if (!$product->is_type('variable')) {
+            return [];
+        }
+
+        $product_id = $product->get_id();
+
+        // First model term assigned to this product, no need to load all variations
+        $model_terms = wc_get_product_terms($product_id, 'pa_model', ['fields' => 'slugs']);
+        if (empty($model_terms) || is_wp_error($model_terms)) {
+            return [];
+        }
+
+        foreach ($model_terms as $model_slug) {
+            $gallery = Fields\ProductAttributeImages::getTermGalleryUrls($product_id, 'pa_model', (string) $model_slug);
+            if (!empty($gallery)) {
+                return $gallery;
+            }
+        }
+
+        return [];
+    }
+
     /**
      * Merge args over defaults. Unknown keys are kept for theme overrides.
      */
