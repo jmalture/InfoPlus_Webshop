@@ -1,0 +1,1256 @@
+{
+    "key": "group_ip_home",
+    "title": "Startseite",
+    "fields": [
+        {
+            "key": "field_ip_home_tab_hero",
+            "label": "Kopfbereich",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_hero_kicker",
+            "label": "Kleine Zeile über der Überschrift",
+            "name": "hero_kicker",
+            "type": "text",
+            "instructions": "Nur echte Fakten (Jahr, Herkunft, Zielgruppe), keine Werbeversprechen.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Namensschilder seit 1983"
+        },
+        {
+            "key": "field_ip_home_hero_image",
+            "label": "Bild",
+            "name": "hero_image",
+            "type": "image",
+            "instructions": "Querformat, mindestens 1600 px breit. Wird als erstes Bild sofort geladen.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 289,
+            "return_format": "id",
+            "preview_size": "medium",
+            "library": "all",
+            "mime_types": "jpg,jpeg,png,webp,svg"
+        },
+        {
+            "key": "field_ip_home_hero_title",
+            "label": "Überschrift (Teil 1)",
+            "name": "hero_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Das tollste Namensschild"
+        },
+        {
+            "key": "field_ip_home_hero_title_accent",
+            "label": "Überschrift (Teil 2, magenta)",
+            "name": "hero_title_accent",
+            "type": "text",
+            "instructions": "Der zweite Teil der Überschrift erscheint in Magenta. Leer lassen für eine einfarbige Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "für Ihr Event."
+        },
+        {
+            "key": "field_ip_home_hero_text",
+            "label": "Text",
+            "name": "hero_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Mit unserem Namensschild “Atlantis” stechen Sie aus der Masse heraus. Egal ob im klassischen Stil, modern, oder ganz individuell nach Ihren Wünschen.",
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_hero_cta_label",
+            "label": "Hauptbutton: Text",
+            "name": "hero_cta_label",
+            "type": "text",
+            "instructions": "Leer lassen, um den Button auszublenden.",
+            "required": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Alle Namensschilder"
+        },
+        {
+            "key": "field_ip_home_hero_cta_url",
+            "label": "Hauptbutton: Link",
+            "name": "hero_cta_url",
+            "type": "text",
+            "instructions": "Pfad wie /namensschilder/ oder volle Adresse.",
+            "required": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "/namensschilder/"
+        },
+        {
+            "key": "field_ip_home_hero_cta2_label",
+            "label": "Zweiter Button: Text",
+            "name": "hero_cta2_label",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Namensschild Atlantis"
+        },
+        {
+            "key": "field_ip_home_hero_cta2_url",
+            "label": "Zweiter Button: Link",
+            "name": "hero_cta2_url",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "/product-category/atlantis/"
+        },
+        {
+            "key": "field_ip_home_tab_models",
+            "label": "Modelle",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_models_show",
+            "label": "Abschnitt „Modelle“ anzeigen",
+            "name": "models_show",
+            "type": "true_false",
+            "instructions": "Aus = der Abschnitt wird ausgeblendet, die Inhalte bleiben gespeichert.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_models_kicker",
+            "label": "Kleine Zeile",
+            "name": "models_kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Modelle"
+        },
+        {
+            "key": "field_ip_home_models_title",
+            "label": "Überschrift (Teil 1)",
+            "name": "models_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Finden Sie Ihr"
+        },
+        {
+            "key": "field_ip_home_models_title_accent",
+            "label": "Überschrift (Teil 2, magenta)",
+            "name": "models_title_accent",
+            "type": "text",
+            "instructions": "Der zweite Teil der Überschrift erscheint in Magenta. Leer lassen für eine einfarbige Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Namensschild"
+        },
+        {
+            "key": "field_ip_home_models_text",
+            "label": "Text",
+            "name": "models_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Wählen Sie ein Modell und gestalten Sie Ihr Namensschild online.",
+            "rows": 2,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_models_products",
+            "label": "Gezeigte Modelle",
+            "name": "models_products",
+            "type": "relationship",
+            "instructions": "Reihenfolge per Ziehen. Es werden nur veröffentlichte Produkte gezeigt. Bild und Text kommen aus dem Produkt (Beitragsbild, Kurzbeschreibung).",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                22964,
+                3338
+            ],
+            "post_type": [
+                "product"
+            ],
+            "taxonomy": "",
+            "filters": [
+                "search",
+                "taxonomy"
+            ],
+            "elements": [
+                "featured_image"
+            ],
+            "min": "",
+            "max": 8,
+            "return_format": "id"
+        },
+        {
+            "key": "field_ip_home_models_link_label",
+            "label": "Link unter den Modellen: Text",
+            "name": "models_link_label",
+            "type": "text",
+            "instructions": "Führt zur Übersicht /namensschilder/. Leer lassen, um den Link auszublenden.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Alle Namensschilder ansehen"
+        },
+        {
+            "key": "field_ip_home_tab_occasions",
+            "label": "Anlässe",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_occasions_show",
+            "label": "Abschnitt „Anlässe“ anzeigen",
+            "name": "occasions_show",
+            "type": "true_false",
+            "instructions": "Aus = der Abschnitt wird ausgeblendet, die Inhalte bleiben gespeichert.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_occasions_kicker",
+            "label": "Kleine Zeile",
+            "name": "occasions_kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Anlässe"
+        },
+        {
+            "key": "field_ip_home_occasions_title",
+            "label": "Überschrift (Teil 1)",
+            "name": "occasions_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Die richtigen Namensschilder"
+        },
+        {
+            "key": "field_ip_home_occasions_title_accent",
+            "label": "Überschrift (Teil 2, magenta)",
+            "name": "occasions_title_accent",
+            "type": "text",
+            "instructions": "Der zweite Teil der Überschrift erscheint in Magenta. Leer lassen für eine einfarbige Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "für jeden Anlass"
+        },
+        {
+            "key": "field_ip_home_occasions",
+            "label": "Reiter",
+            "name": "occasions",
+            "type": "repeater",
+            "instructions": "Ein Reiter pro Anlass. Auf dem Handy sind die Reiter eine wischbare Zeile.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "label": "Events",
+                    "title": "Namensschilder für Events",
+                    "text": "Viele Besucher, Geschäftsgespräche und Eindrücke aller Art: mit unseren Namensschildern hinterlassen Sie einen bleibenden Eindruck.",
+                    "image": 263
+                },
+                {
+                    "label": "Hemd & Anzug",
+                    "title": "Namensschilder für Hemd & Anzug",
+                    "text": "Ein professionelles Outfit verdient das passende Namensschild. Bei uns finden Sie die perfekte Kombination.",
+                    "image": 282
+                },
+                {
+                    "label": "Firmenlogo",
+                    "title": "Namensschilder mit Firmenlogo",
+                    "text": "Sie haben ein exklusives Logo, das Aufmerksamkeit verdient? Stärken Sie Ihre Markenpräsenz – mit unserem Namensschild-Designer wird Ihr Logo zum Blickfang.",
+                    "image": 283
+                },
+                {
+                    "label": "Service & Verkauf",
+                    "title": "Namensschilder für Service & Ankauf",
+                    "text": "Namensschilder für einen überzeugenden ersten Eindruck. Ansprechend, professionell, elegant. Bei uns finden Sie das passende Design.",
+                    "image": 280
+                },
+                {
+                    "label": "pos & promotion",
+                    "title": "Namensschilder für POS & Promotion",
+                    "text": "Ob einzelne Spezialanfertigungen oder Großbestellung – bei uns werden Sie definitiv fündig für Ihre optimale Zufriedenheit.",
+                    "image": 279
+                }
+            ],
+            "layout": "block",
+            "button_label": "Reiter hinzufügen",
+            "collapsed": "field_ip_home_occasions_label",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_home_occasions_label",
+                    "label": "Reiter-Beschriftung",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_occasions_title",
+                    "label": "Überschrift",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "70",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_occasions_text",
+                    "label": "Text",
+                    "name": "text",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_ip_home_occasions_image",
+                    "label": "Bild",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "mime_types": "jpg,jpeg,png,webp,svg"
+                },
+                {
+                    "key": "field_ip_home_occasions_link_label",
+                    "label": "Link: Text (optional)",
+                    "name": "link_label",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "25",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_occasions_link_url",
+                    "label": "Link: Ziel (optional)",
+                    "name": "link_url",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "25",
+                        "class": "",
+                        "id": ""
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_ip_home_tab_benefits",
+            "label": "Vorteile",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_benefits_show",
+            "label": "Abschnitt „Vorteile“ anzeigen",
+            "name": "benefits_show",
+            "type": "true_false",
+            "instructions": "Aus = der Abschnitt wird ausgeblendet, die Inhalte bleiben gespeichert.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_benefits_kicker",
+            "label": "Kleine Zeile",
+            "name": "benefits_kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Online bestellen"
+        },
+        {
+            "key": "field_ip_home_benefits_title",
+            "label": "Überschrift (Teil 1)",
+            "name": "benefits_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Hier bestellen und"
+        },
+        {
+            "key": "field_ip_home_benefits_title_accent",
+            "label": "Überschrift (Teil 2, magenta)",
+            "name": "benefits_title_accent",
+            "type": "text",
+            "instructions": "Der zweite Teil der Überschrift erscheint in Magenta. Leer lassen für eine einfarbige Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Vorteile sichern"
+        },
+        {
+            "key": "field_ip_home_benefits_text",
+            "label": "Text",
+            "name": "benefits_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Bestellen Sie hier direkt im Online-Shop und sichern Sie sich viele Vorteile gegenüber alternativen Methoden wie dem Bestellen per Telefon oder per E-Mail.",
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_benefits",
+            "label": "Vorteile",
+            "name": "benefits",
+            "type": "repeater",
+            "instructions": "Nur echte Konditionen (Rabatt, Versand, Lieferzeit). Titel werden in Großbuchstaben gesetzt.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "icon": "tag",
+                    "title": "5% Online-Rabatt",
+                    "text": "(Abzug im Warenkorb)"
+                },
+                {
+                    "icon": "truck",
+                    "title": "Versandkostenfreie Lieferung ab 250€",
+                    "text": ""
+                },
+                {
+                    "icon": "clock",
+                    "title": "24-stunden-lieferservice",
+                    "text": ""
+                },
+                {
+                    "icon": "layers",
+                    "title": "keine vorkosten ab 250 Stück",
+                    "text": ""
+                }
+            ],
+            "layout": "block",
+            "button_label": "Vorteil hinzufügen",
+            "collapsed": "field_ip_home_benefits_title",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_home_benefits_icon",
+                    "label": "Symbol",
+                    "name": "icon",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    },
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "choices": {
+                        "tag": "Prozent / Rabatt",
+                        "truck": "Lieferwagen / Versand",
+                        "clock": "Uhr / Zeit",
+                        "layers": "Stapel / Menge",
+                        "chat": "Sprechblase / Beratung",
+                        "award": "Auszeichnung / Erfahrung",
+                        "pen": "Stift / Gestaltung",
+                        "zap": "Blitz / schnell",
+                        "check": "Haken",
+                        "phone": "Telefon",
+                        "mail": "E-Mail"
+                    },
+                    "default_value": "check"
+                },
+                {
+                    "key": "field_ip_home_benefits_title",
+                    "label": "Titel",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "40",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_benefits_text",
+                    "label": "Zusatz (optional)",
+                    "name": "text",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_ip_home_tab_quality",
+            "label": "Qualität & Kunden",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_quality_show",
+            "label": "Abschnitt „Qualität & Kunden“ anzeigen",
+            "name": "quality_show",
+            "type": "true_false",
+            "instructions": "Aus = der Abschnitt wird ausgeblendet, die Inhalte bleiben gespeichert.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_quality_kicker",
+            "label": "Kleine Zeile",
+            "name": "quality_kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Referenzen"
+        },
+        {
+            "key": "field_ip_home_quality_title",
+            "label": "Überschrift (Teil 1)",
+            "name": "quality_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Qualität,"
+        },
+        {
+            "key": "field_ip_home_quality_title_accent",
+            "label": "Überschrift (Teil 2, magenta)",
+            "name": "quality_title_accent",
+            "type": "text",
+            "instructions": "Der zweite Teil der Überschrift erscheint in Magenta. Leer lassen für eine einfarbige Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "die für sich spricht"
+        },
+        {
+            "key": "field_ip_home_quality_text",
+            "label": "Text",
+            "name": "quality_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "infoplus ist Ihr Ansprechparter rund um das Thema Namensschilder und Schilder. Mit über 35 Jahren Expertise wissen wir genau, welches Produkt am besten zu Ihnen und Ihrem Anlass passt.\nDie Zusammenarbeit mit über 2.000 Kunden und mehr als 5.000.000 produzierten Namensschildern spricht für unsere Qualität und unseren Service.",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_quality_facts",
+            "label": "Zahlen",
+            "name": "quality_facts",
+            "type": "repeater",
+            "instructions": "Nur belegbare Zahlen. Leer lassen, um die Zeile auszublenden.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "value": "über 35",
+                    "label": "Jahre Expertise"
+                },
+                {
+                    "value": "über 2.000",
+                    "label": "Kunden"
+                },
+                {
+                    "value": "über 5.000.000",
+                    "label": "produzierte Namensschilder"
+                }
+            ],
+            "layout": "block",
+            "button_label": "Zahl hinzufügen",
+            "collapsed": "field_ip_home_quality_facts_label",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_home_quality_facts_value",
+                    "label": "Zahl",
+                    "name": "value",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "40",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_quality_facts_label",
+                    "label": "Beschriftung",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "60",
+                        "class": "",
+                        "id": ""
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_ip_home_quality_logos",
+            "label": "Kundenlogos",
+            "name": "quality_logos",
+            "type": "gallery",
+            "instructions": "Logos in der gewünschten Reihenfolge. Bitte bei jedem Logo in der Mediathek den Firmennamen als Alternativtext eintragen.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                153,
+                162,
+                154,
+                155,
+                159,
+                158,
+                161,
+                160,
+                156,
+                157,
+                164,
+                163
+            ],
+            "return_format": "id",
+            "preview_size": "thumbnail",
+            "library": "all",
+            "mime_types": "jpg,jpeg,png,webp,svg",
+            "insert": "append"
+        },
+        {
+            "key": "field_ip_home_tab_service",
+            "label": "Service",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_service_show",
+            "label": "Abschnitt „Service“ anzeigen",
+            "name": "service_show",
+            "type": "true_false",
+            "instructions": "Aus = der Abschnitt wird ausgeblendet, die Inhalte bleiben gespeichert.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_service_kicker",
+            "label": "Kleine Zeile",
+            "name": "service_kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Full-Service"
+        },
+        {
+            "key": "field_ip_home_service_title",
+            "label": "Überschrift (Teil 1)",
+            "name": "service_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Unser"
+        },
+        {
+            "key": "field_ip_home_service_title_accent",
+            "label": "Überschrift (Teil 2, magenta)",
+            "name": "service_title_accent",
+            "type": "text",
+            "instructions": "Der zweite Teil der Überschrift erscheint in Magenta. Leer lassen für eine einfarbige Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Serviceversprechen"
+        },
+        {
+            "key": "field_ip_home_service_text",
+            "label": "Text",
+            "name": "service_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Profitieren Sie von unserem Full-Service für Namensschilder - von der Beratung über die individuelle Gestaltung bis zur Fertigung",
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_service_points",
+            "label": "Leistungen",
+            "name": "service_points",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "icon": "chat",
+                    "title": "kompetente beratung"
+                },
+                {
+                    "icon": "award",
+                    "title": "mehr als 35 jahre erfahrung"
+                },
+                {
+                    "icon": "pen",
+                    "title": "individuelle layoutgestaltung"
+                },
+                {
+                    "icon": "zap",
+                    "title": "schnelle angebotserstellung"
+                }
+            ],
+            "layout": "block",
+            "button_label": "Leistung hinzufügen",
+            "collapsed": "field_ip_home_service_points_title",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_home_service_points_icon",
+                    "label": "Symbol",
+                    "name": "icon",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    },
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "choices": {
+                        "tag": "Prozent / Rabatt",
+                        "truck": "Lieferwagen / Versand",
+                        "clock": "Uhr / Zeit",
+                        "layers": "Stapel / Menge",
+                        "chat": "Sprechblase / Beratung",
+                        "award": "Auszeichnung / Erfahrung",
+                        "pen": "Stift / Gestaltung",
+                        "zap": "Blitz / schnell",
+                        "check": "Haken",
+                        "phone": "Telefon",
+                        "mail": "E-Mail"
+                    },
+                    "default_value": "check"
+                },
+                {
+                    "key": "field_ip_home_service_points_title",
+                    "label": "Titel",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "70",
+                        "class": "",
+                        "id": ""
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_ip_home_service_cards",
+            "label": "Karten",
+            "name": "service_cards",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "image": 15653,
+                    "title": "Höchste Qualität",
+                    "text": "Innovation „Made in Germany“. Qualität, die überzeugt."
+                },
+                {
+                    "image": 215,
+                    "title": "Faire Preise",
+                    "text": "Hochwertige Namensschilder zu fairen Preisen - mit Onlineshop-Rabatt und vielen attraktiven Serviceangeboten."
+                },
+                {
+                    "image": 217,
+                    "title": "Top Service",
+                    "text": "Schilderlösungen nach Maß – mit attraktiven Rahmenvereinbarungen, schneller Fertigung und badge24, unserem Express-Lieferservice."
+                }
+            ],
+            "layout": "block",
+            "button_label": "Karte hinzufügen",
+            "collapsed": "field_ip_home_service_cards_title",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_home_service_cards_image",
+                    "label": "Bild",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "preview_size": "medium",
+                    "library": "all",
+                    "mime_types": "jpg,jpeg,png,webp,svg"
+                },
+                {
+                    "key": "field_ip_home_service_cards_title",
+                    "label": "Titel",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "70",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_service_cards_text",
+                    "label": "Text",
+                    "name": "text",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 2,
+                    "new_lines": ""
+                }
+            ]
+        },
+        {
+            "key": "field_ip_home_tab_seo",
+            "label": "Text unten",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_seo_show",
+            "label": "Abschnitt „Text unten“ anzeigen",
+            "name": "seo_show",
+            "type": "true_false",
+            "instructions": "Aus = der Abschnitt wird ausgeblendet, die Inhalte bleiben gespeichert.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_seo_blocks",
+            "label": "Textblöcke",
+            "name": "seo_blocks",
+            "type": "repeater",
+            "instructions": "Längere Texte über das Sortiment, nebeneinander am Seitenende.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "title": "Individuelle Namensschilder kaufen im infoplus Onlineshop",
+                    "text": "<p>Infoplus ist Ihr Spezialist für individuelle Namensschilder in Premium-Qualität. Bereits seit 1983 bieten wir einen Full-Service für Namensschilder \"Made in Germany\" an. <br>Unser Service-Angebot reicht von der Beratung über die Gestaltung Ihrer Namensschilder bis hin zur Fertigung mit modernen Laser- und Druckverfahren.<br>Sie suchen niveauvolle Büroschilder, Praxisschilder oder Namensschilder für Ihren Messeauftritt? Dann sind Sie bei uns genau richtig. <br>Entdecken Sie jetzt unser vielseitiges Angebot und bestellen Sie Ihre Schilder online – bereits ab 1 Stück möglich.</p>"
+                },
+                {
+                    "title": "Ihre Namensschilder - individuell gestaltet",
+                    "text": "<p>Das Namensschild ist nicht nur Ihr persönliches Aushängeschild, sondern auch das Ihres Unternehmens. Umso wichtiger ist es, dass das Namensschild Ihren Qualitätsanspruch auf niveauvolle Weise unterstreicht. Bei infoplus sind wir uns dieser Verantwortung bewusst. Bei unseren Produkten setzen wir auf hochwertige Materialien und innovative Fertigungsverfahren, um Ihnen für alle Schilderlösungen nur das Beste anbieten zu können.<br>Sie erhalten in unserem Onlineshop personalisierte Namensschilder zum Anstecken, als Tischaufsteller und als Türschild. Alle Schilder fertigen wir individuell nach Ihren Vorgaben. Dabei stehen Ihnen zahlreiche Optionen zur Auswahl - zum Beispiel eine<br>individuelle Kontur, Flaggen zur Sprachkennzeichnung und die Integration Ihres Firmenlogos an prominenter Stelle. Auch spezielle Wünsche setzen wir gern um - sprechen Sie uns einfach an.</p>"
+                },
+                {
+                    "title": "Büroschilder und Praxisschilder in Premium-Qualität",
+                    "text": "<p>Personalisierte Namensschilder aus besonders edlen Materialien gehören heute in vielen Branchen zur Standard-Ausstattung. Sei es zur Repräsentation auf Messen, bei der Kundenberatung oder in der Arztpraxis, einer Kanzlei oder in öffentlichen Einrichtungen: Mit individuellen Namensschildern unterstreichen Sie Ihr Qualitätsbewusstsein und zeigen Ihren Kunden und Gästen Ihre Wertschätzung.<br>In unserem Onlineshop finden Sie eine riesige Auswahl an Schildern, Logoschildern und Pins für jeden Einsatzzweck. Wir fertigen in Ihrem Auftrag Büroschilder und Praxisschilder in nahezu unbegrenzter Designvielfalt. Auch für den Gebrauch auf Messen, Events und Veranstaltungen haben wir passgenaue Lösungen für Sie im Sortiment.<br>Nutzen Sie unsere Schilder-Suche, um für Ihre Bedürfnisse das passende Namensschild zu finden, oder lassen Sie sich von uns persönlich beraten. Gern sind wir Ihnen dabei behilflich, individuelle Lösungen für Ihr Unternehmen zu entwickeln.</p>"
+                }
+            ],
+            "layout": "block",
+            "button_label": "Textblock hinzufügen",
+            "collapsed": "field_ip_home_seo_blocks_title",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_home_seo_blocks_title",
+                    "label": "Überschrift",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_seo_blocks_text",
+                    "label": "Text",
+                    "name": "text",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "tabs": "visual",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 1
+                }
+            ]
+        },
+        {
+            "key": "field_ip_home_tab_contact",
+            "label": "Kontakt-Band",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_contact_show",
+            "label": "Kontakt-Band anzeigen",
+            "name": "contact_show",
+            "type": "true_false",
+            "instructions": "Band am Seitenende mit Telefon, E-Mail und Öffnungszeiten aus den Website-Einstellungen.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_contact_title",
+            "label": "Überschrift",
+            "name": "contact_title",
+            "type": "text",
+            "instructions": "Leer = „Überschrift im Panel“ aus den Website-Einstellungen (heute „Persönlich für Sie da“).",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": ""
+        },
+        {
+            "key": "field_ip_home_contact_text",
+            "label": "Text",
+            "name": "contact_text",
+            "type": "textarea",
+            "instructions": "Leer = „Einleitung im Panel“ aus den Website-Einstellungen.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "rows": 2,
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "8"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "author",
+        "format",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "Inhalte der Startseite (front-page.php). Ort: Seite = Startseite (ID 8 auf Staging).",
+    "show_in_rest": 0,
+    "modified": 1792483200
+}

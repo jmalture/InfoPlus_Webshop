@@ -152,4 +152,35 @@
     }, { passive: true });
     updateStuck();
   }
+
+  /* ── Swipe rows (.ip-swipe[data-ip-swipe]): dots under the row on phones ── */
+  doc.querySelectorAll('[data-ip-swipe]').forEach(function (row) {
+    var cards = row.children;
+    if (cards.length < 2) return;
+    var dots = doc.createElement('div');
+    dots.className = 'ip-swipe-dots';
+    var buttons = [];
+    Array.prototype.forEach.call(cards, function (card, i) {
+      var b = doc.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', (i + 1) + ' / ' + cards.length);
+      b.addEventListener('click', function () {
+        row.scrollTo({ left: card.offsetLeft - row.offsetLeft - parseFloat(getComputedStyle(row).scrollPaddingLeft || 0), behavior: 'smooth' });
+      });
+      dots.appendChild(b);
+      buttons.push(b);
+    });
+    row.after(dots);
+    var swipeFrame = 0;
+    var markDot = function () {
+      swipeFrame = 0;
+      var max = row.scrollWidth - row.clientWidth;
+      var idx = max > 0 ? Math.round((row.scrollLeft / max) * (cards.length - 1)) : 0;
+      buttons.forEach(function (b, i) { b.setAttribute('aria-current', i === idx ? 'true' : 'false'); });
+    };
+    row.addEventListener('scroll', function () {
+      if (!swipeFrame) swipeFrame = window.requestAnimationFrame(markDot);
+    }, { passive: true });
+    markDot();
+  });
 })();

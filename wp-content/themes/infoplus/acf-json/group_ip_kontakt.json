@@ -1,0 +1,143 @@
+{
+    "key": "group_ip_kontakt",
+    "title": "Kontakt",
+    "fields": [
+        {
+            "key": "field_ip_kontakt_kicker",
+            "label": "Kleine Zeile",
+            "name": "kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Kontakt"
+        },
+        {
+            "key": "field_ip_kontakt_title",
+            "label": "Überschrift (H1)",
+            "name": "title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Persönlich für Sie da"
+        },
+        {
+            "key": "field_ip_kontakt_image",
+            "label": "Bild neben der Einleitung",
+            "name": "image",
+            "type": "image",
+            "instructions": "Leer lassen, um ohne Bild zu zeigen.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 3044,
+            "return_format": "id",
+            "preview_size": "medium",
+            "library": "all",
+            "mime_types": "jpg,jpeg,png,webp,svg"
+        },
+        {
+            "key": "field_ip_kontakt_intro",
+            "label": "Einleitung",
+            "name": "intro",
+            "type": "textarea",
+            "instructions": "Kontaktdaten und Öffnungszeiten kommen aus den Website-Einstellungen (Reiter „Kontakt“).",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Stellen Sie Ihre Fragen einfach und bequem per Mail oder Fax!\n\nSie erhalten schnellstmöglich eine qualifizierte Antwort direkt von unserem zuständigen Sachbearbeiter.",
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_kontakt_form_title",
+            "label": "Überschrift über dem Formular",
+            "name": "form_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Hinterlassen Sie uns eine Nachricht"
+        },
+        {
+            "key": "field_ip_kontakt_fallback_title",
+            "label": "Ohne Formular: Überschrift",
+            "name": "fallback_title",
+            "type": "text",
+            "instructions": "Solange kein Formular-Modul aktiv ist, sehen Besucher stattdessen E-Mail- und Telefon-Buttons.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Schreiben Sie uns eine E-Mail"
+        },
+        {
+            "key": "field_ip_kontakt_fallback_text",
+            "label": "Ohne Formular: Text",
+            "name": "fallback_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Ihre Anfrage per E-Mail oder Telefon erreicht direkt unser Team.",
+            "rows": 2,
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "3040"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "author",
+        "format",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "Texte der Seite /kontakt/ (page-kontakt.php).",
+    "show_in_rest": 0,
+    "modified": 1792483200
+}

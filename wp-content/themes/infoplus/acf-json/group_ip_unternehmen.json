@@ -1,0 +1,409 @@
+{
+    "key": "group_ip_unternehmen",
+    "title": "Unternehmen",
+    "fields": [
+        {
+            "key": "field_ip_unternehmen_tab_head",
+            "label": "Kopfbereich",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_unternehmen_kicker",
+            "label": "Kleine Zeile",
+            "name": "kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Über infoplus"
+        },
+        {
+            "key": "field_ip_unternehmen_title",
+            "label": "Überschrift (H1)",
+            "name": "title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Unternehmen"
+        },
+        {
+            "key": "field_ip_unternehmen_subtitle",
+            "label": "Unterzeile",
+            "name": "subtitle",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Unternehmensgeschichte seit 1983"
+        },
+        {
+            "key": "field_ip_unternehmen_highlights",
+            "label": "Kernaussagen",
+            "name": "highlights",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "text": "über 35 Jahre Markterfahrung"
+                },
+                {
+                    "text": "über 35 Jahre Know-How"
+                },
+                {
+                    "text": "über 35 Jahre Lösungen für unsere Kunden erarbeitet"
+                }
+            ],
+            "layout": "block",
+            "button_label": "Aussage hinzufügen",
+            "collapsed": "field_ip_unternehmen_highlights_text",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_unternehmen_highlights_text",
+                    "label": "Aussage",
+                    "name": "text",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    }
+                }
+            ]
+        },
+        {
+            "key": "field_ip_unternehmen_tagline",
+            "label": "Schlusssatz unter den Kernaussagen",
+            "name": "tagline",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "... das ist infoplus!"
+        },
+        {
+            "key": "field_ip_unternehmen_team_image",
+            "label": "Teamfoto",
+            "name": "team_image",
+            "type": "image",
+            "instructions": "Breites Querformat. Alternativtext in der Mediathek pflegen (heute „Infoplus Team“).",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16017,
+            "return_format": "id",
+            "preview_size": "medium",
+            "library": "all",
+            "mime_types": "jpg,jpeg,png,webp,svg"
+        },
+        {
+            "key": "field_ip_unternehmen_tab_story",
+            "label": "Geschichte",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_unternehmen_story_title",
+            "label": "Überschrift",
+            "name": "story_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Unsere Geschichte"
+        },
+        {
+            "key": "field_ip_unternehmen_story_text",
+            "label": "Text",
+            "name": "story_text",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "<p>Die Infoplus Blindow Namensschilder GmbH &amp; Co. KG wurde im November 1983 von Martin Blindow (medizinisch-technischer Fachkaufmann) und einem zwischenzeitlich ausgeschiedenen Seniorpartner (Werbefachmann Hans Prause† aus Ottendorf bei Altenkirchen / gegründet.</p><p>Der ursprüngliche Schwerpunkt lag in der Produktion von hochwertigen Schildern für den niedergelassenen Arzt und Zahnarzt. infoplus rückte mit dem Slogan: „Das Praxisschild ist die Visitenkarte des Praxis\" das hochwertige, dauerhafte Firmen- bzw. Praxisschild für den Arzt und leitete damit die Therapie von Emailleschild und Aluminium zum gestalteten Acrylglasschild ein. Bereits 1988 setzte infoplus mit der Entwicklung des Schilder-Klassikers „Facettenreicher\" Maßstäbe. Aber auch die Produktinnovation „Lastertop-Display\" aus dem Jahr 1989 gehört mittlerweile zur Standard- Produktfamilie moderner Außendarstellung.</p>",
+            "tabs": "visual",
+            "toolbar": "basic",
+            "media_upload": 0,
+            "delay": 1
+        },
+        {
+            "key": "field_ip_unternehmen_tab_milestones",
+            "label": "Meilensteine",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_unternehmen_milestones_title",
+            "label": "Überschrift",
+            "name": "milestones_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Meilensteine"
+        },
+        {
+            "key": "field_ip_unternehmen_milestones",
+            "label": "Meilensteine",
+            "name": "milestones",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "year": "1985",
+                    "text": "Bereits 1985 erkannte infoplus die Bedeutung von Namensschildern und entwickelte zunächst Standards für Arztpraxen und Apotheken. Schon bald wurden mit den LaserContur- und Papyrus-Namensschildern exklusive Spitzenprodukte für nahezu alle Bereiche aus Industrie, Handel und Vertrieb gefertigt."
+                },
+                {
+                    "year": "1993",
+                    "text": "Nach der Entwicklung des INC/MAG-Systems (ein spezielles Magnetsystem zur Namensschilderbefestigung) stellt infoplus im Jahr 2002 das revolutionäre Systemschild „Atlantis\" vor. Über 15 Jahre Namensschilder-Erfahrung sind in einem Schild zusammengefasst."
+                },
+                {
+                    "year": "2005",
+                    "text": "Im Jahr 2005 überstieg das Namensschildersegment erstmals die ursprünglichen Aktivitäten im Bereich Arzt und Zahnarzt. Um dieser Entwicklung gerecht zu werden, aber auch um die Herausforderungen der größten Kunden wahrnehmen zu können, wurde im Laufe des Jahres 2006 die Firma umstrukturiert, der Name aktualisiert und die einzelnen Tätigkeitsbereiche separiert."
+                },
+                {
+                    "year": "Heute",
+                    "text": "Die zukunftsorientierten Veränderungen spiegeln sich am deutlichsten im neuen Logo, der konsequenten Trennung der Produktbereiche, aber auch in unseren motivierten Mitarbeitern wieder."
+                }
+            ],
+            "layout": "block",
+            "button_label": "Meilenstein hinzufügen",
+            "collapsed": "field_ip_unternehmen_milestones_year",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_unternehmen_milestones_year",
+                    "label": "Jahr",
+                    "name": "year",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "20",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_unternehmen_milestones_text",
+                    "label": "Text",
+                    "name": "text",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "80",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 3,
+                    "new_lines": ""
+                }
+            ]
+        },
+        {
+            "key": "field_ip_unternehmen_tab_service",
+            "label": "Service",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_unternehmen_service_title",
+            "label": "Überschrift",
+            "name": "service_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Unser Service"
+        },
+        {
+            "key": "field_ip_unternehmen_service_text",
+            "label": "Text",
+            "name": "service_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "infoplus ist ein Full Service-Dienstleister für Namensschilder, Gestaltung und Druck kleiner und großer Auflagen im hochwertigen Handsiebdruckverfahren oder in moderner Digitaldrucktechnik ist unser tägliches Geschäft. Die Komplettbedürfnisse zu erfassen, zu verstehen und zu befriedigen ist unsere Aufgabe.",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_unternehmen_service_quote",
+            "label": "Hervorgehobener Absatz",
+            "name": "service_quote",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Für unsere Kunden haben wir verschiedene bewährte Dienstleistungen entwickelt, u. a. Logistik-Services (komfortable Abrufaufträge für den regelmäßigen Schilderbedarf; Rahmenvereinbarungen über ihren 1- bis 2-Jahresbedarf) und den Event-Service sowie eine Vielzahl attraktiver Kundenvorteile.",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_unternehmen_tab_cta",
+            "label": "Abschluss",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_unternehmen_cta_title",
+            "label": "Überschrift",
+            "name": "cta_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Sprechen Sie uns an – wir beraten Sie gern!"
+        },
+        {
+            "key": "field_ip_unternehmen_cta_text",
+            "label": "Text",
+            "name": "cta_text",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Haben Sie Fragen zu unseren Produkten oder Services?"
+        },
+        {
+            "key": "field_ip_unternehmen_cta_label",
+            "label": "Button: Text",
+            "name": "cta_label",
+            "type": "text",
+            "instructions": "Leer lassen, um den Button auszublenden.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Kontakt aufnehmen"
+        },
+        {
+            "key": "field_ip_unternehmen_cta_url",
+            "label": "Button: Link",
+            "name": "cta_url",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "/kontakt/"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "2662"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "author",
+        "format",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "Inhalte der Seite /unternehmen/ (page-unternehmen.php). Quelle: HTML-Widget e43551a der alten Seite.",
+    "show_in_rest": 0,
+    "modified": 1792483200
+}

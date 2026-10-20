@@ -1,0 +1,103 @@
+/* Content bundle: every page that is not the front page, a listing, cart,
+   checkout or account (ip_template_bundle()): page-unternehmen.php,
+   page-kontakt.php, page-faq.php and page.php (info and legal texts).
+   Mobile first; breakpoints 768 and 1101 only. Article and prose base
+   styles are shared (main.css). */
+
+/* ── Page head (kicker, H1, subline) ────────────────────────────────────── */
+.ip-page-head { display: grid; gap: var(--space-8); margin-bottom: var(--space-12) }
+.ip-page-head .ip-head { max-width: 62ch }
+.ip-page-head .ip-head__title { font: var(--type-mega); text-wrap: balance }
+.ip-page-head .ip-head__text { font: var(--type-text) }
+
+/* ── Unternehmen ────────────────────────────────────────────────────────── */
+.ip-about__highlights { display: grid; gap: var(--space-4); align-content: start }
+.ip-checks { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none }
+.ip-checks__item { display: flex; align-items: center; gap: var(--space-4); font: 600 19px/1.3 var(--font) }
+.ip-about__tagline { font: italic 600 22px/1.3 var(--font); color: var(--c-secondary) }
+.ip-about__team { position: relative; aspect-ratio: 16 / 10; margin: 0 0 var(--section-gap); border-radius: 20px; overflow: hidden; background: var(--surface-alt) }
+.ip-about__team img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+@media (min-width: 768px) {
+  .ip-about__head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end }
+  .ip-about__team { aspect-ratio: 21 / 9; border-radius: 24px }
+}
+
+/* Two-column text section: heading left, body right (desktop). */
+.ip-split { display: grid; gap: var(--space-4); padding-block: var(--space-8); border-top: 1px solid var(--border) }
+.ip-split__title { font: var(--type-sub); text-wrap: balance }
+.ip-split__body { max-width: 72ch }
+@media (min-width: 1101px) {
+  .ip-split { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-12); padding-block: var(--space-12) }
+}
+
+/* Milestones */
+.ip-timeline { display: grid; gap: 0; margin: 0; padding: 0; list-style: none }
+.ip-timeline__item { position: relative; display: grid; gap: var(--space-2); padding: 0 0 var(--space-8) var(--space-8) }
+.ip-timeline__item::before { content: ""; position: absolute; left: 6px; top: 10px; bottom: -10px; width: 2px; background: var(--border) }
+.ip-timeline__item:last-child::before { display: none }
+.ip-timeline__item::after { content: ""; position: absolute; left: 0; top: 4px; width: 14px; height: 14px; border: 3px solid var(--accent); border-radius: 999px; background: var(--c-white) }
+.ip-timeline__year { justify-self: start; font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase; color: var(--c-secondary) }
+.ip-timeline__text { font: 400 18px/1.6 var(--font) }
+.ip-timeline__item:last-child { padding-bottom: 0 }
+@media (min-width: 768px) {
+  .ip-timeline__item { grid-template-columns: 96px minmax(0, 1fr); gap: var(--space-6); padding-left: var(--space-8) }
+}
+
+.ip-quote { padding: var(--space-4) var(--space-6); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; background: var(--c-primary-tint) }
+
+/* Closing call to action */
+.ip-cta { display: grid; gap: var(--space-6); margin-top: var(--space-8); padding: var(--space-6) }
+.ip-cta__title { font: var(--type-sub); text-wrap: balance }
+.ip-cta__text { display: grid; gap: var(--space-2) }
+.ip-cta__actions { display: flex; flex-wrap: wrap; gap: var(--space-3) }
+@media (min-width: 768px) {
+  .ip-cta { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: var(--space-12) }
+}
+
+/* ── Kontakt ────────────────────────────────────────────────────────────── */
+.ip-kontakt__media { position: relative; aspect-ratio: 16 / 10; border-radius: 20px; overflow: hidden; background: var(--surface-alt) }
+.ip-kontakt__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+.ip-kontakt__grid { display: grid; gap: var(--space-6); align-items: start }
+.ip-kontakt__form { display: grid; gap: var(--space-4); padding: var(--space-6) }
+.ip-kontakt__form-title { font: var(--type-sub); text-wrap: balance }
+.ip-kontakt__actions { display: flex; flex-wrap: wrap; gap: var(--space-3) }
+.ip-placeholder { display: flex; gap: var(--space-4); padding: var(--space-4); border: 1px dashed var(--accent); border-radius: 12px; background: var(--c-primary-tint); font-size: 16px }
+.ip-placeholder p + p { margin-top: var(--space-2) }
+@media (min-width: 768px) {
+  .ip-kontakt__head.has-media { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center }
+  .ip-kontakt__form { padding: var(--space-8) }
+}
+@media (min-width: 1101px) {
+  .ip-kontakt__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--space-12) }
+  .ip-kontakt__media { aspect-ratio: 4 / 3 }
+}
+
+/* ── FAQ: native details/summary ────────────────────────────────────────── */
+.ip-faq__grid { display: grid; gap: var(--space-8); align-items: start }
+.ip-accordion { display: grid; gap: var(--space-3) }
+.ip-accordion__item { border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--c-white); transition: border-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease) }
+.ip-accordion__item[open] { border-color: var(--c-grey-200); box-shadow: var(--shadow-1) }
+.ip-accordion__q { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-4) var(--space-4) var(--space-4) var(--space-6); font: 600 19px/1.3 var(--font); cursor: pointer; list-style: none; border-radius: var(--radius-card) }
+.ip-accordion__q::-webkit-details-marker { display: none }
+.ip-accordion__q:hover { color: var(--c-secondary) }
+.ip-accordion__icon { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 999px; background: var(--c-primary-tint); color: var(--accent); transition: transform var(--dur-ui) var(--ease) }
+.ip-accordion__icon .ip-icon { width: 18px; height: 18px; transform: rotate(90deg) }
+.ip-accordion__item[open] .ip-accordion__icon { transform: rotate(180deg) }
+.ip-accordion__a { padding: 0 var(--space-6) var(--space-6); font-size: 17px; color: var(--text-secondary) }
+.ip-faq__aside { display: grid; gap: var(--space-3); padding: var(--space-6) }
+.ip-faq__aside-title { font: var(--type-sub); text-wrap: balance }
+.ip-faq__aside .ip-reach { padding-inline: 0 }
+.ip-faq__aside a.ip-reach { padding-inline: var(--space-2); margin-inline: calc(-1 * var(--space-2)) }
+@media (prefers-reduced-motion: no-preference) {
+  .ip-accordion__item[open] .ip-accordion__a { animation: ip-fade-rise 240ms var(--ease) }
+}
+@keyframes ip-fade-rise { from { opacity: 0; transform: translateY(-4px) } }
+@media (min-width: 1101px) {
+  .ip-faq__grid.has-aside { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: var(--space-12) }
+  .ip-faq__aside { position: sticky; top: calc(var(--header-h) + var(--space-6)) }
+}
+
+/* ── Info pages (page.php) ──────────────────────────────────────────────── */
+.ip-prose__figure { max-width: 420px }
+.ip-prose__details { border: 1px solid var(--border); border-radius: 12px; padding: var(--space-3) var(--space-4) }
+.ip-prose__details summary { font-weight: 600; cursor: pointer }

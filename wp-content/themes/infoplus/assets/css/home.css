@@ -1,0 +1,146 @@
+/* Home bundle: front-page.php. Hero, models (product cards from archive.css),
+   occasion tabs, benefits, quality facts + logos, service, sortiment texts,
+   contact band. Mobile first; breakpoints 768 and 1101 only.
+   Shared pieces (.ip-head, .ip-card, .ip-tile, .ip-swipe, .ip-reach, .ip-prose)
+   live in main.css. */
+
+/* ── Hero ───────────────────────────────────────────────────────────────── */
+.ip-hero { padding-block: var(--space-6) var(--section-gap) }
+.ip-hero + .ip-section:not(.ip-band--alt) { padding-top: 0 }
+.ip-home .ip-head { max-width: 780px }
+.ip-hero__grid { display: grid; gap: var(--space-8); align-items: center }
+.ip-hero__text { display: grid; gap: var(--space-4); justify-items: start }
+.ip-hero__title { font: var(--type-mega); text-wrap: balance }
+.ip-hero__title em { font-style: normal; color: var(--accent) }
+.ip-hero__lead { max-width: 46ch; color: var(--text-secondary) }
+.ip-hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2) }
+.ip-hero__media { position: relative; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden; background: var(--surface-alt) }
+.ip-hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+@media (min-width: 768px) {
+  .ip-hero { padding-top: var(--space-12) }
+  .ip-hero__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--space-12) }
+  .ip-hero__media { border-radius: 24px }
+}
+@media (min-width: 1101px) {
+  .ip-hero__media { aspect-ratio: 5 / 4 }
+}
+
+/* ── Section top row: head left, "more" link right ──────────────────────── */
+.ip-section__top { display: grid; gap: var(--space-4); align-items: end }
+.ip-section__more { justify-self: start }
+@media (min-width: 768px) {
+  .ip-section__top { grid-template-columns: minmax(0, 1fr) auto }
+}
+
+/* ── Models: product cards (styles in archive.css) ──────────────────────── */
+.ip-models .ip-shop-card { height: 100% }
+@media (min-width: 768px) {
+  .ip-models__list.ip-cols-2 .ip-shop-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center }
+  .ip-models__list.ip-cols-2 .ip-shop-card__media { height: 100% }
+  .ip-models__list.ip-cols-2 .ip-shop-card__body { padding: var(--space-6) }
+}
+
+/* ── Tabs (occasions) ───────────────────────────────────────────────────── */
+.ip-tabs { margin-top: var(--space-8) }
+.ip-tabs__list {
+  display: flex; gap: var(--space-2);
+  margin: 0 calc(-1 * var(--layout-margin)) var(--space-4); padding: 2px var(--layout-margin) var(--space-2);
+  overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity; scroll-padding-inline: var(--layout-margin);
+}
+.ip-tabs__list::-webkit-scrollbar { display: none }
+.ip-tabs__tab {
+  flex: none; min-height: 44px; padding: 0 var(--space-4); scroll-snap-align: start;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--c-white);
+  font: 600 15px/1 var(--font); letter-spacing: 1px; text-transform: uppercase; white-space: nowrap;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-tabs__tab:hover { background: var(--c-primary-tint); border-color: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-tabs__tab[aria-selected="true"] { background: var(--c-primary-tint); border-color: var(--accent); color: var(--c-secondary) }
+.ip-tabs__panel:focus-visible { outline-offset: 4px; border-radius: var(--radius-card) }
+/* Without JS every panel shows, one below the other, and the tab row is hidden. */
+html:not(.js) .ip-tabs__list { display: none }
+html:not(.js) .ip-tabs__panel[hidden] { display: block; margin-top: var(--space-4) }
+@media (prefers-reduced-motion: no-preference) {
+  .js .ip-tabs__panel:not([hidden]) { animation: ip-rise 260ms var(--ease) }
+}
+@keyframes ip-rise { from { opacity: 0; transform: translateY(8px) } }
+
+.ip-occasion { display: grid; overflow: hidden }
+.ip-occasion__media { position: relative; aspect-ratio: 16 / 10; background: var(--surface-alt) }
+.ip-occasion__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+.ip-occasion__body { display: grid; gap: var(--space-3); align-content: center; justify-items: start; padding: var(--space-6) }
+.ip-occasion__title { font: var(--type-sub); text-wrap: balance }
+.ip-occasion__text { color: var(--text-secondary) }
+@media (min-width: 768px) {
+  .ip-tabs__list { flex-wrap: wrap; margin-inline: 0; padding-inline: 0; overflow: visible }
+  .ip-occasion { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); min-height: 380px }
+  .ip-occasion__media { aspect-ratio: auto }
+  .ip-occasion__body { padding: var(--space-12) }
+}
+
+/* ── Benefits ───────────────────────────────────────────────────────────── */
+.ip-feature-grid { display: grid; gap: var(--space-3); margin: var(--space-8) 0 0; padding: 0; list-style: none }
+.ip-feature { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-6) var(--space-4) var(--space-4) }
+.ip-feature__body { display: grid; gap: 2px }
+.ip-feature__title { font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase; text-wrap: balance }
+.ip-feature__text { font: var(--type-small); color: var(--text-secondary) }
+@media (min-width: 768px) {
+  .ip-feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4) }
+}
+@media (min-width: 1101px) {
+  .ip-feature-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) }
+  .ip-feature { flex-direction: column; align-items: flex-start; padding: var(--space-6) }
+}
+
+/* ── Quality: text + facts, logo wall ───────────────────────────────────── */
+.ip-quality__grid { display: grid; gap: var(--space-8) }
+.ip-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-4); margin-top: var(--space-8) }
+.ip-facts__item { display: flex; flex-direction: column-reverse; gap: var(--space-1); padding-top: var(--space-3); border-top: 2px solid var(--accent) }
+.ip-facts__value { margin: 0; font: 700 30px/1.1 var(--font); color: var(--text-primary) }
+.ip-facts__label { color: var(--text-secondary); font: 400 16px/1.3 var(--font) }
+.ip-logos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-2); margin: 0; padding: 0; list-style: none; align-content: start }
+.ip-logos__item { display: grid; place-items: center; aspect-ratio: 3 / 2; padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: 12px; background: var(--c-white) }
+.ip-logos__img { width: 100%; height: 100%; max-height: 56px; object-fit: contain }
+@media (min-width: 768px) {
+  .ip-logos { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3) }
+  .ip-facts__value { font-size: 34px }
+}
+@media (min-width: 1101px) {
+  .ip-quality__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-16); align-items: center }
+  .ip-facts__value { font-size: 30px }
+}
+
+/* ── Service promise ────────────────────────────────────────────────────── */
+.ip-service__top { display: grid; gap: var(--space-8); align-items: center }
+.ip-points { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none }
+.ip-points__item { display: flex; align-items: center; gap: var(--space-4) }
+.ip-points__title { font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase }
+.ip-photo-card { display: flex; flex-direction: column; height: 100%; overflow: hidden }
+.ip-photo-card__media { position: relative; aspect-ratio: 4 / 3; background: var(--surface-alt) }
+.ip-photo-card__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+.ip-photo-card__body { display: grid; gap: var(--space-2); padding: var(--space-6) }
+.ip-photo-card__title { font: 600 24px/1.2 var(--font) }
+.ip-photo-card__text { color: var(--text-secondary); font: 400 18px/1.4 var(--font) }
+@media (min-width: 768px) {
+  .ip-points { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4) var(--space-6) }
+}
+@media (min-width: 1101px) {
+  .ip-service__top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-16) }
+}
+
+/* ── Sortiment texts ────────────────────────────────────────────────────── */
+.ip-seo__grid { display: grid; gap: var(--space-8) }
+.ip-seo__title { font: 600 24px/1.2 var(--font); text-wrap: balance }
+.ip-seo__text { margin-top: var(--space-3); font-size: 16px; color: var(--text-secondary) }
+@media (min-width: 1101px) {
+  .ip-seo__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-12) }
+}
+
+/* ── Contact band (template-parts/contact-band.php) ─────────────────────── */
+.ip-contact-band__card { display: grid; gap: var(--space-6); padding: var(--space-6) }
+.ip-contact-band__intro { display: grid; gap: var(--space-3); justify-items: start; align-content: start }
+.ip-contact-band__title { font: var(--type-heading); text-wrap: balance }
+.ip-contact-band__intro .ip-btn { margin-top: var(--space-2) }
+@media (min-width: 768px) {
+  .ip-contact-band__card { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-12); padding: var(--space-12) }
+}

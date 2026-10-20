@@ -41,6 +41,11 @@ function ip_template_bundle() {
 	if ( is_singular( 'news' ) ) {
 		return 'news';
 	}
+	// Unternehmen, Kontakt, FAQ and the plain info pages (page.php). The
+	// Namensschilder page is a listing: inc/shop.php gives it the archive bundle.
+	if ( is_page() && ! ( function_exists( 'ip_shop_is_plates_page' ) && ip_shop_is_plates_page() ) ) {
+		return 'content';
+	}
 	return '';
 }
 

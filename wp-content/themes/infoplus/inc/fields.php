@@ -17,7 +17,9 @@ defined( 'ABSPATH' ) || exit;
  */
 function ip_field( $name, $post_id = false, $default = '' ) {
 	if ( ! function_exists( 'get_field' ) ) {
-		return $default;
+		// Plugin inactive: the default_value from the theme's acf-json files.
+		$value = ip_local_field_default( $name, $post_id );
+		return ( null === $value || '' === $value || array() === $value ) ? $default : $value;
 	}
 	$value = get_field( $name, $post_id );
 	if ( null === $value ) {
@@ -34,7 +36,8 @@ function ip_field( $name, $post_id = false, $default = '' ) {
  */
 function ip_flag( $name, $post_id = false, $default = false ) {
 	if ( ! function_exists( 'get_field' ) ) {
-		return (bool) $default;
+		$value = ip_local_field_default( $name, $post_id );
+		return ( null === $value || '' === $value ) ? (bool) $default : (bool) $value;
 	}
 	$value = get_field( $name, $post_id );
 	if ( null === $value || '' === $value ) {
@@ -82,6 +85,82 @@ function ip_field_object( $name, $post_id = false ) {
 		}
 	}
 	return $cache[ $key ] = $found;
+}
+
+/**
+ * default_value of a field from the theme's own acf-json files, for when the
+ * field plugin is inactive (local dev, a plugin update gone wrong). Only
+ * groups whose location matches the post count, with the same rule types
+ * the theme's groups use: page, page_type == front_page, post_type,
+ * page_template, options_page. Any other rule type never matches here.
+ * Returns null when no such field exists.
+ */
+function ip_local_field_default( $name, $post_id = false ) {
+	static $groups = null;
+	if ( null === $groups ) {
+		$groups = array();
+		foreach ( (array) glob( IP_DIR . '/acf-json/*.json' ) as $file ) {
+			$group = json_decode( (string) file_get_contents( $file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions -- local theme file.
+			if ( is_array( $group ) && ! empty( $group['fields'] ) && ! empty( $group['location'] ) ) {
+				$groups[] = $group;
+			}
+		}
+	}
+	$post_id = $post_id ? $post_id : get_the_ID();
+	foreach ( $groups as $group ) {
+		if ( ! ip_local_location_matches( $group['location'], $post_id ) ) {
+			continue;
+		}
+		foreach ( $group['fields'] as $field ) {
+			if ( isset( $field['name'] ) && $field['name'] === $name ) {
+				return $field['default_value'] ?? null;
+			}
+		}
+	}
+	return null;
+}
+
+/** ACF location rules (OR of AND groups) checked without the plugin; see ip_local_field_default(). */
+function ip_local_location_matches( $location, $post_id ) {
+	$is_option = in_array( $post_id, array( 'option', 'options' ), true );
+	$post      = $is_option ? null : get_post( (int) $post_id );
+	foreach ( (array) $location as $and ) {
+		$all = true;
+		foreach ( (array) $and as $rule ) {
+			$param = $rule['param'] ?? '';
+			$value = (string) ( $rule['value'] ?? '' );
+			switch ( $param ) {
+				case 'page':
+					$hit = $post && (string) $post->ID === $value;
+					break;
+				case 'page_type':
+					$hit = $post && 'front_page' === $value && (int) get_option( 'page_on_front' ) === (int) $post->ID;
+					break;
+				case 'post_type':
+					$hit = $post && $post->post_type === $value;
+					break;
+				case 'page_template':
+					$hit = $post && ( get_page_template_slug( $post ) ? get_page_template_slug( $post ) : 'default' ) === $value;
+					break;
+				case 'options_page':
+					$hit = $is_option;
+					break;
+				default:
+					$hit = false;
+			}
+			if ( '!=' === ( $rule['operator'] ?? '==' ) ) {
+				$hit = ! $hit;
+			}
+			if ( ! $hit ) {
+				$all = false;
+				break;
+			}
+		}
+		if ( $all ) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /** Options page for site-wide values (contact, socials, footer, default texts). */
