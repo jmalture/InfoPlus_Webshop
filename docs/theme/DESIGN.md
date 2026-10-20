@@ -58,3 +58,49 @@ the text colour, never grey-black.
 
 #E6007E on white is about 4.5:1: fine for text from 18 px or bold 14 px. Smaller magenta
 text uses #9E0056. White on #E6007E is fine for buttons and the footer bar.
+
+## E-shop UX for B2B buyers and resellers
+
+Goal: a shop that still looks current in five years because it is calm and fast, not
+because it follows a trend. Every screen answers three questions for a professional
+buyer: what is it, what does it cost at my quantity, how fast do I get it. Sources:
+Baymard B2B research themes, configurator and B2B UX practice (links in the rebuild map).
+
+### Finding products
+- Mega menu and listing show every model with a real product photo and its name; no prices
+  in the menu (owner decision).
+- Listing cards carry 2 to 3 fact chips instead of marketing text (e.g. formats, material,
+  "ab 1 Stück"), so models can be compared at a glance.
+- Category pills on top of every listing; on phones a horizontal swipe row.
+- Search finds model names, SKUs and attribute words, results as product cards.
+
+### Configuring (product page)
+- One-page configurator in numbered steps (1 Modell, 2 Format, 3 Optionen, 4 Menge), each
+  step a titled block; done steps show a check and their chosen value; unavailable options
+  are faded, never hidden without explanation.
+- A summary card stays in view: desktop sticky in the right column, phones the bottom bar.
+  It shows the chosen variant, unit price at the current quantity, total, and the next action.
+- Staffelpreise always visible next to quantity, current tier highlighted; prices labelled
+  net or gross exactly as the shop is configured.
+- Lead time (Fertigungszeit), shipping and payment facts sit directly under the main button,
+  as small icon rows, not in tabs.
+- Three order types, three clear main actions: Produkt gestalten (editor), In den Warenkorb
+  (buyable), Individuelle Anfrage (inquiry). The inquiry is always available as a secondary
+  action, so a buyer with a special case never hits a dead end.
+
+### Cart and checkout
+- Company fields first, private-person wording nowhere (B2B only).
+- An optional "Ihre Bestellreferenz / PO-Nummer" field, shown on invoice and order e-mail.
+- Totals card always visible; shipping and VAT lines spelled out before the last step.
+- No surprises: the step indicator shows Warenkorb, Kasse, Bestätigung.
+
+### Account (resellers come back)
+- Orders list with status, total, invoice download and "Erneut bestellen" where reordering
+  is safe; order detail printable.
+- Saved designs / projects from the editor once a data source exists.
+- Addresses saved and editable; company data in one place.
+
+### Always
+- Real contact one click away (Kontakt panel, phone and e-mail in footer).
+- Speed is design: small pages, images sized, no layout shift.
+- Accessible by default: keyboard, focus, labels, contrast; motion off when asked.
