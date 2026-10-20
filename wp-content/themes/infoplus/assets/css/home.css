@@ -25,6 +25,160 @@
   .ip-hero__media { aspect-ratio: 5 / 4 }
 }
 
+/* ── Hero demo: live mini configurator (template-parts/hero-demo.php) ────
+   Fixed aspect box (4/5 phone, 1/1 tablet, 4/3 desktop), sized with
+   container units so every piece scales with the box. Preview area with the
+   plate on a dotted bed, a white control panel below (chips, Staffelpreis,
+   cart). home.js drives the states; the server renders a finished one. */
+.ip-demo { aspect-ratio: 4 / 5; container-type: inline-size; background: var(--surface-alt); isolation: isolate }
+@media (min-width: 768px) { .ip-demo { aspect-ratio: 1 / 1 } }
+@media (min-width: 1101px) { .ip-demo { aspect-ratio: 4 / 3 } }
+.ip-demo__stage {
+  position: absolute; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: 4cqw; gap: 3cqw;
+  background:
+    radial-gradient(60% 50% at 50% 38%, rgb(230 0 126 / .07), transparent 70%),
+    radial-gradient(circle, rgb(25 27 28 / .08) 1px, transparent 1.4px) 0 0 / 18px 18px;
+  font-size: clamp(11px, 2.3cqw, 15px);
+}
+.ip-demo__tag {
+  justify-self: start; display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 6px 12px;
+  border-radius: 999px; background: var(--c-white); box-shadow: var(--shadow-1);
+  font: 600 1em/1 var(--font); letter-spacing: .5px; color: var(--text-secondary);
+}
+.ip-demo__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent) }
+
+/* Preview: the plate, centred. Width from the format (--ip-pw, 0..1), height
+   from its ratio. Everything that moves inside the demo moves by transform
+   (translate / scale) or by size around a fixed start point, so the demo
+   reports no layout shift: the plate is anchored at 50 % / 50 % and centred
+   with `translate`, logo and text lines sit at a fixed top-left and are
+   centred vertically with a transform. --ip-pw and --ip-ratio are
+   registered (@property below) so a format change animates smoothly. */
+.ip-demo__preview { position: relative; min-height: 0 }
+.ip-demo__plate {
+  --ip-plate-w: calc(var(--ip-pw) * 76cqw);
+  --ip-plate-h: calc(var(--ip-plate-w) / var(--ip-ratio));
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%;
+  width: var(--ip-plate-w); height: var(--ip-plate-h);
+  border-radius: 1.6cqw;
+  background: var(--c-white); color: var(--c-text);
+  box-shadow: 0 2px 3px rgb(25 27 28 / .08), 0 22px 40px -18px rgb(25 27 28 / .35);
+  overflow: hidden;
+  transition: --ip-pw 560ms var(--ease), --ip-ratio 560ms var(--ease);
+}
+.ip-demo__logo, .ip-demo__lines { position: absolute; top: 0; transform: translateY(calc(var(--ip-plate-h) / 2 - 50%)) }
+.ip-demo__logo { left: 3.4cqw; display: grid; place-items: center; width: 11cqw; height: 11cqw; opacity: 0; scale: .6; transition: opacity 360ms var(--ease), scale 480ms var(--ease-spring) }
+.ip-demo__logo.is-on { opacity: 1; scale: 1 }
+.ip-demo__logo-svg { width: 100%; height: 100% }
+.ip-demo__logo-svg path { fill: var(--ip-logo-a, var(--accent)) }
+.ip-demo__logo-svg .ip-demo__logo-b { fill: var(--ip-logo-b, var(--c-secondary)); opacity: .85 }
+.ip-demo__lines { left: 17.4cqw; right: 2cqw; display: grid; gap: .5cqw }
+.ip-demo__name { justify-self: start; padding-right: 2px; border-right: 2px solid transparent; font: 600 5.6cqw/1.05 var(--font); white-space: nowrap; color: var(--ip-ink, var(--c-text)) }
+.ip-demo.is-typing .ip-demo__name { border-right-color: var(--accent) } /* Caret on the name's own edge: grows with it, never moves on its own. */
+.ip-demo__role { font: 500 3.4cqw/1.1 var(--font); letter-spacing: .3px; color: var(--ip-ink-2, var(--text-secondary)); white-space: nowrap; opacity: 0; transition: opacity 300ms var(--ease) }
+.ip-demo__role.is-on { opacity: 1 }
+@property --ip-pw { syntax: "<number>"; inherits: true; initial-value: 1 }
+@property --ip-ratio { syntax: "<number>"; inherits: true; initial-value: 3 }
+
+/* Material looks per model (names mapped in hero-demo.php). Gradients only, no images. */
+.ip-demo__plate--atlantis { /* white face in a chrome frame, a magenta swing */
+  background:
+    radial-gradient(42% 78% at 100% 100%, var(--accent) 0 58%, transparent 59.5%),
+    radial-gradient(42% 78% at 100% 100%, var(--c-primary-tint) 0 82%, transparent 83.5%),
+    var(--c-white);
+  box-shadow: inset 0 0 0 3px #d9dbe2, inset 0 0 0 4px #f7f8fb, inset 0 0 0 5px #b9bcc6, 0 22px 40px -18px rgb(25 27 28 / .35);
+}
+.ip-demo__plate--alu { /* brushed aluminium */
+  --ip-ink: #23272b; --ip-ink-2: #4A4E53; --ip-logo-a: #35393D; --ip-logo-b: #6c7077;
+  background:
+    repeating-linear-gradient(0deg, rgb(255 255 255 / .18) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #eef0f3, #c9cdd3 48%, #e3e6ea 52%, #b6bbc2);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .6), 0 22px 40px -18px rgb(25 27 28 / .35);
+}
+.ip-demo__plate--wood { /* light oak, engraved dark text */
+  --ip-ink: #3b2414; --ip-ink-2: #5c3b22; --ip-logo-a: #4a2d18; --ip-logo-b: #7a4f2c;
+  background:
+    repeating-linear-gradient(176deg, rgb(120 72 36 / .14) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(183deg, rgb(255 236 210 / .18) 0 1px, transparent 1px 13px),
+    linear-gradient(180deg, #d9a874, #c58d55);
+}
+.ip-demo__plate--classic { box-shadow: inset 0 0 0 1px var(--c-grey-200), 0 22px 40px -18px rgb(25 27 28 / .35) }
+.ip-demo__plate--chalk { --ip-ink: #f4f4f0; --ip-ink-2: #c9ccc8; --ip-logo-a: #f4f4f0; --ip-logo-b: #c9ccc8; background: radial-gradient(80% 120% at 30% 20%, #3d4446, #23292b) }
+.ip-demo__plate--papyrus { background: linear-gradient(180deg, #fbf5e6, #efe3c4); box-shadow: inset 0 0 0 3px #c9b98f, 0 22px 40px -18px rgb(25 27 28 / .35) }
+.ip-demo__plate--clear { background: linear-gradient(135deg, rgb(255 255 255 / .75), rgb(255 255 255 / .35)); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .9), inset 0 0 0 2px rgb(25 27 28 / .08), 0 22px 40px -18px rgb(25 27 28 / .3); backdrop-filter: blur(6px) }
+.ip-demo__plate--xstyle { --ip-ink: var(--c-white); --ip-ink-2: #c9ccd3; --ip-logo-a: var(--c-white); background: linear-gradient(180deg, #3a3e43, #25282b); box-shadow: inset 0 -4px 0 var(--accent), 0 22px 40px -18px rgb(25 27 28 / .35) }
+
+/* Control panel: chips per option, Staffelpreis and cart in the foot. */
+.ip-demo__panel {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2.4cqw 4cqw;
+  padding: 3.2cqw; border-radius: 18px; background: var(--c-white); box-shadow: var(--shadow-2);
+}
+.ip-demo__group { display: grid; gap: 6px; min-width: 0 }
+.ip-demo__group--model { grid-column: 1 / -1 }
+.ip-demo__label { font: 600 .82em/1 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-demo__chips { display: flex; flex-wrap: wrap; gap: 6px }
+.ip-demo__chip {
+  display: inline-flex; align-items: center; min-height: 2.2em; padding: 0 .85em;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--c-white);
+  font: 600 1em/1 var(--font); white-space: nowrap; color: var(--text-primary);
+  transition: background-color 260ms var(--ease), border-color 260ms var(--ease), color 260ms var(--ease), transform 260ms var(--ease);
+}
+.ip-demo__chip.is-on { background: var(--c-primary-tint); border-color: var(--accent); color: var(--c-secondary) }
+.ip-demo__chip.is-pick { transform: scale(1.06) }
+.ip-demo__foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 2cqw; padding-top: 2.4cqw; border-top: 1px solid var(--border) }
+.ip-demo__price { display: grid; gap: 4px }
+.ip-demo__price-label { display: inline-flex; align-items: center; gap: 6px; font: 600 .82em/1 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-demo__beispiel { padding: 3px 6px; border-radius: 999px; background: var(--c-grey-100); font-size: .9em; letter-spacing: .5px; text-transform: none; color: var(--text-secondary) }
+.ip-demo__price-value { font: 500 1.15em/1.1 var(--font); font-variant-numeric: tabular-nums }
+.ip-demo__price-value b { display: inline-block; font-weight: 700; color: var(--c-secondary) }
+/* Fixed widths, so changing numbers never push the words next to them. */
+.ip-demo__price-value [data-ip-demo-qty] { display: inline-block; min-width: 3ch; text-align: center }
+.ip-demo__price-value b { min-width: 6ch }
+.ip-demo__cart {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 2.9em; padding: 0 1.1em;
+  border-radius: 10px; background: var(--c-grey-800); color: var(--c-white); font: 600 1.05em/1 var(--font); white-space: nowrap;
+  transition: background-color 260ms var(--ease), scale 160ms var(--ease);
+}
+.ip-demo__cart svg { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+.ip-demo__tick-icon { display: none }
+.ip-demo__cart-labels { display: grid }
+.ip-demo__cart-label { grid-area: 1 / 1 }
+.ip-demo__cart-label--added, .ip-demo__cart.is-done .ip-demo__cart-label { visibility: hidden }
+.ip-demo__cart.is-done .ip-demo__cart-label--added { visibility: visible }
+.ip-demo__cart.is-press { scale: .96 }
+.ip-demo__cart.is-done { background: var(--accent) } /* Dark at rest, so the page's real magenta button stays the one primary action. */
+.ip-demo__cart.is-done .ip-demo__cart-icon { display: none }
+.ip-demo__cart.is-done .ip-demo__tick-icon { display: block }
+
+/* Pause / play (WCAG 2.2.2). Sits over the stage's top right corner. */
+.ip-demo__pause {
+  position: absolute; top: 4cqw; right: 4cqw; z-index: 2; display: grid; place-items: center;
+  width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--c-white); color: var(--text-primary); box-shadow: var(--shadow-1);
+  transition: background-color var(--dur-ui) var(--ease);
+}
+.ip-demo__pause:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-demo__pause svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+.ip-demo__play-icon { display: none }
+.ip-demo__pause[aria-pressed="true"] .ip-demo__pause-icon { display: none }
+.ip-demo__pause[aria-pressed="true"] .ip-demo__play-icon { display: block }
+.ip-demo__pause[hidden] { display: none }
+
+@media (min-width: 1101px) {
+  .ip-demo { border-radius: 24px }
+  .ip-demo__plate { --ip-plate-w: calc(var(--ip-pw) * 62cqw) }
+  .ip-demo__name { font-size: 4.4cqw }
+  .ip-demo__role { font-size: 2.6cqw }
+  .ip-demo__logo { width: 9cqw; height: 9cqw }
+  .ip-demo__lines { left: 15cqw }
+  .ip-demo__panel { gap: 2cqw 5cqw; padding: 3cqw 3.4cqw }
+  .ip-demo__stage { font-size: clamp(12px, 2.1cqw, 15px) }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ip-demo__plate, .ip-demo__logo, .ip-demo__role, .ip-demo__chip, .ip-demo__cart { transition: none }
+}
+
 /* ── Section top row: head left, "more" link right ──────────────────────── */
 .ip-section__top { display: grid; gap: var(--space-4); align-items: end }
 .ip-section__more { justify-self: start }

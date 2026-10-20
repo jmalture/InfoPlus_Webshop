@@ -11,6 +11,10 @@
  * the site settings. Sections render only when they have content and their
  * "anzeigen" switch is on.
  *
+ * Hero visual: a live mini configurator (template-parts/hero-demo.php,
+ * switch "Animierte Vorschau statt Bild"); the hero photo is the fallback when
+ * the switch is off or the demo has no models / names.
+ *
  * Dropped from the old page on purpose: the decorative background photos of
  * the "Vorteile" and "Serviceversprechen" bands (DESIGN.md 1 and 10: calm
  * white/grey bands) and the hand-typed prices on the two model teasers (the
@@ -69,7 +73,24 @@ $ip_svg_next = function_exists( 'ip_shop_arrow' ) ? ip_shop_arrow() : '';
 					</div>
 				<?php endif; ?>
 			</div>
-			<?php if ( $ip_hero_img ) : ?>
+			<?php
+			// Live configurator demo (template-parts/hero-demo.php); the photo stays as the fallback when it is switched off.
+			$ip_demo_html = '';
+			if ( ip_flag( 'hero_demo_show', $ip_pid, true ) ) {
+				ob_start();
+				get_template_part( 'template-parts/hero-demo', null, array(
+					'models'    => (string) $ip_f( 'hero_demo_models' ),
+					'names'     => (string) $ip_f( 'hero_demo_names' ),
+					'formats'   => (string) $ip_f( 'hero_demo_formats' ),
+					'fasteners' => (string) $ip_f( 'hero_demo_fasteners' ),
+					'prices'    => (string) $ip_f( 'hero_demo_prices' ),
+				) );
+				$ip_demo_html = trim( (string) ob_get_clean() );
+			}
+			?>
+			<?php if ( $ip_demo_html ) : ?>
+				<?php echo $ip_demo_html; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in the template part. ?>
+			<?php elseif ( $ip_hero_img ) : ?>
 				<div class="ip-hero__media">
 					<?php
 					// LCP image of the page: eager, high priority, never faded in.

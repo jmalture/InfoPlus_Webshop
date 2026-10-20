@@ -248,6 +248,21 @@ def home():
             instructions='Pfad wie /namensschilder/ oder volle Adresse.'),
         g.f('hero_cta2_label', 'text', 'Zweiter Button: Text', text(E, '4fa5bec', 'text'), width=25),
         g.f('hero_cta2_url', 'text', 'Zweiter Button: Link', '/product-category/atlantis/', width=25),
+        # Live configurator demo (template-parts/hero-demo.php). Every value is shown labelled "Beispiel".
+        g.f('hero_demo_show', 'true_false', 'Animierte Vorschau statt Bild', 1,
+            instructions='Ja = rechts läuft eine kleine Konfigurator-Animation: ein Namensschild wird gestaltet. '
+                         'Nein = das Bild oben wird gezeigt. Wer reduzierte Bewegung eingestellt hat, sieht ein fertiges Standbild.'),
+        g.f('hero_demo_models', 'textarea', 'Vorschau: Modelle', 'Atlantis\nAlucontur\nWoodline', width=50, rows=4,
+            instructions='Ein Modell pro Zeile. Das Aussehen folgt dem Namen: Atlantis, Alucontur, Aluprofil, Woodline, '
+                         'Classic, Chalk Board, Papyrus, Translex, X-Style. Andere Namen bekommen ein neutrales Schild.'),
+        g.f('hero_demo_names', 'textarea', 'Vorschau: Namen', 'Andreas Denker | Vertrieb\nJulia Weber | Projektleitung\nThomas Krüger | Empfang',
+            width=50, rows=4, instructions='Ein Name pro Zeile, die Funktion nach einem senkrechten Strich: Name | Funktion.'),
+        g.f('hero_demo_formats', 'textarea', 'Vorschau: Formate', '60 × 20 mm\n75 × 30 mm', width=33, rows=3,
+            instructions='Ein Format pro Zeile, Breite × Höhe in mm. Die Schildgröße in der Vorschau folgt den Zahlen.'),
+        g.f('hero_demo_fasteners', 'textarea', 'Vorschau: Befestigungen', 'Magnet\nNadel', width=33, rows=3,
+            instructions='Eine Befestigung pro Zeile.'),
+        g.f('hero_demo_prices', 'textarea', 'Vorschau: Staffelpreise', '10 | 7,92 €\n50 | 6,44 €\n100 | 5,45 €\n250 | 4,95 €', width=34, rows=4,
+            instructions='Eine Stufe pro Zeile: Stückzahl | Preis pro Stück. Die Vorschau kennzeichnet die Preise als Beispiel.'),
 
         g.tab('models', 'Modelle'),
         g.show('models', 'Modelle'),

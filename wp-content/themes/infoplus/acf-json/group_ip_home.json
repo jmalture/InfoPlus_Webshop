@@ -143,6 +143,103 @@
             "default_value": "/product-category/atlantis/"
         },
         {
+            "key": "field_ip_home_hero_demo_show",
+            "label": "Animierte Vorschau statt Bild",
+            "name": "hero_demo_show",
+            "type": "true_false",
+            "instructions": "Ja = rechts läuft eine kleine Konfigurator-Animation: ein Namensschild wird gestaltet. Nein = das Bild oben wird gezeigt. Wer reduzierte Bewegung eingestellt hat, sieht ein fertiges Standbild.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_hero_demo_models",
+            "label": "Vorschau: Modelle",
+            "name": "hero_demo_models",
+            "type": "textarea",
+            "instructions": "Ein Modell pro Zeile. Das Aussehen folgt dem Namen: Atlantis, Alucontur, Aluprofil, Woodline, Classic, Chalk Board, Papyrus, Translex, X-Style. Andere Namen bekommen ein neutrales Schild.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Atlantis\nAlucontur\nWoodline",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_hero_demo_names",
+            "label": "Vorschau: Namen",
+            "name": "hero_demo_names",
+            "type": "textarea",
+            "instructions": "Ein Name pro Zeile, die Funktion nach einem senkrechten Strich: Name | Funktion.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Andreas Denker | Vertrieb\nJulia Weber | Projektleitung\nThomas Krüger | Empfang",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_hero_demo_formats",
+            "label": "Vorschau: Formate",
+            "name": "hero_demo_formats",
+            "type": "textarea",
+            "instructions": "Ein Format pro Zeile, Breite × Höhe in mm. Die Schildgröße in der Vorschau folgt den Zahlen.",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "60 × 20 mm\n75 × 30 mm",
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_hero_demo_fasteners",
+            "label": "Vorschau: Befestigungen",
+            "name": "hero_demo_fasteners",
+            "type": "textarea",
+            "instructions": "Eine Befestigung pro Zeile.",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Magnet\nNadel",
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_hero_demo_prices",
+            "label": "Vorschau: Staffelpreise",
+            "name": "hero_demo_prices",
+            "type": "textarea",
+            "instructions": "Eine Stufe pro Zeile: Stückzahl | Preis pro Stück. Die Vorschau kennzeichnet die Preise als Beispiel.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "10 | 7,92 €\n50 | 6,44 €\n100 | 5,45 €\n250 | 4,95 €",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
             "key": "field_ip_home_tab_models",
             "label": "Modelle",
             "name": "",
