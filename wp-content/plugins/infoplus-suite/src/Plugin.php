@@ -17,7 +17,7 @@ use Infoplus\Suite\Modules\Inquiry\Module as InquiryModule;
 
 final class Plugin
 {
-    public const VERSION = '0.10.31';
+    public const VERSION = '0.10.32';
 
     private string $file;
     private array $modules = [];

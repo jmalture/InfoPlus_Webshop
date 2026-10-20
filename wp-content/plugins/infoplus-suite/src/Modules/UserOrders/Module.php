@@ -1820,16 +1820,26 @@ final class Module implements ModuleInterface
      */
     public function fixEmailHeaderInlineStyles($email_heading, $email): void
     {
-        if (!$email || !in_array($email->id, self::BRANDED_EMAIL_IDS, true)) {
+        if (!$this->emailBrandingEnabled() || !$email || !in_array($email->id, self::BRANDED_EMAIL_IDS, true)) {
             return;
         }
 
-        ob_start();
-        // The header template has already started output; we capture what
-        // follows (the rest of the header) and patch it on ob_end_clean via
-        // a shutdown-style filter on the full email content instead.
-        // Use woocommerce_mail_content to rewrite the final HTML.
+        // The rewrite runs on the final HTML (woocommerce_mail_content), once.
+        // Until 0.10.29 this method also called ob_start() without ever
+        // closing the buffer: every branded mail left one output buffer open
+        // until the end of the request (PLUGIN-DOCUMENTATION.md Section 16).
         add_filter('woocommerce_mail_content', [$this, 'rewriteEmailHeaderLogoInline']);
+    }
+
+    /**
+     * Whether the order e-mail branding of this module runs (styles, banner,
+     * logo fix). Off when the active theme brings its own e-mail design and
+     * declares add_theme_support('infoplus-emails') (Infoplus classic theme).
+     * Filter infoplus_suite_order_email_branding to force it on or off.
+     */
+    private function emailBrandingEnabled(): bool
+    {
+        return (bool) apply_filters('infoplus_suite_order_email_branding', !current_theme_supports('infoplus-emails'));
     }
 
     /**
@@ -1910,7 +1920,7 @@ final class Module implements ModuleInterface
      */
     public function brandOrderEmailStyles(string $css, $email): string
     {
-        if (!$email || !in_array($email->id, self::BRANDED_EMAIL_IDS, true)) {
+        if (!$this->emailBrandingEnabled() || !$email || !in_array($email->id, self::BRANDED_EMAIL_IDS, true)) {
             return $css;
         }
 
@@ -1969,7 +1979,7 @@ final class Module implements ModuleInterface
      */
     public function renderOrderEmailBanner($order, bool $sent_to_admin, bool $plain_text, $email): void
     {
-        if ($plain_text || $sent_to_admin) {
+        if ($plain_text || $sent_to_admin || !$this->emailBrandingEnabled()) {
             return;
         }
 
