@@ -191,6 +191,8 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .ip-step[data-ip-step-state="done"] .ip-step__num { opacity: 0 }
 .ip-step[data-ip-step-state="done"] .ip-step__badge .ip-icon { opacity: 1; transform: none }
 .ip-step[data-ip-step-state="done"] .ip-step__status { color: var(--text-primary); font-weight: 600 }
+/* "preset": the Suite's preselected value, not chosen by the visitor yet: value without tick. */
+.ip-step[data-ip-step-state="preset"] .ip-step__status { color: var(--text-secondary) }
 .ip-step[data-ip-step-state="locked"] .ip-step__status,
 .ip-step[data-ip-step-state="error"] .ip-step__status { color: var(--c-secondary); font-weight: 600 }
 .ip-step[data-ip-step-state="error"] .ip-step__badge { border-color: var(--c-secondary); color: var(--c-secondary) }
@@ -439,6 +441,13 @@ html:not(.js) .ip-stepnav { display: none }
 .ip-product .ip-vd-inline[data-ip-layout="list"] .ip-c-variation-dropdowns__option { min-height: 44px; padding: 6px 10px }
 .ip-product .ip-vd-inline[data-ip-layout="list"] .infoplus-dropdown__option-text { font-size: 15px }
 .ip-product .ip-vd-inline .infoplus-dropdowns-lock { display: none !important } /* the step is hidden; product.js shows the message */
+/* Colour swatches (product.js: .ip-vd-colour rows, .ip-swatch from the term colour or the
+   name). Term images in colour rows use the same 28x20 block. 1px border so white shows. */
+.ip-product .ip-vd-colour { --infoplus-dropdown-image-width: 28px; --infoplus-dropdown-image-height: 20px }
+.ip-swatch { flex: none; width: 28px; height: 20px; border: 1px solid rgb(25 27 28 / .18); border-radius: 6px; background: var(--c-grey-100) }
+.ip-product .ip-vd-colour .ip-c-variation-dropdowns__image { width: 28px; height: 20px; padding: 0; border: 1px solid rgb(25 27 28 / .18); border-radius: 6px !important; object-fit: cover }
+.ip-product .ip-opt-off:has(.ip-swatch) .ip-opt-reason,
+.ip-product .ip-vd-colour .ip-opt-off:has(.ip-c-variation-dropdowns__image) .ip-opt-reason { padding-left: calc(28px + 10px) }
 
 /* "Dieses Modell ist nicht konfigurierbar" overlay for requestable models. */
 .ip-product .infoplus-dropdowns-lock { border-radius: 16px; background: rgb(255 255 255 / .8) }
@@ -499,6 +508,25 @@ html:not(.js) .ip-stepnav { display: none }
 .ip-buy__caption { margin: 0; color: var(--text-secondary); font: 400 15px/1.3 var(--font) }
 /* The Suite hides the tier grid for requestable models; the caption goes with it. */
 .ip-buy__tiers:has(.ibpt-grid[style*="none"]):has(.ibpt-skeleton[style*="none"]) .ip-buy__caption { display: none }
+
+/* Folding steps: the Staffelpreise as a compact strip above the summary card
+   (purchase.php part "tiers"). Phones: three per row; from 768 px one row.
+   The current tier is the Suite's .ibpt-cell--active (bulk calculator). The
+   strip goes away with the Suite's grid for requestable models. */
+.ip-tierstrip { display: grid; gap: 6px; min-width: 0 }
+.ip-tierstrip:has(.ibpt-grid[style*="none"]):has(.ibpt-skeleton[style*="none"]) { display: none }
+.ip-tierstrip .ip-buy__caption { font-size: 14px }
+.ip-product .ip-tierstrip .ibpt-grid,
+.ip-product .ip-tierstrip .ibpt-skeleton { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 4px; column-gap: 4px; row-gap: 4px }
+@media (min-width: 768px) {
+  .ip-product .ip-tierstrip .ibpt-grid,
+  .ip-product .ip-tierstrip .ibpt-skeleton { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr) }
+}
+.ip-product .ip-tierstrip .ibpt-cell { flex-wrap: wrap; justify-content: center; gap: 0 3px; min-height: 0; padding: 6px 4px; text-align: center }
+.ip-product .ip-tierstrip .ibpt-cell__label { font-size: 13px }
+.ip-product .ip-tierstrip .ibpt-cell__qty { font-size: 14px }
+.ip-product .ip-tierstrip .ibpt-cell__price { flex-basis: 100%; margin-left: 0; font-size: 15px; text-align: center }
+.ip-product .ip-tierstrip .ibpt-skeleton__cell { height: 42px }
 
 /* Quantity stepper and prices ([data-ip-qty-row], driven by the Suite bulk calculator). */
 .ip-buy__row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4) var(--space-6) }

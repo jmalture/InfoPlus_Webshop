@@ -25,16 +25,22 @@
    Suite's state and infoplus:* events say what is chosen. This file only
    - shows the Suite options of an expanded step inline: tiles (up to 8 options)
      or a compact chip list (more), instead of the Suite's dropdown panel;
-   - moves on after a choice: a click (or Enter / Space) on a model card or an
-     option opens the next step that is not done yet, else Menge, else nothing;
-     focus goes to that step's heading, the page scrolls only when the step is
-     out of view.
-   Initial step (decided once the Suite has applied its defaults): preselected
-   values count as done. Products with two or more models open Modell, because
-   the model decides order type, options and price and the preselection is the
-   shop's, not the buyer's. Products with one model open the first step that is
-   not done, else Menge. After a buy form POST (Woo renders this page again)
-   Menge opens, with the posted selection restored.
+   - ticks a step when the visitor chooses in it: a click, Enter or Space on a
+     model card or option, the highlighted default included. The tick stays
+     while that value stays; when the Suite changes it (a model change resets
+     the options to the model's defaults) the tick goes. Steps with a single
+     option for the chosen model are ticked on their own;
+   - moves on after a choice: the next step below without a tick, else the
+     first one above, else Menge (stays open). Focus goes to that step's
+     heading, the page scrolls only when the step is out of view. Arrow keys
+     change the choice without ticking or moving on. A quantity set by the
+     visitor (stepper, input, tier) ticks Menge.
+   Initial state: the Suite's defaults stay preselected (price shown at once)
+   but nothing is ticked ("preset": value, no tick); Modell is open. After a
+   buy form POST (Woo renders this page again) the posted selection counts as
+   chosen: everything ticked, Menge open.
+   Staffelpreise are a strip above the summary card (purchase.php, part
+   "tiers"); the Menge step holds the quantity only.
 
    Order type of the selected model (Infoplus Suite, per product and model):
    - editable:    #editor ("Produkt gestalten", external editor) + #anfrage.
@@ -151,6 +157,7 @@
   var silentPick = false;  // a selection made by arrow keys: no "move on"
   var stepInfo = {};       // key -> { done, hidden } from the last render
   var lastChoice = null;   // the step of the visitor's last choice
+  var ticks = {};          // key -> value the visitor ticked the step with (see renderSteps)
   var editPending = false; // "Auswahl ändern" in the inquiry drawer, waiting for it to close
 
   /* ── Suite state ──────────────────────────────────────────────────────── */
@@ -258,16 +265,18 @@
       var attr = row.getAttribute('data-attribute');
       var value = selected[attr];
       var label = text(row.querySelector('.infoplus-dropdown__label'));
+      // Only one option for the chosen model (shown options are the model's, faded or not).
+      var single = shownOptions(row).length === 1;
       if (!value) {
         allSet = false;
-        attrs[attr] = { set: false, conflict: false, value: '' };
+        attrs[attr] = { set: false, conflict: false, value: '', raw: '', single: false };
         return;
       }
       var shown = optionText(row, value);
       // The chosen value no longer combines with the other choices (Suite availability).
       var list = avail[attr];
       var conflict = !!(list && list.length && list.indexOf(value) === -1);
-      attrs[attr] = { set: true, conflict: conflict, value: shown };
+      attrs[attr] = { set: true, conflict: conflict, value: shown, raw: value, single: single };
       options.push({ label: label, value: shown });
     });
 
@@ -447,7 +456,7 @@
     if (!el) return;
     el.setAttribute('data-ip-step-state', stepState);
     var edit = el.querySelector('[data-ip-step-edit-label]');
-    if (edit) setText(edit, stepState === 'done' || stepState === 'error' ? (T.edit || '') : (T.choose || T.edit || ''));
+    if (edit) setText(edit, value && stepState !== 'open' ? (T.edit || '') : (T.choose || T.edit || ''));
     var slot = el.querySelector('[data-ip-step-status]');
     if (!slot) return;
     var sig = stepState + '|' + value + '|' + (reason || '');
@@ -456,8 +465,8 @@
     slot.textContent = '';
     var sr = doc.createElement('span');
     sr.className = 'ip-sr';
-    if (stepState === 'done') {
-      sr.textContent = (T.done || '') + ' ';
+    if (stepState === 'done' || stepState === 'preset') {
+      sr.textContent = (stepState === 'done' ? T.done || '' : T.preset || '') + ' ';
       slot.appendChild(sr);
     } else if (stepState === 'open' || !value) {
       sr.textContent = T.open || '';
@@ -476,31 +485,52 @@
     }
   }
 
+  /** What a tick stands for: the value chosen when the visitor ticked the step. */
+  function stepSig(key, s) {
+    if (key === 'model') return s.model || '';
+    if (key === 'qty') return 'qty';
+    var a = s.attrs[key];
+    return a && a.set ? a.raw : '';
+  }
+
+  /**
+   * Step states. "done" (tick) only for steps the visitor ticked by a choice
+   * (ticks[key], dropped again when the Suite changes that value, e.g. after a
+   * model change) and for steps with a single option for the chosen model.
+   * The Suite's preselected values show as "preset": value, no tick.
+   */
   function renderSteps(s) {
     stepInfo = {};
     order.forEach(function (key) {
       var el = steps[key];
-      var info = { done: false, hidden: false };
+      var info = { done: false, hidden: false, auto: false };
+      var sig = stepSig(key, s);
+      if (ticks[key] !== undefined && ticks[key] !== sig) delete ticks[key];
+      var ticked = ticks[key] !== undefined && sig !== '';
       if (key === 'model') {
-        setStep(key, s.model ? 'done' : 'open', s.modelName);
-        info.done = !!s.model;
+        info.auto = !!s.model && modelCards().length === 1;
+        info.done = ticked || info.auto;
+        setStep(key, info.done ? 'done' : (s.model ? 'preset' : 'open'), s.modelName);
       } else if (key === 'qty') {
         // Requestable models have no quantity or price (the Suite hides the row): no step.
         // Otherwise the step stays in the sequence and waits for a complete selection.
         info.hidden = s.type === 'requestable' && !s.qtyShown;
         el.classList.toggle('is-waiting', !(s.found && s.qtyShown));
-        setStep(key, s.hasPrice ? 'done' : 'open', s.qty + (unitLabel ? ' ' + unitLabel : ''));
-        info.done = s.hasPrice;
+        info.done = ticked && s.hasPrice;
+        setStep(key, info.done ? 'done' : (s.hasPrice ? 'preset' : 'open'), s.qty + (unitLabel ? ' ' + unitLabel : ''));
       } else {
-        var a = s.attrs[key] || { set: false, conflict: false, value: '' };
+        var a = s.attrs[key] || { set: false, conflict: false, value: '', single: false };
         // The Suite locks the options of models that are only requestable: no attribute steps then.
         info.hidden = s.locked;
+        info.auto = a.set && a.single && !a.conflict;
+        info.done = (ticked || info.auto) && !a.conflict;
         if (s.locked) setStep(key, 'locked', '');
         else if (a.conflict) setStep(key, 'error', a.value, T.unavailable || '');
-        else if (a.set) setStep(key, 'done', a.value);
+        else if (info.done) setStep(key, 'done', a.value);
+        else if (a.set) setStep(key, 'preset', a.value);
         else setStep(key, 'open', '');
-        info.done = a.set && !a.conflict;
       }
+      el.classList.toggle('is-auto', info.auto);
       if (el.hidden !== info.hidden) el.hidden = info.hidden;
       stepInfo[key] = info;
     });
@@ -558,8 +588,9 @@
 
   /**
    * The step to open after a choice in "from" (null: from the start): the next
-   * visible step that is not done, else the first one before it, else Menge
-   * (stays open once everything is done), else none.
+   * visible step below it without a tick (single-option steps carry one, so
+   * they are skipped), else the first one above it, else Menge (stays open
+   * once everything is ticked), else none.
    */
   function nextStep(from) {
     var list = visibleSteps();
@@ -666,24 +697,46 @@
     }
   }
 
-  /** After a choice in "key": move on once the Suite has updated its state. */
+  /** Tick "key" with its current value (the Suite has already applied the choice). */
+  function tick(key) {
+    var sig = stepSig(key, snapshot());
+    if (sig !== '') ticks[key] = sig;
+  }
+
+  /** After a choice in "key": tick it and move on once the Suite has updated its state. */
   function moveOn(key) {
     win.setTimeout(function () {
+      tick(key);
       sync();
       openStep(nextStep(key), { focus: true, reveal: true });
     }, 0);
   }
 
-  /** Initial step, once the Suite has applied its defaults (see the file header). */
+  /**
+   * Initial step, once the Suite has applied its defaults: nothing ticked,
+   * Modell open (or the first step with a choice, when there is one model).
+   * After a buy form POST the posted selection counts as chosen: all ticked, Menge open.
+   */
   function settle() {
     if (settled || !folding) return;
     sync();
     var key;
-    if (postedSelection() && visibleSteps().indexOf('qty') !== -1) key = 'qty';
-    else if (modelCards().length > 1) key = 'model';
-    else key = nextStep('model');
+    if (postedSelection() && visibleSteps().indexOf('qty') !== -1) {
+      var s = snapshot();
+      visibleSteps().forEach(function (k) { var sig = stepSig(k, s); if (sig !== '') ticks[k] = sig; });
+      sync();
+      key = 'qty';
+    } else {
+      key = nextStep(null);
+    }
     openStep(key, { instant: true });
     settled = true;
+  }
+
+  /** A quantity set by the visitor (stepper, input, tier) ticks Menge; it stays open. */
+  function qtyTouched() {
+    lastChoice = 'qty';
+    win.setTimeout(function () { tick('qty'); queue(); }, 0);
   }
 
   function enhanceSteps() {
@@ -711,6 +764,20 @@
         openStep(key, { focus: true, reveal: true });
       });
     });
+    if (qtyInput) qtyInput.addEventListener('change', qtyTouched);
+    if (qtyRow) {
+      qtyRow.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('[data-ip-qty="minus"], [data-ip-qty="plus"]')) qtyTouched();
+      }, true);
+    }
+    if (tiers) {
+      tiers.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('.ibpt-cell')) qtyTouched();
+      }, true);
+      tiers.addEventListener('keydown', function (e) {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('.ibpt-cell')) qtyTouched();
+      }, true);
+    }
   }
 
   /**
@@ -723,10 +790,8 @@
   function editTarget() {
     var list = visibleSteps();
     if (lastChoice && list.indexOf(lastChoice) !== -1) return lastChoice;
-    for (var i = 0; i < list.length; i++) {
-      if (list[i] !== 'qty' && !isDone(list[i])) return list[i];
-    }
-    return list[0] || null;
+    var next = nextStep(null);
+    return next && next !== 'qty' ? next : (list[0] || null);
   }
 
   function editSelection() {
@@ -969,6 +1034,92 @@
     silentPick = false;
   }
 
+  /* ── Colour swatches ─────────────────────────────────────────────────────
+     A small block before the option name in colour attributes. Per term:
+     1. the term image (the Suite's option image) wins;
+     2. else the colour set on the term ("Farbe (Hex)", Suite 0.10.31: data-color);
+     3. else a colour guessed from the German term name (swatchFor());
+     4. else no swatch.
+     Colour attributes: slug or label containing "farbe", "color" or "colour",
+     or any term with a colour set. Attributes whose terms only have images
+     (Format, Befestigung: product photos) keep their images and get no guessed swatch. */
+
+  var METALS = {
+    silber: ['#f4f5f7', '#c3c7cc', '#eceef0', '#9fa4ab'],
+    gold: ['#f7e7a1', '#d4af37', '#f3dc8a', '#b08a1e'],
+    chrom: ['#ffffff', '#b4b9bf', '#f4f5f6', '#868b92'],
+    messing: ['#efdc9a', '#b5a642', '#dcc872', '#9a8a2e'],
+    kupfer: ['#f3bd96', '#b87333', '#dc9563', '#8f5424']
+  };
+  var COLOURS = [ // most specific first
+    ['dunkelblau', '#1f2f5c'], ['hellblau', '#8cb8e0'], ['blau', '#2e6db4'],
+    ['lichtgrau', '#d3d5d9'], ['hellgrau', '#d3d5d9'], ['dunkelgrau', '#55595f'], ['grau', '#8d9096'],
+    ['anthrazit', '#3b3f44'], ['schwarz', '#1b1b1b'], ['weiss', '#ffffff'], ['weiß', '#ffffff'],
+    ['dunkelrot', '#8b1424'], ['rot', '#c8102e'], ['dunkelgrün', '#1f5c3a'], ['grün', '#2e8b57'], ['gruen', '#2e8b57'],
+    ['gelb', '#f2c200'], ['orange', '#ee7f00'], ['braun', '#6b4226'], ['beige', '#e3d3b4'], ['pink', '#e6007e'], ['magenta', '#e6007e']
+  ];
+  var CHECKER = 'repeating-conic-gradient(#dfe0e6 0 25%, #ffffff 0 50%) 0 0 / 8px 8px';
+
+  function rgba(hex, a) {
+    var n = parseInt(hex.replace('#', ''), 16);
+    return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+
+  /** CSS background for a colour named in German ("Coating silber", "Rot transparent"), '' when unknown. */
+  function swatchFor(name) {
+    var n = ' ' + String(name || '').toLowerCase().replace(/[()/,&-]/g, ' ').replace(/\s+/g, ' ') + ' ';
+    var has = function (w) { return n.indexOf(w) !== -1; };
+    var clear = has('transparent') || has('klar') || has('transluzent');
+    var matt = has(' matt');
+    var bg = '';
+    Object.keys(METALS).some(function (m) {
+      if (!has(m)) return false;
+      var c = METALS[m];
+      // Brushed metal; matt flattens the highlights.
+      bg = matt ? 'linear-gradient(135deg, ' + c[1] + ', ' + c[2] + ' 60%, ' + c[1] + ')'
+        : 'linear-gradient(135deg, ' + c[0] + ' 0%, ' + c[1] + ' 38%, ' + c[2] + ' 58%, ' + c[3] + ' 100%)';
+      return true;
+    });
+    if (!bg && has('holz')) bg = 'repeating-linear-gradient(100deg, #c69c6d 0 4px, #b0844f 4px 6px, #cfa676 6px 10px)';
+    if (!bg) {
+      var hex = '';
+      COLOURS.some(function (c) { if (has(c[0])) { hex = c[1]; return true; } return false; });
+      if (hex && clear) {
+        var a = has('transluzent') ? 0.7 : 0.45;
+        bg = 'linear-gradient(' + rgba(hex, a) + ', ' + rgba(hex, a) + '), ' + CHECKER;
+      } else if (hex) {
+        bg = has('glänzend') || has('glaenzend')
+          ? 'linear-gradient(160deg, rgba(255,255,255,.45), rgba(255,255,255,0) 45%), ' + hex
+          : hex;
+      } else if (clear) {
+        bg = 'linear-gradient(rgba(220,232,240,.35), rgba(220,232,240,.35)), ' + CHECKER; // klar transparent
+      }
+    }
+    return bg;
+  }
+
+  function isColourAttribute(row) {
+    var key = (row.getAttribute('data-attribute') || '') + ' ' + text(row.querySelector('.infoplus-dropdown__label'));
+    if (/farbe|colou?r/i.test(key)) return true;
+    return !!row.querySelector('.infoplus-dropdown__option[data-color]');
+  }
+
+  function addSwatches(row) {
+    if (!isColourAttribute(row)) return;
+    row.classList.add('ip-vd-colour');
+    Array.prototype.forEach.call(row.querySelectorAll('.infoplus-dropdown__option'), function (opt) {
+      if (opt.querySelector('.infoplus-dropdown__option-image, .ip-swatch')) return; // 1. term image
+      var colour = opt.getAttribute('data-color') || '';
+      var bg = /^#[0-9a-f]{3,8}$/i.test(colour) ? colour : swatchFor(text(opt.querySelector('.infoplus-dropdown__option-text')));
+      if (!bg) return;
+      var sw = doc.createElement('span');
+      sw.className = 'ip-swatch';
+      sw.setAttribute('aria-hidden', 'true');
+      sw.style.background = bg;
+      opt.insertBefore(sw, opt.firstChild);
+    });
+  }
+
   function enhanceDropdowns() {
     widgets.forEach(function (w) {
       w.addEventListener('click', guardFaded, true);
@@ -1001,6 +1152,7 @@
       // The combobox trigger is not used in the inline layout (product.css hides it).
       var trigger = row.querySelector('.infoplus-dropdown__trigger');
       if (trigger) trigger.setAttribute('tabindex', '-1');
+      addSwatches(row);
     });
   }
 
@@ -1075,8 +1227,21 @@
     if (ps && q > 0 && parseInt(ps.currentQty, 10) !== q) ps.currentQty = q;
   }
 
+  /**
+   * The bulk calculator inserts its minimum quantity note (#qty-limit-message)
+   * after the first element matching [class*="qty"] it finds upward from the
+   * input, which is the input itself, so the note lands inside the stepper.
+   * Move it below the stepper; the calculator finds it again by its id.
+   */
+  function placeQtyNote() {
+    var note = doc.getElementById('qty-limit-message');
+    var stepper = qtyInput ? qtyInput.closest('[data-ip-qty-controls]') : null;
+    if (note && stepper && stepper.contains(note)) stepper.parentNode.insertBefore(note, stepper.nextSibling);
+  }
+
   function sync() {
     queued = false;
+    placeQtyNote();
     keepQty();
     renderOptions();
     var s = snapshot();
@@ -1103,6 +1268,8 @@
     if (total) mo.observe(total, { childList: true, subtree: true, characterData: true });
     if (unitEl) mo.observe(unitEl, { childList: true, subtree: true, characterData: true });
     if (qtyRow) mo.observe(qtyRow, { attributes: true, attributeFilter: ['style'] });
+    var qtyControls = qtyInput ? qtyInput.closest('[data-ip-qty-controls]') : null;
+    if (qtyControls) mo.observe(qtyControls, { childList: true }); // the minimum quantity note
     mo.observe(actions, { childList: true });
     if (buyForm) mo.observe(buyForm.parentNode, { childList: true });
     widgets.forEach(function (w) { mo.observe(w, { attributes: true, attributeFilter: ['class'] }); });
@@ -1149,7 +1316,7 @@
   if (folding) {
     enhanceSteps();
     sync();
-    openStep(modelCards().length > 1 ? 'model' : (order[1] || order[0]), { instant: true });
+    openStep(order[0], { instant: true });
   } else {
     sync();
   }

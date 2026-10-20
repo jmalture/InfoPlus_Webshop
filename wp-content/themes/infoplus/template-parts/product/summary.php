@@ -117,6 +117,7 @@ $ip_step_close = static function () {
 $ip_js_texts = array(
 	'done'        => ip_product_text( 'step_done' ),
 	'open'        => ip_product_text( 'step_open' ),
+	'preset'      => ip_product_text( 'step_preset' ),
 	'unavailable' => ip_product_text( 'unavailable' ),
 	'empty'       => ip_product_text( 'summary_empty' ),
 	'unit'        => ip_product_text( 'summary_unit' ),
@@ -201,10 +202,12 @@ $ip_js_texts = array(
 		// Shown by product.css while the step waits for a complete selection (.is-waiting).
 		echo '<p class="ip-step__wait">' . esc_html( ip_product_text( 'qty_wait' ) ) . '</p>';
 	}
-	get_template_part( 'template-parts/product/purchase', null, array( 'product' => $ip_product, 'suite' => $ip_suite ) );
+	// Folding steps: Menge holds the quantity only; the Staffelpreise sit above the summary card.
+	get_template_part( 'template-parts/product/purchase', null, array( 'product' => $ip_product, 'suite' => $ip_suite, 'part' => $ip_steps ? 'qty' : 'all' ) );
 	if ( $ip_steps ) {
 		$ip_step_close();
 		echo '</div>';
+		get_template_part( 'template-parts/product/purchase', null, array( 'product' => $ip_product, 'suite' => $ip_suite, 'part' => 'tiers' ) );
 	}
 
 	get_template_part( 'template-parts/product/order-summary', null, array( 'product' => $ip_product, 'suite' => $ip_suite ) );

@@ -14,9 +14,16 @@
  * values and the tax note (assets/js/product.js reads them from here), so the
  * pair and the note are visually hidden there (product.css, .ip-step--qty).
  *
+ * Folding steps (summary.php): the Staffelpreise are not part of the Menge
+ * step but an always visible strip above the summary card. summary.php calls
+ * this file twice, with part "qty" inside the step and part "tiers" above the
+ * card. bulk-price-table.js finds its component anywhere on the page
+ * (.infoplus-bulk-price-table), so the place does not matter to the Suite.
+ *
  * $args:
  * - product (WC_Product)
  * - suite   (bool) Suite helpers available.
+ * - part    (string) "all" (default), "qty" (quantity row and note) or "tiers" (Staffelpreise only).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -25,11 +32,26 @@ $ip_product = $args['product'] ?? null;
 if ( ! $ip_product instanceof WC_Product ) {
 	return;
 }
-$ip_tax = ip_product_tax_label();
+$ip_tax  = ip_product_tax_label();
+$ip_part = in_array( $args['part'] ?? 'all', array( 'all', 'qty', 'tiers' ), true ) ? ( $args['part'] ?? 'all' ) : 'all';
+
+if ( 'tiers' === $ip_part ) {
+	if ( ! empty( $args['suite'] ) ) {
+		echo '<div class="ip-buy__tiers ip-tierstrip" data-ip-tiers>';
+		echo '<p class="ip-buy__caption">' . esc_html( ip_product_text( 'tiers_caption' ) ) . ( $ip_tax ? ' <span class="ip-buy__tax">(' . esc_html( $ip_tax ) . ')</span>' : '' ) . '</p>';
+		infoplus_suite_bulk_price_table( $ip_product, array(
+			'columns'      => 2,
+			'ab_label'     => ip_product_text( 'ab_label' ),
+			'stueck_label' => ip_product_text( 'unit' ),
+		) );
+		echo '</div>';
+	}
+	return;
+}
 ?>
 <div class="ip-buy">
 	<?php
-	if ( ! empty( $args['suite'] ) ) {
+	if ( 'all' === $ip_part && ! empty( $args['suite'] ) ) {
 		echo '<div class="ip-buy__tiers" data-ip-tiers>';
 		echo '<p class="ip-buy__caption">' . esc_html( ip_product_text( 'tiers_caption' ) ) . ( $ip_tax ? ' <span class="ip-buy__tax">(' . esc_html( $ip_tax ) . ')</span>' : '' ) . '</p>';
 		// Widget 75affe8. Two columns, as the widget default.

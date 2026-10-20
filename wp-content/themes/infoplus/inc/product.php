@@ -233,6 +233,7 @@ function ip_product_texts() {
 			'step_done'      => 'erledigt:',
 			'step_open'      => 'noch offen',
 		'step_edit'      => 'Ändern',
+		'step_preset'    => 'vorausgewählt:',
 		'step_choose'    => 'Auswählen',
 		'steps_nav'      => 'Konfigurationsschritte',
 			'tiers_caption'  => 'Staffelpreise pro Stück',
