@@ -29,4 +29,5 @@ require IP_DIR . '/inc/account.php';
 require IP_DIR . '/inc/product.php';
 require IP_DIR . '/inc/content.php';
 require IP_DIR . '/inc/catalog.php';
+require IP_DIR . '/inc/inquiry.php';
 require IP_DIR . '/inc/assets.php';

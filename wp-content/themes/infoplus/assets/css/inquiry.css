@@ -1,0 +1,364 @@
+/* Inquiry drawer ("Individuelle Anfrage"): template-parts/inquiry-drawer.php around
+   the Infoplus Suite form (form.ip-inq). Loaded on product pages and the Kontakt page
+   (inc/inquiry.php). Right-hand drawer from 768 px, bottom sheet below.
+   Motion: drawer 250 ms, steps slide and fade, upload bars, the success check draws
+   itself. No rotation anywhere. Everything is instant under prefers-reduced-motion. */
+
+.ip-inq-drawer {
+  --ip-inq-dur: 250ms;
+  --ip-inq-step: 250ms;
+  --ip-input-border: #8E9196; /* 3:1 on white for form borders (WCAG 1.4.11), as in checkout.css */
+  --ip-overlay: rgb(25 27 28 / .45);
+  --ip-ok: #15803D;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ip-inq-drawer { --ip-inq-dur: 0ms; --ip-inq-step: 0ms }
+}
+
+/* Variant switch: product page or Kontakt page texts. */
+.ip-inq-drawer [hidden] { display: none !important }
+.ip-inq-drawer[data-variant="product"] [data-ip-inq-only="contact"],
+.ip-inq-drawer[data-variant="contact"] [data-ip-inq-only="product"] { display: none !important }
+
+/* ── Drawer shell: bottom sheet on phones ──────────────────────────────── */
+.ip-inq-drawer {
+  position: fixed;
+  inset: auto 0 0 0;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  max-height: 94dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  background: var(--c-white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  transform: translateY(100%);
+  transition:
+    transform var(--ip-inq-dur) var(--ease),
+    overlay var(--ip-inq-dur) allow-discrete,
+    display var(--ip-inq-dur) allow-discrete;
+}
+.ip-inq-drawer[open] { display: flex; flex-direction: column; transform: none }
+@starting-style { .ip-inq-drawer[open] { transform: translateY(100%) } }
+
+.ip-inq-drawer::backdrop {
+  background: var(--ip-overlay);
+  opacity: 0;
+  transition:
+    opacity var(--ip-inq-dur) ease,
+    overlay var(--ip-inq-dur) allow-discrete,
+    display var(--ip-inq-dur) allow-discrete;
+}
+.ip-inq-drawer[open]::backdrop { opacity: 1 }
+@starting-style { .ip-inq-drawer[open]::backdrop { opacity: 0 } }
+
+@media (min-width: 768px) {
+  .ip-inq-drawer {
+    inset: 0 0 0 auto;
+    width: min(600px, 100vw);
+    height: 100dvh;
+    max-height: none;
+    border-radius: var(--radius-panel) 0 0 var(--radius-panel);
+    transform: translateX(100%);
+  }
+  @starting-style { .ip-inq-drawer[open] { transform: translateX(100%) } }
+}
+
+.ip-inq-drawer__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-3) var(--space-6);
+  border-bottom: 1px solid var(--border);
+}
+.ip-inq-drawer__titles { display: grid; gap: 4px; min-width: 0 }
+.ip-inq-drawer__kicker { font-size: 13px }
+.ip-inq-drawer__title { font: 600 26px/1.15 var(--font); text-wrap: balance }
+.ip-inq-drawer__title:focus { outline: none }
+.ip-inq-drawer__title:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px }
+.ip-inq-drawer__sub { display: none; color: var(--text-secondary); font: 400 16px/1.4 var(--font) } /* phones: room for the form */
+.ip-inq-drawer__close {
+  display: inline-grid; place-items: center; flex: none;
+  width: 40px; height: 40px; margin-top: -4px; padding: 0;
+  border: 0; border-radius: 999px; background: var(--c-grey-100); color: var(--text-primary);
+  transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-inq-drawer__close:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-inq-drawer__close .ip-icon { width: 22px; height: 22px }
+@media (min-width: 768px) {
+  .ip-inq-drawer__head { padding: var(--space-8) var(--space-6) var(--space-4) var(--space-8) }
+  .ip-inq-drawer__title { font-size: 30px }
+  .ip-inq-drawer__sub { display: block }
+}
+
+/* ── Form layout: scrolling body, fixed footer ─────────────────────────── */
+.ip-inq { display: flex; flex: 1; flex-direction: column; min-height: 0 }
+.ip-inq__body {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-4) var(--space-6) var(--space-8);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+@media (min-width: 768px) { .ip-inq__body { padding-inline: var(--space-8) } }
+
+.ip-inq__step { display: grid; gap: var(--space-6) }
+.ip-inq__step-title { font: 600 15px/1.2 var(--font); letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-inq__step-title:focus { outline: none }
+.ip-inq__step-title:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px }
+.ip-inq__note { margin-top: calc(-1 * var(--space-3)); color: var(--text-secondary); font: 400 15px/1.4 var(--font) }
+
+.ip-inq__step.is-in-next { animation: ip-inq-in-next var(--ip-inq-step) var(--ease) both }
+.ip-inq__step.is-in-back { animation: ip-inq-in-back var(--ip-inq-step) var(--ease) both }
+@keyframes ip-inq-in-next { from { opacity: 0; transform: translateX(20px) } }
+@keyframes ip-inq-in-back { from { opacity: 0; transform: translateX(-20px) } }
+
+/* Error summary, announced (role=alert). */
+.ip-inq__summary {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  background: var(--c-primary-tint);
+  color: var(--c-secondary);
+  font: 600 16px/1.4 var(--font);
+  animation: ip-inq-fade var(--ip-inq-step) var(--ease) both;
+}
+.ip-inq__summary:focus { outline: none }
+@keyframes ip-inq-fade { from { opacity: 0; transform: translateY(-4px) } }
+
+/* ── Product context card ──────────────────────────────────────────────── */
+.ip-inq__product {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--c-white);
+}
+.ip-inq__product-media { width: 76px; height: 76px; border-radius: 12px; background: var(--c-grey-100); overflow: hidden }
+.ip-inq__product-media img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply }
+.ip-inq__product-body { display: grid; gap: 6px; min-width: 0; padding-top: 2px }
+.ip-inq__product-kicker { font: 600 12px/1.2 var(--font); letter-spacing: 1.2px; text-transform: uppercase; color: var(--c-secondary) }
+.ip-inq__product-name { font: 600 19px/1.25 var(--font) }
+.ip-inq__chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; padding: 0; list-style: none }
+.ip-inq__chip { display: inline-flex; align-items: baseline; gap: 4px; padding: 3px 10px; border-radius: 999px; background: var(--c-grey-100); font: 500 14px/1.3 var(--font) }
+.ip-inq__chip-label { color: var(--text-secondary); font-weight: 400 }
+.ip-inq__change {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 32px; margin-top: 2px; padding: 0;
+  border: 0; background: none; color: var(--c-secondary);
+  font: 600 15px/1.2 var(--font); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px;
+  transition: text-decoration-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-inq__change:hover { color: var(--accent); text-decoration-color: currentColor }
+.ip-inq__change .ip-icon { width: 16px; height: 16px }
+@media (min-width: 768px) {
+  .ip-inq__product { grid-template-columns: 96px minmax(0, 1fr); padding: var(--space-4) }
+  .ip-inq__product-media { width: 96px; height: 96px }
+}
+
+/* ── Fields ────────────────────────────────────────────────────────────── */
+.ip-inq__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-4) }
+.ip-inq__row--plz { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) }
+.ip-inq__field { display: grid; gap: 6px; align-content: start; min-width: 0 }
+.ip-inq__group { display: grid; gap: 6px; margin: 0; padding: 0; border: 0; min-width: 0 }
+.ip-inq__label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; padding: 0; font: 600 16px/1.3 var(--font) }
+.ip-inq__label--sub { font-weight: 500; font-size: 15px; color: var(--text-secondary) }
+.ip-inq__opt { color: var(--text-secondary); font-weight: 400; font-size: 14px }
+.ip-inq__req { color: var(--c-secondary) }
+.ip-inq__hint { color: var(--text-secondary); font: 400 14px/1.4 var(--font) }
+
+.ip-inq__input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid var(--ip-input-border);
+  border-radius: 10px;
+  background: var(--c-white);
+  font: 400 17px/1.4 var(--font);
+  transition: border-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease), background-color var(--dur-ui) var(--ease);
+}
+.ip-inq__input:hover { border-color: var(--text-secondary) }
+.ip-inq__input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgb(230 0 126 / .18) }
+.ip-inq__input:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px }
+.ip-inq__input::placeholder { color: #7A7E83 }
+.ip-inq__textarea { min-height: 120px; resize: vertical }
+.ip-inq__select {
+  appearance: none;
+  padding-right: 40px;
+  background: var(--c-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4E53' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center / 18px;
+}
+input[type="date"].ip-inq__input { min-width: 0 }
+input[type="number"].ip-inq__input { -moz-appearance: textfield }
+
+.ip-inq__field.is-invalid .ip-inq__input,
+.ip-inq__input[aria-invalid="true"] { border-color: var(--c-secondary); background: #FFF8FB }
+.ip-inq__error {
+  display: flex; align-items: flex-start; gap: 6px;
+  color: var(--c-secondary); font: 600 14px/1.35 var(--font);
+  animation: ip-inq-fade var(--ip-inq-step) var(--ease) both;
+}
+.ip-inq__error::before {
+  content: "!"; display: inline-grid; place-items: center; flex: none;
+  width: 16px; height: 16px; margin-top: 1px; border-radius: 999px;
+  background: var(--c-secondary); color: var(--c-white); font: 700 11px/1 var(--font);
+}
+
+/* Toggles (checkbox with role="switch"). */
+.ip-inq__switch { position: relative; display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer }
+.ip-inq__switch input { position: absolute; width: 44px; height: 26px; margin: 0; opacity: 0; cursor: pointer }
+.ip-inq__switch-ui {
+  position: relative; flex: none; width: 44px; height: 26px; margin-top: 1px;
+  border-radius: 999px; background: var(--c-grey-200);
+  box-shadow: inset 0 0 0 1px rgb(25 27 28 / .08);
+  transition: background-color var(--dur-ui) var(--ease);
+}
+.ip-inq__switch-ui::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+  border-radius: 999px; background: var(--c-white); box-shadow: 0 1px 3px rgb(25 27 28 / .3);
+  transition: transform var(--ip-inq-dur) var(--ease);
+}
+.ip-inq__switch input:checked + .ip-inq__switch-ui { background: var(--accent) }
+.ip-inq__switch input:checked + .ip-inq__switch-ui::after { transform: translateX(18px) }
+.ip-inq__switch input:focus-visible + .ip-inq__switch-ui { outline: 2px solid var(--focus); outline-offset: 3px }
+.ip-inq__switch:hover .ip-inq__switch-ui { background: #CFCFDD }
+.ip-inq__switch:hover input:checked + .ip-inq__switch-ui { background: var(--accent-hover) }
+.ip-inq__switch-text { display: grid; gap: 2px; font: 400 15px/1.35 var(--font); color: var(--text-secondary) }
+.ip-inq__switch-text strong { color: var(--text-primary); font: 600 16px/1.3 var(--font) }
+
+/* ── Upload ────────────────────────────────────────────────────────────── */
+.ip-inq__drop {
+  position: relative;
+  border: 1.5px dashed var(--ip-input-border);
+  border-radius: var(--radius-card);
+  background: var(--c-white);
+  transition: border-color var(--dur-ui) var(--ease), background-color var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease);
+}
+.ip-inq__drop:hover, .ip-inq__drop.is-over { border-color: var(--accent); background: var(--c-primary-tint) }
+.ip-inq__drop.is-over { transform: scale(1.01) }
+.ip-inq__drop:focus-within { outline: 2px solid var(--focus); outline-offset: 2px }
+.ip-inq__drop.is-invalid { border-color: var(--c-secondary) }
+.ip-inq__file-input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; clip: rect(0 0 0 0) }
+.ip-inq__drop-label { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); cursor: pointer }
+.ip-inq__drop-icon { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 13px; background: var(--c-primary-tint); color: var(--accent); transition: transform 350ms var(--ease-spring) }
+.ip-inq__drop:hover .ip-inq__drop-icon, .ip-inq__drop.is-over .ip-inq__drop-icon { transform: translateY(-2px) }
+.ip-inq__drop-icon .ip-icon { width: 22px; height: 22px }
+.ip-inq__drop-text { font: 400 16px/1.35 var(--font); color: var(--text-secondary) }
+.ip-inq__drop-text strong { display: block; color: var(--text-primary); font-weight: 600 }
+.ip-inq__drop-link { color: var(--c-secondary); font-weight: 600; text-decoration: underline; text-underline-offset: 3px }
+
+.ip-inq__files { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none }
+.ip-inq__files:empty { display: none }
+.ip-inq__file {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3);
+  padding: 10px 6px 10px 10px; border: 1px solid var(--border); border-radius: 12px; background: var(--c-white);
+  animation: ip-inq-fade var(--ip-inq-step) var(--ease) both;
+  transition: opacity 200ms var(--ease), transform 200ms var(--ease), border-color var(--dur-ui) var(--ease);
+}
+.ip-inq__file.is-leaving { opacity: 0; transform: translateX(12px) }
+.ip-inq__file.is-error { border-color: var(--c-secondary); background: #FFF8FB }
+.ip-inq__file-type { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--c-grey-100); color: var(--text-secondary); font: 700 11px/1 var(--font); letter-spacing: .5px }
+.ip-inq__file.is-done .ip-inq__file-type { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-inq__file-body { display: grid; gap: 3px; min-width: 0 }
+.ip-inq__file-name { overflow: hidden; font: 600 15px/1.3 var(--font); text-overflow: ellipsis; white-space: nowrap }
+.ip-inq__file-meta { color: var(--text-secondary); font: 400 13px/1.3 var(--font) }
+.ip-inq__file.is-done .ip-inq__file-status { color: var(--ip-ok); font-weight: 600 }
+.ip-inq__file.is-error .ip-inq__file-status { color: var(--c-secondary); font-weight: 600 }
+.ip-inq__file-bar { display: block; height: 3px; margin-top: 2px; border-radius: 3px; background: var(--c-grey-200); overflow: hidden; transition: opacity 400ms var(--ease) 300ms }
+.ip-inq__file-bar > span { display: block; height: 100%; background: var(--accent); transform: scaleX(.02); transform-origin: left; transition: transform 200ms linear }
+.ip-inq__file.is-done .ip-inq__file-bar, .ip-inq__file.is-error .ip-inq__file-bar { opacity: 0 }
+.ip-inq__file-remove {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0;
+  border: 0; border-radius: 999px; background: none; color: var(--text-secondary);
+  transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-inq__file-remove:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+
+/* ── Consent and honeypot ──────────────────────────────────────────────── */
+.ip-inq__consent { display: flex; align-items: flex-start; gap: var(--space-3); font: 400 15px/1.45 var(--font); cursor: pointer }
+.ip-inq__consent input { flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--accent); cursor: pointer }
+.ip-inq__consent a { color: var(--c-secondary); text-underline-offset: 2px }
+.ip-inq__consent a:hover { color: var(--accent) }
+.ip-inq__field.is-invalid .ip-inq__consent input { outline: 2px solid var(--c-secondary); outline-offset: 2px }
+.ip-inq__hp { position: absolute !important; left: -10000px; width: 1px; height: 1px; overflow: hidden }
+
+/* ── Success state ─────────────────────────────────────────────────────── */
+.ip-inq__done { display: grid; justify-items: center; gap: var(--space-4); padding: var(--space-8) 0 var(--space-4); text-align: center }
+.ip-inq__check { width: 76px; height: 76px }
+.ip-inq__check-ring { stroke: var(--accent); stroke-dasharray: 183; stroke-dashoffset: 0 }
+.ip-inq__check-mark { stroke: var(--accent); stroke-dasharray: 40; stroke-dashoffset: 0 }
+.ip-inq__done.is-in .ip-inq__check-ring { animation: ip-inq-draw-ring 600ms var(--ease) both }
+.ip-inq__done.is-in .ip-inq__check-mark { animation: ip-inq-draw-mark 400ms var(--ease) 450ms both }
+.ip-inq__done.is-in > :not(svg) { animation: ip-inq-rise 400ms var(--ease) both }
+.ip-inq__done.is-in > :nth-child(2) { animation-delay: 250ms }
+.ip-inq__done.is-in > :nth-child(3) { animation-delay: 320ms }
+.ip-inq__done.is-in > :nth-child(4) { animation-delay: 380ms }
+.ip-inq__done.is-in > :nth-child(5) { animation-delay: 440ms }
+@keyframes ip-inq-draw-ring { from { stroke-dashoffset: 183 } }
+@keyframes ip-inq-draw-mark { from { stroke-dashoffset: 40 } }
+@keyframes ip-inq-rise { from { opacity: 0; transform: translateY(8px) } }
+.ip-inq__done-title { max-width: 22ch; font: 600 26px/1.2 var(--font); text-wrap: balance }
+.ip-inq__done-title:focus { outline: none }
+.ip-inq__ref { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 8px; padding: 10px 16px; border-radius: 12px; background: var(--c-grey-100); color: var(--text-secondary); font: 400 16px/1.3 var(--font) }
+.ip-inq__ref strong { color: var(--text-primary); font: 700 20px/1.2 var(--font); letter-spacing: .5px }
+.ip-inq__done-mail { color: var(--text-secondary); font: 400 16px/1.4 var(--font); overflow-wrap: anywhere }
+.ip-inq__next { width: 100%; margin-top: var(--space-2); padding: var(--space-4) var(--space-6); border: 1px solid var(--border); border-radius: var(--radius-card); text-align: left }
+.ip-inq__next h4 { margin-bottom: 4px; font: 600 15px/1.2 var(--font); letter-spacing: 1.2px; text-transform: uppercase; color: var(--c-secondary) }
+.ip-inq__next p { font: 400 17px/1.45 var(--font) }
+
+/* ── Footer: progress and navigation ───────────────────────────────────── */
+.ip-inq__foot {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-6) calc(var(--space-3) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: var(--c-white);
+}
+.ip-inq__progress { display: flex; gap: var(--space-3); margin: 0; padding: 0; list-style: none; counter-reset: none }
+.ip-inq__progress-item { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-secondary); font: 500 15px/1.2 var(--font) }
+.ip-inq__progress-num {
+  display: inline-grid; place-items: center; width: 26px; height: 26px;
+  border: 1px solid var(--ip-input-border); border-radius: 999px; background: var(--c-white); font: 600 13px/1 var(--font);
+  transition: background-color var(--ip-inq-dur) var(--ease), border-color var(--ip-inq-dur) var(--ease), color var(--ip-inq-dur) var(--ease);
+}
+.ip-inq__progress-item.is-current { color: var(--text-primary); font-weight: 600 }
+.ip-inq__progress-item.is-current .ip-inq__progress-num { border-color: var(--accent); background: var(--accent); color: var(--c-white) }
+.ip-inq__progress-item.is-done .ip-inq__progress-num { border-color: var(--c-primary-tint); background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-inq__progress-item + .ip-inq__progress-item::before { content: ""; width: 16px; height: 1px; margin-right: var(--space-2); background: var(--ip-input-border) }
+
+.ip-inq__nav { display: flex; gap: var(--space-3) }
+.ip-inq__nav .ip-btn { flex: 1; min-height: 48px; justify-content: center; white-space: nowrap }
+.ip-inq__nav .ip-inq__back { flex: 0 0 auto; padding-inline: var(--space-4) }
+.ip-inq__nav .ip-btn .ip-icon { width: 18px; height: 18px }
+.ip-inq__next-btn .ip-icon, .ip-inq__submit .ip-icon { transition: transform var(--dur-ui) var(--ease) }
+.ip-inq__next-btn:hover .ip-icon { transform: translateX(3px) }
+.ip-inq__submit { position: relative; overflow: hidden }
+.ip-inq__submit.is-busy { background: var(--accent-hover); cursor: progress }
+.ip-inq__submit.is-busy .ip-icon { opacity: 0 }
+.ip-inq__submit.is-busy::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 40%; height: 3px; background: rgb(255 255 255 / .7);
+  animation: ip-inq-busy 1.1s var(--ease) infinite;
+}
+@keyframes ip-inq-busy { from { transform: translateX(-100%) } to { transform: translateX(250%) } }
+.ip-inq.is-done .ip-inq__progress { display: none }
+
+@media (min-width: 768px) {
+  .ip-inq__foot { grid-template-columns: auto 1fr; align-items: center; gap: var(--space-4); padding-inline: var(--space-8) }
+  .ip-inq__nav { justify-content: flex-end }
+  .ip-inq__nav .ip-btn { flex: 0 0 auto; min-width: 132px }
+  .ip-inq__nav .ip-inq__back { min-width: 0 }
+  .ip-inq.is-done .ip-inq__foot { grid-template-columns: 1fr }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ip-inq-drawer *, .ip-inq-drawer *::before, .ip-inq-drawer *::after { animation: none !important; transition: none !important }
+}
