@@ -23,6 +23,8 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
 use Elementor\Group_Control_Border;
+use Infoplus\Suite\View;
+use Infoplus\Suite\Modules\ProductDetailSuite\Components;
 
 if (!defined('ABSPATH')) exit;
 
@@ -295,65 +297,15 @@ class BulkPriceTable extends Widget_Base
     {
         $settings = $this->get_settings_for_display();
 
-        $columns      = max(1, min(4, (int)($settings['columns'] ?? 2)));
-        $skeletonRows = max(1, min(6, (int)($settings['skeleton_rows'] ?? 3)));
-        $abLabel      = $settings['ab_label'] ?? 'ab';
-        $stueckLabel  = $settings['stueck_label'] ?? 'Stück';
-
-        $isEditMode = \Elementor\Plugin::$instance->editor->is_edit_mode();
-
-        // Static demo data shown in the Elementor editor
-        $demoTiers = [
-            ['from' => '10',  'to' => '19',  'value' => '38.95'],
-            ['from' => '20',  'to' => '49',  'value' => '31.25'],
-            ['from' => '50',  'to' => '99',  'value' => '24.45'],
-            ['from' => '100', 'to' => '249', 'value' => '18.05'],
-            ['from' => '250', 'to' => '499', 'value' => '16.28'],
-            ['from' => '500', 'to' => '',    'value' => '14.92'],
-        ];
-        ?>
-        <div class="infoplus-bulk-price-table"
-             data-columns="<?php echo esc_attr($columns); ?>"
-             data-ab-label="<?php echo esc_attr($abLabel); ?>"
-             data-stueck-label="<?php echo esc_attr($stueckLabel); ?>">
-
-            <?php if ($isEditMode): ?>
-
-                <?php /* Editor preview — static demo grid so the designer can see the layout */ ?>
-                <div class="ibpt-grid ibpt-grid--preview">
-                    <?php foreach ($demoTiers as $i => $tier):
-                        $from     = (int) $tier['from'];
-                        $to       = $tier['to'] !== '' ? (int) $tier['to'] : null;
-                        $price    = number_format((float) $tier['value'], 2, ',', '.');
-                        $qtyText  = $to === null ? ($from . '+') : (string) $from;
-                        $isActive = $i === 0;
-                    ?>
-                        <div class="ibpt-cell<?php echo $isActive ? ' ibpt-cell--active' : ''; ?>"
-                             data-from="<?php echo esc_attr($from); ?>"
-                             data-to="<?php echo esc_attr($to ?? ''); ?>">
-                            <span class="ibpt-cell__label"><?php echo esc_html($abLabel); ?></span>
-                            <span class="ibpt-cell__qty"><?php echo esc_html($qtyText); ?></span>
-                            <span class="ibpt-cell__label"><?php echo esc_html($stueckLabel); ?></span>
-                            <span class="ibpt-cell__price"><?php echo esc_html($price); ?> €</span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-
-            <?php else: ?>
-
-                <?php /* Loading skeleton — JS hides this and shows ibpt-grid once prices arrive */ ?>
-                <div class="ibpt-skeleton">
-                    <?php for ($i = 0; $i < ($columns * $skeletonRows); $i++): ?>
-                        <div class="ibpt-skeleton__cell"></div>
-                    <?php endfor; ?>
-                </div>
-
-                <?php /* Price grid — populated entirely by bulk-price-table.js */ ?>
-                <div class="ibpt-grid" style="display:none;"></div>
-
-            <?php endif; ?>
-
-        </div>
-        <?php
+        // Markup lives in templates/bulk-price-table.php (View::render).
+        // In the Elementor editor the template shows static demo tiers.
+        View::render('bulk-price-table', Components::bulkPriceTable(null, [
+            'context'       => View::CONTEXT_ELEMENTOR,
+            'columns'       => $settings['columns'] ?? 2,
+            'skeleton_rows' => $settings['skeleton_rows'] ?? 3,
+            'ab_label'      => $settings['ab_label'] ?? 'ab',
+            'stueck_label'  => $settings['stueck_label'] ?? 'Stück',
+            'is_preview'    => \Elementor\Plugin::$instance->editor->is_edit_mode(),
+        ]));
     }
 }

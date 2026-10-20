@@ -73,3 +73,19 @@ if (!function_exists('infoplus_suite_product_info_box')) {
         View::render('product-info-box', Components::productInfoBox($product, $args));
     }
 }
+
+if (!function_exists('infoplus_suite_bulk_price_table')) {
+    /**
+     * Render the bulk price table (Staffelpreise). Tiers are loaded in the browser
+     * by bulk-price-table.js for the selected variation; $product is accepted for
+     * a uniform signature and passed to the template.
+     *
+     * @param WC_Product|int|null $product Product, product ID, or null for the global $product.
+     * @param array               $args    See templates/bulk-price-table.php. Defaults:
+     *                                     Components::bulkPriceTableDefaults().
+     */
+    function infoplus_suite_bulk_price_table($product = null, array $args = []): void
+    {
+        View::render('bulk-price-table', Components::bulkPriceTable($product, $args));
+    }
+}

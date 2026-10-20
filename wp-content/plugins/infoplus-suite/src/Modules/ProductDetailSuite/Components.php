@@ -496,6 +496,43 @@ final class Components
         return $args;
     }
 
+    // ── bulk-price-table ────────────────────────────────────────────────────
+
+    /**
+     * Defaults of the bulk price table (BulkPriceTable widget content controls).
+     */
+    public static function bulkPriceTableDefaults(): array
+    {
+        return [
+            'columns'       => 2, // 1 to 4
+            'skeleton_rows' => 3, // 1 to 6, loading placeholder rows
+            'ab_label'      => 'ab',
+            'stueck_label'  => 'Stück',
+            'is_preview'    => false, // static demo tiers instead of the loading skeleton
+        ];
+    }
+
+    /**
+     * Final template args for templates/bulk-price-table.php.
+     * The tiers themselves are loaded by bulk-price-table.js (REST, per variation SKU),
+     * so the product is only passed through for theme overrides.
+     *
+     * @param \WC_Product|int|null $product
+     */
+    public static function bulkPriceTable($product = null, array $args = []): array
+    {
+        $args = self::merge(self::bulkPriceTableDefaults(), $args);
+
+        $args['columns']       = max(1, min(4, (int) ($args['columns'] ?? 2)));
+        $args['skeleton_rows'] = max(1, min(6, (int) ($args['skeleton_rows'] ?? 3)));
+        $args['ab_label']      = (string) ($args['ab_label'] ?? 'ab');
+        $args['stueck_label']  = (string) ($args['stueck_label'] ?? 'Stück');
+        $args['is_preview']    = self::flag($args['is_preview']);
+        $args['product']       = self::resolveProduct($product);
+
+        return $args;
+    }
+
     /**
      * Merge args over defaults. Unknown keys are kept for theme overrides.
      */
