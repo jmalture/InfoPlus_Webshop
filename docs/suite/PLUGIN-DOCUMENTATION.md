@@ -23,6 +23,7 @@
    - 4.7 [UserOrders](#47-userorders)
    - 4.8 [ElementorUserAvatar](#48-elementoruseravatar)
    - 4.9 [Custom404](#49-custom404)
+   - 4.10 [Inquiry](#410-inquiry)
 5. [Module Dependency Map](#5-module-dependency-map)
 6. [REST API Endpoints](#6-rest-api-endpoints)
 7. [WooCommerce Meta Keys](#7-woocommerce-meta-keys)
@@ -40,6 +41,7 @@
 18. [Changes from 0.9.93 to 0.9.111](#18-changes-from-0993-to-09111)
 19. [Theme Renderer](#19-theme-renderer)
 20. [Order Types and the Buy Flow](#20-order-types-and-the-buy-flow)
+21. [Inquiry Form ("Individuelle Anfrage")](#21-inquiry-form-individuelle-anfrage)
 
 ---
 
@@ -115,7 +117,7 @@ interface ModuleInterface {
 }
 ```
 
-All nine modules are instantiated in `Plugin.php → registerModules()` in this order: WooSingleProductAddons, WooProductVariationFields, EditorLinkSettings, IkonaIFE, ElementorUserAvatar, UserDashboard, UserOrders, ProductDetailSuite, Custom404. Each module's `register()` method is called unconditionally. There is no try/catch around instantiation and no way to disable a single module without editing code (roadmap items R-05 and R-11).
+All nine modules are instantiated in `Plugin.php → registerModules()` in this order: WooSingleProductAddons, WooProductVariationFields, EditorLinkSettings, IkonaIFE, ElementorUserAvatar, UserDashboard, UserOrders, ProductDetailSuite, Custom404. Each module's `register()` method is called unconditionally. Since Plugin 0.10.29 (branch `feature/view-renderer`) the module `Inquiry` is registered last, after CatalogImport (Section 21). There is no try/catch around instantiation and no way to disable a single module without editing code (roadmap items R-05 and R-11).
 
 ### 2.3 Admin Dashboard Tabs
 
@@ -125,6 +127,7 @@ Only modules listed in `Plugin::$visibleModules` appear as tabs in the WP Admin 
 |-----|-------------|-------------|
 | Settings | `editor-link-settings` | Editor URL configuration |
 | IFE Sync | `ikona-ife` | Product synchronization dashboard |
+| Anfragen | `inquiry` | Settings of the inquiry form (since 0.10.29, Section 21) |
 
 The admin page is registered under **IKONA IFE** in the WP sidebar (position 56) with a custom icon.
 
@@ -838,6 +841,12 @@ All strings are hardcoded German. Colors use `--e-global-color-primary` with `#e
 
 ---
 
+### 4.10 Inquiry
+
+`src/Modules/Inquiry/`, added in Plugin 0.10.29. The inquiry form "Individuelle Anfrage" for the classic theme: REST routes, the private post type `infoplus_inquiry` (WooCommerce → Anfragen), protected file storage, e-mails and a settings tab. Full description in Section 21.
+
+---
+
 ## 5. Module Dependency Map
 
 ```
@@ -901,6 +910,10 @@ Regenerated 2026-09-17 from every `register_rest_route` call in `src/` and `refe
 | GET | `/product/{id}/detail` | ProductDetailSuite | public |
 | GET | `/product/{id}/variations` | ProductDetailSuite (new in 0.9.111) | public |
 | GET | `/attribute-terms/{attribute}` | ProductDetailSuite | public |
+| POST | `/inquiries/session` | Inquiry (0.10.29) | public (`__return_true`), rate limited; issues a signed form token |
+| POST | `/inquiries/files` | Inquiry (0.10.29) | form token |
+| DELETE | `/inquiries/files/{id}` | Inquiry (0.10.29) | form token |
+| POST | `/inquiries` | Inquiry (0.10.29) | form token, plus `X-WP-Nonce` for logged-in visitors |
 
 Not a registered route but effectively a Suite endpoint: `GET /infoplus/v1/products/prices?sku=X` is answered by `ProductDetailSuite\Module::interceptBulkPricesRoute()` on `rest_pre_dispatch` before the InfoplusAPI handler runs (Section 12).
 
@@ -1002,6 +1015,8 @@ Regenerated 2026-09-17 by grepping the quoted key strings in `src/`.
 |-----|--------|-------------|
 | `infoplus_editor_base_desktop_url`, `infoplus_editor_base_mobile_url`, `infoplus_editor_theme_id`, `infoplus_editor_cart_entry_path`, `infoplus_editor_back_path`, `infoplus_editor_bearer_token` | EditorLinkSettings (settings group `infoplus_editor_link_settings`) | See 4.1 |
 | `infoplus_flush_rewrite_rules` | UserOrders | One-shot flag; when set, `registerRewriteRules()` flushes rewrite rules and deletes it |
+| `infoplus_inquiry_settings` | Inquiry (tab Anfragen) | Array: recipient, max_upload_mb, max_files, attach_limit_mb, success_text, customer_mail, privacy_page. See Section 21 |
+| `infoplus_inquiry_seq_{year}` | Inquiry `PostType::nextReference()` | Counter of the reference numbers ANF-{year}-{0000} |
 
 ### Transients
 
@@ -1011,6 +1026,9 @@ Regenerated 2026-09-17 by grepping the quoted key strings in `src/`.
 | `infoplus_pd_{product_id}_{ProductDetailSuite VERSION}` | ProductDetailSuite `outputProductState()` | 12 h | `woocommerce_after_product_object_save` for the product or the parent of a saved variation; a VERSION bump changes the key |
 | `infoplus_prices_{md5(sku)}` | ProductDetailSuite `interceptBulkPricesRoute()` | 24 h | none (WDP rule edits are not seen for up to 24 h) |
 | Sonderkontur upload storage (key from `getStorageKey()`, session cookie or IP+UA hash) | WooSingleProductAddons | 24 h | `cleanupOldTransients()` on `wp_scheduled_delete` |
+| `infoplus_inq_up_{token key}` | Inquiry `Files::storeTemp()` | 24 h | deleted when the inquiry is sent; files in `tmp/` older than a day removed by the daily cron `infoplus_inquiry_cleanup` |
+| `infoplus_inq_done_{token key}` | Inquiry `Controller::submit()` | 6 h | none; answers a repeated submit with the same reference |
+| `infoplus_inq_rl_{bucket}_{ip hash}` | Inquiry `Controller::limited()` | 15 min | expires |
 
 ### Custom database tables (InfoplusAPI, not created by the Suite)
 
@@ -1877,4 +1895,154 @@ Local WordPress with WooCommerce 10.6.1, this branch and the classic theme (no E
 - Posted variation of a `requestable` model: error notice from `validateBuyForm()`, nothing added. No variation: WooCommerce's "Please choose product options" notice. Posted format that does not match the variation: WooCommerce's "Invalid value posted for Format". Click on the disabled button: no request, a hint asks for the missing options.
 - `editable` and `requestable` models: unchanged (editor link with URL, Anfrage only with quantity row hidden).
 - Same page with the form removed (as on the Elementor template): `#editor` turns into "In den Warenkorb" and posts `infoplus_add_to_cart` as before.
+
+---
+
+## 21. Inquiry Form ("Individuelle Anfrage")
+
+Added in Plugin 0.10.29 (branch `feature/view-renderer`, 2026-10-20) for the classic Infoplus theme. Not deployed. It replaces the Elementor popup 14241 (Section 9) on the classic theme and is meant to serve the Kontakt page as well. The Elementor template is not changed.
+
+### Split between Suite and theme
+
+| Part | Where |
+|------|-------|
+| Form markup (both steps, success state) | Suite `templates/inquiry-form.php`, rendered by `infoplus_suite_inquiry_form(array $args)` through `View::render('inquiry-form')`. Theme override: `{theme}/infoplus-suite/inquiry-form.php` |
+| E-mail body | Suite `templates/inquiry-email.php` (`View::capture('inquiry-email')`), override `{theme}/infoplus-suite/inquiry-email.php` |
+| REST, validation, storage, files, mails, admin, settings | Suite `src/Modules/Inquiry/` |
+| Drawer (`<dialog id="ip-inquiry">`), styles, browser logic | Infoplus theme: `inc/inquiry.php`, `template-parts/inquiry-drawer.php`, `assets/css/inquiry.css`, `assets/js/inquiry.js` |
+
+Files of the module:
+
+| File | Role |
+|------|------|
+| `Module.php` | Registration, `formArgs()` (template args), `prefill()` (logged-in customer), `clientConfig()` (JSON for the browser) |
+| `Controller.php` | REST routes, validation and sanitising, honeypot, time trap, rate limit, product context lookup |
+| `Token.php` | Signed form token |
+| `Files.php` | Upload checks and protected storage |
+| `PostType.php` | Post type `infoplus_inquiry`, statuses, reference numbers |
+| `Admin.php` | List columns, status filter, detail and status meta boxes, file download, "Neu" count in the menu |
+| `Mailer.php` | Team e-mail and customer confirmation |
+| `Settings.php` | Option `infoplus_inquiry_settings`, tab "Anfragen" in IKONA IFE |
+
+`infoplus_suite_inquiry_form()` takes `variant` (`product` or `contact`), `product` (`WC_Product`, ID, or null for the queried product) and `id_prefix`.
+
+### Form
+
+Step 1 "Ihr Projekt" (contact variant: "Ihr Anliegen"): product card (image, name, chips for model and options, button "Auswahl ändern"), Menge (required in the product variant, prefilled from the configurator), toggle "Regelmäßiger Bedarf", Wunschtermin (optional, not in the past), Dateien (drag and drop or picker, several files), Ihre Nachricht (optional; required in the contact variant), toggle "Kostenlose Muster anfordern".
+
+Step 2 "Ihre Kontaktdaten": Firma (recommended), Vorname and Nachname (required), E-Mail (required), Telefon, PLZ and Land (optional, for a shipping quote), consent checkbox with a link to the privacy page (required), honeypot `ip_extra`.
+
+Success state: reference number, the address of the confirmation e-mail and the text "So geht es weiter" from the settings.
+
+Elements with `data-ip-inq-only="product"` or `"contact"` show only in that variant; the theme script disables the inputs of the other one. The full list of data attributes is in the template header.
+
+### Product context
+
+The browser sends IDs and slugs only: `context.product_id`, `context.model`, `context.attributes` (`{ pa_format: '68x28', ... }`), `context.variation_id`, and on the Kontakt page `context.product_name`. `Controller::resolveProduct()` looks everything up again:
+
+- The product must exist and be published.
+- Each attribute must be an attribute of the product, and its value a term (or option) of the product. Unknown keys and values are dropped.
+- The model gives the order type (`_infoplus_attr_order_type_model_{slug}`) and the image (first image of `_infoplus_attr_gallery_model_{slug}`).
+- The variation ID is kept only when it is a child of the product and its attributes match the chosen ones.
+- A product name without ID is stored as text with `verified => false` (shown as "nicht geprüft" in the admin).
+
+### REST routes and security
+
+Namespace `infoplus/v1`:
+
+| Method | Route | Permission | Notes |
+|--------|-------|------------|-------|
+| POST | `/inquiries/session` | `__return_true` (public on purpose) | Returns `{ token, minSeconds }`, header `Cache-Control: no-store, private`. A POST so no page or REST cache stores it. 60 per IP and 15 minutes. |
+| POST | `/inquiries/files` | valid token | Multipart field `file`, one file per request (per-file progress in the browser). 40 per IP and 15 minutes. Returns `{ id, name, size }` (201). |
+| DELETE | `/inquiries/files/{id}` | valid token | Removes an uploaded file of this token again. |
+| POST | `/inquiries` | valid token | JSON body. Returns `{ reference, message, email }` (201), 422 with `data.fields` (field name to German message), 400 for honeypot or time trap, 429 for the rate limit, 403 for a missing or expired token. |
+
+Nonce strategy:
+
+- Guests: product pages are page-cached, so a nonce in the HTML would go stale. The drawer asks `/inquiries/session` for a token when it opens. The token is `{issued time}.{random}.{HMAC-SHA256}` keyed with `wp_salt('nonce')` (`Token.php`). It is sent as header `X-IP-Inquiry-Token` and is valid for 6 hours.
+- Logged-in visitors: `clientConfig()` adds a `wp_rest` nonce only for them (their pages are not page-cached). The browser sends it as `X-WP-Nonce`; core checks it before the route runs and treats a request without it as a guest, so the inquiry would not be linked to the account. The token is required as well.
+
+Spam and abuse:
+
+- Honeypot `ip_extra` (hidden, `tabindex="-1"`, `autocomplete="off"`): filled means 400.
+- Time trap on the server clock: a submit sooner than 4 seconds (`Token::MIN_SECONDS`) after the token was issued is refused.
+- Rate limit per IP: 5 accepted submits per 15 minutes (counted after validation, so correcting a field never locks a person out). Only a salted hash of `REMOTE_ADDR` is kept, in a transient. Filters `infoplus_suite_inquiry_client_ip` (for a proxy) and `infoplus_suite_inquiry_rate_limit`.
+- A repeated submit with the same token (double click, lost response) returns the first answer and creates nothing new.
+
+Validation and sanitising: every field is sanitised (`sanitize_text_field`, `sanitize_textarea_field`, `sanitize_email`) and cut to a maximum length. Menge integer 1 to 1,000,000; Wunschtermin `Y-m-d`, not before today and not more than three years ahead (site timezone); e-mail `is_email()`; phone digits, spaces, `+()/.-`; PLZ 3 to 12 letters, digits, spaces or hyphens; Land must be an allowed WooCommerce country; consent must be true. `source_url` is kept only when it has the site's host.
+
+Files:
+
+- Extensions: pdf, ai, eps, svg, png, jpg, jpeg, webp. Each file is checked with `wp_check_filetype_and_ext()` against the real content (fileinfo) for a list of allowed MIME types per extension (`Files::TYPES`; AI as PDF or PostScript, EPS as PostScript, SVG as SVG/XML with an `<svg` root). During the check those types are added to `upload_mimes` and removed again, so the media library does not accept them. A PNG named `.svg` is stored as `.png`; `logo.php.png` with PHP content and `.exe` are refused.
+- Size: total of all files of one form at most the setting (default 20 MB, cap 64 MB); one file is also limited by PHP (`wp_max_upload_size()`). At most 10 files (setting).
+- Storage: `wp-content/uploads/infoplus-inquiries/`, created with an `.htaccess` (`Require all denied`, `Deny from all`, `Options -Indexes`, `php_flag engine off`) and `index.php`. Temporary files in `tmp/`, sent files in `{Y}/{m}/{random}/`. Stored names are random hex with the checked extension; the original name is kept only in the record. Never in the media library. nginx does not read `.htaccess` (unverified for production, LiteSpeed is expected). The PHP built-in server used for local tests ignores `.htaccess` as well, so the deny rule was not tested locally.
+- Download: `admin-post.php?action=infoplus_inquiry_file&post={id}&file={index}`, only with `edit_post` on the inquiry, always as `application/octet-stream` with `Content-Disposition: attachment` and `nosniff` (an SVG is never rendered in the admin's browser). Logged-out requests get 400 from `admin-post.php`.
+- Temporary files that were never sent are removed by the daily cron `infoplus_inquiry_cleanup` after 24 hours. Permanently deleting an inquiry deletes its files (`before_delete_post`).
+
+### Post type `infoplus_inquiry`
+
+Private, not public, no REST, no front-end URL. Menu: WooCommerce → Anfragen (under IKONA IFE when WooCommerce is inactive), with a count of "Neu" inquiries. All capabilities map to `manage_woocommerce`; `create_posts` is `do_not_allow`.
+
+| Meta key | Content |
+|----------|---------|
+| `_ip_inquiry` | The whole record: variant, product (see above), quantity, recurring, wish_date, message, samples, files (name, file, size, ext, mime), contact (company, first_name, last_name, email, phone, postcode, country, country_name), consent (time, privacy_url), source_url, reference, created, user_id |
+| `_ip_inquiry_ref` | Reference, e.g. ANF-2026-0042 (also the start of the title) |
+| `_ip_inquiry_status` | `neu`, `in-bearbeitung`, `angebot-gesendet`, `erledigt` (Neu, In Bearbeitung, Angebot gesendet, Erledigt) |
+| `_ip_inquiry_email` | Customer e-mail (searching an e-mail address in the list finds it) |
+| `_ip_inquiry_product_id` | Product ID or 0 |
+| `_ip_inquiry_mail` | Result of both e-mails: sent, time, to, attached |
+
+The record is stored before any e-mail is sent, so a failing mail never loses a request; the mail result is shown in the status box. List columns: Referenz, Status, Firma / Name, Produkt, Menge, Dateien, Eingang; filter by status. The edit screen shows a read-only detail box (Projekt, Dateien, Kontakt, Technisch) and a status box (status select, "Status speichern", "Per E-Mail antworten", mail results). The post always stays private.
+
+Reference numbers: `ANF-{year}-{0000}`, one counter per year in the option `infoplus_inquiry_seq_{year}`, raised with a single SQL UPDATE. Filter `infoplus_suite_inquiry_reference`.
+
+### E-mails
+
+Sent with WooCommerce's e-mail header and footer and `WC_Email::send()` (shop sender, WooCommerce e-mail styles), or a small branded wrapper without WooCommerce. Both use the template `inquiry-email`.
+
+- Team: to the recipients from the settings (filter `infoplus_suite_inquiry_recipients`), `Reply-To` the customer, subject "Neue Anfrage {ref}: {product} ({company or name})". Files are attached under their original names while all files together stay within "Dateien anhängen bis" (default 10 MB); otherwise the mail lists download links to the admin (login needed). Button "Anfrage im Backend öffnen".
+- Customer (setting, default on): subject "Ihre Anfrage {ref} bei {site name}", `Reply-To` the first team recipient, the reference, the "So geht es weiter" text and a summary of the request.
+
+### Settings (IKONA IFE → tab "Anfragen")
+
+Option `infoplus_inquiry_settings`:
+
+| Key | Default | Notes |
+|-----|---------|-------|
+| `recipient` | empty: the site admin e-mail (`admin_email`) | Comma separated. **To be confirmed by the client before rollout.** On staging the default is the site admin e-mail. No address is written in code. |
+| `success_text` | "Wir prüfen Ihre Anfrage und melden uns innerhalb von 24 Stunden mit einem Angebot." | Shown in the success state and in the customer e-mail. Owner decision of 2026-10-20 to promise 24 hours. **To be confirmed by the client before rollout.** |
+| `max_upload_mb` | 20 | Total of all files, 1 to 64 |
+| `max_files` | 10 | 1 to 20 |
+| `attach_limit_mb` | 10 | Larger totals are linked instead of attached; 0 never attaches |
+| `customer_mail` | on | Confirmation to the customer |
+| `privacy_page` | 0: the WordPress privacy page (else a page with slug `datenschutz`) | Link next to the consent checkbox |
+
+### Hooks
+
+| Hook | Type | Use |
+|------|------|-----|
+| `infoplus_suite_inquiry_record` | filter | Change the record before it is stored |
+| `infoplus_suite_inquiry_created` | action | After storing and mailing (`$post_id`, `$record`, `$mail`) |
+| `infoplus_suite_inquiry_recipients` | filter | Team recipients |
+| `infoplus_suite_inquiry_reference` | filter | Reference format |
+| `infoplus_suite_inquiry_client_ip` | filter | Client IP for the rate limit |
+| `infoplus_suite_inquiry_rate_limit` | filter | Limit per bucket (`session`, `upload`, `submit`) |
+| `infoplus_suite_inquiry_client_config` | filter | Browser configuration and messages |
+
+### Theme side (Infoplus theme)
+
+`inc/inquiry.php` prints the drawer in `wp_footer` and loads `inquiry.css` and `inquiry.js` on product pages (variant product) and on the page with slug `kontakt` (variant contact); filter `ip_inquiry_variant`. It appends `#anfrage` to `ip_product_inquiry_url()`, so the no-JS link (Kontakt page with `?produkt=`) opens the drawer there with the product name.
+
+`assets/js/inquiry.js` opens the drawer on a click on `[data-ip-action="inquiry"]`, `[data-ip-inquiry-link]`, `[data-ip-inquiry-open]` or a link ending in `#anfrage` (capture phase, so the link does not navigate), on the DOM event `infoplus:inquiry-open` (its `detail` is the context), through `window.InfoplusInquiry.open(context)`, and on the hash `#anfrage`. After opening it dispatches `infoplus:inquiry-open` with `detail.source = 'drawer'`, which makes `product-state.js` re-run its readonly product field check (Section 19). The product context comes from `window.infoplusProductData` and `window.infoplusProductState` (selected model, `selectedAttributes`, `selectedVariation`, quantity from `[data-ip-qty="value"]` or `currentQty`). Further events: `infoplus:inquiry-close`, `infoplus:inquiry-sent` (`{ reference }`) and the cancelable `infoplus:inquiry-edit-selection` ("Auswahl ändern").
+
+### Verified
+
+Local WordPress 6.9 with WooCommerce 10.6.1, this branch and the classic theme, 2026-10-20 (mail captured by a local mu-plugin, nothing sent):
+
+- Product page (model selected), 1440 and 390 px: drawer opens with product name, model chip and quantity; step validation in German with summary and focus on the first error; past Wunschtermin refused; PNG and PDF uploaded with progress, `.exe` and a 21 MB PDF refused in the browser; submit after both steps creates the inquiry, success state with reference; Escape closes and focus returns to the button.
+- Server: `.exe`, `evil.php.png` (PHP content) refused; SVG accepted; PNG renamed `.svg` stored as `.png`; missing or forged token 403; honeypot 400; submit within 4 seconds 400; sixth accepted submit within 15 minutes 429; repeated submit returns the same reference; unknown attribute keys and values dropped; a variation that does not match the chosen options dropped.
+- Kontakt page with `?produkt=…#anfrage`: contact variant, message required, privacy link opens a new tab without closing the drawer, inquiry stored with the unverified product name.
+- Logged-in customer: step 2 prefilled from the billing data, inquiry linked to the account.
+- Admin: list, status filter, detail box, status saved, file download as attachment for the admin, refused when logged out. Team e-mail with three attachments and Reply-To, customer e-mail with the 24-hour text.
+- Not tested: real mail delivery, the `.htaccess` deny rule (PHP built-in server), the Elementor template, WebKit.
 
