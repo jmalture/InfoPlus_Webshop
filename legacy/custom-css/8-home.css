@@ -1,0 +1,72 @@
+/* element 4fa5bec button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element f43c793 image */
+selector:hover {
+    transform: scale(1.05);
+    transition: all 0.5s linear;
+}
+
+selector {
+    transition: all 0.5s linear;
+}
+
+/* element 1af6e3a button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}
+
+/* element 26fee90 image */
+selector:hover {
+    transform: scale(1.05);
+    transition: all 0.5s linear;
+}
+
+selector {
+    transition: all 0.5s linear;
+}
+
+/* element 9aae57a button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}
+
+/* element ba9a744 container */
+selector .elementor-widget-icon-box.elementor-mobile-position-left .elementor-icon-box-wrapper, .elementor-widget-icon-box.elementor-mobile-position-right .elementor-icon-box-wrapper {
+    align-items: center;
+}
+
+@media only screen and (max-width: 767px) {
+  selector .elementor-icon {
+    padding-top: 6px;
+}
+}
+
+/* element 27b830f icon-box */
+selector p {
+    padding-bottom: 7px;
+}
+
+/* element e1e70bf container */
+selector .elementor-widget-icon-box.elementor-mobile-position-left .elementor-icon-box-wrapper, .elementor-widget-icon-box.elementor-mobile-position-right .elementor-icon-box-wrapper {
+    align-items: center;
+}
+
+@media only screen and (max-width: 767px) {
+  selector .elementor-icon {
+    padding-top: 6px;
+}
+}

@@ -1,0 +1,196 @@
+{
+ "id": 13365,
+ "post_type": "elementor_library",
+ "title": "Related News",
+ "slug": "elementor-loop-item-13365",
+ "status": "publish",
+ "template_type": "loop-item",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents",
+  "preview_type": "single/news",
+  "preview_id": "13345"
+ },
+ "elementor_data": [
+  {
+   "id": "0d88742",
+   "elType": "container",
+   "settings": {
+    "content_width": "full",
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "flex_gap": {
+     "column": "0",
+     "row": "10",
+     "isLinked": false,
+     "unit": "px",
+     "size": 0
+    },
+    "width": {
+     "unit": "%",
+     "size": 80,
+     "sizes": []
+    },
+    "html_tag": "a",
+    "custom_css": "selector .elementor-heading-title{\n    transition: color .3s ease;\n}\n\nselector:hover .elementor-heading-title{\n    color: var(--e-global-color-primary);\n}",
+    "__dynamic__": {
+     "link": "[elementor-tag id=\"2c5f8f8\" name=\"post-url\" settings=\"%7B%7D\"]"
+    }
+   },
+   "elements": [
+    {
+     "id": "3313750",
+     "elType": "widget",
+     "settings": {
+      "image": {
+       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/revslider/christmas-landing-page-2/xmas-thumb2.jpg",
+       "id": 9992,
+       "size": "",
+       "alt": "",
+       "source": "library"
+      },
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "px",
+       "size": "",
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "px",
+       "size": "",
+       "sizes": []
+      },
+      "object-fit": "contain",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "_border_radius": {
+       "unit": "px",
+       "top": "9",
+       "right": "9",
+       "bottom": "9",
+       "left": "9",
+       "isLinked": true
+      },
+      "__globals__": {
+       "_background_color": "globals/colors?id=217b49e"
+      },
+      "width_laptop": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "height": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "__dynamic__": {
+       "image": "[elementor-tag id=\"5a1aebf\" name=\"post-featured-image\" settings=\"%7B%7D\"]"
+      },
+      "align": "left",
+      "_element_width": "inherit",
+      "_flex_align_self": "flex-start",
+      "height_laptop": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "height_tablet": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "height_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      }
+     },
+     "elements": [],
+     "widgetType": "image"
+    },
+    {
+     "id": "600c5d6",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+     },
+     "elements": [
+      {
+       "id": "7078524",
+       "elType": "widget",
+       "settings": {
+        "title": "IFE Editor Update: New Design Templates",
+        "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "custom_css": "selector:hover{\n    text-decoration: underline;\n    text-decoration-color: var(--e-global-color-text);\n    color: var(--e-global-color-secondary)\n}",
+        "__globals__": {
+         "typography_typography": "globals/typography?id=text",
+         "title_hover_color": "globals/colors?id=secondary",
+         "title_color": "globals/colors?id=text"
+        },
+        "__dynamic__": {
+         "title": "[elementor-tag id=\"d32c121\" name=\"post-title\" settings=\"%7B%7D\"]"
+        }
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "fab589d",
+       "elType": "widget",
+       "settings": {
+        "editor": "<div class=\"activity-meta\">2 hours ago</div>",
+        "text_color": "#666666",
+        "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "__globals__": {
+         "typography_typography": "globals/typography?id=b8bbfd9"
+        },
+        "__dynamic__": {
+         "editor": "[elementor-tag id=\"ca38372\" name=\"post-date\" settings=\"%7B%22format%22%3A%22Y-m-d%22%7D\"]"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": true
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [
+    "plus-alignmnet-effect",
+    "plus-temp-notice",
+    "tp-navigation-menu"
+   ],
+   "update_at": "1770125555"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 4167,
+  "elementor_data_sha256_of_db_string": "35965f398b58e34680c3d559d8c820418654f09e57c816732b7eda67a91cea82",
+  "page_settings_db_length_bytes": 126
+ }
+}

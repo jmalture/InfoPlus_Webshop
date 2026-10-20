@@ -1,0 +1,227 @@
+<style>
+        .order-search-container {
+            background: white!important;
+            padding: 2rem 2.5rem!important;
+            border-radius: 16px!important;
+            /*box-shadow: 0 4px 20px rgba(0,0,0,0.06)!important;*/
+            margin-bottom: 2rem!important;
+        }
+
+        .search-wrapper {
+            display: flex!important;
+            gap: 1rem!important;
+            align-items: center!important;
+            flex-wrap: wrap!important;
+        }
+
+        .search-input-group {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+
+        .search-input {
+            width: 100%!important;
+            padding: 1rem !important;
+            border: 2px solid #f0f0f0!important;
+            border-radius: 50px!important;
+            font-size: 1rem!important;
+            transition: all 0.3s ease;
+            outline: none!important;
+            background: #f8f8f8!important;
+        }
+
+        .search-input:focus {
+            border-color: #e91e8c!important;
+            background: white!important;
+            /*box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.1)!important;*/
+        }
+
+        .search-input::placeholder {
+            color: #999!important;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.9rem 2.5rem 0.9rem 1.2rem;
+            border: 2px solid #f0f0f0;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            background: #f8f8f8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .filter-select:hover {
+            border-color: #e0e0e0;
+            background-color: white;
+        }
+
+        .filter-select:focus {
+            border-color: #e91e8c;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.1);
+        }
+
+        .clear-filters-btn {
+            padding: 0.9rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            background: transparent;
+            color: #e91e8c;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .clear-filters-btn:hover {
+            background: var(--e-global-color-secondary);
+        }
+
+        .results-info {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #f0f0f0;
+            color: #666;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .results-info.active {
+            display: block;
+        }
+
+        .results-count {
+            color: #e91e8c;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .order-search-container {
+                padding: 1.5rem;
+            }
+
+            .search-wrapper {
+                flex-direction: column;
+            }
+
+            .search-input-group {
+                min-width: 100%;
+            }
+
+            .filter-group {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="order-search-container">
+        <div class="search-wrapper">
+            <div class="search-input-group">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="projectSearch"
+                    placeholder="Suche nach Bestellnummer, Produkt oder Datum..."
+                    autocomplete="off"
+                >
+            </div>
+            
+            <div class="filter-group">
+
+                <button class="clear-filters-btn" id="clearFilters">Zurücksetzen</button>
+            </div>
+        </div>
+
+        <div class="results-info" id="resultsInfo">
+            <span class="results-count">0</span> Bestellungen gefunden
+        </div>
+    </div>
+
+    <script>
+        // Basic functionality for demonstration
+        // You'll integrate this with your actual order filtering logic
+        
+        const searchInput = document.getElementById('orderSearch');
+        const statusFilter = document.getElementById('statusFilter');
+        const clearBtn = document.getElementById('clearFilters');
+        const resultsInfo = document.getElementById('resultsInfo');
+
+        // Store filter state
+        let filterState = {
+            search: '',
+            status: ''
+        };
+
+        // Search input handler
+        searchInput.addEventListener('input', function(e) {
+            filterState.search = e.target.value;
+            performFilter();
+        });
+
+        // Status filter handler
+        statusFilter.addEventListener('change', function(e) {
+            filterState.status = e.target.value;
+            performFilter();
+        });
+
+        // Clear filters
+        clearBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            statusFilter.value = '';
+            filterState = { search: '', status: '' };
+            resultsInfo.classList.remove('active');
+            performFilter();
+        });
+
+        // Main filter function (you'll replace this with actual logic)
+        function performFilter() {
+            // This is where you'll add your filtering logic
+            // For now, just show the results info when filters are active
+            const hasFilters = filterState.search || filterState.status;
+            
+            if (hasFilters) {
+                resultsInfo.classList.add('active');
+                // You'll update the count here based on filtered results
+                // resultsInfo.querySelector('.results-count').textContent = filteredOrders.length;
+            } else {
+                resultsInfo.classList.remove('active');
+            }
+
+            // Dispatch custom event that your WordPress/Elementor can listen to
+            const event = new CustomEvent('orderFilterChange', {
+                detail: filterState
+            });
+            document.dispatchEvent(event);
+
+            console.log('Filter applied:', filterState);
+        }
+
+        // Listen for Enter key in search
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performFilter();
+            }
+        });
+    </script>

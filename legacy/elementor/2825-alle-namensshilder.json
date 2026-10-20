@@ -1,0 +1,2269 @@
+{
+ "id": 2825,
+ "post_type": "post",
+ "title": "Alle Namensshilder ",
+ "slug": "alle-namensshilder",
+ "status": "draft",
+ "template_type": "wp-post",
+ "conditions": null,
+ "page_settings": null,
+ "elementor_data": [
+  {
+   "id": "5fe8502",
+   "elType": "container",
+   "settings": {
+    "container_type": "grid",
+    "grid_columns_grid": {
+     "unit": "fr",
+     "size": 5
+    },
+    "grid_rows_grid": {
+     "unit": "fr",
+     "size": 5
+    },
+    "grid_rows_grid_mobile": {
+     "unit": "fr",
+     "size": "2"
+    },
+    "grid_gaps": {
+     "column": "0",
+     "row": "0",
+     "isLinked": false,
+     "unit": "px"
+    },
+    "grid_justify_items": "center",
+    "grid_align_items": "center",
+    "border_border": "solid",
+    "border_width": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "margin": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "padding": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "css_classes": "mega_content"
+   },
+   "elements": [
+    {
+     "id": "679acc9",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "db1fb5c",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_basic0e8T21ZorZJ3f.png",
+         "id": 2482,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 63,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "14b1b15",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>AluContur</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "7eae276",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "e77f3d1",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "253c417",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/namensschild_aluprofil_comfort_schwarziNSYQkuCHlan7.png",
+         "id": 2229,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "image_size": "full",
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "ff39ce7",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>AluProfil</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "901e509",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "2557149",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_border": "none",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "b8fb581",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/alucontur_exklusivJvJBazIqISACX.png",
+         "id": 2200,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "6d484fe",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Alutlantis</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "2f91f1f",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/product/alucontur-namensschild/",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "1d3dbcb",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "29968a3",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "c5d4f5e",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "437c215",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "babd1c7",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "4c2cfb6",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "e346602",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>ChalkBoard</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "0353755",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "c507104",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "b7c0eae",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "20353ea",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "f21884c",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "a82774f",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "b2a64dd",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "740cd8d",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "c4c4000",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "0a71397",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "a230bcd",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "b0ff343",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "656fc01",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "bcbec4c",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "7a2ca74",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "1b57bfb",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "405efe4",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "90f9419",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "a8d5ecf",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "63a4ccb",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "5b47e32",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "619c68b",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "e7155fb",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "cb83109",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "58e680e",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "1dabc11",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "d7908f2",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "e7d34a5",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "75a4e08",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "e25b9ee",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "41512da",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "9a7e547",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "2ac92be",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "7dccbb9",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "659cf66",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/alucontur_stickerlHLgVfH4AM3ys.png",
+         "id": 2483,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "object-fit": "cover"
+       },
+       "elements": [],
+       "widgetType": "image"
+      },
+      {
+       "id": "a4a73d7",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Business</p>",
+        "align": "center",
+        "text_color": "#4A4E53",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=65ac2ee"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "5ddf973",
+       "elType": "widget",
+       "settings": {
+        "text": "Produkt gestalten",
+        "selected_icon": {
+         "value": {
+          "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/arrow-right.svg",
+          "id": 165
+         },
+         "library": "svg"
+        },
+        "icon_align": "row-reverse",
+        "icon_indent": {
+         "unit": "px",
+         "size": 10,
+         "sizes": []
+        },
+        "text_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "24",
+         "bottom": "10",
+         "left": "24",
+         "isLinked": false
+        },
+        "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}\n\nselector path {\n    fill: white;\n}",
+        "__globals__": {
+         "button_text_color": "globals/colors?id=accent",
+         "typography_typography": "globals/typography?id=text",
+         "background_color": "globals/colors?id=primary",
+         "button_background_hover_color": "globals/colors?id=secondary"
+        },
+        "border_radius": {
+         "unit": "px",
+         "top": "9",
+         "right": "9",
+         "bottom": "9",
+         "left": "9",
+         "isLinked": true
+        },
+        "_flex_align_self": "center",
+        "link": {
+         "url": "",
+         "is_external": "",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "justify",
+        "_css_classes": "button-arrow-right",
+        "__dynamic__": []
+       },
+       "elements": [],
+       "widgetType": "button"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "8b791ee",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": ""
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_align_items": "center",
+      "flex_gap": {
+       "column": "0",
+       "row": "16",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "border_border": "none",
+      "border_width": {
+       "unit": "px",
+       "top": "0",
+       "right": "1",
+       "bottom": "1",
+       "left": "0",
+       "isLinked": false
+      },
+      "border_color": "#E9EBEC",
+      "border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "padding": {
+       "unit": "px",
+       "top": "30",
+       "right": "30",
+       "bottom": "30",
+       "left": "30",
+       "isLinked": true
+      },
+      "_flex_align_self": "stretch",
+      "css_classes": "mega_item",
+      "__globals__": {
+       "border_color": ""
+      }
+     },
+     "elements": [
+      {
+       "id": "ad235ef",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/08/made-in-germany-de.png",
+         "id": 2484,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "width": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        },
+        "space": {
+         "unit": "%",
+         "size": 100,
+         "sizes": []
+        }
+       },
+       "elements": [],
+       "widgetType": "image"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [
+    "plus-alignmnet-effect",
+    "plus-temp-notice",
+    "tp-navigation-menu"
+   ],
+   "update_at": "1763129608"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 35409,
+  "elementor_data_sha256_of_db_string": "280dde4486788390c0020feb2ebd355b5266c43ac036b0765e926b929638abf0",
+  "page_settings_db_length_bytes": null
+ }
+}

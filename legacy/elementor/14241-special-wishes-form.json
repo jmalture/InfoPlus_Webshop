@@ -1,0 +1,496 @@
+{
+ "id": 14241,
+ "post_type": "elementor_library",
+ "title": "Special Wishes Form",
+ "slug": "special-wishes-form",
+ "status": "publish",
+ "template_type": "popup",
+ "conditions": null,
+ "page_settings": {
+  "width": {
+   "unit": "vw",
+   "size": 70,
+   "sizes": []
+  },
+  "entrance_animation": "fadeIn",
+  "exit_animation": "fadeIn",
+  "entrance_animation_duration": {
+   "unit": "px",
+   "size": 0.4,
+   "sizes": []
+  },
+  "eael_ext_toc_title": "Table of Contents",
+  "eael_custom_js": "(function($) {\r\n    'use strict';\r\n\r\n    console.log('[SonderwunschPopup] Script loaded');\r\n\r\n    var RWV_HEADING     = 'Individuelle Anfrage mit Variante';\r\n    var RWV_DESCRIPTION = 'Sie haben bereits Ihre Wunschkonfiguration ausgewählt. Ergänzen Sie weitere Details, beschreiben Sie Sonderwünsche oder laden Sie Ihr Logo hoch. Wir melden uns innerhalb von 24 Stunden mit einem unverbindlichen Angebot.';\r\n\r\n    var _originalHeading     = null;\r\n    var _originalDescription = null;\r\n\r\n    function setReadonlyField($field) {\r\n        $field\r\n            .prop('readonly', true)\r\n            .css({\r\n                'background-color': '#f5f5f5',\r\n                'color':            '#888888',\r\n                'border-color':     '#e0e0e0',\r\n                'cursor':           'default'\r\n            });\r\n    }\r\n\r\n    function clearReadonlyField($field) {\r\n        $field\r\n            .prop('readonly', false)\r\n            .css({\r\n                'background-color': '',\r\n                'color':            '',\r\n                'border-color':     '',\r\n                'cursor':           ''\r\n            });\r\n    }\r\n\r\n    // ── Reorder form fields for grid layout ───────────────────────────────────\r\n    function reorderFormFields($popup) {\r\n        var $wrapper = $popup.find('.elementor-form-fields-wrapper');\r\n        if (!$wrapper.length) return;\r\n\r\n        // Define field order - Product fields: product first, then stuck\r\n        var productFields = ['product', 'stuck', 'modell', 'variante', 'befestigung'];\r\n        var contactFields = ['firma', 'name', 'email', 'rufnummer'];\r\n        var fullWidthFields = ['message', 'muster', 'file_upload'];\r\n\r\n        var productRow = 1;\r\n        var contactRow = 1;\r\n\r\n        productFields.forEach(function(fieldId) {\r\n            var $field = $wrapper.find('.elementor-field-group-' + fieldId);\r\n            if ($field.length && $field.is(':visible')) {\r\n                $field.css({\r\n                    'grid-column': '1',\r\n                    'grid-row': productRow++\r\n                });\r\n            }\r\n        });\r\n\r\n        contactFields.forEach(function(fieldId) {\r\n            var $field = $wrapper.find('.elementor-field-group-' + fieldId);\r\n            if ($field.length) {\r\n                $field.css({\r\n                    'grid-column': '2',\r\n                    'grid-row': contactRow++\r\n                });\r\n            }\r\n        });\r\n\r\n        // Full width fields start after the tallest column\r\n        var startRow = Math.max(productRow, contactRow);\r\n\r\n        fullWidthFields.forEach(function(fieldId) {\r\n            var $field = $wrapper.find('.elementor-field-group-' + fieldId);\r\n            if ($field.length) {\r\n                $field.css({\r\n                    'grid-column': '1 / -1',\r\n                    'grid-row': startRow++\r\n                });\r\n            }\r\n        });\r\n\r\n        // Submit button at the end\r\n        var $submit = $wrapper.find('.elementor-field-type-submit');\r\n        if ($submit.length) {\r\n            $submit.css({\r\n                'grid-column': '1 / -1',\r\n                'grid-row': startRow\r\n            });\r\n        }\r\n\r\n        console.log('[SonderwunschPopup] ✓ Form fields reordered');\r\n    }\r\n\r\n    $(document).on('elementor/popup/show', function(event, id, instance) {\r\n        console.log('[SonderwunschPopup] Popup opened, ID:', id);\r\n\r\n        setTimeout(function() {\r\n            var $popup = $('.sonderwuche_popup');\r\n            if (!$popup.length) {\r\n                console.log('[SonderwunschPopup] Popup container not found');\r\n                return;\r\n            }\r\n\r\n            // Determine order type\r\n            var orderType = 'editable';\r\n            if (window.infoplusProductState && window.infoplusProductData && window.infoplusProductData.models) {\r\n                var selectedModel = window.infoplusProductState.selectedModel;\r\n                for (var m = 0; m < window.infoplusProductData.models.length; m++) {\r\n                    if (window.infoplusProductData.models[m].slug === selectedModel) {\r\n                        orderType = window.infoplusProductData.models[m].order_type || 'editable';\r\n                        break;\r\n                    }\r\n                }\r\n            }\r\n            var isVariantRequest = (orderType === 'requestable_with_variants');\r\n            console.log('[SonderwunschPopup] Order type:', orderType, '| isVariantRequest:', isVariantRequest);\r\n\r\n            // Heading & Description\r\n            var $headingText     = $popup.find('#form_heading .elementor-heading-title');\r\n            var $descriptionText = $popup.find('#form_description p').first();\r\n\r\n            if ($headingText.length && _originalHeading === null) {\r\n                _originalHeading = $headingText.text();\r\n            }\r\n            if ($descriptionText.length && _originalDescription === null) {\r\n                _originalDescription = $descriptionText.text();\r\n            }\r\n\r\n            if (isVariantRequest) {\r\n                if ($headingText.length)     $headingText.text(RWV_HEADING);\r\n                if ($descriptionText.length) $descriptionText.text(RWV_DESCRIPTION);\r\n            } else {\r\n                if ($headingText.length && _originalHeading !== null)         $headingText.text(_originalHeading);\r\n                if ($descriptionText.length && _originalDescription !== null) $descriptionText.text(_originalDescription);\r\n            }\r\n\r\n            // Product field\r\n            var $productField = $popup.find('#form-field-product');\r\n            var productName = '';\r\n            var productSku  = '';\r\n\r\n            if (window.infoplusProductData) {\r\n                productName = window.infoplusProductData.name || '';\r\n                productSku  = window.infoplusProductData.sku  || '';\r\n            }\r\n\r\n            if (!productName) {\r\n                productName = $('.product_title').text().trim() || $('h1.elementor-heading-title').first().text().trim();\r\n            }\r\n\r\n            var productInfo = productName;\r\n            if (productSku) productInfo += ' (SKU: ' + productSku + ')';\r\n\r\n            if ($productField.length && productInfo) {\r\n                $productField.val(productInfo);\r\n                setReadonlyField($productField);\r\n                console.log('[SonderwunschPopup] ✓ Product value injected');\r\n            }\r\n\r\n            // Stück field\r\n            var $stuckField = $popup.find('#form-field-stuck');\r\n            if ($stuckField.length) {\r\n                var qty = 1;\r\n                if (window.infoplusProductState && window.infoplusProductState.quantity) {\r\n                    qty = window.infoplusProductState.quantity;\r\n                } else {\r\n                    var $qtyInput = $('.quantity input[type=\"number\"], .infoplus-qty-input, input[name=\"quantity\"]');\r\n                    if ($qtyInput.length) {\r\n                        qty = parseInt($qtyInput.val()) || 1;\r\n                    }\r\n                }\r\n                $stuckField.val(qty);\r\n                console.log('[SonderwunschPopup] ✓ Stück value injected:', qty);\r\n            }\r\n\r\n            // Befestigung dropdown\r\n            var $befField = $popup.find('#form-field-befestigung');\r\n\r\n            if ($befField.is('select') && window.infoplusProductData) {\r\n                var pd = window.infoplusProductData;\r\n                var bef_terms = [];\r\n\r\n                if (pd.attributes && pd.attributes['pa_befestigung'] && pd.attributes['pa_befestigung'].terms) {\r\n                    bef_terms = pd.attributes['pa_befestigung'].terms;\r\n                }\r\n\r\n                if (!bef_terms.length && pd.variations) {\r\n                    var seen = {};\r\n                    for (var v = 0; v < pd.variations.length; v++) {\r\n                        var bef_val = pd.variations[v].attributes && pd.variations[v].attributes['attribute_pa_befestigung'];\r\n                        if (bef_val && !seen[bef_val]) {\r\n                            seen[bef_val] = true;\r\n                            var bef_name = bef_val.replace(/-/g, ' ').replace(/\\b\\w/g, function(c) { return c.toUpperCase(); });\r\n                            bef_terms.push({ slug: bef_val, name: bef_name });\r\n                        }\r\n                    }\r\n                }\r\n\r\n                if (bef_terms.length) {\r\n                    $befField.empty();\r\n                    $befField.append($('<option>', { value: '', text: 'Bitte wählen…' }));\r\n                    for (var i = 0; i < bef_terms.length; i++) {\r\n                        $befField.append($('<option>', { value: bef_terms[i].slug, text: bef_terms[i].name }));\r\n                    }\r\n                    console.log('[SonderwunschPopup] ✓ Befestigung populated');\r\n                }\r\n            }\r\n\r\n            // Modell & Variante fields\r\n            var $modellField   = $popup.find('#form-field-modell');\r\n            var $varianteField = $popup.find('#form-field-variante');\r\n\r\n            function getFieldWrapper($field) {\r\n                return $field.closest('.elementor-field-group');\r\n            }\r\n\r\n            if (isVariantRequest) {\r\n                var ps  = window.infoplusProductState || {};\r\n                var pd2 = window.infoplusProductData  || {};\r\n\r\n                if ($modellField.length) {\r\n                    getFieldWrapper($modellField).show();\r\n                    var modelName = '';\r\n                    if (ps.selectedModel && pd2.models) {\r\n                        for (var mi = 0; mi < pd2.models.length; mi++) {\r\n                            if (pd2.models[mi].slug === ps.selectedModel) {\r\n                                modelName = pd2.models[mi].name;\r\n                                break;\r\n                            }\r\n                        }\r\n                    }\r\n                    $modellField.val(modelName);\r\n                    setReadonlyField($modellField);\r\n                }\r\n\r\n                if ($varianteField.length) {\r\n                    getFieldWrapper($varianteField).show();\r\n                    var parts = [];\r\n\r\n                    if (ps.selectedAttributes && pd2.attributes) {\r\n                        for (var attrKey in ps.selectedAttributes) {\r\n                            if (!ps.selectedAttributes.hasOwnProperty(attrKey)) continue;\r\n                            var attrValue = ps.selectedAttributes[attrKey];\r\n                            if (!attrValue) continue;\r\n\r\n                            var attrData = pd2.attributes[attrKey];\r\n                            var attrName = attrData\r\n                                ? attrData.name\r\n                                : attrKey.replace('pa_', '').replace(/_/g, ' ');\r\n\r\n                            var termName = attrValue;\r\n                            if (attrData && attrData.terms) {\r\n                                for (var t = 0; t < attrData.terms.length; t++) {\r\n                                    if (attrData.terms[t].slug === attrValue) {\r\n                                        termName = attrData.terms[t].name;\r\n                                        break;\r\n                                    }\r\n                                }\r\n                            }\r\n                            parts.push(attrName + ': ' + termName);\r\n                        }\r\n                    }\r\n\r\n                    var varianteText = parts.join(', ');\r\n                    $varianteField.val(varianteText);\r\n                    setReadonlyField($varianteField);\r\n                }\r\n\r\n            } else {\r\n                if ($modellField.length) {\r\n                    getFieldWrapper($modellField).hide();\r\n                    $modellField.val('');\r\n                    clearReadonlyField($modellField);\r\n                }\r\n                if ($varianteField.length) {\r\n                    getFieldWrapper($varianteField).hide();\r\n                    $varianteField.val('');\r\n                    clearReadonlyField($varianteField);\r\n                }\r\n            }\r\n\r\n            // Reorder fields for grid layout\r\n            reorderFormFields($popup);\r\n\r\n        }, 100);\r\n    });\r\n\r\n})(jQuery);",
+  "border_radius": {
+   "unit": "px",
+   "top": "6",
+   "right": "6",
+   "bottom": "6",
+   "left": "6",
+   "isLinked": true
+  },
+  "icon_size": {
+   "unit": "px",
+   "size": 30,
+   "sizes": []
+  },
+  "classes": "sonderwuche_popup",
+  "width_laptop": {
+   "unit": "vw",
+   "size": 70,
+   "sizes": []
+  },
+  "width_tablet": {
+   "unit": "vw",
+   "size": "",
+   "sizes": []
+  },
+  "width_mobile": {
+   "unit": "vw",
+   "size": 100,
+   "sizes": []
+  },
+  "__globals__": {
+   "close_button_color": "globals/colors?id=primary"
+  },
+  "custom_css": "/* ============================================\r\n   SONDERWUNSCH FORM - TWO COLUMN LAYOUT\r\n   ============================================ */\r\n\r\n/* Main form container - enable grid */\r\n.sonderwuche_popup .elementor-form-fields-wrapper {\r\n    display: grid !important;\r\n    grid-template-columns: 1fr 1fr;\r\n    gap: 15px 40px;\r\n    align-items: start;\r\n}\r\n\r\n/* ── Section Headers (full width) ─────────────── */\r\n/* Product section header */\r\n.sonderwuche_popup .elementor-field-group-product::before {\r\n    content: 'Produktdetails';\r\n    display: block;\r\n    width: calc(200% + 40px); /* Span both columns + gap */\r\n    font-size: 13px;\r\n    font-weight: 600;\r\n    color: #e91e8c;\r\n    text-transform: uppercase;\r\n    letter-spacing: 0.5px;\r\n    margin-bottom: 15px;\r\n    padding-bottom: 10px;\r\n    border-bottom: 2px solid #e91e8c;\r\n    margin-left: 0;\r\n}\r\n\r\n/* Contact section header */\r\n.sonderwuche_popup .elementor-field-group-firma::before {\r\n    content: 'Ihre Kontaktdaten';\r\n    display: block;\r\n    font-size: 13px;\r\n    font-weight: 600;\r\n    color: #e91e8c;\r\n    text-transform: uppercase;\r\n    letter-spacing: 0.5px;\r\n    margin-bottom: 15px;\r\n    padding-bottom: 10px;\r\n    border-bottom: 2px solid #e91e8c;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n    right: 0;\r\n}\r\n\r\n/* Additional details header */\r\n.sonderwuche_popup .elementor-field-group-message::before {\r\n    content: 'Weitere Angaben';\r\n    display: block;\r\n    width: 100%;\r\n    font-size: 13px;\r\n    font-weight: 600;\r\n    color: #e91e8c;\r\n    text-transform: uppercase;\r\n    letter-spacing: 0.5px;\r\n    margin-bottom: 20px;\r\n    padding-bottom: 10px;\r\n    border-bottom: 2px solid #e91e8c;\r\n    margin-top: 15px;\r\n}\r\n\r\n/* ── Product Fields (Left Column) ─────────────── */\r\n.sonderwuche_popup .elementor-field-group-product,\r\n.sonderwuche_popup .elementor-field-group-stuck,\r\n.sonderwuche_popup .elementor-field-group-modell,\r\n.sonderwuche_popup .elementor-field-group-variante,\r\n.sonderwuche_popup .elementor-field-group-befestigung {\r\n    grid-column: 1;\r\n    width: 100% !important;\r\n    max-width: 100% !important;\r\n    padding: 0 !important;\r\n    margin: 0 !important;\r\n}\r\n\r\n/* ── Contact Fields (Right Column) ────────────── */\r\n.sonderwuche_popup .elementor-field-group-firma,\r\n.sonderwuche_popup .elementor-field-group-name,\r\n.sonderwuche_popup .elementor-field-group-email,\r\n.sonderwuche_popup .elementor-field-group-rufnummer {\r\n    grid-column: 2;\r\n    width: 100% !important;\r\n    max-width: 100% !important;\r\n    padding: 0 !important;\r\n    margin: 0 !important;\r\n}\r\n\r\n/* Position for header spacing */\r\n.sonderwuche_popup .elementor-field-group-firma {\r\n    position: relative;\r\n    padding-top: 45px !important; /* Space for absolute header */\r\n}\r\n\r\n/* ── Full Width Fields (Bottom) ───────────────── */\r\n.sonderwuche_popup .elementor-field-group-message,\r\n.sonderwuche_popup .elementor-field-group-muster,\r\n.sonderwuche_popup .elementor-field-group-file_upload {\r\n    grid-column: 1 / -1;\r\n    width: 100% !important;\r\n    max-width: 100% !important;\r\n    padding: 0 !important;\r\n    margin: 0 !important;\r\n}\r\n\r\n/* Submit button */\r\n.sonderwuche_popup .elementor-field-type-submit {\r\n    grid-column: 1 / -1;\r\n    margin-top: 10px !important;\r\n}\r\n\r\n/* ── Field Styling ────────────────────────────── */\r\n.sonderwuche_popup .elementor-field {\r\n    border-radius: 6px !important;\r\n}\r\n\r\n.sonderwuche_popup .elementor-field-label {\r\n    font-weight: 500;\r\n    margin-bottom: 5px;\r\n}\r\n\r\n/* ── Mobile Responsive ────────────────────────── */\r\n@media (max-width: 767px) {\r\n    .sonderwuche_popup .elementor-form-fields-wrapper {\r\n        grid-template-columns: 1fr;\r\n        gap: 15px;\r\n    }\r\n\r\n    .sonderwuche_popup .elementor-field-group-product,\r\n    .sonderwuche_popup .elementor-field-group-stuck,\r\n    .sonderwuche_popup .elementor-field-group-modell,\r\n    .sonderwuche_popup .elementor-field-group-variante,\r\n    .sonderwuche_popup .elementor-field-group-befestigung,\r\n    .sonderwuche_popup .elementor-field-group-firma,\r\n    .sonderwuche_popup .elementor-field-group-name,\r\n    .sonderwuche_popup .elementor-field-group-email,\r\n    .sonderwuche_popup .elementor-field-group-rufnummer {\r\n        grid-column: 1;\r\n    }\r\n\r\n    .sonderwuche_popup .elementor-field-group-product::before {\r\n        width: 100%;\r\n    }\r\n\r\n    .sonderwuche_popup .elementor-field-group-firma {\r\n        padding-top: 35px !important;\r\n    }\r\n\r\n    .sonderwuche_popup .elementor-field-group-firma::before {\r\n        position: relative;\r\n        margin-bottom: 15px;\r\n    }\r\n}"
+ },
+ "elementor_data": [
+  {
+   "id": "8f04968",
+   "elType": "container",
+   "settings": {
+    "min_height": {
+     "unit": "vh",
+     "size": 50,
+     "sizes": []
+    },
+    "min_height_laptop": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_tablet": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_mobile": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "padding": {
+     "unit": "em",
+     "top": "3",
+     "right": "3",
+     "bottom": "3",
+     "left": "3",
+     "isLinked": true
+    },
+    "padding_laptop": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding_tablet": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding_mobile": {
+     "unit": "em",
+     "top": "2",
+     "right": "1",
+     "bottom": "2",
+     "left": "1",
+     "isLinked": false
+    },
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "boxed_width": {
+     "unit": "%",
+     "size": 100,
+     "sizes": []
+    },
+    "boxed_width_laptop": {
+     "unit": "%",
+     "size": "",
+     "sizes": []
+    },
+    "boxed_width_tablet": {
+     "unit": "%",
+     "size": "",
+     "sizes": []
+    },
+    "boxed_width_mobile": {
+     "unit": "%",
+     "size": "",
+     "sizes": []
+    }
+   },
+   "elements": [
+    {
+     "id": "8c27169",
+     "elType": "widget",
+     "settings": {
+      "title": "Individuelle Anfrage",
+      "align": "center",
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "a5a4998"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "d1a841f"
+       }
+      ],
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "_element_id": "form_heading",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "d58a721",
+     "elType": "widget",
+     "settings": {
+      "editor": "<p>Beschreiben Sie Ihre Wunschkontur und laden Sie optional Ihr Logo hoch. Wir melden uns innerhalb von 24 Stunden mit einem unverbindlichen Angebot.</p>",
+      "align": "center",
+      "typography_typography": "custom",
+      "typography_font_family": "Archivo Narrow",
+      "typography_font_size": {
+       "unit": "px",
+       "size": 17,
+       "sizes": []
+      },
+      "typography_font_weight": "400",
+      "typography_text_transform": "none",
+      "typography_font_style": "normal",
+      "typography_text_decoration": "none",
+      "typography_line_height": {
+       "unit": "em",
+       "size": 1.3,
+       "sizes": []
+      },
+      "typography_letter_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "typography_word_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "53a0589"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "2921815"
+       }
+      ],
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "__globals__": {
+       "text_color": "globals/colors?id=8df0251"
+      },
+      "_element_id": "form_description",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "7cedd60",
+     "elType": "widget",
+     "settings": {
+      "form_name": "specia wusges form",
+      "form_fields": [
+       {
+        "_id": "9ddc7bd",
+        "field_label": "Produkt",
+        "custom_id": "product"
+       },
+       {
+        "field_label": "Stück",
+        "custom_id": "stuck",
+        "field_type": "number",
+        "placeholder": "10",
+        "_id": "e8636ac"
+       },
+       {
+        "field_label": "Modell",
+        "custom_id": "modell",
+        "_id": "3660cf2"
+       },
+       {
+        "field_label": "Variante",
+        "custom_id": "variante",
+        "_id": "f448c1f"
+       },
+       {
+        "field_label": "Befestigung",
+        "custom_id": "befestigung",
+        "field_type": "select",
+        "placeholder": "10",
+        "_id": "427b0c3"
+       },
+       {
+        "_id": "f0a99f7",
+        "field_label": "Firma",
+        "placeholder": "Firma",
+        "custom_id": "firma"
+       },
+       {
+        "custom_id": "name",
+        "field_label": "Name",
+        "placeholder": "Name",
+        "dynamic": {
+         "active": true
+        },
+        "_id": "c21c666",
+        "required": "true"
+       },
+       {
+        "custom_id": "email",
+        "field_type": "email",
+        "required": "true",
+        "field_label": "Email",
+        "placeholder": "Email",
+        "_id": "86b81a7",
+        "width": "80"
+       },
+       {
+        "_id": "7d16702",
+        "field_type": "tel",
+        "field_label": "Rufnummer",
+        "placeholder": "+49 (0) 123 4567890",
+        "custom_id": "rufnummer"
+       },
+       {
+        "custom_id": "message",
+        "field_type": "textarea",
+        "field_label": "Bemerkungen",
+        "placeholder": "Beschreiben Sie Ihre Wunschkontur...",
+        "_id": "e3682f4"
+       },
+       {
+        "_id": "db7260a",
+        "field_type": "checkbox",
+        "field_label": "Muster gewünscht",
+        "field_options": "Ja|ja\nNein|nein",
+        "custom_id": "muster"
+       },
+       {
+        "_id": "abf4045",
+        "field_type": "upload",
+        "field_label": "Logo/Bild hochladen",
+        "attachment_type": "both",
+        "file_sizes": 10,
+        "file_types": "jpg,png,webp,",
+        "allow_multiple_upload": "yes",
+        "max_files": 4,
+        "custom_id": "file_upload"
+       }
+      ],
+      "input_size": "md",
+      "mark_required": "yes",
+      "button_size": "md",
+      "step_next_label": "Next",
+      "step_previous_label": "Previous",
+      "button_text": "Anfrage absenden",
+      "email_to": "hostinger@alture.io",
+      "email_subject": "New message from \"infoplus\"",
+      "email_content": "[all-fields]",
+      "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+      "email_from_name": "infoplus",
+      "email_to_2": "hostinger@alture.io",
+      "email_subject_2": "New message from \"infoplus\"",
+      "email_content_2": "[all-fields]",
+      "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+      "email_from_name_2": "infoplus",
+      "email_reply_to_2": "hostinger@alture.io",
+      "mailchimp_fields_map": [],
+      "drip_fields_map": [],
+      "activecampaign_fields_map": [],
+      "getresponse_fields_map": [],
+      "convertkit_fields_map": [],
+      "mailerlite_fields_map": [],
+      "success_message": "Your submission was successful.",
+      "error_message": "Your submission failed because of an error.",
+      "server_message": "Your submission failed because of a server error.",
+      "invalid_message": "Your submission failed because the form is invalid.",
+      "required_field_message": "This field is required.",
+      "row_gap": {
+       "unit": "px",
+       "size": 20,
+       "sizes": []
+      },
+      "label_spacing": {
+       "unit": "px",
+       "size": 5,
+       "sizes": []
+      },
+      "label_color": "#191B1C",
+      "mark_required_color": "#E6007E",
+      "field_background_color": "",
+      "field_border_radius": {
+       "unit": "px",
+       "top": "6",
+       "right": "6",
+       "bottom": "6",
+       "left": "6",
+       "isLinked": true
+      },
+      "button_border_border": "solid",
+      "button_border_width": {
+       "unit": "px",
+       "top": "1",
+       "right": "1",
+       "bottom": "1",
+       "left": "1",
+       "isLinked": true
+      },
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "__globals__": {
+       "label_color": "globals/colors?id=text",
+       "mark_required_color": "globals/colors?id=primary",
+       "field_background_color": "",
+       "button_background_color": "globals/colors?id=primary",
+       "button_typography_typography": "globals/typography?id=text",
+       "button_background_hover_color": "globals/colors?id=accent",
+       "button_hover_color": "globals/colors?id=primary"
+      },
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "form"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "popup_display_settings": {
+   "triggers": [],
+   "timing": []
+  },
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.35.7",
+  "elementor_pro_version": "3.35.1",
+  "elementor_source": "post",
+  "wp_page_template": "default",
+  "elementor_forms_snapshot": [
+   {
+    "id": "7cedd60",
+    "name": "specia wusges form",
+    "fields": [
+     {
+      "id": "product",
+      "type": "text",
+      "label": "Produkt"
+     },
+     {
+      "id": "stuck",
+      "type": "number",
+      "label": "Stück"
+     },
+     {
+      "id": "modell",
+      "type": "text",
+      "label": "Modell"
+     },
+     {
+      "id": "variante",
+      "type": "text",
+      "label": "Variante"
+     },
+     {
+      "id": "befestigung",
+      "type": "select",
+      "label": "Befestigung",
+      "options": [
+       ""
+      ],
+      "is_multiple": false
+     },
+     {
+      "id": "firma",
+      "type": "text",
+      "label": "Firma"
+     },
+     {
+      "id": "name",
+      "type": "text",
+      "label": "Name"
+     },
+     {
+      "id": "email",
+      "type": "email",
+      "label": "Email"
+     },
+     {
+      "id": "rufnummer",
+      "type": "tel",
+      "label": "Rufnummer"
+     },
+     {
+      "id": "message",
+      "type": "textarea",
+      "label": "Bemerkungen"
+     },
+     {
+      "id": "muster",
+      "type": "checkbox",
+      "label": "Muster gewünscht",
+      "options": [
+       "Ja|ja",
+       "Nein|nein"
+      ]
+     },
+     {
+      "id": "file_upload",
+      "type": "upload",
+      "label": "Logo/Bild hochladen"
+     }
+    ]
+   }
+  ],
+  "eael_custom_js_meta_bytes": 12187
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 7204,
+  "elementor_data_sha256_of_db_string": "5f131573ddff6ab953c0f5978f9be111c9f5e2bfee97a4a778f39707c80d6127",
+  "page_settings_db_length_bytes": 17954
+ }
+}

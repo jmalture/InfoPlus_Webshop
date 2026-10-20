@@ -1,0 +1,1875 @@
+{
+ "id": 13937,
+ "post_type": "page",
+ "title": "Alture Namenschilder TeamShared shared project",
+ "slug": "",
+ "status": "draft",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents"
+ },
+ "elementor_data": [
+  {
+   "id": "d763eb6",
+   "elType": "container",
+   "settings": {
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "margin": {
+     "unit": "em",
+     "top": "2",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "margin_laptop": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "margin_tablet": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "margin_mobile": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "7b02dba",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "flex_direction": "row",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+     },
+     "elements": [
+      {
+       "id": "e8abf1d",
+       "elType": "container",
+       "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "flex_justify_content": "center",
+        "flex_align_items": "center",
+        "flex_gap": {
+         "column": "40",
+         "row": "30",
+         "isLinked": false,
+         "unit": "px",
+         "size": 40
+        },
+        "background_background": "classic",
+        "border_radius": {
+         "unit": "px",
+         "top": "12",
+         "right": "12",
+         "bottom": "12",
+         "left": "12",
+         "isLinked": true
+        },
+        "box_shadow_box_shadow": {
+         "horizontal": 0,
+         "vertical": 2,
+         "blur": 8,
+         "spread": 0,
+         "color": "rgba(0, 0, 0, 0.08)"
+        },
+        "padding": {
+         "unit": "px",
+         "top": "30",
+         "right": "30",
+         "bottom": "30",
+         "left": "30",
+         "isLinked": true
+        },
+        "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "__globals__": {
+         "background_color": "globals/colors?id=accent"
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "24",
+         "left": "0",
+         "isLinked": false
+        },
+        "width": {
+         "unit": "%",
+         "size": 75,
+         "sizes": []
+        }
+       },
+       "elements": [
+        {
+         "id": "27f9b56",
+         "elType": "widget",
+         "settings": {
+          "image": {
+           "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/11/namensschild_alucontur_comfort_70x20_untereloxaldruck_silber-matt_Patrick_Keller_Alture.webp",
+           "id": 13550,
+           "size": "",
+           "alt": "",
+           "source": "library"
+          },
+          "width": {
+           "unit": "%",
+           "size": 100,
+           "sizes": []
+          },
+          "space": {
+           "unit": "%",
+           "size": 100,
+           "sizes": []
+          },
+          "height": {
+           "unit": "%",
+           "size": 100,
+           "sizes": []
+          },
+          "height_laptop": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          },
+          "height_tablet": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          },
+          "height_mobile": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          },
+          "object-fit": "cover",
+          "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "image_border_width": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": true
+          },
+          "image_border_color": "#E0E0E0",
+          "width_laptop": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          },
+          "width_tablet": {
+           "unit": "px",
+           "size": "",
+           "sizes": []
+          },
+          "width_mobile": {
+           "unit": "px",
+           "size": "",
+           "sizes": []
+          },
+          "space_laptop": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          },
+          "space_tablet": {
+           "unit": "px",
+           "size": "",
+           "sizes": []
+          },
+          "space_mobile": {
+           "unit": "px",
+           "size": "",
+           "sizes": []
+          },
+          "_margin": {
+           "unit": "%",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          },
+          "_margin_laptop": {
+           "unit": "%",
+           "top": "",
+           "right": "",
+           "bottom": "",
+           "left": "",
+           "isLinked": true
+          },
+          "_margin_tablet": {
+           "unit": "%",
+           "top": "",
+           "right": "",
+           "bottom": "",
+           "left": "",
+           "isLinked": true
+          },
+          "_margin_mobile": {
+           "unit": "%",
+           "top": "",
+           "right": "",
+           "bottom": "",
+           "left": "",
+           "isLinked": true
+          },
+          "_padding": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "50",
+           "left": "0",
+           "isLinked": false
+          },
+          "align": "left",
+          "_flex_align_self": "flex-start"
+         },
+         "elements": [],
+         "widgetType": "image"
+        },
+        {
+         "id": "1aa1efa",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "flex_direction": "row",
+          "flex_gap": {
+           "column": "0",
+           "row": "0",
+           "isLinked": false,
+           "unit": "px",
+           "size": 0
+          },
+          "flex_wrap_laptop": "wrap",
+          "flex_wrap_tablet": "wrap",
+          "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+         },
+         "elements": [
+          {
+           "id": "eddef9a",
+           "elType": "container",
+           "settings": {
+            "content_width": "full",
+            "flex_gap": {
+             "column": "0",
+             "row": "10",
+             "isLinked": false,
+             "unit": "px",
+             "size": 0
+            },
+            "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "width": {
+             "unit": "%",
+             "size": 50,
+             "sizes": []
+            },
+            "width_laptop": {
+             "unit": "%",
+             "size": 45,
+             "sizes": []
+            },
+            "width_tablet": {
+             "unit": "%",
+             "size": 100,
+             "sizes": []
+            },
+            "width_mobile": {
+             "unit": "%",
+             "size": "",
+             "sizes": []
+            },
+            "_flex_size": "custom",
+            "_flex_size_laptop": "custom",
+            "_flex_size_tablet": "custom",
+            "_flex_grow_tablet": 1,
+            "_flex_shrink_tablet": 1
+           },
+           "elements": [
+            {
+             "id": "a034f1d",
+             "elType": "widget",
+             "settings": {
+              "title": "Alture Namenschilder Team",
+              "typography_typography": "custom",
+              "typography_font_family": "Archivo Narrow",
+              "typography_font_size": {
+               "unit": "px",
+               "size": 48,
+               "sizes": []
+              },
+              "typography_font_size_mobile": {
+               "unit": "px",
+               "size": 36,
+               "sizes": []
+              },
+              "typography_font_weight": "600",
+              "typography_font_style": "normal",
+              "typography_text_decoration": "none",
+              "typography_line_height": {
+               "unit": "em",
+               "size": 1.2,
+               "sizes": []
+              },
+              "typography_letter_spacing": {
+               "unit": "px",
+               "size": 0,
+               "sizes": []
+              },
+              "typography_word_spacing": {
+               "unit": "px",
+               "size": 0,
+               "sizes": []
+              },
+              "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+              "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+              "__globals__": {
+               "title_color": "globals/colors?id=text"
+              },
+              "_margin": {
+               "unit": "px",
+               "top": "0",
+               "right": "0",
+               "bottom": "7",
+               "left": "0",
+               "isLinked": false
+              },
+              "_padding": {
+               "unit": "px",
+               "top": "0",
+               "right": "0",
+               "bottom": "0",
+               "left": "0",
+               "isLinked": false
+              }
+             },
+             "elements": [],
+             "widgetType": "heading"
+            },
+            {
+             "id": "0393f17",
+             "elType": "container",
+             "settings": {
+              "content_width": "full",
+              "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+              "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+             },
+             "elements": [
+              {
+               "id": "4039ebc",
+               "elType": "widget",
+               "settings": {
+                "title": "Alucontur Namensschild",
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "__globals__": {
+                 "title_color": "globals/colors?id=primary",
+                 "typography_typography": "globals/typography?id=accent"
+                },
+                "_margin": {
+                 "unit": "px",
+                 "top": "0",
+                 "right": "0",
+                 "bottom": "7",
+                 "left": "0",
+                 "isLinked": false
+                },
+                "_padding": {
+                 "unit": "px",
+                 "top": "0",
+                 "right": "0",
+                 "bottom": "0",
+                 "left": "0",
+                 "isLinked": false
+                }
+               },
+               "elements": [],
+               "widgetType": "heading"
+              },
+              {
+               "id": "6173e04",
+               "elType": "container",
+               "settings": {
+                "content_width": "full",
+                "flex_gap": {
+                 "column": "0",
+                 "row": "0",
+                 "isLinked": false,
+                 "unit": "px",
+                 "size": 0
+                },
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "_title": "Container",
+                "width": {
+                 "unit": "%",
+                 "size": 100,
+                 "sizes": []
+                },
+                "flex_direction": "row",
+                "flex_justify_content": "flex-start",
+                "flex_align_items": "flex-start",
+                "flex_wrap": "nowrap",
+                "flex_wrap_mobile": "wrap"
+               },
+               "elements": [
+                {
+                 "id": "830f894",
+                 "elType": "container",
+                 "settings": {
+                  "content_width": "full",
+                  "flex_gap": {
+                   "column": "18",
+                   "row": "10",
+                   "isLinked": false,
+                   "unit": "px",
+                   "size": 18
+                  },
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "_title": "Container",
+                  "width_mobile": {
+                   "unit": "%",
+                   "size": 33,
+                   "sizes": []
+                  },
+                  "flex_direction": "column",
+                  "flex_justify_content": "flex-start",
+                  "flex_align_items": "flex-start",
+                  "flex_align_items_mobile": "flex-start",
+                  "_flex_size": "custom",
+                  "_flex_size_mobile": "shrink"
+                 },
+                 "elements": [
+                  {
+                   "id": "260ba78",
+                   "elType": "widget",
+                   "settings": {
+                    "editor": "<p><strong>Format:</strong></p>",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Montserrat",
+                    "typography_font_size": {
+                     "unit": "px",
+                     "size": 14,
+                     "sizes": []
+                    },
+                    "typography_font_weight": "500",
+                    "text_color": "#666666",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "__globals__": {
+                     "typography_typography": ""
+                    }
+                   },
+                   "elements": [],
+                   "widgetType": "text-editor"
+                  },
+                  {
+                   "id": "f352b4a",
+                   "elType": "widget",
+                   "settings": {
+                    "editor": "<p>60×15 mm</p>",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Montserrat",
+                    "typography_font_size": {
+                     "unit": "px",
+                     "size": 14,
+                     "sizes": []
+                    },
+                    "typography_font_weight": "500",
+                    "text_color": "#666666",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "__globals__": {
+                     "typography_typography": ""
+                    }
+                   },
+                   "elements": [],
+                   "widgetType": "text-editor"
+                  }
+                 ],
+                 "isInner": true
+                },
+                {
+                 "id": "a312874",
+                 "elType": "container",
+                 "settings": {
+                  "content_width": "full",
+                  "flex_gap": {
+                   "column": "20",
+                   "row": "10",
+                   "isLinked": false,
+                   "unit": "px",
+                   "size": 20
+                  },
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "_title": "Container",
+                  "width_mobile": {
+                   "unit": "%",
+                   "size": 34,
+                   "sizes": []
+                  },
+                  "flex_direction": "column",
+                  "_flex_size": "custom",
+                  "_flex_size_mobile": "shrink"
+                 },
+                 "elements": [
+                  {
+                   "id": "a02351a",
+                   "elType": "widget",
+                   "settings": {
+                    "editor": "<strong>Befestigung:</strong>",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Montserrat",
+                    "typography_font_size": {
+                     "unit": "px",
+                     "size": 14,
+                     "sizes": []
+                    },
+                    "typography_font_weight": "500",
+                    "text_color": "#666666",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "__globals__": {
+                     "typography_typography": ""
+                    }
+                   },
+                   "elements": [],
+                   "widgetType": "text-editor"
+                  },
+                  {
+                   "id": "e0f8e3c",
+                   "elType": "widget",
+                   "settings": {
+                    "editor": "<p>DUOMAG Magnetsystem</p>",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Montserrat",
+                    "typography_font_size": {
+                     "unit": "px",
+                     "size": 14,
+                     "sizes": []
+                    },
+                    "typography_font_weight": "500",
+                    "text_color": "#666666",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "__globals__": {
+                     "typography_typography": ""
+                    }
+                   },
+                   "elements": [],
+                   "widgetType": "text-editor"
+                  }
+                 ],
+                 "isInner": true
+                },
+                {
+                 "id": "753e246",
+                 "elType": "container",
+                 "settings": {
+                  "content_width": "full",
+                  "flex_gap": {
+                   "column": "20",
+                   "row": "5",
+                   "isLinked": false,
+                   "unit": "px",
+                   "size": 20
+                  },
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "_title": "Container",
+                  "flex_direction": "column",
+                  "_flex_size": "custom",
+                  "_flex_size_mobile": "shrink"
+                 },
+                 "elements": [
+                  {
+                   "id": "53f59f8",
+                   "elType": "widget",
+                   "settings": {
+                    "editor": "<strong>Oberfläche:</strong>",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Montserrat",
+                    "typography_font_size": {
+                     "unit": "px",
+                     "size": 14,
+                     "sizes": []
+                    },
+                    "typography_font_weight": "500",
+                    "text_color": "#666666",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "__globals__": {
+                     "typography_typography": ""
+                    }
+                   },
+                   "elements": [],
+                   "widgetType": "text-editor"
+                  },
+                  {
+                   "id": "043b9a4",
+                   "elType": "widget",
+                   "settings": {
+                    "editor": "<p>Silber matt</p>",
+                    "typography_typography": "custom",
+                    "typography_font_family": "Montserrat",
+                    "typography_font_size": {
+                     "unit": "px",
+                     "size": 14,
+                     "sizes": []
+                    },
+                    "typography_font_weight": "500",
+                    "text_color": "#666666",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "__globals__": {
+                     "typography_typography": ""
+                    }
+                   },
+                   "elements": [],
+                   "widgetType": "text-editor"
+                  }
+                 ],
+                 "isInner": true
+                }
+               ],
+               "isInner": true
+              },
+              {
+               "id": "22c66d8",
+               "elType": "container",
+               "settings": {
+                "content_width": "full",
+                "flex_direction": "row",
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "box_shadow_box_shadow": {
+                 "horizontal": 0,
+                 "vertical": 2,
+                 "blur": 8,
+                 "spread": 0,
+                 "color": "rgba(0, 0, 0, 0.08)"
+                },
+                "border_border": "none",
+                "flex_justify_content": "space-between",
+                "flex_wrap": "wrap",
+                "margin": {
+                 "unit": "px",
+                 "top": "10",
+                 "right": "0",
+                 "bottom": "0",
+                 "left": "0",
+                 "isLinked": false
+                },
+                "padding": {
+                 "unit": "px",
+                 "top": "0",
+                 "right": "0",
+                 "bottom": "0",
+                 "left": "0",
+                 "isLinked": false
+                }
+               },
+               "elements": [
+                {
+                 "id": "5ce8730",
+                 "elType": "widget",
+                 "settings": {
+                  "title": "Produktvorschauen",
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "__globals__": {
+                   "title_color": "globals/colors?id=text",
+                   "typography_typography": "globals/typography?id=accent"
+                  },
+                  "_margin": {
+                   "unit": "px",
+                   "top": "0",
+                   "right": "0",
+                   "bottom": "7",
+                   "left": "0",
+                   "isLinked": false
+                  },
+                  "_padding": {
+                   "unit": "px",
+                   "top": "0",
+                   "right": "0",
+                   "bottom": "0",
+                   "left": "0",
+                   "isLinked": false
+                  }
+                 },
+                 "elements": [],
+                 "widgetType": "heading"
+                },
+                {
+                 "id": "3319346",
+                 "elType": "container",
+                 "settings": {
+                  "content_width": "full",
+                  "flex_direction": "row",
+                  "flex_justify_content": "center",
+                  "flex_align_items": "center",
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+                 },
+                 "elements": [
+                  {
+                   "id": "e94fd76",
+                   "elType": "container",
+                   "settings": {
+                    "content_width": "full",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+                   },
+                   "elements": [
+                    {
+                     "id": "44641c3",
+                     "elType": "widget",
+                     "settings": {
+                      "image": {
+                       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/namensschild_alucontur_comfort_70x20_untereloxaldruck_silber-matt__1_uTu3B2oyAbNb5_600x600.png",
+                       "id": 2201,
+                       "size": "",
+                       "alt": "",
+                       "source": "library"
+                      },
+                      "width": {
+                       "unit": "%",
+                       "size": 100,
+                       "sizes": []
+                      },
+                      "space": {
+                       "unit": "%",
+                       "size": 100,
+                       "sizes": []
+                      },
+                      "height": {
+                       "unit": "px",
+                       "size": 200,
+                       "sizes": []
+                      },
+                      "height_laptop": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "height_tablet": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "height_mobile": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "object-fit": "contain",
+                      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "link_to": "custom",
+                      "link": {
+                       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/project-detail/",
+                       "is_external": "",
+                       "nofollow": "",
+                       "custom_attributes": ""
+                      },
+                      "align": "center",
+                      "_flex_align_self": "center"
+                     },
+                     "elements": [],
+                     "widgetType": "image"
+                    }
+                   ],
+                   "isInner": true
+                  },
+                  {
+                   "id": "ceadd11",
+                   "elType": "container",
+                   "settings": {
+                    "content_width": "full",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+                   },
+                   "elements": [
+                    {
+                     "id": "fd75e98",
+                     "elType": "widget",
+                     "settings": {
+                      "image": {
+                       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/alucontur_exklusivJvJBazIqISACX.png",
+                       "id": 2200,
+                       "size": "",
+                       "alt": "",
+                       "source": "library"
+                      },
+                      "width": {
+                       "unit": "%",
+                       "size": 100,
+                       "sizes": []
+                      },
+                      "space": {
+                       "unit": "%",
+                       "size": 100,
+                       "sizes": []
+                      },
+                      "height": {
+                       "unit": "px",
+                       "size": 200,
+                       "sizes": []
+                      },
+                      "height_laptop": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "height_tablet": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "height_mobile": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "object-fit": "contain",
+                      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "link_to": "custom",
+                      "link": {
+                       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/project-detail/",
+                       "is_external": "",
+                       "nofollow": "",
+                       "custom_attributes": ""
+                      },
+                      "align": "center",
+                      "_flex_align_self": "center"
+                     },
+                     "elements": [],
+                     "widgetType": "image"
+                    }
+                   ],
+                   "isInner": true
+                  },
+                  {
+                   "id": "b87b608",
+                   "elType": "container",
+                   "settings": {
+                    "content_width": "full",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+                   },
+                   "elements": [
+                    {
+                     "id": "7e62cec",
+                     "elType": "widget",
+                     "settings": {
+                      "image": {
+                       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/alucontur.png",
+                       "id": 1664,
+                       "size": "",
+                       "alt": "",
+                       "source": "library"
+                      },
+                      "width": {
+                       "unit": "%",
+                       "size": 100,
+                       "sizes": []
+                      },
+                      "space": {
+                       "unit": "%",
+                       "size": 100,
+                       "sizes": []
+                      },
+                      "height": {
+                       "unit": "px",
+                       "size": 200,
+                       "sizes": []
+                      },
+                      "height_laptop": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "height_tablet": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "height_mobile": {
+                       "unit": "%",
+                       "size": "",
+                       "sizes": []
+                      },
+                      "object-fit": "contain",
+                      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "link_to": "custom",
+                      "link": {
+                       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/project-detail/",
+                       "is_external": "",
+                       "nofollow": "",
+                       "custom_attributes": ""
+                      },
+                      "align": "center",
+                      "_flex_align_self": "center"
+                     },
+                     "elements": [],
+                     "widgetType": "image"
+                    }
+                   ],
+                   "isInner": true
+                  }
+                 ],
+                 "isInner": true
+                }
+               ],
+               "isInner": true
+              },
+              {
+               "id": "aedbd21",
+               "elType": "container",
+               "settings": {
+                "content_width": "full",
+                "flex_direction": "row",
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "box_shadow_box_shadow": {
+                 "horizontal": 0,
+                 "vertical": 2,
+                 "blur": 8,
+                 "spread": 0,
+                 "color": "rgba(0, 0, 0, 0.08)"
+                },
+                "border_border": "none",
+                "flex_justify_content": "space-between",
+                "flex_wrap": "wrap",
+                "flex_gap": {
+                 "column": "0",
+                 "row": "10",
+                 "isLinked": false,
+                 "unit": "px",
+                 "size": 0
+                }
+               },
+               "elements": [
+                {
+                 "id": "55a1337",
+                 "elType": "widget",
+                 "settings": {
+                  "title": "Produktbeschreibung",
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "__globals__": {
+                   "title_color": "globals/colors?id=text",
+                   "typography_typography": "globals/typography?id=accent"
+                  },
+                  "_margin": {
+                   "unit": "px",
+                   "top": "0",
+                   "right": "0",
+                   "bottom": "7",
+                   "left": "0",
+                   "isLinked": false
+                  },
+                  "_padding": {
+                   "unit": "px",
+                   "top": "0",
+                   "right": "0",
+                   "bottom": "0",
+                   "left": "0",
+                   "isLinked": false
+                  }
+                 },
+                 "elements": [],
+                 "widgetType": "heading"
+                },
+                {
+                 "id": "a3bab76",
+                 "elType": "container",
+                 "settings": {
+                  "content_width": "full",
+                  "flex_direction": "row",
+                  "flex_justify_content": "center",
+                  "flex_align_items": "center",
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+                 },
+                 "elements": [
+                  {
+                   "id": "6c34651",
+                   "elType": "container",
+                   "settings": {
+                    "content_width": "full",
+                    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                    "margin": {
+                     "unit": "px",
+                     "top": "0",
+                     "right": "0",
+                     "bottom": "0",
+                     "left": "0",
+                     "isLinked": false
+                    },
+                    "padding": {
+                     "unit": "px",
+                     "top": "0",
+                     "right": "0",
+                     "bottom": "0",
+                     "left": "0",
+                     "isLinked": false
+                    }
+                   },
+                   "elements": [
+                    {
+                     "id": "8cc4837",
+                     "elType": "widget",
+                     "settings": {
+                      "editor": "<p>Perfektion in der Business-Class: Die modernen Oberflächen, z.B. silber-matt eloxiert oder gebürstet im Edelstahl-Look, machen AluContur-Namensschilder zu einem stets modernen Design-Klassiker.<br />Egal, ob unaufdringlich nur mit Namen bedruckt, mit individuellem Logo oder sogar mit einer extravaganten Sonderkontur, mit AluContur-Namensschildern treten Sie stets elegant und zeitlos auf. Tipp: 100% kratzfest im 4C-Untereloxaldruck!</p>",
+                      "typography_typography": "custom",
+                      "typography_font_family": "Montserrat",
+                      "typography_font_size": {
+                       "unit": "px",
+                       "size": 14,
+                       "sizes": []
+                      },
+                      "typography_font_weight": "500",
+                      "text_color": "#666666",
+                      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                      "__globals__": {
+                       "typography_typography": ""
+                      }
+                     },
+                     "elements": [],
+                     "widgetType": "text-editor"
+                    }
+                   ],
+                   "isInner": true
+                  }
+                 ],
+                 "isInner": true
+                }
+               ],
+               "isInner": true
+              },
+              {
+               "id": "b85467d",
+               "elType": "container",
+               "settings": {
+                "content_width": "full",
+                "flex_direction": "row",
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "box_shadow_box_shadow": {
+                 "horizontal": 0,
+                 "vertical": 2,
+                 "blur": 8,
+                 "spread": 0,
+                 "color": "rgba(0, 0, 0, 0.08)"
+                },
+                "border_border": "none",
+                "flex_justify_content": "space-between",
+                "flex_wrap": "wrap",
+                "flex_gap": {
+                 "column": "0",
+                 "row": "10",
+                 "isLinked": false,
+                 "unit": "px",
+                 "size": 0
+                }
+               },
+               "elements": [
+                {
+                 "id": "6e63a26",
+                 "elType": "widget",
+                 "settings": {
+                  "text": "Produkt öffnen",
+                  "icon_indent": {
+                   "unit": "px",
+                   "size": 10,
+                   "sizes": []
+                  },
+                  "text_padding": {
+                   "unit": "px",
+                   "top": "12",
+                   "right": "24",
+                   "bottom": "12",
+                   "left": "24",
+                   "isLinked": false
+                  },
+                  "__globals__": {
+                   "button_text_color": "globals/colors?id=accent",
+                   "typography_typography": "globals/typography?id=text",
+                   "background_color": "globals/colors?id=primary",
+                   "hover_color": "globals/colors?id=accent",
+                   "button_background_hover_color": "globals/colors?id=secondary",
+                   "button_hover_border_color": "globals/colors?id=primary",
+                   "border_color": "globals/colors?id=primary"
+                  },
+                  "border_radius": {
+                   "unit": "px",
+                   "top": "6",
+                   "right": "6",
+                   "bottom": "6",
+                   "left": "6",
+                   "isLinked": true
+                  },
+                  "_flex_align_self": "center",
+                  "link": {
+                   "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/product/alucontur-namensschild/",
+                   "is_external": "on",
+                   "nofollow": "",
+                   "custom_attributes": ""
+                  },
+                  "_css_classes": "button-arrow-right",
+                  "align": "left",
+                  "border_border": "solid",
+                  "border_width": {
+                   "unit": "px",
+                   "top": "1",
+                   "right": "1",
+                   "bottom": "1",
+                   "left": "1",
+                   "isLinked": true
+                  },
+                  "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                  "hover_color": "#FFFFFF",
+                  "content_align": "center",
+                  "_element_width": "auto"
+                 },
+                 "elements": [],
+                 "widgetType": "button"
+                }
+               ],
+               "isInner": true
+              }
+             ],
+             "isInner": true
+            }
+           ],
+           "isInner": true
+          }
+         ],
+         "isInner": true
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "eb260d9",
+       "elType": "container",
+       "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "flex_justify_content": "flex-start",
+        "flex_align_items": "center",
+        "flex_gap": {
+         "column": "40",
+         "row": "020",
+         "isLinked": false,
+         "unit": "px",
+         "size": 40
+        },
+        "background_background": "classic",
+        "border_radius": {
+         "unit": "px",
+         "top": "12",
+         "right": "12",
+         "bottom": "12",
+         "left": "12",
+         "isLinked": true
+        },
+        "box_shadow_box_shadow": {
+         "horizontal": 0,
+         "vertical": 2,
+         "blur": 8,
+         "spread": 0,
+         "color": "rgba(0, 0, 0, 0.08)"
+        },
+        "padding": {
+         "unit": "px",
+         "top": "30",
+         "right": "30",
+         "bottom": "30",
+         "left": "30",
+         "isLinked": true
+        },
+        "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "__globals__": {
+         "background_color": "globals/colors?id=accent"
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "24",
+         "left": "0",
+         "isLinked": false
+        },
+        "width": {
+         "unit": "%",
+         "size": 25,
+         "sizes": []
+        }
+       },
+       "elements": [
+        {
+         "id": "bfb7b78",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "flex_direction": "column",
+          "flex_gap": {
+           "column": "0",
+           "row": "5",
+           "isLinked": false,
+           "unit": "px",
+           "size": 0
+          },
+          "flex_wrap_laptop": "wrap",
+          "flex_wrap_tablet": "wrap",
+          "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "flex_justify_content": "center",
+          "flex_align_items": "center",
+          "border_radius": {
+           "unit": "px",
+           "top": "9",
+           "right": "9",
+           "bottom": "9",
+           "left": "9",
+           "isLinked": true
+          },
+          "margin": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          },
+          "padding": {
+           "unit": "px",
+           "top": "20",
+           "right": "0",
+           "bottom": "20",
+           "left": "0",
+           "isLinked": false
+          },
+          "__globals__": {
+           "background_color": "globals/colors?id=217b49e"
+          }
+         },
+         "elements": [
+          {
+           "id": "cf947e4",
+           "elType": "container",
+           "settings": {
+            "content_width": "full",
+            "margin": {
+             "unit": "px",
+             "top": "0",
+             "right": "0",
+             "bottom": "0",
+             "left": "0",
+             "isLinked": false
+            },
+            "padding": {
+             "unit": "px",
+             "top": "0",
+             "right": "20",
+             "bottom": "0",
+             "left": "20",
+             "isLinked": false
+            },
+            "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "__globals__": {
+             "background_color": "globals/colors?id=217b49e"
+            }
+           },
+           "elements": [
+            {
+             "id": "41bbd3b",
+             "elType": "container",
+             "settings": {
+              "content_width": "full",
+              "flex_justify_content": "center",
+              "flex_align_items": "center",
+              "background_background": "classic",
+              "border_radius": {
+               "unit": "px",
+               "top": "9",
+               "right": "9",
+               "bottom": "9",
+               "left": "9",
+               "isLinked": true
+              },
+              "padding": {
+               "unit": "px",
+               "top": "20",
+               "right": "20",
+               "bottom": "20",
+               "left": "20",
+               "isLinked": true
+              },
+              "_flex_align_self": "center",
+              "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+              "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+              "__globals__": {
+               "background_color": "globals/colors?id=accent"
+              }
+             },
+             "elements": [
+              {
+               "id": "ac83511",
+               "elType": "widget",
+               "settings": {
+                "title": "930,35 €",
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "__globals__": {
+                 "title_color": "globals/colors?id=primary",
+                 "typography_typography": "globals/typography?id=secondary"
+                },
+                "_margin": {
+                 "unit": "px",
+                 "top": "0",
+                 "right": "0",
+                 "bottom": "7",
+                 "left": "0",
+                 "isLinked": false
+                },
+                "_padding": {
+                 "unit": "px",
+                 "top": "0",
+                 "right": "0",
+                 "bottom": "0",
+                 "left": "0",
+                 "isLinked": false
+                },
+                "align": "center"
+               },
+               "elements": [],
+               "widgetType": "heading"
+              }
+             ],
+             "isInner": true
+            },
+            {
+             "id": "25bf777",
+             "elType": "container",
+             "settings": {
+              "content_width": "full",
+              "flex_justify_content": "center",
+              "flex_align_items": "center",
+              "flex_gap": {
+               "column": "0",
+               "row": "10",
+               "isLinked": false,
+               "unit": "px",
+               "size": 0
+              },
+              "margin": {
+               "unit": "px",
+               "top": "0",
+               "right": "0",
+               "bottom": "0",
+               "left": "0",
+               "isLinked": false
+              },
+              "padding": {
+               "unit": "px",
+               "top": "0",
+               "right": "0",
+               "bottom": "0",
+               "left": "0",
+               "isLinked": false
+              },
+              "_flex_align_self": "center",
+              "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+              "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+             },
+             "elements": [
+              {
+               "id": "15b690d",
+               "elType": "widget",
+               "settings": {
+                "editor": "Menge",
+                "typography_typography": "custom",
+                "typography_font_family": "Montserrat",
+                "typography_font_size": {
+                 "unit": "px",
+                 "size": 19,
+                 "sizes": []
+                },
+                "typography_font_weight": "500",
+                "text_color": "#666666",
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "__globals__": {
+                 "typography_typography": ""
+                },
+                "align": "center",
+                "_flex_align_self": "center"
+               },
+               "elements": [],
+               "widgetType": "text-editor"
+              },
+              {
+               "id": "cc3d2db",
+               "elType": "widget",
+               "settings": {
+                "title": "23 Stück",
+                "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+                "__globals__": {
+                 "title_color": "globals/colors?id=text",
+                 "typography_typography": ""
+                },
+                "typography_typography": "custom",
+                "typography_font_family": "Montserrat",
+                "typography_font_size": {
+                 "unit": "px",
+                 "size": 18,
+                 "sizes": []
+                },
+                "typography_font_weight": "500",
+                "_flex_align_self": "center"
+               },
+               "elements": [],
+               "widgetType": "heading"
+              }
+             ],
+             "isInner": true
+            }
+           ],
+           "isInner": true
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "28b5304",
+         "elType": "container",
+         "settings": {
+          "width": {
+           "unit": "%",
+           "size": 100,
+           "sizes": []
+          },
+          "flex_direction": "column",
+          "flex_justify_content": "center",
+          "flex_wrap": "nowrap",
+          "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "flex_gap": {
+           "column": "10",
+           "row": "4",
+           "isLinked": false,
+           "unit": "px",
+           "size": 10
+          },
+          "border_width": {
+           "unit": "px",
+           "top": "1",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          },
+          "border_color": "#F0F0F0",
+          "margin": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          },
+          "padding": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          },
+          "flex_align_items": "center",
+          "_flex_align_self": "center",
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "50084ae",
+           "elType": "widget",
+           "settings": {
+            "text": "In den Warenkorb",
+            "icon_indent": {
+             "unit": "px",
+             "size": 10,
+             "sizes": []
+            },
+            "text_padding": {
+             "unit": "px",
+             "top": "12",
+             "right": "24",
+             "bottom": "12",
+             "left": "24",
+             "isLinked": false
+            },
+            "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}",
+            "__globals__": {
+             "button_text_color": "globals/colors?id=accent",
+             "typography_typography": "",
+             "background_color": "globals/colors?id=primary",
+             "hover_color": "globals/colors?id=accent",
+             "button_background_hover_color": "globals/colors?id=secondary",
+             "button_hover_border_color": "globals/colors?id=secondary",
+             "border_color": "globals/colors?id=primary"
+            },
+            "border_radius": {
+             "unit": "px",
+             "top": "6",
+             "right": "6",
+             "bottom": "6",
+             "left": "6",
+             "isLinked": true
+            },
+            "_flex_align_self": "center",
+            "link": {
+             "url": "",
+             "is_external": "",
+             "nofollow": "",
+             "custom_attributes": ""
+            },
+            "_css_classes": "button-arrow-right",
+            "align": "justify",
+            "border_border": "solid",
+            "border_width": {
+             "unit": "px",
+             "top": "1",
+             "right": "1",
+             "bottom": "1",
+             "left": "1",
+             "isLinked": true
+            },
+            "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "selected_icon": {
+             "value": "fas fa-shopping-cart",
+             "library": "fa-solid"
+            },
+            "typography_typography": "custom",
+            "typography_font_family": "Archivo Narrow",
+            "typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "typography_font_size_mobile": {
+             "unit": "px",
+             "size": 24,
+             "sizes": []
+            },
+            "typography_font_weight": "500",
+            "typography_text_transform": "none",
+            "typography_font_style": "normal",
+            "typography_text_decoration": "none",
+            "typography_line_height": {
+             "unit": "em",
+             "size": 1.2,
+             "sizes": []
+            },
+            "typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "hover_color": "#E6007E",
+            "content_align": "center",
+            "_element_width": "inherit",
+            "button_hover_border_color": "#E6007E"
+           },
+           "elements": [],
+           "widgetType": "button"
+          },
+          {
+           "id": "c0f4557",
+           "elType": "widget",
+           "settings": {
+            "text": "Projekt speichern",
+            "icon_indent": {
+             "unit": "px",
+             "size": 10,
+             "sizes": []
+            },
+            "text_padding": {
+             "unit": "px",
+             "top": "12",
+             "right": "24",
+             "bottom": "12",
+             "left": "24",
+             "isLinked": false
+            },
+            "custom_css": "selector svg {\n    font-size:30px;\n    margin-top:-1px;\n}",
+            "__globals__": {
+             "button_text_color": "globals/colors?id=primary",
+             "typography_typography": "",
+             "background_color": "",
+             "hover_color": "globals/colors?id=accent",
+             "button_background_hover_color": "globals/colors?id=primary",
+             "button_hover_border_color": "globals/colors?id=primary",
+             "border_color": "globals/colors?id=primary"
+            },
+            "border_radius": {
+             "unit": "px",
+             "top": "6",
+             "right": "6",
+             "bottom": "6",
+             "left": "6",
+             "isLinked": true
+            },
+            "_flex_align_self": "center",
+            "link": {
+             "url": "",
+             "is_external": "",
+             "nofollow": "",
+             "custom_attributes": ""
+            },
+            "_css_classes": "button-arrow-right",
+            "align": "justify",
+            "border_border": "solid",
+            "border_width": {
+             "unit": "px",
+             "top": "1",
+             "right": "1",
+             "bottom": "1",
+             "left": "1",
+             "isLinked": true
+            },
+            "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+            "selected_icon": {
+             "value": "fas fa-download",
+             "library": "fa-solid"
+            },
+            "typography_typography": "custom",
+            "typography_font_family": "Archivo Narrow",
+            "typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "typography_font_size_mobile": {
+             "unit": "px",
+             "size": 24,
+             "sizes": []
+            },
+            "typography_font_weight": "500",
+            "typography_text_transform": "none",
+            "typography_font_style": "normal",
+            "typography_text_decoration": "none",
+            "typography_line_height": {
+             "unit": "em",
+             "size": 1.2,
+             "sizes": []
+            },
+            "typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "background_color": "#E6007E00",
+            "hover_color": "#E6007E",
+            "button_hover_border_color": "#E6007E",
+            "content_align": "center",
+            "_element_width": "inherit"
+           },
+           "elements": [],
+           "widgetType": "button"
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "4f129eb",
+         "elType": "widget",
+         "settings": {
+          "image": {
+           "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/11/qrcode.png",
+           "id": 12915,
+           "size": "",
+           "alt": "",
+           "source": "library"
+          },
+          "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "image_border_radius": {
+           "unit": "px",
+           "top": "9",
+           "right": "9",
+           "bottom": "9",
+           "left": "9",
+           "isLinked": true
+          },
+          "_margin": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          },
+          "_padding": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": true
+          },
+          "_background_background": "classic",
+          "__globals__": {
+           "_background_color": "globals/colors?id=accent"
+          },
+          "width": {
+           "unit": "px",
+           "size": 200,
+           "sizes": []
+          },
+          "width_tablet": {
+           "unit": "px",
+           "size": "",
+           "sizes": []
+          },
+          "width_mobile": {
+           "unit": "px",
+           "size": "",
+           "sizes": []
+          },
+          "height": {
+           "unit": "px",
+           "size": 200,
+           "sizes": []
+          }
+         },
+         "elements": [],
+         "widgetType": "image"
+        },
+        {
+         "id": "3132011",
+         "elType": "widget",
+         "settings": {
+          "editor": "<p>Scannen um Projekt anzuzeigen</p>",
+          "typography_typography": "custom",
+          "typography_font_family": "Montserrat",
+          "typography_font_size": {
+           "unit": "px",
+           "size": 12,
+           "sizes": []
+          },
+          "typography_font_weight": "500",
+          "text_color": "#666666",
+          "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+          "__globals__": {
+           "typography_typography": ""
+          },
+          "align": "center",
+          "_flex_align_self": "center",
+          "_margin": {
+           "unit": "px",
+           "top": "-15",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          },
+          "_padding": {
+           "unit": "px",
+           "top": "0",
+           "right": "0",
+           "bottom": "0",
+           "left": "0",
+           "isLinked": false
+          }
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        }
+       ],
+       "isInner": true
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": true
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "elementor_header_footer",
+  "tp_widgets": {
+   "widgets": [
+    "plus-alignmnet-effect",
+    "plus-temp-notice",
+    "tp-navigation-menu"
+   ],
+   "update_at": "1763720427"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 40007,
+  "elementor_data_sha256_of_db_string": "1348af14e11336071fc2cf8362f9598083cf78185fbe422dcdd811d8bcfb2138",
+  "page_settings_db_length_bytes": 57
+ }
+}

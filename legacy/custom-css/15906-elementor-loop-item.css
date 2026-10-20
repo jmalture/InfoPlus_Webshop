@@ -1,0 +1,9 @@
+/* element 76c8dfc image */
+selector:hover {
+    transform: scale(1.05);
+    transition: all 0.5s linear;
+}
+
+selector {
+    transition: all 0.5s linear;
+}

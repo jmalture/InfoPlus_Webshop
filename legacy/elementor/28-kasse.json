@@ -1,0 +1,117 @@
+{
+ "id": 28,
+ "post_type": "page",
+ "title": "Checkout",
+ "slug": "kasse",
+ "status": "publish",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents",
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "6656d4c4",
+   "elType": "container",
+   "settings": {
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+   },
+   "elements": [
+    {
+     "id": "e140c14",
+     "elType": "widget",
+     "settings": {
+      "title": "Kasse",
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "29d8177"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "18acf7e"
+       }
+      ],
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis",
+      "custom_css": "selector h {\r\n    font-size: clamp(1.75rem, 3vw, 2.5rem)!important;\r\n    font-weight: 700!important;\r\n    color: #e91e8c!important;\r\n    text-align: left!important;\r\n    margin: 0 0 2rem 0!important;\r\n    line-height: 1.2!important;\r\n}",
+      "__globals__": {
+       "typography_typography": "globals/typography?id=secondary"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "d7d6062",
+     "elType": "widget",
+     "settings": {
+      "shortcode": "[infoplus_order_received]",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "shortcode"
+    },
+    {
+     "id": "df7ac84",
+     "elType": "widget",
+     "settings": {
+      "editor": "<!-- wp:woocommerce/checkout -->\n<div class=\"wp-block-woocommerce-checkout alignwide wc-block-checkout is-loading\"><!-- wp:woocommerce/checkout-fields-block -->\n<div class=\"wp-block-woocommerce-checkout-fields-block\"><!-- wp:woocommerce/checkout-express-payment-block -->\n<div class=\"wp-block-woocommerce-checkout-express-payment-block\"> </div>\n<!-- /wp:woocommerce/checkout-express-payment-block --><!-- wp:woocommerce/checkout-contact-information-block -->\n<div class=\"wp-block-woocommerce-checkout-contact-information-block\"> </div>\n<!-- /wp:woocommerce/checkout-contact-information-block --><!-- wp:woocommerce/checkout-shipping-method-block -->\n<div class=\"wp-block-woocommerce-checkout-shipping-method-block\"> </div>\n<!-- /wp:woocommerce/checkout-shipping-method-block --><!-- wp:woocommerce/checkout-pickup-options-block -->\n<div class=\"wp-block-woocommerce-checkout-pickup-options-block\"> </div>\n<!-- /wp:woocommerce/checkout-pickup-options-block --><!-- wp:woocommerce/checkout-shipping-address-block -->\n<div class=\"wp-block-woocommerce-checkout-shipping-address-block\"> </div>\n<!-- /wp:woocommerce/checkout-shipping-address-block --><!-- wp:woocommerce/checkout-billing-address-block -->\n<div class=\"wp-block-woocommerce-checkout-billing-address-block\"> </div>\n<!-- /wp:woocommerce/checkout-billing-address-block --><!-- wp:woocommerce/checkout-shipping-methods-block -->\n<div class=\"wp-block-woocommerce-checkout-shipping-methods-block\"> </div>\n<!-- /wp:woocommerce/checkout-shipping-methods-block --><!-- wp:woocommerce/checkout-payment-block -->\n<div class=\"wp-block-woocommerce-checkout-payment-block\"> </div>\n<!-- /wp:woocommerce/checkout-payment-block --><!-- wp:woocommerce/checkout-additional-information-block -->\n<div class=\"wp-block-woocommerce-checkout-additional-information-block\"> </div>\n<!-- /wp:woocommerce/checkout-additional-information-block --><!-- wp:woocommerce/checkout-order-note-block -->\n<div class=\"wp-block-woocommerce-checkout-order-note-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-note-block --><!-- wp:woocommerce/checkout-terms-block -->\n<div class=\"wp-block-woocommerce-checkout-terms-block\"> </div>\n<!-- /wp:woocommerce/checkout-terms-block --><!-- wp:woocommerce/checkout-actions-block -->\n<div class=\"wp-block-woocommerce-checkout-actions-block\"> </div>\n<!-- /wp:woocommerce/checkout-actions-block --></div>\n<!-- /wp:woocommerce/checkout-fields-block --><!-- wp:woocommerce/checkout-totals-block -->\n<div class=\"wp-block-woocommerce-checkout-totals-block\"><!-- wp:woocommerce/checkout-order-summary-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-block\"><!-- wp:woocommerce/checkout-order-summary-cart-items-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-cart-items-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-summary-cart-items-block --><!-- wp:woocommerce/checkout-order-summary-coupon-form-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-coupon-form-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-summary-coupon-form-block --><!-- wp:woocommerce/checkout-order-summary-totals-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-totals-block\"><!-- wp:woocommerce/checkout-order-summary-subtotal-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-subtotal-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-summary-subtotal-block --><!-- wp:woocommerce/checkout-order-summary-fee-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-fee-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-summary-fee-block --><!-- wp:woocommerce/checkout-order-summary-discount-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-discount-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-summary-discount-block --><!-- wp:woocommerce/checkout-order-summary-shipping-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-shipping-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-summary-shipping-block --><!-- wp:woocommerce/checkout-order-summary-taxes-block -->\n<div class=\"wp-block-woocommerce-checkout-order-summary-taxes-block\"> </div>\n<!-- /wp:woocommerce/checkout-order-summary-taxes-block --></div>\n<!-- /wp:woocommerce/checkout-order-summary-totals-block --></div>\n<!-- /wp:woocommerce/checkout-order-summary-block --><!-- wp:woocommerce-paypal-payments/checkout-paylater-messages {\"ppcpId\":\"ppcp-2ad8051a-8d47-4d79-bebc-eaf166b76e10\"} /--></div>\n<!-- /wp:woocommerce/checkout-totals-block --></div>\n<!-- /wp:woocommerce/checkout -->",
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "ec6b83a"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "5008a6d"
+       }
+      ],
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.35.7",
+  "elementor_pro_version": "3.35.1",
+  "wp_page_template": "elementor_header_footer",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": 1774967595
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 7568,
+  "elementor_data_sha256_of_db_string": "e4965ed669aaa27187fee235cea6f40c387c11631017121c09db0ab0975877e7",
+  "page_settings_db_length_bytes": 85
+ }
+}

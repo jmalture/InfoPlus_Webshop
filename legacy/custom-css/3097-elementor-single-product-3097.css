@@ -1,0 +1,26 @@
+/* element 0a869ae tp-woo-single-pricing */
+
+selector{
+    display: none;
+}
+
+
+/* element b4b8680 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}
+
+/* element 3be77dd button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}

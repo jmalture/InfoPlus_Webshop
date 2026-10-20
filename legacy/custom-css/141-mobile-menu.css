@@ -1,0 +1,25 @@
+/* element 7e0e013 search-form */
+selector input {
+    padding:0px !important;
+}
+
+/* element db36de2 nav-menu */
+/* product submenu expands in place (accordion) instead of flying out */
+selector .elementor-nav-menu--main .sub-menu {
+  position: static !important;
+  margin: 6px 0 4px !important;
+  padding-left: 14px !important;
+  min-width: 0 !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+selector .elementor-nav-menu--main .sub-menu a.elementor-sub-item {
+  background: transparent !important;
+  padding: 6px 0 !important;
+  font-family: 'Archivo Narrow', sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}

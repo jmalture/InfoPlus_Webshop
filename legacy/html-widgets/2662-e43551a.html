@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Header Section */
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #e91e8c;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        /* Highlights Section */
+        .highlights {
+            background: white;
+            padding: 2.5rem 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .highlights-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .highlights-list li {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .highlights-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #e91e8c;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .tagline {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #e91e8c;
+            margin-top: 2rem;
+            font-style: italic;
+        }
+
+        /* Team Photo Section */
+        .team-photo-section {
+            margin-bottom: 4rem;
+        }
+
+        .team-photo {
+            width: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .content-section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #666;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .content-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Quote/Highlight Box */
+        .quote-box {
+            background: #fff5fb;
+            padding: 2rem 2.5rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            border-left: 4px solid #e91e8c;
+        }
+
+        .quote-box p {
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-style: italic;
+            margin: 0;
+        }
+
+        /* Timeline/History Items */
+        .timeline-item {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .timeline-year {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e91e8c;
+            margin-bottom: 0.8rem;
+        }
+
+        .timeline-content {
+            font-size: 1.05rem;
+            color: #666;
+            line-height: 1.9;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #e91e8c 0%, #d01978 100%);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            margin-top: 3rem;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #e91e8c;
+            padding: 1rem 3rem;
+            border-radius: background: linear-gradient(135deg, #e91e8c 0%, #d01978 100%);px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 2rem 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .highlights {
+                padding: 2rem 1.5rem;
+            }
+
+            .highlights-list {
+                grid-template-columns: 1fr;
+            }
+
+            .content-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .content-section h2 {
+                font-size: 1.5rem;
+            }
+
+            .content-section p {
+                text-align: left;
+                font-size: 1rem;
+            }
+
+            .cta-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">Unternehmen</h1>
+            <p class="page-subtitle">Unternehmensgeschichte seit 1983</p>
+        </div>
+
+        <!-- Highlights -->
+        <div class="highlights">
+            <ul class="highlights-list">
+                <li>über 35 Jahre Markterfahrung</li>
+                <li>über 35 Jahre Know-How</li>
+                <li>über 35 Jahre Lösungen für unsere Kunden erarbeitet</li>
+            </ul>
+            <p class="tagline">... das ist infoplus!</p>
+        </div>
+
+        <!-- Team Photo -->
+        <div class="team-photo-section">
+            <img src="https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2026/03/Team_infoplus-scaled-1.webp" alt="Infoplus Team" class="team-photo">
+        </div>
+
+        <!-- Company Story -->
+        <div class="content-section">
+            <h2>Unsere Geschichte</h2>
+            <p>
+                Die Infoplus Blindow Namensschilder GmbH & Co. KG wurde im November 1983 von Martin Blindow (medizinisch-technischer Fachkaufmann) und einem zwischenzeitlich ausgeschiedenen Seniorpartner (Werbefachmann Hans Prause† aus Ottendorf bei Altenkirchen / gegründet.
+            </p>
+            <p>
+                Der ursprüngliche Schwerpunkt lag in der Produktion von hochwertigen Schildern für den niedergelassenen Arzt und Zahnarzt. infoplus rückte mit dem Slogan: „Das Praxisschild ist die Visitenkarte des Praxis" das hochwertige, dauerhafte Firmen- bzw. Praxisschild für den Arzt und leitete damit die Therapie von Emailleschild und Aluminium zum gestalteten Acrylglasschild ein. Bereits 1988 setzte infoplus mit der Entwicklung des Schilder-Klassikers „Facettenreicher" Maßstäbe. Aber auch die Produktinnovation „Lastertop-Display" aus dem Jahr 1989 gehört mittlerweile zur Standard- Produktfamilie moderner Außendarstellung.
+            </p>
+        </div>
+
+        <!-- Timeline -->
+        <div class="content-section">
+            <h2>Meilensteine</h2>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">1985</div>
+                <div class="timeline-content">
+                    Bereits 1985 erkannte infoplus die Bedeutung von Namensschildern und entwickelte zunächst Standards für Arztpraxen und Apotheken. Schon bald wurden mit den LaserContur- und Papyrus-Namensschildern exklusive Spitzenprodukte für nahezu alle Bereiche aus Industrie, Handel und Vertrieb gefertigt.
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">1993</div>
+                <div class="timeline-content">
+                    Nach der Entwicklung des INC/MAG-Systems (ein spezielles Magnetsystem zur Namensschilderbefestigung) stellt infoplus im Jahr 2002 das revolutionäre Systemschild „Atlantis" vor. Über 15 Jahre Namensschilder-Erfahrung sind in einem Schild zusammengefasst.
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">2005</div>
+                <div class="timeline-content">
+                    Im Jahr 2005 überstieg das Namensschildersegment erstmals die ursprünglichen Aktivitäten im Bereich Arzt und Zahnarzt. Um dieser Entwicklung gerecht zu werden, aber auch um die Herausforderungen der größten Kunden wahrnehmen zu können, wurde im Laufe des Jahres 2006 die Firma umstrukturiert, der Name aktualisiert und die einzelnen Tätigkeitsbereiche separiert.
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">Heute</div>
+                <div class="timeline-content">
+                    Die zukunftsorientierten Veränderungen spiegeln sich am deutlichsten im neuen Logo, der konsequenten Trennung der Produktbereiche, aber auch in unseren motivierten Mitarbeitern wieder.
+                </div>
+            </div>
+        </div>
+
+        <!-- Services -->
+        <div class="content-section">
+            <h2>Unser Service</h2>
+            <p>
+                infoplus ist ein Full Service-Dienstleister für Namensschilder, Gestaltung und Druck kleiner und großer Auflagen im hochwertigen Handsiebdruckverfahren oder in moderner Digitaldrucktechnik ist unser tägliches Geschäft. Die Komplettbedürfnisse zu erfassen, zu verstehen und zu befriedigen ist unsere Aufgabe.
+            </p>
+            
+            <div class="quote-box">
+                <p>Für unsere Kunden haben wir verschiedene bewährte Dienstleistungen entwickelt, u. a. Logistik-Services (komfortable Abrufaufträge für den regelmäßigen Schilderbedarf; Rahmenvereinbarungen über ihren 1- bis 2-Jahresbedarf) und den Event-Service sowie eine Vielzahl attraktiver Kundenvorteile.</p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>Sprechen Sie uns an – wir beraten Sie gern!</h2>
+            <p>Haben Sie Fragen zu unseren Produkten oder Services?</p>
+            <a href="/kontakt" class="cta-button">Kontakt aufnehmen</a>
+        </div>
+    </div>
+</body>
+</html>

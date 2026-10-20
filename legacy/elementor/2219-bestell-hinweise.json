@@ -1,0 +1,681 @@
+{
+ "id": 2219,
+ "post_type": "elementor_library",
+ "title": "Bestell-Hinweise",
+ "slug": "bestell-hinweise",
+ "status": "publish",
+ "template_type": "container",
+ "conditions": null,
+ "page_settings": null,
+ "elementor_data": [
+  {
+   "id": "8e80f4b",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "0",
+     "row": "5",
+     "isLinked": false,
+     "unit": "px",
+     "size": 0
+    }
+   },
+   "elements": [
+    {
+     "id": "626fd6c",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "9a7f333",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Lieferzeit",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "42c6237",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Es gilt die jeweils angegebene Lieferzeit der gewählten Produktausführung, Auftragsklarheit vorausgesetzt.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "ddeacda",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "c5e1e39",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Auftragsklarheit",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "17fa0d8",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Das bedeutet, dass die Druckdaten in Ordnung und ggf. ein Originalmuster freigegeben sind und auch die Zahlung geklärt ist. Ihr Auftrag wird produziert, sobald Auftragsklarheit vorliegt. Sollte es zu Verzögerung durch fehlerhafte Daten, fehlende Daten oder Zahlung kommen, so kann sich das Versanddatum eventuell verschieben.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "cb9ce8b",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "fc58f9d",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Lieferservice / Express-Versand",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "bf48f31",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Benötigen Sie Ihre Schilder zu einem Fix-Termin, sprechen Sie uns bitte an, sodass wir Ihren Auftrag ggf. anpassen können.<br />Auf Wunsch versenden wir die Namensschilder direkt an Ihre Filiale oder jede andere gewünschte Adresse. Wir versenden weltweit mit UPS.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "1dfcd05",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "5e0f074",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Verpackung, Lagerung und Schutz",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "155c08a",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Ihre Namensschilder AluContur | Comfort liefern wir komplett mit Logo und Namen in Untereloxaldruck in einer repräsentativen Sichtverpackung. Für die einzelne Aufbewahrung empfehlen wir z.B. eine Klarsichttasche, damit das Schild vor dem Zerkratzen bzw. Verbiegen geschützt ist (als Zubehör bestellbar).</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "57d6746",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "fcae576",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Zubehör / Ersatzteile",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "42bb17d",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Umfangreiches Zubehör bzw. Ersatzteile sind kurzfristig verfügbar, z.B. Klarsichttaschen und Ersatz-Magnete</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "7e7bad0",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "dfd9423",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Musterbestellung",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "f6caeaa",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Möchten Sie diesen Artikel anschauen, anfassen und testen? Fragen Sie uns einfach nach einem Referenzmuster*, das Sie bequem mit unserer Produkt-Anfrage (Button „Anfragen“) bestellen können.</p><p class=\"small\">*Wir behalten uns vor, ab einem bestimmten Wert Mustersendungen zu berechnen. Die Rechnungsstellung erfolgt dann i.d.R. 4 Wochen nach Musterlieferung. Im Auftragsfall bzw. bei rechtzeitiger Rücksendung frei Haus werden natürlich keine Musterkosten berechnet.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "6448911",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "fab2132",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Nachbestellungen",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "f664ecd",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Sie möchten Ihr Namensschild nachbestellen? Kein Problem! Unser spezieller Nachbestellungs-Service macht es auf schnellstem Wege möglich. Sie können Ihr Namensschild mit nur wenigen Klicks online nachbestellen.<br />Einfach einloggen, Ihr bereits schon einmal bestelltes Produkt im Kundenkonto aufrufen, die gewünschte Menge eintragen, bestellen und anschließend im Upload-Center die Namensliste* hochladen - und schon liefern wir Ihnen Ihre Namensschilder!</p><p class=\"small\">*Bitte verwenden Sie die Excel-Vorlage (Namenslisten-Vorlage unter \"Downloads\") für die Übermittlung Ihrer Namen.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "b1d1022",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "3058fe7",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Unbedenklichkeit von magnetischen Befestigungen",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "ce7fc69",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>(Hinweise für Träger von Herzschrittmachern)<br />Das Tragen von kleinen Dauermagneten am Körper, wie z. B. in Form von magnetischen Ansteckerclips für Namensschilder, ist in der Regel gesundheitlich unbedenklich. Diese Anwendungen führen nur zu einer örtlich eng begrenzten Exposition mit schwachen statischen Magnetfeldern. Bei normaler Anwendung derartiger Magnetclips werden die bekannten biologischen Wirkungsschwellen bei weitem nicht erreicht. Störbeeinflussungen bestimmter Herzschrittmachertypen durch kleine Dauermagneten sind jedoch nicht auszuschließen. Ab ca. 1 mT magnetischer Flussdichte ist auch eine Beeinflussung u. a. von Magnetkarten, Kreditkarten, Uhren denkbar. Es ist daher ratsam, solche Namensschilder nicht unmittelbar über einem implantierten Herzschrittmacher zu benutzen und in den Jackentaschen keine empfindlichen Magnetkarten aufzubewahren.<br />Quelle: <a href=\"http://www.bfs.de/DE/themen/emf/nff/anwendung/andere/andere.html\" target=\"_blank\" rel=\"nofollow noopener\">www.bfs.de</a></p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.2",
+  "elementor_pro_version": "3.30.0",
+  "elementor_source": "post",
+  "wp_page_template": "default"
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 12243,
+  "elementor_data_sha256_of_db_string": "cfaf1d88f8712fe10a63b8b9912ae0c9bfe47a7964d674c055421ad74142984e",
+  "page_settings_db_length_bytes": null
+ }
+}

@@ -1,0 +1,9 @@
+/* element e140c14 heading */
+selector h {
+    font-size: clamp(1.75rem, 3vw, 2.5rem)!important;
+    font-weight: 700!important;
+    color: #e91e8c!important;
+    text-align: left!important;
+    margin: 0 0 2rem 0!important;
+    line-height: 1.2!important;
+}

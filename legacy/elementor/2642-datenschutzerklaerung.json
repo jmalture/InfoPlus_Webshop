@@ -1,0 +1,158 @@
+{
+ "id": 2642,
+ "post_type": "page",
+ "title": "Datenschutz",
+ "slug": "datenschutzerklaerung",
+ "status": "publish",
+ "template_type": "wp-post",
+ "conditions": null,
+ "page_settings": {
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "c7d1141",
+   "elType": "container",
+   "settings": {
+    "flex_gap": {
+     "column": "50",
+     "row": "50",
+     "isLinked": true,
+     "unit": "px",
+     "size": 50
+    },
+    "padding": {
+     "unit": "px",
+     "top": "80",
+     "right": "40",
+     "bottom": "80",
+     "left": "40",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "40",
+     "right": "20",
+     "bottom": "40",
+     "left": "20",
+     "isLinked": false
+    },
+    "padding_tablet": {
+     "unit": "px",
+     "top": "40",
+     "right": "40",
+     "bottom": "40",
+     "left": "40",
+     "isLinked": true
+    },
+    "flex_gap_tablet": {
+     "column": "40",
+     "row": "40",
+     "isLinked": true,
+     "unit": "px",
+     "size": 40
+    },
+    "flex_gap_mobile": {
+     "column": "",
+     "row": "",
+     "isLinked": true,
+     "unit": "px",
+     "size": null
+    }
+   },
+   "elements": [
+    {
+     "id": "124a3d3",
+     "elType": "widget",
+     "settings": {
+      "title": "Datenschutz",
+      "__globals__": {
+       "typography_typography": "globals/typography?id=secondary",
+       "title_color": "globals/colors?id=primary"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "00a167e",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "66f8743",
+       "elType": "widget",
+       "settings": {
+        "editor": "<h3>Gegenstand</h3><p>Nachfolgend möchten wir Sie darüber informieren, welche personenbezogenen Daten wir von Ihnen bei der Nutzung unserer Angebote und den nachfolgend beschriebenen Vorgängen verarbeiten. </p><p>Personenbezogene Daten (nachfolgend „Daten“) sind alle Daten, die auf Sie persönlich beziehbar sind, z.B. Ihr Name, Ihre E-Mail-Adresse und Ihre Nutzung unserer Angebote.</p><h3>Verantwortlicher</h3><p>Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist die Infoplus Blindow Namensschilder GmbH &amp; Co. KG, Otto-Hahn-Straße 21, 22941 Bargteheide, info@infoplus.de.</p><p>Unseren Datenschutzbeauftragten können Sie per E-Mail unter ds@infoplus.de oder per Post unter unserer Anschrift mit dem Zusatz „der Datenschutzbeauftragte“ erreichen.</p><h3>Browserdaten</h3><p>Sobald Sie unsere Website aufrufen, erhebt unser Webserver, auf dem unsere Website liegt, automatisch die folgenden von Ihrem Browser übermittelten Daten</p><ul><li>IP-Adresse Ihres Endgerätes</li><li>Datum und Uhrzeit der Anfrage</li><li>Inhalt der Anforderung (konkrete Seite)</li><li>Zugriffsstatus und übertragene Datenmenge</li><li>Produkt- und Versionsinformationen Ihres Browsers</li><li>Betriebssystem Ihres Endgerätes</li><li>von welcher Website aus der Zugriff auf unsere Website erfolgte</li></ul><p>Diese Daten sind für uns technisch erforderlich, um Ihnen unsere Website anzuzeigen und um die Stabilität und Sicherheit unserer Website zu gewährleisten. Empfänger ist in diesem Zusammenhang unser Server-Host.</p><p>Die IP-Adresse Ihres Endgerätes wird dabei nur für die Zeit Ihrer Nutzung der Website gespeichert und im Anschluss daran unverzüglich gelöscht oder durch Kürzung anonymisiert.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. f DSGVO, wobei sich unsere berechtigten Interessen aus den vorgenannten Zwecken ergeben.</p><h3>Funktionelle Cookies</h3><p>Wir setzen Cookies ein, um die Nutzung unserer Website komfortabel für Sie zu gestalten.</p><p>Cookies sind kleine Textdateien, die im Rahmen Ihres Besuchs unserer Website von unserem Webserver an Ihren Browser gesandt und von diesem auf Ihrem Rechner für einen späteren Abruf vorgehalten werden. Die Cookies ermöglichen die Wiedererkennung Ihres Internetbrowsers.</p><p>Wir setzen Cookies ein, um Ihre Voreinstellungen verfügbar zu machen, um Ihre persönlichen Daten bei zukünftigen Interaktionen mit unserer Website in die Eingabemaske einzutragen zu lassen oder um Ihre Autorisierung sicherzustellen.</p><p>Session-Cookies werden automatisiert gelöscht, wenn Sie den Browser schließen. Andere Cookies werden automatisiert nach einer vorgegebenen Dauer gelöscht, die sich je nach Cookie unterscheiden kann. Die genaue Speicherdauer können Sie den Einstellungen Ihres Browsers entnehmen.</p><p>Sie können Ihre Browser-Einstellung entsprechend Ihren Wünschen konfigurieren und z. B. die Annahme von Third-Party-Cookies oder allen Cookies ablehnen. Wir weisen Sie darauf hin, dass Sie dann eventuell nicht alle Funktionen dieser Website nutzen können.</p><p>Sie können die Cookies in den Sicherheitseinstellungen Ihres Browsers jederzeit löschen.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. f DSGVO, wobei sich unsere berechtigten Interessen aus den vorgenannten Zwecken ergeben.</p><h3>Ihre Anfrage</h3><p>Wir bieten Ihnen verschiedene Kontaktmöglichkeiten, z.B. unsere Anschrift, unsere E-Mail-Adresse, unsere Telefonnummer, die Auftritte in den sozialen Medien und unser Kontaktformular.</p><p>Wenn Sie mit uns Kontakt aufnehmen, nutzen wir die von Ihnen mitgeteilten Daten, wie z.B. Ihre E-Mail-Adresse, Ihren Namen und den Inhalt Ihrer Anfrage, um Ihre Anfrage zu bearbeiten.</p><p>In Rahmen der Kommunikation setzen wir u.U. zusätzlich Messenger ein. Sie sind jederzeit berechtigt unsere weiteren Kommunikationsmittel zu nutzen. Nutzt der Messenger eine Ende-zu-Ende-Verschlüsselung, so kann der Messenger-Anbieter nicht auf den Nachrichteninhalt zugreifen. Jedoch hat der Messenger-Dienstleister u.U. Zugriff auf die Information, dass eine Kommunikation stattgefunden hat und welches Gerät genutzt wurde. Diese Daten werden aber durch den Messenger-Anbieter verarbeitet, lesen Sie hierzu dessen Datenschutzerklärung.</p><p>Die hierbei anfallenden Daten löschen wir, nachdem die Speicherung nicht mehr erforderlich ist, oder schränken die Verarbeitung ein, falls gesetzliche Aufbewahrungspflichten bestehen.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. b DSGVO.</p><h3>Bestellungen</h3><p>Wenn Sie etwas in unserem Webshop bestellen, fragen wir Sie zur Abwicklung Ihrer Bestellung nach Ihrem Namen, Ihren Kontaktdaten und Ihren Zahlungsinformationen.</p><p>Für die Bestellung notwendige Pflichtangaben sind markiert, weitere Angaben sind freiwillig. Freiwillig ist ebenfalls das Anlegen eines Kundenkontos in unserem Webshop.</p><p>Zur Abwicklung Ihrer Bestellung können wir Ihre Zahlungsdaten an unsere Zahlungsdienstleister und Ihre Lieferanschrift an unsere Versanddienstleister weitergeben.</p><p>Die Zahlungsdienstleister verarbeiten diejenigen Bestandsdaten der Kunden, die erforderlich sind, um die Transaktion durchzuführen (u.a. Name, E-Mail-Adresse, IP-Adresse sowie finanztechnische Transaktionsdaten wie Kontodaten oder Kreditkartennummer). Wir erhalten jedoch nur die Information, ob eine Bezahlung erfolgreich durchgeführt wurde. Für die Zahlungsgeschäfte gelten die Geschäftsbedingungen und Datenschutzhinweise der jeweiligen Zahlungsdienstleister.</p><p>Wir sind aufgrund handels- und steuerrechtlicher Vorgaben verpflichtet, Ihre Bestelldaten für zehn Jahre zu speichern. Allerdings nehmen wir nach zwei Jahren eine Einschränkung der Verarbeitung vor, d.h. Ihre Daten werden nur zur Einhaltung der gesetzlichen Verpflichtungen eingesetzt.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. b DSGVO.</p><h3>Kundenkonto</h3><p>Wenn Sie auf unseren Angeboten ein Kundenkonto erstellen, um die damit verbundenen Funktionen nutzen zu können, z.B. um Details zu Ihren Bestellungen einzusehen, fragen wir im Registrierungsvorgang bestimmte Daten ab, um Ihr Konto zu erstellen.</p><p>Notwendige Pflichtangaben sind markiert, weitere Angaben sind freiwillig. Wir löschen Ihre sonstigen Daten nach Ablauf der zivilrechtlichen Verjährungsfristen. Ebenfalls können Sie Ihr Kundenkonto jederzeit löschen, durch Nutzung der Funktion im Konto oder eine direkte Nachricht an uns. </p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. b DSGVO.</p><h3>Gewinnspiele</h3><p>Wenn Sie an einem unserer Gewinnspiele teilnehmen, ist es für die Teilnahme erforderlich, dass Sie Ihre persönlichen Daten angeben, die wir für Ihre Teilnahme an dem Gewinnspiel benötigen.</p><p>Notwendige Pflichtangaben sind markiert, weitere Angaben sind freiwillig.</p><p>Die von Ihnen angegebenen Daten verarbeiten wir zur Durchführung des Gewinnspiels, insbesondere zur Ermittlung und Benachrichtigung der Gewinner.</p><p>Dazu können wir Ihre Teilnahmedaten an uns unterstützende Dienstleister weitergegeben, die uns z.B. technisch oder bei der Abwicklung der Gewinnspiele unterstützen.</p><p>Nach Ende des Gewinnspiels werden die personenbezogenen Daten gelöscht, es sei denn, sie sind erforderlich, um den Preis an die Gewinner zu übermitteln. Aus gewährleistungsrechtlichen Gründen können die Daten der Gewinner länger aufbewahrt werden. Wir sind außerdem aufgrund handels- und steuerrechtlicher Vorgaben verpflichtet, Daten der Gewinner für zehn Jahre zu speichern. Allerdings nehmen wir nach zwei Jahren eine Einschränkung der Verarbeitung vor, d.h. Ihre Daten werden nur zur Einhaltung der gesetzlichen Verpflichtungen eingesetzt.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. b DSGVO.</p><h3>Bewerbungen</h3><p>Falls wir auf der Suche nach Mitarbeitern sind, veröffentlichen wir Stellenausschreibungen.</p><p>Um Ihre Bewerbung bearbeiten zu können, benötigen wir bestimmte Daten von Ihnen.</p><p>Neben Ihrem Namen und Ihren Kontaktdaten brauchen und verarbeiten wir auch Ihre sonstigen Bewerberdaten, z.B. Ihr Bewerbungsschreiben, Lebenslauf, Zeugnisse oder Gesprächsnotizen.</p><p>Die im Bewerbungsverfahren anfallenden Daten löschen wir, wenn die Daten für den Zweck der Bewerbung nicht mehr gebraucht werden. Dies ist nach einer Frist von höchstens sechs Monaten nach Ende des Bewerbungsverfahrens der Fall, sollte eine Anstellung nicht erfolgen. Dies gilt nicht, sofern gesetzliche Bestimmungen einer Löschung entgegenstehen, die Daten zum Zwecke der Beweisführung erforderlich sind oder Sie einer längeren Speicherdauer ausdrücklich zugestimmt haben.</p><p>Falls wir Sie um Einwilligung bitten, z.B. in die längere Speicherung Ihrer Daten, ist die Rechtsgrundlage Art. 6 Abs. 1 S. 1 lit. a DSGVO, § 26 Abs. 2 BDSG. Ansonsten ist die Rechtsgrundlage Art. 6 Abs. 1 S. 1 lit. b DSGVO, § 26 BDSG.</p><h3>Geschäftsbeziehung</h3><p>Für das Zustandekommen wie auch für die Durchführung eines Vertrags über die von uns oder von Ihnen angebotenen Leistungen benötigen wir personenbezogene Daten.</p><p>Im Rahmen der Anbahnung bzw. der Durchführung des Vertrags müssen Sie diejenigen personenbezogenen Daten bereitstellen, die für die Begründung, Durchführung und Beendigung des Vertragsverhältnisses und die Erfüllung der damit verbundenen vertraglichen Pflichten erforderlich sind. Wir verarbeiten Ihre Daten, um den Vertrag mit Ihnen sowie um bestehende gesetzliche Vorgaben, z.B. handels- oder steuerrechtlicher Natur, zu erfüllen. Dies kann eine Weitergabe von Daten an Subunternehmer, Zahlungsdienstleister oder Behörden beinhalten.</p><p>Wir sind aufgrund handels- und steuerrechtlicher Vorgaben verpflichtet, die Vertragsdaten für zehn Jahre zu speichern. Allerdings nehmen wir nach zwei Jahren eine Einschränkung der Verarbeitung vor, d.h. Ihre Daten werden nur zur Einhaltung der gesetzlichen Verpflichtungen eingesetzt.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. b DSGVO.</p><h3>Bonitätsprüfung</h3><p>Wie behalten uns vor, bei erheblicher Vorleistungspflicht unsererseits in Einzelfällen vor Vertragsschluss eine Bonitätsauskunft bei einer Wirtschaftsauskunftei einzuholen. Der Zweck ist der Schutz vor Zahlungsausfällen.</p><p>Die Löschung der von der Auskunftei mitgeteilten Daten erfolgt nach der Entscheidung über den Abschluss des jeweiligen Vertrags.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. f DSGVO, wobei sich unsere berechtigten Interessen aus den vorgenannten Zwecken ergeben.</p><h3>Bestandskundenwerbung</h3><p>Sollten Sie Kunde bei uns werden, können wir Ihre in diesem Zusammenhang erhaltene E-Mail-Adresse nutzen, um Ihnen Werbung für ähnliche Waren oder Dienstleistungen zukommen zu lassen.</p><p>Sie können dieser Werbung jederzeit widersprechen, insbesondere indem Sie uns über die im Impressum angegebenen Kontaktmöglichkeiten hierüber informieren. Auch falls wir Ihnen für einen Zeitraum von zwei Jahren keine Werbung senden, sperren wir Ihre E-Mail-Adresse für die Zusendung von Werbung. Für die Speicherung Ihrer E-Mail-Adresse an sich gelten die Ausführungen zu den handels- und steuerrechtlichen Vorgaben im Zusammenhang mit Ihrem Kauf bei uns.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. f DSGVO i.V.m. § 7 Abs. 3 UWG, wobei sich unsere berechtigten Interessen aus den vorgenannten Zwecken ergeben.</p><h3>Newsletter</h3><p>Wir möchten Ihnen gern gelegentlich per E-Mail in Form unseres Newsletters interessante Neuigkeiten und Hinweise zu unserem Unternehmen oder unseren Angeboten zukommen lassen.</p><p>Hierzu benötigen wir neben Ihrer datenschutzrechtlichen Einwilligung zumindest Ihre E-Mail-Adresse, an die der Newsletter versendet werden soll. Notwendige Pflichtangaben sind markiert, weitere Angaben sind freiwillig, z.B. um Sie persönlich anzusprechen oder um den Newsletter zu individualisieren.</p><p>Wir möchten unseren Newsletter stetig optimieren, um den Lesern passende Inhalte zu bieten. Hierfür erstellen wir eine Erfolgsmessung unseres Newsletters. Wir weisen Sie daher darauf hin, dass wir zu diesen Zwecken Ihr Öffnungs- und Klickverhalten auswerten.</p><p>Für die Auswertung des Öffnungsverhaltens beinhalten unsere Newsletter sog. Tracking-Pixel, die Ein-Pixel-Bilddateien darstellen, die auf unserem Webserver gespeichert sind. Sobald Sie den Newsletter öffnen, wird der Trackingpixel von unserem Webserver geladen und gleichzeitig Informationen über Sie als E-Mail-Empfänger an uns übermittelt, wie z.B. der Zeitpunkt des Aufrufs und Ihre IP-Adresse.</p><p>Für die Auswertung des Klickverhaltens enthalten unsere Newsletter sog. personalisierte Links. Falls Sie einen solchen Link öffnen, können wir Informationen über Sie erheben, insbesondere dass Sie den Link angeklickt haben.</p><p>Trotz der technischen Möglichkeiten weitergehender Analysen geht es uns dabei nur um den Erhalt aggregierter Daten, d.h. statistische Auswertungen ohne Profilbildung, die sich auf die Öffnungsrate des Newsletters und die Öffnung einzelner Links beziehen.</p><p>Ihre Einwilligung in die Übersendung des Newsletters können Sie jederzeit widerrufen und den Newsletter abbestellen. Den Widerruf können Sie durch Anklicken des in jeder Newsletter-E-Mail bereitgestellten Links oder durch eine direkte Nachricht an uns erklären. Auch falls wir Ihnen für einen Zeitraum von zwei Jahren keine Werbung senden, entfernen wir Ihre E-Mail-Adresse aus unserem Newsletter-Verteiler. Nach Ablauf der wettbewerbs- und persönlichkeitsrechtlichen Verjährungsfristen werden wir Ihre erloschene Einwilligungserklärung löschen.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. a und f DSGVO, wobei sich unsere berechtigten Interessen aus den vorgenannten Zwecken ergeben.</p><p>Die Rechtsgrundlage ist Art. 6 Abs. 1 S. 1 lit. a und f DSGVO.</p><h3>Webkonferenzen</h3><p>Unter Webkonferenzen verstehen wir die Abhaltung von Onlinemeetings, Videokonferenzen, Screen-Sharing oder Webinaren. Für die Durchführung setzen wir Dienstleister ein. Zu diesem Zweck werden von Ihnen als Teilnehmer insbesondere Anmelde- und Kontaktdaten sowie Kommunikationsdaten, die während der Konferenz anfallen, verarbeitet.</p><p>Es kann sein, dass der Dienstleister Nutzungs- und Metadaten zu Zwecken der Optimierung seines Dienstes verarbeitet. Zweck und Umfang der Erhebung und Nutzung Ihrer Daten sowie Ihre diesbezüglichen Rechte und Einstellungsmöglichkeiten zum Schutz Ihrer Privatsphäre durch den Drittanbieter entnehmen Sie bitte den Datenschutzerklärungen des jeweiligen Anbieters.</p><p>Im Einzelnen setzen wir die folgenden Dienstleister ein:</p><ul><li>Microsoft Teams - Website: <a href=\"https://www.microsoft.com/de-de/microsoft-teams/group-chat-software\" rel=\"nofollow noopener\">https://www.microsoft.com/de-de/microsoft-teams/group-chat-software</a> ; Datenschutzhinweise: <a href=\"https://privacy.microsoft.com/de-de/privacystatement\" rel=\"nofollow noopener\">https://privacy.microsoft.com/de-de/privacystatement</a></li></ul><p>Falls wir Sie um Einwilligung für die Nutzung der Dienste bitten, ist die Rechtsgrundlage Art. 6 Abs. 1 S. 1 lit. a DSGVO. Ansonsten ist die Rechtsgrundlage Art. 6 Abs. 1 S. 1 lit. b DSGVO.</p><h3>Dienste von Drittanbietern</h3><p>Wir setzen Dienste von Drittanbietern ein, um unsere Angebote zu optimieren.</p><p>Wenn Sie ein Angebot aufrufen, das einen solchen Dienst enthält, wird u.U. eine direkte Verbindung mit den Servern des Drittanbieters aufgebaut. Der Drittanbieter erhält daher die Information, dass Sie bzw. Ihre IP-Adresse die entsprechende Seite unseres Angebotes aufgerufen haben.</p><p>Falls Sie beim Anbieter des Dienstes eingeloggt sind, kann der Drittanbieter Ihren Besuch unseres Angebots Ihrem Konto zuordnen. Wenn Sie mit den Diensten interagieren, zum Beispiel einen Button betätigen, wird dies von Ihrem Endgerät direkt an den Drittanbieter übermittelt. Wenn Sie nicht möchten, dass ein Drittanbieter, bei dem Sie ein Konto unterhalten, über unser Angebote Daten über Sie erfasst, müssen Sie sich vor Ihrem Besuch unserer Angebote bei dem jeweiligen Konto ausloggen.</p><p>Teils kommen Verfahren zur Identifikation und Wiedererkennung zum Einsatz, die auf Ihrem Endgerät gespeichert und/oder aus automatisch übertragenen Informationen Ihres Endgeräts erzeugt werden. Dies können z.B. Cookies oder Fingerprint-Verfahren sein. Soweit erforderlich bieten wir Ihnen ein Tool, mit dem Sie den Einsatz derartiger Verfahren steuern können.</p><p>Zweck und Umfang der Erhebung und Nutzung Ihrer Daten sowie Ihre diesbezüglichen Rechte und Einstellungsmöglichkeiten zum Schutz Ihrer Privatsphäre durch den Drittanbieter entnehmen Sie bitte auch den Datenschutzhinweisen des jeweiligen Drittanbieters.</p><p>Eingebettete Dienste:</p><p>Wir betten Dienste von Drittanbietern ein, um unsere Angebote durch zusätzliche Dienste informativer für Sie zu gestalten.</p><p>Im Einzelnen betten wir Dienste von folgenden Anbietern auf unserer Website ein:</p><ul><li>Font Awesome - Website: <a href=\"https://fontawesome.com/\" rel=\"nofollow noopener\">https://fontawesome.com/</a> ; Datenschutzhinweise: <a href=\"https://fontawesome.com/privacy\" rel=\"nofollow noopener\">https://fontawesome.com/privacy</a></li><li>LinkedIn - Website: <a href=\"https://de.linkedin.com/\" rel=\"nofollow noopener\">https://de.linkedin.com/</a> ; Datenschutzhinweise: <a href=\"https://www.linkedin.com/legal/privacy-policy\" rel=\"nofollow noopener\">https://www.linkedin.com/legal/privacy-policy</a></li></ul><p>Analysedienste:</p><p>Wir setzen Analyse-Dienste ein, um das Nutzerverhalten der Besucher unserer Angebote zu erfassen, statistisch auszuwerten und mithilfe der gewonnenen Erkenntnisse unsere Angebote zu verbessern und für Sie als Nutzer interessanter auszugestalten.</p><p>Im Einzelnen setzen wir die folgenden Analyse-Werkzeuge auf unserer Website ein:</p><ul><li>Google Analytics - Website: <a href=\"https://marketingplatform.google.com/intl/de/about/analytics/\" rel=\"nofollow noopener\">https://marketingplatform.google.com/intl/de/about/analytics/</a> ; Datenschutzhinweise: <a href=\"https://policies.google.com/privacy\" rel=\"nofollow noopener\">https://policies.google.com/privacy</a></li><li>Shopware Statistics – Website und Datenschutzhinweise: <a href=\"https://docs.shopware.com/de/shopware-5-de/marketing-und-einkaufswelten/statistiken%20%20\" rel=\"nofollow noopener\">https://docs.shopware.com/de/shopware-5-de/marketing-und-einkaufswelten/statistiken  </a></li></ul><p>Werbedienste:</p><p>Wir setzen Werbedienste bzw. Dienste zur Erfolgsmessung ein, um Ihnen passende Werbung anhand Ihrer potenziellen Interessen zu zeigen sowie um die Effektivität unserer Werbung zu messen. Hierbei wird Ihr Nutzungsverhalten bei Besuch unserer oder dem Besuch anderer Angebote ausgewertet und/oder Werbung anhand anderer beim Werbedienst vorhandener Daten auf Sie zugeschnitten.</p><p>Wir selbst erheben und verarbeiten hierbei keine Daten. Wir erhalten vom Werbedienst lediglich statistische Auswertungen zur Verfügung gestellt. Anhand dieser Auswertungen können wir erkennen, welche der eingesetzten Werbemaßnahmen besonders effektiv sind und Optimierungen vornehmen.</p><p>Im Einzelnen setzen wir die folgenden Werbedienste bzw. Dienste zur Erfolgsmessung auf unserer Website ein:</p><ul><li>Google Ads - Website: <a href=\"https://ads.google.com/intl/de_de/home/\" rel=\"nofollow noopener\">https://ads.google.com/intl/de_de/home/</a> ; Datenschutzhinweise: <a href=\"https://policies.google.com/privacy\" rel=\"nofollow noopener\">https://policies.google.com/privacy</a></li></ul><p>Bewertungsdienste:</p><p>Wir setzen Bewertungsdienste ein, um durch Kundenrezensionen eine authentische Außendarstellung zu gewährleisten. Nach einer Bestellung können Sie hierzu eine E-Mail von unserem eingesetzten Bewertungsdienst erhalten. Sie werden darin gebeten, zu Ihrem Einkaufserlebnis eine Bewertung abzugeben. Dafür übermitteln wir Ihre E-Mail-Adresse und Informationen zu Ihrer Bestellung an den eingesetzten Bewertungsdienst. </p><p>Im Einzelnen setzen wir die folgenden Bewertungsdienste ein:</p><ul><li>Trustbadge/Widget – Website: <a href=\"https://www.trustedshops.de/shopbetreiber/trustbadge/\" rel=\"nofollow noopener\">https://www.trustedshops.de/shopbetreiber/trustbadge/</a> ; Datenschutzhinweise: <a href=\"https://business.trustedshops.de/impressum\" rel=\"nofollow noopener\">https://business.trustedshops.de/impressum</a></li></ul><p>Wir haben mit der Trusted Shops GmbH einen Vertrag über die gemeinsame Verantwortlichkeit geschlossen. Die Verarbeitung ist zur Erfüllung des an die konkrete Bestellung gekoppelten Käuferschutzes und der transaktionellen Bewertungsleistungen erforderlich oder richtet sich bei Registrierung nach der vertraglichen Vereinbarung (Art. 6 Abs. 1 S. 1 lit. b DSGVO). Im Zusammenhang mit diesen Verarbeitungen wenden Sie sich bei Datenschutzfragen und zur Geltendmachung Ihrer Rechte bitte bevorzugt an die Trusted Shops GmbH. Weitere Informationen zur Aufteilung der Zuständigkeiten zwischen uns und Trusted Shops entnehmen Sie bitte der Tabelle, abrufbar unter:  <a href=\"https://help.etrusted.com/hc/de/articles/360026938971-Mustertext-f%C3%BCr-Ihre-Datenschutzerkl%C3%A4rung-Trustbadge-Widgets-.\" rel=\"nofollow noopener\">https://help.etrusted.com/hc/de/articles/360026938971-Mustertext-f%C3%BCr-Ihre-Datenschutzerkl%C3%A4rung-Trustbadge-Widgets-.</a></p><p>Falls wir Sie um Einwilligung für die Nutzung der Dienste bitten, ist die Rechtsgrundlage Art. 6 Abs. 1 S. 1 lit. a DSGVO. Ansonsten ist die Rechtsgrundlage Art. 6 Abs. 1 S. 1 lit. f DSGVO, wobei sich unsere berechtigten Interessen aus den vorgenannten Zwecken ergeben.</p><h3>Dienstleister</h3><p>Soweit wir Dienstleister einsetzen, die im Rahmen einer sog. Auftragsverarbeitung nach Art. 28 DSGVO für uns tätig werden, haben wir mit diesen einen entsprechenden Vertrag geschlossen.</p><p>Soweit wir Dienstleister in sog. Drittländer außerhalb der Europäischen Union bzw. des Europäischen Wirtschaftsraums einsetzen, lassen wir Ihre Daten nur in Drittländern mit einem durch die EU-Kommission geprüften Datenschutzniveau, auf Grundlage besonderer Garantien, wie z.B. vertraglicher Verpflichtung durch sog. Standardschutzklauseln der EU-Kommission, verarbeiten.</p><p>Nähere Informationen stellen wir Ihnen auf Anfrage gern bereit.</p><h3>Auftritte in sozialen Medien</h3><p>Wir betreiben Auftritte in sozialen Medien, um mit unseren Kunden, Interessenten und Nutzern zu kommunizieren und über unsere Leistungen zu informieren. In der Regel werden Cookies auf den Rechnern der Nutzer gespeichert. Bei Cookies handelt es sich um kleine Textdateien, die auf der Festplatte dem verwendeten Browser zugeordnet gespeichert werden und durch welche der Stelle, die das Cookie setzt (hier durch das soziale Netzwerk), bestimmte Informationen zufließen. </p><p>Die Cookies ermöglichen die Erstellung von Statistiken über die Nutzung eines Auftritts in den sozialen Netzwerken. Die Verarbeitung kann unabhängig davon stattfinden, ob Sie ein Profil bei dem sozialen Netzwerk haben und bei Ihrem Besuch in diesem eingeloggt sind. Ferner werden die Daten der Nutzer regelmäßig auch für Werbezwecke genutzt, indem Nutzungsprofile (insbesondere der angemeldeten Nutzer) über das Nutzungsverhalten erstellt und für die Schaltung von passenden Werbeanzeigen genutzt werden. Das soziale Netzwerk kann außerdem den Besuch unseres Auftritts zu Ihrem Profil zuordnen. Bezogen auf unsere Beiträge oder den Besuch unseres Auftritts, können wir Statistiken (insb. demographisch und geographisch) über die Nutzung in anonymisierter Form einsehen. Soweit erforderlich bietet Ihnen das soziale Netzwerk ein Tool oder Einstellungsmöglichkeiten, mit dem Sie den Einsatz derartiger Verfahren steuern können.</p><p>Die Rechtsgrundlage für den Betrieb unseres Auftritts in sozialen Medien ist Art. 6 Abs. 1 S. 1 lit. f DSGVO. Unser berechtigtes Interesse ist die umfassende und optimierte Information der Nutzer. Wir weisen darauf hin, dass nur das jeweilige soziale Netzwerk vollen Zugriff auf die gesamten Daten hat und daher ein effektiver Auskunftsanspruch direkt beim sozialen Netzwerk gestellt werden sollte.</p><p>Vereinbarung über die gemeinsame Verantwortlichkeit:</p><p>Das soziale Netzwerk stellt uns u.U. Informationen über das Verhalten von Besuchern auf unserem Auftritt bereit, dies erfolgt lediglich in Form von Statistiken. Die gewonnen Erkenntnisse helfen uns unsere Angebote zu verbessern und für Sie als Besucher interessanter zu gestalten. Wir haben hierzu mit dem sozialen Netzwerk einen Vertrag über die gemeinsame Verantwortlichkeit geschlossen, im Zusammenhang mit der Erhebung von Daten unserer Besucher. </p><p>Im Einzelnen haben wir mit folgenden sozialen Netzwerken eine Vereinbarung geschlossen:</p><ul><li>LinkedIn - Website: <a href=\"https://de.linkedin.com/\" rel=\"nofollow noopener\">https://de.linkedin.com/</a> ; Information über die gemeinsame Verantwortlichkeit: <a href=\"https://legal.linkedin.com/pages-joint-controller-addendum\" rel=\"nofollow noopener\">https://legal.linkedin.com/pages-joint-controller-addendum</a> ; Datenschutzhinweise: <a href=\"https://www.linkedin.com/legal/privacy-policy\" rel=\"nofollow noopener\">https://www.linkedin.com/legal/privacy-policy</a></li></ul><p>Informationen unter anderem zu Art, Umfang und Zweck der Verarbeitung sowie der Wahrnehmung Ihrer Rechte finden Sie in den bereitgestellten Informationen.</p><h3>Ihre Rechte</h3><p>Sie haben gegenüber uns folgende Rechte hinsichtlich der Sie betreffenden Daten:</p><ul><li>Recht auf Auskunft</li><li>Recht auf Berichtigung oder Löschung</li><li>Recht auf Einschränkung der Verarbeitung</li><li>Recht auf Widerspruch gegen die Verarbeitung</li><li>Recht auf Datenübertragbarkeit</li><li>Recht auf Beschwerde bei einer Datenschutz-Aufsichtsbehörde</li></ul><p>Falls Sie uns eine Einwilligung zur Verarbeitung Ihrer Daten erteilt haben, können Sie diese jederzeit mit Wirkung für die Zukunft widerrufen. </p><p><strong>Sie können Direktwerbung jederzeit widersprechen. Falls Ihre besondere Situation dies erfordert, können Sie jederzeit auch Verarbeitungen aufgrund von Art. 6 Abs. 1 S. 1 lit. f DSGVO widersprechen.</strong></p>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1774967595"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 29258,
+  "elementor_data_sha256_of_db_string": "958fe93037af5b231f5a7bdd97f31a2cdd94baf00eabc0e6d418bcd70519e130",
+  "page_settings_db_length_bytes": 34
+ }
+}

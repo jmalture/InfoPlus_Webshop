@@ -1,0 +1,95 @@
+<!--
+Elementor Custom Code snippet (post_type elementor_snippet) exported read-only from staging
+post_id: 13432
+title: printOrder.css
+status: publish
+location (_elementor_location): elementor_body_end
+priority (_elementor_priority): 1
+conditions (_elementor_conditions): ["include/singular/page/13123"]
+conditions raw: a:1:{i:0;s:27:"include/singular/page/13123";}
+extra options (_elementor_extra_options): []
+code bytes (LENGTH(_elementor_code)): 1393
+Everything below the END HEADER line is the _elementor_code meta value verbatim (post_content is empty for these posts).
+-->
+<!-- END HEADER -->
+<style>
+@media print {
+  body {
+    font-size: 8pt;
+    color: #000;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+  .print_body {
+    margin: 0;
+    padding: 0;
+  }
+  .elementor-heading-title.elementor-size-default {
+    font-size: 14pt!important;
+    font-weight: bold;
+  }
+  #print_main_header .elementor-heading-title{
+    font-size: 25pt!important;
+  }
+ .print_model_description p{
+    font-size: 10pt !important;
+    font-weight: normal;
+    display: inline-block;
+    white-space: nowrap !important;
+    max-width: none;
+    width: auto;
+  }
+  #order_detail_hero {
+    margin-top: 0px;
+    padding: 0px;
+    margin-bottom: -50px;
+  }
+	.print_order_item{
+		margin-top: -20px;
+		margin-left: -0px;
+	}
+  .item_info {
+    font-size: 8pt;
+    width: 100%;
+		margin-left: -20px;
+		margin-top: -10px;
+  }
+	#print_prices{
+		margin-top: -20px;
+		gap: 0px
+	}
+	#print_prices{
+		margin: 0;
+		padding: 0;
+	}
+
+  .no-print, .cky-btn-revisit-wrapper {
+    display: none;
+  }
+
+  .order-summary {
+    page-break-before: always;
+  }
+  button {
+    display: none;
+  }
+
+  /*hide url*/
+  a[href]:after {
+    content: none !important;
+  }
+  #footer {
+    display: none;
+  }
+  #wpadminbar {
+    display: none;
+  }
+  [data-elementor-type="header"],
+  [data-elementor-type="footer"] {
+    display: none;
+  }
+}
+
+
+	</style>

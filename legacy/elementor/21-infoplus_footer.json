@@ -1,0 +1,1443 @@
+{
+ "id": 21,
+ "post_type": "elementor_library",
+ "title": "infoplus_footer",
+ "slug": "infoplus_footer",
+ "status": "publish",
+ "template_type": "footer",
+ "conditions": [
+  "include/general"
+ ],
+ "page_settings": null,
+ "elementor_data": [
+  {
+   "id": "5139926",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "row",
+    "flex_gap": {
+     "column": "120",
+     "row": "120",
+     "isLinked": true,
+     "unit": "px",
+     "size": 120
+    },
+    "background_background": "classic",
+    "padding": {
+     "unit": "px",
+     "top": "75",
+     "right": "40",
+     "bottom": "50",
+     "left": "40",
+     "isLinked": false
+    },
+    "__globals__": {
+     "background_color": "globals/colors?id=217b49e"
+    },
+    "flex_direction_tablet": "column",
+    "flex_justify_content": "space-between",
+    "flex_align_items_tablet": "flex-start",
+    "flex_gap_tablet": {
+     "column": "60",
+     "row": "60",
+     "isLinked": true,
+     "unit": "px",
+     "size": 60
+    },
+    "padding_tablet": {
+     "unit": "px",
+     "top": "60",
+     "right": "40",
+     "bottom": "40",
+     "left": "40",
+     "isLinked": false
+    },
+    "flex_gap_mobile": {
+     "column": "40",
+     "row": "40",
+     "isLinked": true,
+     "unit": "px",
+     "size": 40
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "40",
+     "right": "20",
+     "bottom": "20",
+     "left": "20",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "0ac2d65",
+     "elType": "widget",
+     "settings": {
+      "__dynamic__": {
+       "image": "[elementor-tag id=\"\" name=\"site-logo\" settings=\"%7B%7D\"]",
+       "link": "[elementor-tag id=\"\" name=\"site-url\" settings=\"%7B%7D\"]"
+      },
+      "width": {
+       "unit": "px",
+       "size": 190,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "px",
+       "size": 150,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "px",
+       "size": "",
+       "sizes": []
+      },
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "theme-site-logo"
+    },
+    {
+     "id": "ac371b7",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "flex_gap": {
+       "column": "50",
+       "row": "50",
+       "isLinked": true,
+       "unit": "px",
+       "size": 50
+      },
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_align_items": "flex-end",
+      "flex_gap_tablet": {
+       "column": "40",
+       "row": "40",
+       "isLinked": true,
+       "unit": "px",
+       "size": 40
+      }
+     },
+     "elements": [
+      {
+       "id": "68f7414",
+       "elType": "container",
+       "settings": {
+        "content_width": "full",
+        "grid_rows_grid": {
+         "unit": "fr",
+         "size": 1,
+         "sizes": []
+        },
+        "presetTitle": "Container",
+        "presetIcon": "eicon-container",
+        "flex_direction": "row",
+        "flex_justify_content": "flex-end",
+        "flex_align_items": "flex-start",
+        "flex_gap": {
+         "column": "100",
+         "row": "100",
+         "isLinked": true,
+         "unit": "px",
+         "size": 100
+        },
+        "flex_gap_tablet": {
+         "column": "40",
+         "row": "40",
+         "isLinked": true,
+         "unit": "px",
+         "size": 40
+        },
+        "grid_justify_items": "end",
+        "_flex_align_self": "flex-end"
+       },
+       "elements": [
+        {
+         "id": "655ebbc",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "width": {
+           "unit": "%",
+           "size": 100,
+           "sizes": []
+          },
+          "flex_gap": {
+           "column": "15",
+           "row": "15",
+           "isLinked": true,
+           "unit": "px",
+           "size": 15
+          }
+         },
+         "elements": [
+          {
+           "id": "f944408",
+           "elType": "widget",
+           "settings": {
+            "title": "informationen",
+            "align": "left",
+            "title_color": "#191B1C",
+            "__globals__": {
+             "typography_typography": "globals/typography?id=9e95dbb",
+             "title_color": "globals/colors?id=text"
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "bc7394b"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "344d8f4"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "heading"
+          },
+          {
+           "id": "d13f510",
+           "elType": "widget",
+           "settings": {
+            "menu": "footer_informationen",
+            "layout": "vertical",
+            "pointer": "none",
+            "color_menu_item_hover": "#E6007E",
+            "color_menu_item_active": "#E6007E",
+            "padding_horizontal_menu_item": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "padding_vertical_menu_item": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "menu_space_between": {
+             "unit": "px",
+             "size": 15,
+             "sizes": []
+            },
+            "__globals__": {
+             "menu_typography_typography": "",
+             "color_menu_item_hover": "globals/colors?id=primary",
+             "color_menu_item_active": "globals/colors?id=primary",
+             "color_menu_item": "globals/colors?id=8df0251"
+            },
+            "dropdown": "none",
+            "menu_typography_typography": "custom",
+            "menu_typography_font_family": "Archivo Narrow",
+            "menu_typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "menu_typography_font_weight": "400",
+            "menu_typography_text_transform": "none",
+            "menu_typography_font_style": "normal",
+            "menu_typography_text_decoration": "none",
+            "menu_typography_line_height": {
+             "unit": "em",
+             "size": 1.3,
+             "sizes": []
+            },
+            "menu_typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "menu_typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "color_menu_item": "#4A4E53",
+            "menu_name": "Menu",
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "nav-menu"
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "db712cd",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "width": {
+           "unit": "%",
+           "size": 100,
+           "sizes": []
+          },
+          "flex_gap": {
+           "column": "15",
+           "row": "15",
+           "isLinked": true,
+           "unit": "px",
+           "size": 15
+          }
+         },
+         "elements": [
+          {
+           "id": "8de8c17",
+           "elType": "widget",
+           "settings": {
+            "title": "rechtliches",
+            "align": "left",
+            "title_color": "#191B1C",
+            "__globals__": {
+             "typography_typography": "globals/typography?id=9e95dbb",
+             "title_color": "globals/colors?id=text"
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "02c3e91"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "972da88"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "heading"
+          },
+          {
+           "id": "77328a4",
+           "elType": "widget",
+           "settings": {
+            "menu": "footer_rechtliches",
+            "layout": "vertical",
+            "pointer": "none",
+            "color_menu_item_hover": "#E6007E",
+            "color_menu_item_active": "#E6007E",
+            "padding_horizontal_menu_item": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "padding_vertical_menu_item": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "menu_space_between": {
+             "unit": "px",
+             "size": 15,
+             "sizes": []
+            },
+            "__globals__": {
+             "menu_typography_typography": "",
+             "color_menu_item_hover": "globals/colors?id=primary",
+             "color_menu_item_active": "globals/colors?id=primary",
+             "color_menu_item": "globals/colors?id=8df0251"
+            },
+            "dropdown": "none",
+            "menu_typography_typography": "custom",
+            "menu_typography_font_family": "Archivo Narrow",
+            "menu_typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "menu_typography_font_weight": "400",
+            "menu_typography_text_transform": "none",
+            "menu_typography_font_style": "normal",
+            "menu_typography_text_decoration": "none",
+            "menu_typography_line_height": {
+             "unit": "em",
+             "size": 1.3,
+             "sizes": []
+            },
+            "menu_typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "menu_typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "color_menu_item": "#4A4E53",
+            "menu_name": "Menu",
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "nav-menu"
+          },
+          {
+           "id": "51ee0cd",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Unser Angebot richtet sich nur an Unternehmen, Gewerbetreibende und Freiberufler – nicht an Privatpersonen.</p>",
+            "typography_typography": "custom",
+            "typography_font_family": "Archivo Narrow",
+            "typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "typography_font_weight": "400",
+            "typography_text_transform": "none",
+            "typography_font_style": "normal",
+            "typography_text_decoration": "none",
+            "typography_line_height": {
+             "unit": "em",
+             "size": 1.4,
+             "sizes": []
+            },
+            "typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "__globals__": {
+             "text_color": "globals/colors?id=8df0251"
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "aa87e3a"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "a52e94e"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "91b7fbd",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "width": {
+           "unit": "%",
+           "size": 75,
+           "sizes": []
+          },
+          "width_tablet": {
+           "unit": "%",
+           "size": 85,
+           "sizes": []
+          },
+          "width_mobile": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          },
+          "flex_gap": {
+           "column": "0",
+           "row": "0",
+           "isLinked": true,
+           "unit": "px",
+           "size": 0
+          }
+         },
+         "elements": [
+          {
+           "id": "553202b",
+           "elType": "widget",
+           "settings": {
+            "title": "kontakt",
+            "align": "left",
+            "title_color": "#191B1C",
+            "__globals__": {
+             "typography_typography": "globals/typography?id=9e95dbb",
+             "title_color": "globals/colors?id=text"
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "a829692"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "0f14a80"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "heading"
+          },
+          {
+           "id": "ba57c84",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Infoplus Blindow<br />Namensschilder GmbH &amp; Co. KG</p>",
+            "typography_typography": "custom",
+            "typography_font_family": "Archivo Narrow",
+            "typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "typography_font_weight": "400",
+            "typography_text_transform": "none",
+            "typography_font_style": "normal",
+            "typography_text_decoration": "none",
+            "typography_line_height": {
+             "unit": "em",
+             "size": 1.4,
+             "sizes": []
+            },
+            "typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "text_color": "#4A4E53",
+            "_margin": {
+             "unit": "px",
+             "top": "15",
+             "right": "0",
+             "bottom": "0",
+             "left": "0",
+             "isLinked": false
+            },
+            "__globals__": {
+             "text_color": "globals/colors?id=8df0251",
+             "typography_typography": ""
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "98192de"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "53d7a4a"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          },
+          {
+           "id": "6945293",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Schierenberg 62 <br />22145 Hamburg <br />Deutschland</p>",
+            "typography_typography": "custom",
+            "typography_font_family": "Archivo Narrow",
+            "typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "typography_font_weight": "400",
+            "typography_text_transform": "none",
+            "typography_font_style": "normal",
+            "typography_text_decoration": "none",
+            "typography_line_height": {
+             "unit": "em",
+             "size": 1.4,
+             "sizes": []
+            },
+            "typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "text_color": "#4A4E53",
+            "__globals__": {
+             "text_color": "globals/colors?id=8df0251",
+             "typography_typography": ""
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "240f394"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "2157465"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          },
+          {
+           "id": "3f98dc4",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Telefon: +49 40 - 696 3003-0<br />Telefax: +49 40 - 696 3003-13 <br />E-Mail: info@infoplus.de</p>",
+            "typography_typography": "custom",
+            "typography_font_family": "Archivo Narrow",
+            "typography_font_size": {
+             "unit": "px",
+             "size": 16,
+             "sizes": []
+            },
+            "typography_font_weight": "400",
+            "typography_text_transform": "none",
+            "typography_font_style": "normal",
+            "typography_text_decoration": "none",
+            "typography_line_height": {
+             "unit": "em",
+             "size": 1.4,
+             "sizes": []
+            },
+            "typography_letter_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "typography_word_spacing": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "text_color": "#4A4E53",
+            "__globals__": {
+             "text_color": "globals/colors?id=8df0251",
+             "typography_typography": ""
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "cfc9c75"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "7926e41"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "f733e91",
+       "elType": "container",
+       "settings": {
+        "content_width": "full",
+        "flex_direction": "row",
+        "flex_direction_tablet": "row",
+        "flex_justify_content": "space-between",
+        "flex_gap": {
+         "column": "75",
+         "row": "75",
+         "isLinked": true,
+         "unit": "px",
+         "size": 75
+        },
+        "flex_gap_tablet": {
+         "column": "40",
+         "row": "40",
+         "isLinked": true,
+         "unit": "px",
+         "size": 40
+        },
+        "flex_justify_content_tablet": "flex-start",
+        "flex_gap_mobile": {
+         "column": "30",
+         "row": "30",
+         "isLinked": true,
+         "unit": "px",
+         "size": 30
+        },
+        "flex_wrap_tablet": "wrap"
+       },
+       "elements": [
+        {
+         "id": "90e7be5",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "width": {
+           "unit": "%",
+           "size": 50,
+           "sizes": []
+          },
+          "flex_gap": {
+           "column": "15",
+           "row": "15",
+           "isLinked": true,
+           "unit": "px",
+           "size": 15
+          },
+          "width_tablet": {
+           "unit": "%",
+           "size": 100,
+           "sizes": []
+          },
+          "width_mobile": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          }
+         },
+         "elements": [
+          {
+           "id": "a1d5785",
+           "elType": "widget",
+           "settings": {
+            "title": "zahlungsarten",
+            "align": "left",
+            "title_color": "#191B1C",
+            "__globals__": {
+             "typography_typography": "globals/typography?id=9e95dbb",
+             "title_color": "globals/colors?id=text"
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "9410ea0"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "00c7bbc"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "heading"
+          },
+          {
+           "id": "e80973b",
+           "elType": "container",
+           "settings": {
+            "content_width": "full",
+            "flex_direction": "row"
+           },
+           "elements": [
+            {
+             "id": "b97547e",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-8.png",
+               "id": 117,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "object-fit_mobile": "contain",
+              "object-position_mobile": "center center",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            },
+            {
+             "id": "c84e813",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-9.png",
+               "id": 118,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            },
+            {
+             "id": "50d2444",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-10.png",
+               "id": 119,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            },
+            {
+             "id": "d6862c9",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-11.png",
+               "id": 120,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            },
+            {
+             "id": "618941c",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-12.png",
+               "id": 121,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            },
+            {
+             "id": "9f17225",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-13.png",
+               "id": 122,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            }
+           ],
+           "isInner": true
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "96d0c9f",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "width": {
+           "unit": "%",
+           "size": 15,
+           "sizes": []
+          },
+          "flex_gap": {
+           "column": "15",
+           "row": "15",
+           "isLinked": true,
+           "unit": "px",
+           "size": 15
+          },
+          "width_mobile": {
+           "unit": "%",
+           "size": "",
+           "sizes": []
+          }
+         },
+         "elements": [
+          {
+           "id": "a858a6b",
+           "elType": "widget",
+           "settings": {
+            "title": "versand",
+            "align": "left",
+            "title_color": "#191B1C",
+            "__globals__": {
+             "typography_typography": "globals/typography?id=9e95dbb",
+             "title_color": "globals/colors?id=text"
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "c81cdf4"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "884fd77"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "heading"
+          },
+          {
+           "id": "bb7e98a",
+           "elType": "container",
+           "settings": {
+            "content_width": "full",
+            "flex_direction": "row"
+           },
+           "elements": [
+            {
+             "id": "ba2a508",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-14.png",
+               "id": 123,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            }
+           ],
+           "isInner": true
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "0bd9aa3",
+         "elType": "container",
+         "settings": {
+          "content_width": "full",
+          "width": {
+           "unit": "%",
+           "size": 35,
+           "sizes": []
+          },
+          "flex_gap": {
+           "column": "15",
+           "row": "15",
+           "isLinked": true,
+           "unit": "px",
+           "size": 15
+          }
+         },
+         "elements": [
+          {
+           "id": "f62aa1d",
+           "elType": "widget",
+           "settings": {
+            "title": "sicherheit",
+            "align": "left",
+            "title_color": "#191B1C",
+            "__globals__": {
+             "typography_typography": "globals/typography?id=9e95dbb",
+             "title_color": "globals/colors?id=text"
+            },
+            "eael_vto_writing_gradient_color_repeater": [
+             {
+              "eael_vto_writing_gradient_color": "#7C62FF",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 50
+              },
+              "_id": "d32db5d"
+             },
+             {
+              "eael_vto_writing_gradient_color": "#FF6464",
+              "eael_vto_writing_gradient_color_location": {
+               "unit": "%",
+               "size": 90
+              },
+              "_id": "e9406f4"
+             }
+            ],
+            "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+           },
+           "elements": [],
+           "widgetType": "heading"
+          },
+          {
+           "id": "991e34c",
+           "elType": "container",
+           "settings": {
+            "content_width": "full",
+            "flex_direction": "row",
+            "flex_align_items": "center"
+           },
+           "elements": [
+            {
+             "id": "4c808ec",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/Frame-21.png",
+               "id": 125,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            },
+            {
+             "id": "8803f50",
+             "elType": "widget",
+             "settings": {
+              "image": {
+               "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/image-16.png",
+               "id": 124,
+               "size": "",
+               "alt": "",
+               "source": "library"
+              },
+              "image_size": "full",
+              "align": "left",
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "image"
+            },
+            {
+             "id": "f676f3e",
+             "elType": "widget",
+             "settings": {
+              "text": "Datenschutz",
+              "typography_typography": "custom",
+              "typography_font_family": "Archivo Narrow",
+              "typography_font_size": {
+               "unit": "px",
+               "size": 16,
+               "sizes": []
+              },
+              "typography_font_weight": "400",
+              "typography_text_transform": "none",
+              "typography_font_style": "normal",
+              "typography_text_decoration": "none",
+              "typography_line_height": {
+               "unit": "em",
+               "size": 1.3,
+               "sizes": []
+              },
+              "typography_letter_spacing": {
+               "unit": "px",
+               "size": 0,
+               "sizes": []
+              },
+              "typography_word_spacing": {
+               "unit": "px",
+               "size": 0,
+               "sizes": []
+              },
+              "border_radius": {
+               "unit": "px",
+               "top": "8",
+               "right": "8",
+               "bottom": "8",
+               "left": "8",
+               "isLinked": true
+              },
+              "text_padding": {
+               "unit": "px",
+               "top": "9",
+               "right": "12",
+               "bottom": "9",
+               "left": "12",
+               "isLinked": false
+              },
+              "__globals__": {
+               "typography_typography": "",
+               "button_text_color": "globals/colors?id=accent",
+               "background_color": "globals/colors?id=secondary",
+               "button_background_hover_color": "globals/colors?id=primary"
+              },
+              "link": {
+               "url": "",
+               "is_external": "",
+               "nofollow": "",
+               "custom_attributes": ""
+              },
+              "__dynamic__": {
+               "link": "[elementor-tag id=\"a48ea66\" name=\"internal-url\" settings=\"%7B%22type%22%3A%22post%22%2C%22post_id%22%3A%222642%22%7D\"]"
+              },
+              "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+             },
+             "elements": [],
+             "widgetType": "button"
+            }
+           ],
+           "isInner": true
+          }
+         ],
+         "isInner": true
+        }
+       ],
+       "isInner": true
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  },
+  {
+   "id": "9fbcba0",
+   "elType": "container",
+   "settings": {
+    "background_background": "classic",
+    "padding": {
+     "unit": "px",
+     "top": "25",
+     "right": "40",
+     "bottom": "25",
+     "left": "40",
+     "isLinked": false
+    },
+    "__globals__": {
+     "background_color": "globals/colors?id=primary"
+    },
+    "flex_direction": "row",
+    "flex_justify_content": "space-between",
+    "flex_align_items": "flex-start",
+    "flex_direction_tablet": "column",
+    "flex_align_items_tablet": "flex-start",
+    "padding_tablet": {
+     "unit": "px",
+     "top": "20",
+     "right": "40",
+     "bottom": "20",
+     "left": "40",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "20",
+     "right": "20",
+     "bottom": "20",
+     "left": "20",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "9d608a3",
+     "elType": "widget",
+     "settings": {
+      "editor": "© 2025 Infoplus Blindow Namensschilder GmbH &amp; Co. KG",
+      "custom_css": "selector a {\n    color: var(--e-global-color-accent);\n}\n\nselector a:hover {\n    color: var(--e-global-color-accent);\n    text-decoration: underline;\n    text-underline-offset: 3px;\n}",
+      "__globals__": {
+       "typography_typography": "",
+       "text_color": "globals/colors?id=accent"
+      },
+      "typography_typography": "custom",
+      "typography_font_family": "Archivo Narrow",
+      "typography_font_size": {
+       "unit": "px",
+       "size": 16,
+       "sizes": []
+      },
+      "typography_font_weight": "400",
+      "typography_text_transform": "none",
+      "typography_font_style": "normal",
+      "typography_text_decoration": "none",
+      "typography_line_height": {
+       "unit": "em",
+       "size": 1.3,
+       "sizes": []
+      },
+      "typography_letter_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "typography_word_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "text_color": "#FFFFFF",
+      "_flex_align_self": "center",
+      "_flex_align_self_tablet": "flex-start",
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "4b546d6"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "a2fab17"
+       }
+      ],
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "833ed41",
+     "elType": "widget",
+     "settings": {
+      "editor": "<p>Webdesign by <a href=\"https://alture.io/\" target=\"_blank\" rel=\"noopener\">Alture</a> <img class=\"alignnone  wp-image-3065\" src=\"https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/09/alture_logo_flag.png\" alt=\"\" width=\"26\" height=\"26\" /></p>",
+      "custom_css": "selector a {\n    color: var(--e-global-color-accent);\n}\n\nselector a:hover {\n    color: var(--e-global-color-accent);\n    text-decoration: underline;\n    text-underline-offset: 3px;\n}",
+      "__globals__": {
+       "typography_typography": "",
+       "text_color": "globals/colors?id=accent"
+      },
+      "typography_typography": "custom",
+      "typography_font_family": "Archivo Narrow",
+      "typography_font_size": {
+       "unit": "px",
+       "size": 16,
+       "sizes": []
+      },
+      "typography_font_weight": "400",
+      "typography_text_transform": "none",
+      "typography_font_style": "normal",
+      "typography_text_decoration": "none",
+      "typography_line_height": {
+       "unit": "em",
+       "size": 1.3,
+       "sizes": []
+      },
+      "typography_letter_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "typography_word_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "c14c632"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "dbb37b8"
+       }
+      ],
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "f7977bf",
+     "elType": "widget",
+     "settings": {
+      "editor": "*Alle Preise inkl. MwSt., zzgl. Versandkosten",
+      "custom_css": "selector a {\n    color: var(--e-global-color-accent);\n}\n\nselector a:hover {\n    color: var(--e-global-color-accent);\n    text-decoration: underline;\n    text-underline-offset: 3px;\n}",
+      "__globals__": {
+       "typography_typography": "",
+       "text_color": "globals/colors?id=accent"
+      },
+      "typography_typography": "custom",
+      "typography_font_family": "Archivo Narrow",
+      "typography_font_size": {
+       "unit": "px",
+       "size": 16,
+       "sizes": []
+      },
+      "typography_font_weight": "400",
+      "typography_text_transform": "none",
+      "typography_font_style": "normal",
+      "typography_text_decoration": "none",
+      "typography_line_height": {
+       "unit": "em",
+       "size": 1.3,
+       "sizes": []
+      },
+      "typography_letter_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "typography_word_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "text_color": "#FFFFFF",
+      "_flex_align_self": "center",
+      "_flex_align_self_tablet": "flex-start",
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "2e5b73e"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "7636483"
+       }
+      ],
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "4.1.4",
+  "elementor_pro_version": "3.35.1",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1774045720"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 24557,
+  "elementor_data_sha256_of_db_string": "defc8eeea4e44d1bba8c975773eaec3a6f12fae2a020b8d74ec7232a98e40c74",
+  "page_settings_db_length_bytes": null
+ }
+}

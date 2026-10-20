@@ -1,0 +1,21 @@
+{
+ "id": 15739,
+ "post_type": "elementor_library",
+ "title": "Elementor Header #15739",
+ "slug": "",
+ "status": "draft",
+ "template_type": "header",
+ "conditions": null,
+ "page_settings": null,
+ "elementor_data": null,
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.35.7",
+  "elementor_pro_version": "3.35.1"
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": null,
+  "elementor_data_sha256_of_db_string": null,
+  "page_settings_db_length_bytes": null
+ }
+}

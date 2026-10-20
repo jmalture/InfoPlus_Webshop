@@ -1,0 +1,29 @@
+<!--
+Elementor Custom Code snippet (post_type elementor_snippet) exported read-only from staging
+post_id: 15757
+title: icon style
+status: publish
+location (_elementor_location): elementor_body_start
+priority (_elementor_priority): 1
+conditions (_elementor_conditions): ["include/general"]
+conditions raw: a:1:{i:0;s:15:"include/general";}
+extra options (_elementor_extra_options): []
+code bytes (LENGTH(_elementor_code)): 232
+Everything below the END HEADER line is the _elementor_code meta value verbatim (post_content is empty for these posts).
+-->
+<!-- END HEADER -->
+<style>
+.elementor-icon i,
+.elementor-icon svg {
+    font-size: inherit;
+    width: 1em;
+    height: 1em;
+}
+
+.elementor-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+</style>

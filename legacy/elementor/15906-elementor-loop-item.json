@@ -1,0 +1,319 @@
+{
+ "id": 15906,
+ "post_type": "elementor_library",
+ "title": "Elementor Loop Item #15906",
+ "slug": "elementor-loop-item",
+ "status": "publish",
+ "template_type": "loop-item",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents"
+ },
+ "elementor_data": [
+  {
+   "id": "9a65b7f",
+   "elType": "container",
+   "settings": {
+    "content_width": "full",
+    "flex_direction": "column",
+    "flex_align_items": "center",
+    "flex_gap_laptop": {
+     "column": "",
+     "row": "",
+     "isLinked": true,
+     "unit": "px",
+     "size": null
+    },
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "flex_justify_content": "flex-start",
+    "width": {
+     "unit": "%",
+     "size": 100,
+     "sizes": []
+    },
+    "html_tag": "a",
+    "__dynamic__": {
+     "link": "[elementor-tag id=\"d0fe6ac\" name=\"post-url\" settings=\"%7B%7D\"]"
+    }
+   },
+   "elements": [
+    {
+     "id": "76c8dfc",
+     "elType": "widget",
+     "settings": {
+      "image": {
+       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/alucontur.png",
+       "id": 1664,
+       "size": "",
+       "alt": "",
+       "source": "library"
+      },
+      "custom_css": "selector:hover {\n    transform: scale(1.05);\n    transition: all 0.5s linear;\n}\n\nselector {\n    transition: all 0.5s linear;\n}",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis",
+      "image_size": "full",
+      "__dynamic__": {
+       "image": "[elementor-tag id=\"6446112\" name=\"post-featured-image\" settings=\"%7B%7D\"]"
+      },
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "height": {
+       "unit": "px",
+       "size": 170,
+       "sizes": []
+      },
+      "object-fit": "contain"
+     },
+     "elements": [],
+     "widgetType": "image"
+    },
+    {
+     "id": "39f4013",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 65,
+       "sizes": []
+      },
+      "width_laptop": {
+       "unit": "%",
+       "size": 90,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": 90,
+       "sizes": []
+      },
+      "flex_align_items": "center",
+      "flex_gap_mobile": {
+       "column": "10",
+       "row": "10",
+       "isLinked": true,
+       "unit": "px",
+       "size": 10
+      },
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "flex_gap": {
+       "column": "0",
+       "row": "0",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      }
+     },
+     "elements": [
+      {
+       "id": "00f1daa",
+       "elType": "widget",
+       "settings": {
+        "title": "Alucontur Namensschild",
+        "align": "center",
+        "__globals__": {
+         "typography_typography": "",
+         "title_color": "globals/colors?id=text"
+        },
+        "eael_vto_writing_gradient_color_repeater": [
+         {
+          "eael_vto_writing_gradient_color": "#7C62FF",
+          "eael_vto_writing_gradient_color_location": {
+           "unit": "%",
+           "size": 50
+          },
+          "_id": "9c02b70"
+         },
+         {
+          "eael_vto_writing_gradient_color": "#FF6464",
+          "eael_vto_writing_gradient_color_location": {
+           "unit": "%",
+           "size": 90
+          },
+          "_id": "5292361"
+         }
+        ],
+        "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis",
+        "__dynamic__": {
+         "title": "[elementor-tag id=\"ccdadb0\" name=\"woocommerce-product-title-tag\" settings=\"%7B%7D\"]"
+        },
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "10",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "typography_typography": "custom",
+        "typography_font_family": "Archivo Narrow",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 29,
+         "sizes": []
+        },
+        "typography_font_size_mobile": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "typography_font_weight": "500",
+        "typography_text_transform": "none",
+        "typography_font_style": "normal",
+        "typography_text_decoration": "none",
+        "typography_line_height": {
+         "unit": "em",
+         "size": 1.2,
+         "sizes": []
+        },
+        "typography_letter_spacing": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "typography_word_spacing": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "title_color": "#191B1C"
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "1fabed5",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p><span style=\"font-weight: 400;\">Modern, schwungvoll, dynamisch. Hoher Tragekomfort und sofort vielfältig einsetzbar</span></p>",
+        "align": "center",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "eael_vto_writing_gradient_color_repeater": [
+         {
+          "eael_vto_writing_gradient_color": "#7C62FF",
+          "eael_vto_writing_gradient_color_location": {
+           "unit": "%",
+           "size": 50
+          },
+          "_id": "84af149"
+         },
+         {
+          "eael_vto_writing_gradient_color": "#FF6464",
+          "eael_vto_writing_gradient_color_location": {
+           "unit": "%",
+           "size": 90
+          },
+          "_id": "db37e41"
+         }
+        ],
+        "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis",
+        "__dynamic__": {
+         "editor": "[elementor-tag id=\"7bb1bc0\" name=\"woocommerce-product-short-description-tag\" settings=\"%7B%7D\"]"
+        },
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "10",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "43d4d43",
+       "elType": "widget",
+       "settings": {
+        "title": "ab 6,35€ - 31,45€ ",
+        "align": "center",
+        "title_color": "#191B1C",
+        "__globals__": {
+         "typography_typography": "globals/typography?id=76fb71c",
+         "title_color": "globals/colors?id=primary"
+        },
+        "eael_vto_writing_gradient_color_repeater": [
+         {
+          "eael_vto_writing_gradient_color": "#7C62FF",
+          "eael_vto_writing_gradient_color_location": {
+           "unit": "%",
+           "size": 50
+          },
+          "_id": "82bb21b"
+         },
+         {
+          "eael_vto_writing_gradient_color": "#FF6464",
+          "eael_vto_writing_gradient_color_location": {
+           "unit": "%",
+           "size": 90
+          },
+          "_id": "86970fb"
+         }
+        ],
+        "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+        "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis",
+        "__dynamic__": [],
+        "header_size": "span"
+       },
+       "elements": [],
+       "widgetType": "heading"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": true
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.35.7",
+  "elementor_pro_version": "3.35.1",
+  "elementor_source": "product",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1790578654"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 6509,
+  "elementor_data_sha256_of_db_string": "97a591d68b85c5bc4596d2fcc3695918fe8a92292e4e6521669ab78d17d41808",
+  "page_settings_db_length_bytes": 57
+ }
+}
