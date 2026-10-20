@@ -39,6 +39,7 @@
 17. [Large Products: Deferred Variations and Caching](#17-large-products-deferred-variations-and-caching)
 18. [Changes from 0.9.93 to 0.9.111](#18-changes-from-0993-to-09111)
 19. [Theme Renderer](#19-theme-renderer)
+20. [Order Types and the Buy Flow](#20-order-types-and-the-buy-flow)
 
 ---
 
@@ -354,12 +355,12 @@ Enqueues multiple frontend scripts on product pages that handle variation filter
 
 | File | Role |
 |------|------|
-| `Module.php` | Script enqueueing, REST endpoints for file uploads, cart/order integration hooks, product context JSON output, editor settings injection, AJAX add-to-cart, model image in cart and order line items. |
+| `Module.php` | Script enqueueing, REST endpoints for file uploads, cart/order integration hooks, product context JSON output, editor settings injection, AJAX add-to-cart, buy form filters for the classic theme (0.10.27, Section 20), model image in cart and order line items. |
 | `Assets/variation-filter.js` | Filters available variations based on selected attributes. |
 | `Assets/elementor-bulk-calculator.js` | Legacy Elementor bulk calculator (`#qty_value`, `#bulk_table`). Since 0.9.111 it no longer renders its own price grid. It syncs its qty with `infoplusProductState` (`qty:changed`, `source: 'calculator'`), emits `minqty:changed`, and hides the qty row for requestable models. |
 | `Assets/custom-model-dropdown.js` | Custom styled model dropdown behavior. |
 | `Assets/product-gallery-sizer.js` | Handles product gallery image sizing/layout. |
-| `Assets/variation-editor-link.js` | Updates the "Open Editor" button URL when a variation is selected. Since 0.9.111 it handles `requestable_with_variants` like `requestable` and pulses the active button (`infoplus-anfrage-pulse--long`, 3.1 s). |
+| `Assets/variation-editor-link.js` | Updates the "Open Editor" button URL when a variation is selected. Since 0.9.111 it handles `requestable_with_variants` like `requestable` and pulses the active button (`infoplus-anfrage-pulse--long`, 3.1 s). Since 0.10.27 it publishes the resolved order type (`infoplusProductState.orderType`, event `ordertype:changed`) and, on a page with `form[data-ip-buy-form]`, leaves the "buyable" action to that form instead of its admin-ajax cart button (Section 20). |
 | `Assets/sonderkontur-upload-toggle.js` | Toggle UI for the Sonderkontur file upload area. |
 | `Assets/sonderkontur-upload.css` | Styling for the upload UI. |
 | `Assets/sonderkontur-admin.css` | Admin order page styling for uploaded files display. |
@@ -402,6 +403,8 @@ A temporary file storage system using WP transients (24h TTL) keyed by WooCommer
 #### AJAX add to cart (`infoplus_add_to_cart`)
 
 `ajaxAddToCart()` is registered on `wp_ajax_infoplus_add_to_cart` and `wp_ajax_nopriv_infoplus_add_to_cart`. It reads `product_id`, `variation_id`, `quantity` and `model_image_url` from POST, resolves the variation attributes from the variation object and calls `WC()->cart->add_to_cart()`. The only caller in the repo is `variation-editor-link.js` (the legacy Elementor button flow for the `buyable` order type). There is no nonce or referer check in this handler (see Section 16).
+
+Since 0.10.27 the classic theme does not use this handler. It posts a normal WooCommerce add-to-cart form instead; see Section 20. The handler and its caller are unchanged for the Elementor template.
 
 #### Model image in cart and orders
 
@@ -984,7 +987,7 @@ Regenerated 2026-09-17 by grepping the quoted key strings in `src/`.
 | Key | Set By | Description |
 |-----|--------|-------------|
 | `_sonderkontur_files` | WooSingleProductAddons | Array of uploaded file data (order item meta) |
-| `_infoplus_model_image_url` | WooSingleProductAddons (`ajaxAddToCart`) | Model image URL. Cart item data, copied to order item meta at checkout. Read by cart/order thumbnail filters and by the OrderDetails widget. |
+| `_infoplus_model_image_url` | WooSingleProductAddons (`ajaxAddToCart`, and since 0.10.27 `addBuyFormCartItemData` for the theme buy form) | Model image URL. Cart item data, copied to order item meta at checkout. Read by cart/order thumbnail filters and by the OrderDetails widget. The ajax path takes the URL from the request; the buy form path resolves it on the server. |
 | `display`, `project_id`, `ife_price`, `ife_thumbnail_url`, `infoplus_unique` | InfoplusAPI (`woocommerce_add_cart_item_data`, `/cart/updateCart`) | Editor line items: display name, IFE project UUID, unit price from the editor, thumbnail. The first four are copied to order item meta at checkout. |
 
 ### Order Meta (InfoplusAPI)
@@ -1123,6 +1126,8 @@ The 4th order type is the primary consumer of the variant fields. When a model h
 | `requestable` | Requestable (Anfrage) | Anfrage only | No |
 | `requestable_with_variants` | Anfrage mit Varianten | Anfrage only | Yes |
 | `buyable` | Buyable (Warenkorb) | Cart only | No |
+
+On the classic theme the "Cart" button of a `buyable` model is the submit button of a WooCommerce add-to-cart form, not the `#editor` button in cart mode. See Section 20.
 
 ### ⚠ Adding a new order type: required checklist
 
@@ -1571,6 +1576,8 @@ Observed while reading the code. None of these has been fixed; they are listed s
 | 16 | Section 7 of the 0.9.93 docs | Order type meta key was documented as `_infoplus_order_type_{term}`. Real key is `_infoplus_attr_order_type_{attr}_{term}`. Corrected in this version. | fixed (docs) |
 | 17 | `Custom404/Module.php` and `UserOrders/Module.php` | Both hardcode `calc(100vh - 684px)` from measured header (83 px) and footer (601 px) heights. A theme change breaks the layout silently. | still open |
 | 18 | `ProductDetailSuite/Widgets/VariationDropdowns.php` `renderDropdowns()` (up to `feature/catalog-import`) | Read `$info_behavior`, a local variable of `render()`, so the option info buttons never got `data-tooltip` and PHP logged "Undefined variable" once per option. Since `feature/view-renderer` the template keeps the old output on purpose (`$option_info_tooltip_attr = false`) without the warning. `variation-dropdowns.js` falls back to the option's own `data-tooltip`. See Section 19. | kept as is, warning gone |
+| 19 | `WooSingleProductAddons/Module.php` `ajaxAddToCart()` | Calls `WC()->cart->add_to_cart()` directly, so `woocommerce_add_to_cart_validation` never runs (Min and Max Quantity for WooCommerce, Germanized and other validators are skipped), errors only show as button text, and `model_image_url` is stored as sent by the browser (escaped on output, but not checked). Found 2026-10-20. The theme buy form (Section 20) avoids all three; the Elementor template still uses the handler. | still open (Elementor path) |
+| 20 | Minimum order quantity | `elementor-bulk-calculator.js` clamps the quantity to the larger of `currentProduct.mindestanzahl` (post meta `mindestanzahl`) and the first Staffelpreise tier. Nothing checks this on the server, in either add-to-cart path. The info box shows `_infoplus_min_quantity`, a different key. Found 2026-10-20. | still open |
 
 ---
 
@@ -1795,3 +1802,79 @@ Made for the classic Infoplus theme (single product page). Every change keeps th
 The theme side (data attributes on the buttons and the quantity row) is in the Infoplus theme, `template-parts/product/actions.php` and `purchase.php`.
 
 Verified on a local WordPress 6.9 with WooCommerce and this branch (no Elementor), with a variable test product of 33 variations: editable model (editor link gets `{baseUrl}?product=…&theme=…&cartEntryPath=…&backPath=…` after the variation is complete), buyable model ("In den Warenkorb"), requestable model (editor hidden, quantity row hidden, Anfrage pulses), tier click and plus button update Einzelpreis and Gesamtpreis, no console errors. The Elementor template was not tested after these changes (unverified); the old selectors are kept as they were.
+
+---
+
+## 20. Order Types and the Buy Flow
+
+Added in Plugin 0.10.27 (branch `feature/view-renderer`, 2026-10-20) for the classic Infoplus theme. The Elementor template keeps its old behaviour.
+
+### Where the order type comes from
+
+The order type is set per product and per model, not per variation. In the product edit screen, meta box "Infoplus Suite", tab Attribute Overrides, every `pa_model` term has a "Bestelltyp" select. It is saved as post meta on the parent product: `_infoplus_attr_order_type_model_{term_slug}`. Allowed values: `editable` (default when nothing is saved), `requestable`, `requestable_with_variants`, `buyable`. `Fields\ProductAttributeImages::getTermOrderType()` reads it, and `ProductDetailSuite` puts it into `window.infoplusProductData.models[].order_type`.
+
+`variation-editor-link.js` reads `order_type` of the selected model on `model:changed`. It has one fallback: an `editable` model counts as `buyable` when the selected option of `select[name^="attribute_pa_model"]` contains "sonderkontur". That select only exists when the page renders WooCommerce's variations form, which neither the Elementor template nor the classic theme does by default, so the fallback does not apply there. On the server, `WooSingleProductAddons\Module::resolveOrderType()` applies the same rule to the model slug.
+
+Since 0.10.27 the script also writes the result to `infoplusProductState.orderType` and emits `ordertype:changed` (`{ orderType, model }`, also as the DOM event `infoplus:ordertype:changed` on `document`).
+
+### The three order types on the product page
+
+| Order type | What the visitor sees | What happens |
+|------------|----------------------|--------------|
+| `editable` | "Produkt gestalten" and "Individuelle Anfrage" | The editor link stays disabled until the selection matches a variation, then opens the external editor in a new tab (`{baseUrl}?product={_ife_uuid}&theme={themeId}&cartEntryPath=…&backPath=…`). The editor puts the item into the Warenkorb through InfoplusAPI. |
+| `buyable` | "In den Warenkorb" only | Elementor template: `#editor` turns into an admin-ajax button (`infoplus_add_to_cart`). Classic theme: a WooCommerce add-to-cart form, see below. |
+| `requestable`, `requestable_with_variants` | "Individuelle Anfrage" only | No price and no quantity row (`elementor-bulk-calculator.js` hides it). The Anfrage button opens the inquiry (Elementor popup 14241, or on the classic theme for now the Kontakt page with `?produkt=`). With `requestable_with_variants` the dropdowns stay usable so the inquiry can carry the chosen variant. |
+
+The classic theme marks the active type on its button container (`data-ip-order-type`), gives each type its own label, icon and one line of explanation (a polite live region), and mirrors the active button in the sticky phone bar with a full `aria-label`.
+
+### Buy flow on the classic theme
+
+The theme renders, next to the editor link, a form in `template-parts/product/actions.php`:
+
+```html
+<form class="cart" data-ip-buy-form method="post" enctype="multipart/form-data" action="{product permalink}">
+  (woocommerce_before_add_to_cart_button)
+  <input type="hidden" name="add-to-cart" value="{parent product ID}">
+  <input type="hidden" name="product_id" value="{parent product ID}">
+  <input type="hidden" name="variation_id" value="{selected variation}">
+  <input type="hidden" name="quantity" class="qty" value="{quantity}">
+  <input type="hidden" name="infoplus_buy_form" value="1">
+  <input type="hidden" name="attribute_pa_model" value="…"> (one per variation attribute)
+  <button type="submit" data-ip-action="cart">In den Warenkorb</button>
+  (woocommerce_after_add_to_cart_button)
+</form>
+```
+
+1. The theme's `product.js` shows the form only for `buyable` models and fills the hidden fields from `infoplusProductState` (selected model, `selectedAttributes`, `selectedVariation`, the quantity input). The submit button is `aria-disabled` until a variation is found. `elementor-bulk-calculator.js` also writes the clamped quantity into `form.cart input.qty`.
+2. When `form[data-ip-buy-form]` exists, `variation-editor-link.js` hides `#editor` and `#anfrage` for `buyable` models and does not bind the admin-ajax handler. "Kombination nicht verfügbar" is shown after the form instead of after the editor button.
+3. The browser posts the form to the product page. WooCommerce's `WC_Form_Handler::add_to_cart_action()` handles it: `woocommerce_add_to_cart_validation` (Min and Max Quantity for WooCommerce, Germanized and other plugins), `WC()->cart->add_to_cart()` with its own attribute checks, `woocommerce_add_cart_item_data` (all plugins), then either a redirect to the Warenkorb (WooCommerce setting "Redirect to the cart page after successful addition", `woocommerce_cart_redirect_after_add`) or the product page again with the success notice and the new header count. Errors come back as WooCommerce notices at the top of the product page. After such a page load the theme restores the posted model, options and quantity.
+4. Two Suite filters run only for this form. Both check `infoplus_buy_form` in the POST and return early for every other request, including the admin-ajax handler:
+   - `validateBuyForm()` on `woocommerce_add_to_cart_validation` (priority 20): refuses a variation whose model is not `buyable` with an error notice. The page never offers that, so it only catches tampered or stale requests. Filter `infoplus_suite_buy_form_check_order_type` (bool) turns it off.
+   - `addBuyFormCartItemData()` on `woocommerce_add_cart_item_data` (priority 20): adds `_infoplus_model_image_url`, the first gallery image of the model (`getTermGalleryUrls()`, the same URL as `models[].image_url`), unless the line already has one.
+
+### What the old handler added, and where it comes from now
+
+| Cart line data | `infoplus_add_to_cart` (Elementor) | Buy form (classic theme) |
+|----------------|-----------------------------------|--------------------------|
+| Product, variation, quantity | From POST | From POST, WooCommerce's handler |
+| Variation attributes | From the variation object | From the posted `attribute_*` fields, checked by WooCommerce against the variation |
+| `_infoplus_model_image_url` | From POST (`model_image_url`, sent by the browser) | `addBuyFormCartItemData()`, resolved on the server |
+| `sonderkontur_files` | `attachFilesToCart()` on `woocommerce_add_cart_item_data` | Same filter, unchanged |
+| Validation (`woocommerce_add_to_cart_validation`) | Not run | Run |
+| Staffelpreise | Not handled by the Suite in either path. The tiers on the page come from `/infoplus/v1/products/prices` (Section 12). The cart price is set by the pricing plugin (Advanced Dynamic Pricing on staging) when the cart is calculated, the same way in both paths (not tested locally, the plugin is not installed there). |
+| Minimum order quantity | Only clamped in the browser | Only clamped in the browser (Section 16, row 20) |
+
+### Per product setup
+
+Nothing new. A model is bought directly when its "Bestelltyp" is "Buyable (Warenkorb)" and its variations have a price. The buy form is rendered on every variable product page of the classic theme; it stays hidden until a `buyable` model is selected.
+
+### Verified
+
+Local WordPress with WooCommerce 10.6.1, this branch and the classic theme (no Elementor, no Advanced Dynamic Pricing, no Min and Max plugin), test product with four models (one `buyable`, one `requestable`, two `editable`), 2026-10-20:
+
+- `buyable` model, 68x28, Kombi-Clip, quantity 12: one POST to the product page, no admin-ajax request. Cart line has the right `variation_id`, the three `attribute_pa_*` values, quantity 12, `_infoplus_model_image_url` of the model. The line price was the regular variation price (no pricing plugin installed locally). Success notice shown, header count 12, selection and quantity restored.
+- With the cart redirect setting on: redirect to the Warenkorb, line added.
+- Posted variation of a `requestable` model: error notice from `validateBuyForm()`, nothing added. No variation: WooCommerce's "Please choose product options" notice. Posted format that does not match the variation: WooCommerce's "Invalid value posted for Format". Click on the disabled button: no request, a hint asks for the missing options.
+- `editable` and `requestable` models: unchanged (editor link with URL, Anfrage only with quantity row hidden).
+- Same page with the form removed (as on the Elementor template): `#editor` turns into "In den Warenkorb" and posts `infoplus_add_to_cart` as before.
+
