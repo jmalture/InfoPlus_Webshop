@@ -104,19 +104,31 @@
       setMega(!isMegaOpen());
     });
 
-    // Hover intent on the item (the panel is inside it, so moving into the panel keeps it open).
+    // Hover intent, desktop with a mouse only (1101 px and up, hover: hover, pointer: fine);
+    // touch and pen keep click only. The panel is inside the item, so the pointer can
+    // travel from the link or caret into the panel: it opens after HOVER_OPEN ms on the
+    // item and closes HOVER_CLOSE ms after the pointer has left both. Crossing the nav
+    // quickly opens nothing.
+    var HOVER_OPEN = 120;
+    var HOVER_CLOSE = 250;
+    var canHover = function (e) { return e.pointerType === 'mouse' && finePointer.matches && desktop.matches; };
     mega.addEventListener('pointerenter', function (e) {
-      if (e.pointerType !== 'mouse' || !finePointer.matches) return;
+      if (!canHover(e)) return;
       clearTimeout(megaTimer);
+      if (isMegaOpen()) return; // back inside before the close delay ran out
       megaTimer = setTimeout(function () {
-        if (!isMegaOpen()) hoverOpenedAt = Date.now();
+        hoverOpenedAt = Date.now();
         setMega(true);
-      }, 80);
+      }, HOVER_OPEN);
     });
     mega.addEventListener('pointerleave', function (e) {
-      if (e.pointerType !== 'mouse') return;
+      if (!canHover(e)) return;
       clearTimeout(megaTimer);
-      megaTimer = setTimeout(function () { setMega(false); }, 250);
+      if (!isMegaOpen()) return;
+      // Focus on a card inside the panel (keyboard) keeps it open until focus leaves (focusout below).
+      megaTimer = setTimeout(function () {
+        if (!megaPanel.contains(doc.activeElement)) setMega(false);
+      }, HOVER_CLOSE);
     });
 
     // Keyboard: leaving the item and its panel closes it.

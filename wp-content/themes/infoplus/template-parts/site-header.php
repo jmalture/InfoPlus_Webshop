@@ -114,6 +114,26 @@ if ( ! function_exists( 'ip_header_is_current' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ip_header_in_catalog' ) ) {
+	/**
+	 * True on every view that belongs to the Namensschilder section: the
+	 * Namensschilder page, the shop page, product category and tag archives
+	 * and single products. The header item "Namensschilder" is then current
+	 * (aria-current="page"), also on the category URLs that the in-place
+	 * filter pushes (inc/catalog.php, assets/js/archive.js), because those
+	 * URLs render server side as category archives. Filter
+	 * ip_header_in_catalog to change it.
+	 */
+	function ip_header_in_catalog() {
+		$in = ( function_exists( 'ip_shop_is_plates_page' ) && ip_shop_is_plates_page() )
+			|| ( function_exists( 'is_shop' ) && is_shop() )
+			|| ( function_exists( 'is_product_category' ) && is_product_category() )
+			|| ( function_exists( 'is_product_tag' ) && is_product_tag() )
+			|| ( function_exists( 'is_product' ) && is_product() );
+		return (bool) apply_filters( 'ip_header_in_catalog', $in );
+	}
+}
+
 if ( ! function_exists( 'ip_header_menu_tree' ) ) {
 	/**
 	 * Top-level items (with children) of the menu in the 'mobile' location
@@ -189,7 +209,8 @@ if ( ! function_exists( 'ip_header_menu_tree' ) ) {
 				$plates = null === $plates ? $i : $plates;
 			}
 			if ( null !== $plates ) {
-				$tree[ $plates ]['plates'] = true;
+				$tree[ $plates ]['plates']  = true;
+				$tree[ $plates ]['current'] = $tree[ $plates ]['current'] || ip_header_in_catalog();
 			}
 			return $tree;
 		}
@@ -228,7 +249,7 @@ if ( ! function_exists( 'ip_header_menu_tree' ) ) {
 			$tree[] = array(
 				'title'    => $link[0],
 				'url'      => $link[1],
-				'current'  => ip_header_is_current( $link[1] ),
+				'current'  => ip_header_is_current( $link[1] ) || ( 0 === $i && ip_header_in_catalog() ),
 				'plates'   => 0 === $i,
 				'children' => 0 === $i ? $products : array(),
 			);
@@ -256,7 +277,7 @@ if ( ! function_exists( 'ip_header_nameplates' ) ) {
 			}
 		}
 		$url = home_url( '/namensschilder/' );
-		return array( 'title' => __( 'Namensschilder', 'infoplus' ), 'url' => $url, 'current' => ip_header_is_current( $url ), 'items' => array() );
+		return array( 'title' => __( 'Namensschilder', 'infoplus' ), 'url' => $url, 'current' => ip_header_is_current( $url ) || ip_header_in_catalog(), 'items' => array() );
 	}
 }
 
@@ -304,7 +325,7 @@ $ip_mega_id = 'ip-mega-panel';
 		<nav class="ip-nav" aria-label="<?php esc_attr_e( 'Hauptmenü', 'infoplus' ); ?>">
 			<ul class="ip-nav__list">
 				<li class="ip-nav__item<?php echo $ip_count ? ' ip-nav__item--mega' : ''; ?>"<?php echo $ip_count ? ' data-ip-mega' : ''; ?>>
-					<a class="ip-nav__link" href="<?php echo esc_url( $ip_plates['url'] ); ?>"<?php echo $ip_plates['current'] ? ' aria-current="page"' : ''; ?>>
+					<a class="ip-nav__link" href="<?php echo esc_url( $ip_plates['url'] ); ?>" data-ip-nav-plates<?php echo $ip_plates['current'] ? ' aria-current="page"' : ''; ?>>
 						<?php echo esc_html( $ip_plates['title'] ); ?>
 						<?php if ( $ip_count ) : ?>
 							<span class="ip-pill ip-nav__count" aria-hidden="true"><?php echo esc_html( $ip_count ); ?></span>

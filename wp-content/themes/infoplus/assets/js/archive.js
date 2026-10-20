@@ -9,7 +9,9 @@
       click shows the matching cards, swaps title, intro, breadcrumb and
       count, and writes the pill's own URL with history.pushState, so the
       address is shareable and a reload renders the same state on the server.
-      Back/forward restore the state. Ctrl/Cmd/Shift/middle click keep the
+      Back/forward restore the state. The header item "Namensschilder"
+      ([data-ip-nav-plates]) keeps aria-current="page" in every state.
+      Ctrl/Cmd/Shift/middle click keep the
       normal link behaviour (new tab, new window). Motion: remaining cards
       glide to their new place (FLIP), new cards fade in and rise 8 px;
       nothing moves under prefers-reduced-motion. */
@@ -186,9 +188,19 @@
     renderHead(s, animate);
     renderCount(renderGrid(slug, animate));
     centerChip(nav.querySelector('[aria-current="page"]'));
+    markHeader();
     current = slug;
     return true;
   }
+
+  // Every filter state is a Namensschilder URL: the header item stays current
+  // (the server marks it on these views, ip_header_in_catalog()).
+  function markHeader() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ip-nav-plates]'), function (a) {
+      a.setAttribute('aria-current', 'page');
+    });
+  }
+  markHeader();
 
   // Remember the server-rendered state, so "back" to it restores it.
   try { history.replaceState(Object.assign({}, history.state, { ipCat: current }), ''); } catch (e) { /* state not writable: popstate falls back to the URL */ }

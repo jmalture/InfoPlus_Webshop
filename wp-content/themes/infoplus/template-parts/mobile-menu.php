@@ -45,7 +45,7 @@ $ip_args = wp_parse_args( $args ?? array(), array(
 						?>
 						<li class="ip-drawer__item<?php echo $ip_active ? ' is-active' : ''; ?><?php echo ( $ip_kids && $ip_active ) ? ' is-open' : ''; ?>">
 							<div class="ip-drawer__row">
-								<a class="ip-drawer__link" href="<?php echo esc_url( $ip_entry['url'] ); ?>"<?php echo $ip_entry['current'] ? ' aria-current="page"' : ''; ?>>
+								<a class="ip-drawer__link" href="<?php echo esc_url( $ip_entry['url'] ); ?>"<?php echo ! empty( $ip_entry['plates'] ) ? ' data-ip-nav-plates' : ''; ?><?php echo $ip_entry['current'] ? ' aria-current="page"' : ''; ?>>
 									<?php echo esc_html( $ip_entry['title'] ); ?>
 									<?php if ( $ip_cards && $ip_kids ) : ?>
 										<span class="ip-pill" aria-hidden="true"><?php echo esc_html( count( $ip_kids ) ); ?></span>
