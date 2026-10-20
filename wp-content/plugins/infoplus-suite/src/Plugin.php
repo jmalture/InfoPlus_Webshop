@@ -13,10 +13,11 @@ use Infoplus\Suite\Modules\UserOrders\Module as UserOrdersModule;
 use Infoplus\Suite\Modules\ProductDetailSuite\Module as ProductDetailSuiteModule;
 use Infoplus\Suite\Modules\Custom404\Module as Custom404Module;
 use Infoplus\Suite\Modules\CatalogImport\Module as CatalogImportModule;
+use Infoplus\Suite\Modules\Inquiry\Module as InquiryModule;
 
 final class Plugin
 {
-    public const VERSION = '0.10.28';
+    public const VERSION = '0.10.29';
 
     private string $file;
     private array $modules = [];
@@ -54,12 +55,14 @@ final class Plugin
         new ProductDetailSuiteModule(), // Product detail page widgets (runs in background)
         new Custom404Module(),          // Custom branded 404 page (runs in background)
         new CatalogImportModule(),      // WooCommerce → Katalog-Import (CSV catalog import)
+        new InquiryModule(),            // Inquiry form "Individuelle Anfrage": REST, CPT Anfragen, mails (settings tab)
     ];
 
         // Only these modules should have visible tabs in the dashboard
         $this->visibleModules = [
             'editor-link-settings',  // Editor Link Settings tab
             'ikona-ife',             // Ikona IFE tab
+            'inquiry',               // Anfragen tab (inquiry form settings)
         ];
 
         // Register all modules (hooks, functionality, etc.)

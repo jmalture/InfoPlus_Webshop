@@ -113,6 +113,8 @@ public function render(): void
             $icon_html = '<span class="dashicons dashicons-admin-settings nav-tab-icon"></span>'; 
         } elseif ($slug === 'ikona-ife') {
             $icon_html = '<span class="dashicons dashicons-update nav-tab-icon"></span>';
+        } elseif ($slug === 'inquiry') {
+            $icon_html = '<span class="dashicons dashicons-email nav-tab-icon"></span>';
         }
 
         echo '<a class="' . $class . '" href="' . esc_url($url) . '">' . $icon_html . $label . '</a>';

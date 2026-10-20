@@ -89,3 +89,17 @@ if (!function_exists('infoplus_suite_bulk_price_table')) {
         View::render('bulk-price-table', Components::bulkPriceTable($product, $args));
     }
 }
+
+if (!function_exists('infoplus_suite_inquiry_form')) {
+    /**
+     * Render the inquiry form ("Individuelle Anfrage"). The theme puts it into
+     * its own drawer or page section and drives it with its script.
+     *
+     * @param array $args variant ("product"|"contact"), product (WC_Product|int|null,
+     *                    default the queried product), id_prefix. See templates/inquiry-form.php.
+     */
+    function infoplus_suite_inquiry_form(array $args = []): void
+    {
+        View::render('inquiry-form', \Infoplus\Suite\Modules\Inquiry\Module::formArgs($args));
+    }
+}
