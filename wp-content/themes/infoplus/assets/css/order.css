@@ -1,0 +1,120 @@
+/* Order view (account endpoint view-order) and order confirmation (checkout
+   endpoint order-received): summary card with facts and actions, payment
+   card (bank details), items with totals, addresses. Loaded on those two
+   views only (inc/account.php), next to account.css or checkout.css.
+
+   From a content width of 960 px the addresses move into a right column.
+   Widths are container queries on the content column, because the account
+   puts a 300 px aside next to it and the checkout frame does not. */
+
+.ip-wc--received .ip-wc__body { padding: 0; background: none; border: 0; container-type: inline-size }
+
+.ip-order { display: grid; gap: var(--space-4); grid-auto-flow: row dense }
+@media (min-width: 768px) { .ip-order { gap: var(--space-6) } }
+.ip-order > * { min-width: 0 }
+@container (min-width: 960px) {
+  .ip-order { grid-template-columns: minmax(0, 1fr) 340px; align-items: start }
+  .ip-order > * { grid-column: 1 / -1 }
+  .ip-order > :is(.ip-order__payment, .ip-order__notes, .woocommerce-order-details) { grid-column: 1 }
+  .ip-order > .woocommerce-customer-details { grid-column: 2; grid-row: span 3 }
+}
+
+/* ── Summary ────────────────────────────────────────────────────────────── */
+.ip-order__summary { display: grid; gap: var(--space-6) }
+.ip-order__hero { display: flex; align-items: flex-start; gap: var(--space-4) }
+.ip-order__hero-title { font: 600 26px/1.2 var(--font); text-wrap: balance }
+.ip-order__hero-text { margin-top: 6px; color: var(--text-secondary); font: 400 18px/1.45 var(--font); max-width: 64ch }
+.ip-tile--ok { background: #E8F5EC; color: #15803D }
+.ip-tile--warn { background: var(--c-primary-tint); color: var(--c-secondary) }
+@media (min-width: 768px) { .ip-order__hero-title { font-size: 30px } }
+
+.ip-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr)); gap: var(--space-4); margin: 0 }
+.ip-facts__item { min-width: 0 }
+.ip-facts dt { color: var(--text-secondary); font: 600 13px/1.25 var(--font); letter-spacing: 1px; text-transform: uppercase }
+.ip-facts dd { margin: 6px 0 0; font: 600 18px/1.3 var(--font); overflow-wrap: anywhere }
+.ip-facts .includes_tax { display: block; margin-top: 2px; color: var(--text-secondary); font: 400 14px/1.3 var(--font) }
+.ip-facts__item--total dd { font-size: 20px }
+
+.ip-order__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border) }
+.ip-order__back { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; color: var(--c-secondary); font: 600 16px/1.3 var(--font); text-decoration: none }
+.ip-order__back .ip-icon { width: 18px; height: 18px }
+.ip-order__back:hover { text-decoration: underline; text-underline-offset: 2px }
+.ip-order__buttons { display: flex; flex-wrap: wrap; gap: var(--space-3) }
+
+/* ── Payment (gateway output, e.g. bank transfer) ───────────────────────── */
+.ip-order__payment-body { font: 400 17px/1.5 var(--font) }
+.ip-order__payment-body > p { max-width: 70ch }
+.ip-order__payment-body > p + * { margin-top: var(--space-4) }
+.ip-order__payment-body .wc-bacs-bank-details-heading { margin: var(--space-6) 0 var(--space-2); font: 600 18px/1.3 var(--font) }
+.ip-order__payment-body .wc-bacs-bank-details-account-name { margin-bottom: var(--space-2); color: var(--text-secondary); font: 600 16px/1.3 var(--font) }
+.ip-order__payment-body ul.wc-bacs-bank-details {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: var(--space-3) var(--space-4);
+  margin: 0; padding: var(--space-4); list-style: none; background: var(--c-grey-100); border-radius: 12px;
+  color: var(--text-secondary); font: 600 13px/1.3 var(--font); letter-spacing: .5px; text-transform: uppercase;
+}
+.ip-order__payment-body ul.wc-bacs-bank-details strong { display: block; margin-top: 4px; color: var(--text-primary); font: 600 17px/1.3 var(--font); letter-spacing: 0; text-transform: none; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; user-select: all }
+
+/* ── Order updates (customer notes) ─────────────────────────────────────── */
+.ip-notes { display: grid; gap: var(--space-4); margin: 0; padding: 0; list-style: none }
+.ip-notes li { padding-left: var(--space-4); border-left: 3px solid var(--c-primary-tint) }
+.ip-notes .meta { color: var(--text-secondary); font: 600 14px/1.3 var(--font) }
+.ip-notes .description { margin-top: 4px; font: 400 17px/1.45 var(--font) }
+
+/* ── Items and totals ───────────────────────────────────────────────────── */
+.ip-order-table { width: 100%; border-collapse: collapse; font: 400 17px/1.4 var(--font) }
+.ip-order-table tbody td { padding: var(--space-4) 0; border-top: 1px solid var(--border); vertical-align: top }
+.ip-order-table tbody tr:first-child td { border-top: 0; padding-top: 0 }
+.ip-order-table td.product-total { padding-left: var(--space-4); text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap }
+.ip-order-item__row { display: flex; align-items: flex-start; gap: 14px }
+.ip-order-item__thumb { display: grid; place-items: center; flex: none; width: 56px; height: 56px; overflow: hidden; border-radius: 10px; background: var(--c-grey-100) }
+.ip-order-item__thumb img { width: 100%; height: 100%; object-fit: contain }
+.ip-order-item__noimg { width: 100%; height: 100% }
+.ip-order-item__body { min-width: 0 }
+.ip-order-item__name { font: 600 18px/1.3 var(--font); overflow-wrap: anywhere }
+.ip-order-item__name a { color: inherit; text-decoration: none }
+.ip-order-item__name a:hover { color: var(--c-secondary); text-decoration: underline; text-underline-offset: 2px }
+.ip-order-item__sku { margin-top: 2px; color: var(--text-secondary); font-size: 14px }
+.ip-order-item .product-quantity { display: block; margin-top: 4px; font: 600 15px/1.3 var(--font) }
+.ip-order-item .wc-item-meta { margin: 6px 0 0; padding: 0; list-style: none; color: var(--text-secondary); font: 400 15px/1.4 var(--font) }
+.ip-order-item .wc-item-meta li { display: flex; flex-wrap: wrap; gap: 0 4px }
+.ip-order-item .wc-item-meta li + li { margin-top: 2px }
+.ip-order-item .wc-item-meta strong { color: var(--text-primary); font-weight: 600 }
+.ip-order-item .wc-item-meta p { display: inline; margin: 0 }
+.ip-order-item .wc-item-meta img { max-width: 120px; border-radius: 6px }
+@media (min-width: 768px) { .ip-order-item__thumb { width: 72px; height: 72px } }
+
+.ip-order-table__totals th, .ip-order-table__totals td { padding: 6px 0; vertical-align: top }
+.ip-order-table__totals th { color: var(--text-secondary); font-weight: 400; text-align: left }
+.ip-order-table__totals td { padding-left: var(--space-4); text-align: right; font-weight: 600; font-variant-numeric: tabular-nums }
+.ip-order-table__totals tr:first-child :is(th, td) { padding-top: var(--space-4); border-top: 1px solid var(--border) }
+.ip-order-table__total--order_total :is(th, td) { padding-top: var(--space-3); border-top: 1px solid var(--border); color: var(--text-primary); font: 700 22px/1.25 var(--font) }
+.ip-order-table__totals .includes_tax, .ip-order-table__totals small { display: block; color: var(--text-secondary); font: 400 14px/1.3 var(--font) }
+.ip-order-table__total--note td { font-weight: 400; text-align: left }
+
+/* ── Addresses and additional fields ────────────────────────────────────── */
+.ip-order-customer { display: grid; gap: var(--space-4); container-type: inline-size }
+@media (min-width: 768px) { .ip-order-customer { gap: var(--space-6) } }
+.ip-order-customer__grid { display: grid; gap: var(--space-4) }
+@container (min-width: 560px) { .ip-order-customer__grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) } }
+.ip-order-address .ip-acc-card__title { font-size: 20px }
+.ip-address__line { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2) }
+.ip-address__line .ip-icon { width: 18px; height: 18px; color: var(--text-secondary) }
+.ip-order-customer .wc-block-components-additional-fields-list { margin: var(--space-3) 0 0 }
+.ip-order-customer .wc-block-components-additional-fields-list dt { color: var(--text-secondary); font: 600 14px/1.3 var(--font) }
+.ip-order-customer .wc-block-components-additional-fields-list dd { margin: 2px 0 var(--space-2) }
+.ip-order-customer .wc-block-order-confirmation-additional-fields-wrapper { padding: var(--space-4); background: var(--c-white); border: 1px solid var(--border); border-radius: var(--radius-card) }
+.ip-order-customer .wc-block-order-confirmation-additional-fields-wrapper h2 { font: 600 20px/1.25 var(--font) }
+@media (min-width: 768px) { .ip-order-customer .wc-block-order-confirmation-additional-fields-wrapper { padding: var(--space-6) } }
+
+/* ── Print (order view, "Drucken"): the order only, on white ────────────── */
+@media print {
+  .ip-header, .ip-footer, .ip-contact, .ip-skip, .ip-acc-aside, .ip-steps, .ip-order__actions, .ip-acc__head .ip-sub, .woocommerce-notices-wrapper { display: none !important }
+  body, .ip-acc, .ip-wc { background: #fff !important }
+  .ip-acc, .ip-wc { padding: 0; border: 0 }
+  .ip-acc-layout { display: block }
+  .ip-order { display: block }
+  .ip-order > * + * { margin-top: 16px }
+  .ip-acc-card { padding: 12px 0; border: 0; border-top: 1px solid #999; border-radius: 0; break-inside: avoid }
+  .ip-order-item__name a { color: inherit; text-decoration: none }
+  .ip-status { padding: 0; background: none }
+}

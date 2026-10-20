@@ -35,6 +35,10 @@ function ip_template_bundle() {
 	if ( function_exists( 'is_account_page' ) && is_account_page() ) {
 		return 'account';
 	}
+	// The login page (/log-in/) is a normal page, rendered by wc-account.php like the account.
+	if ( function_exists( 'ip_account_is_login_page' ) && ip_account_is_login_page() ) {
+		return 'account';
+	}
 	if ( is_search() ) {
 		return 'archive';
 	}

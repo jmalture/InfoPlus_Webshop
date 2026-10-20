@@ -212,3 +212,30 @@ a.ip-reach:hover .ip-reach__value { color: var(--c-secondary) }
 .ip-article__head { display: grid; gap: var(--space-3); margin-bottom: var(--space-8) }
 .ip-article__title { font: var(--type-heading); text-wrap: balance }
 @media (min-width: 768px) { .ip-content, .ip-news { padding-top: var(--space-12) } }
+
+/* ── Shared by account, order view and order confirmation ─────────────── */
+/* Small button, full-width button, JS-only controls (html.js is set in the head before paint, so nothing shifts). */
+.ip-btn { justify-content: center; cursor: pointer }
+.ip-btn--sm { min-height: 40px; padding: var(--space-2) 14px; font-size: 15px; gap: 6px }
+.ip-btn--sm .ip-icon { width: 18px; height: 18px }
+.ip-btn--block { width: 100% }
+.ip-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+html:not(.js) .ip-js-only { display: none !important }
+.ip-muted { color: var(--text-secondary) }
+/* Order status: neutral pill, the coloured dot is extra; the text names the status. */
+.ip-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 999px; background: var(--c-grey-100); color: var(--text-primary); font: 600 14px/1.25 var(--font); white-space: nowrap }
+.ip-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ip-status, #6B7075); flex: none }
+.ip-status--pending, .ip-status--on-hold { --ip-status: #C2410C }
+.ip-status--processing { --ip-status: #1D4ED8 }
+.ip-status--completed { --ip-status: #15803D }
+.ip-status--cancelled, .ip-status--failed, .ip-status--refunded { --ip-status: #B91C1C }
+/* White content card with a head row (title + link). */
+.ip-acc-card { padding: var(--space-4); background: var(--c-white); border: 1px solid var(--border); border-radius: var(--radius-card) }
+.ip-acc-card__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2) var(--space-4); margin-bottom: var(--space-4) }
+.ip-acc-card__title { font: 600 22px/1.25 var(--font); text-wrap: balance }
+.ip-acc-card > .ip-acc-card__title { margin-bottom: var(--space-4) }
+.ip-acc-card__more { display: inline-flex; align-items: center; gap: 2px; color: var(--c-secondary); font: 600 16px/1.3 var(--font); text-decoration: none }
+.ip-acc-card__more .ip-icon { width: 18px; height: 18px }
+.ip-acc-card__more:hover { text-decoration: underline; text-underline-offset: 2px }
+.ip-address { font: 400 17px/1.45 var(--font) }
+@media (min-width: 768px) { .ip-acc-card { padding: var(--space-6) } }

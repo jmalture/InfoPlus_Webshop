@@ -37,6 +37,16 @@ function ip_icon( $name, $label = '' ) {
 		'pin'     => '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
 		'help'    => '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/>',
 		'arrow-left' => '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+		// Account area (inc/account.php).
+		'grid'     => '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+		'package'  => '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>',
+		'download' => '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+		'upload'   => '<path d="M12 20V9M7 14l5-5 5 5M5 4h14"/>',
+		'logout'   => '<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 8l-4 4 4 4M6 12h10"/>',
+		'card'     => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
+		'refresh'  => '<path d="M20 11a8 8 0 0 0-14.7-3.9M4 4v4h4M4 13a8 8 0 0 0 14.7 3.9M20 20v-4h-4"/>',
+		'euro'     => '<path d="M17 6.5A7 7 0 1 0 17 17.5"/><path d="M4 10h9M4 14h9"/>',
+		'file'     => '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
 	);
 	if ( ! isset( $paths[ $name ] ) ) {
 		return '';
