@@ -29,7 +29,7 @@ $ip_tax      = ip_product_tax_label();
 $ip_shipping = ip_product_shipping_url();
 ?>
 <section class="ip-summary" data-ip-summary aria-labelledby="ip-summary-title">
-	<h2 class="ip-summary__title" id="ip-summary-title"><?php echo esc_html( ip_product_text( 'summary_title' ) ); ?></h2>
+	<h2 class="ip-summary__title" id="ip-summary-title" tabindex="-1"><?php echo esc_html( ip_product_text( 'summary_title' ) ); ?></h2>
 	<div class="ip-summary__body">
 		<p class="ip-summary__choice">
 			<span class="ip-summary__model" data-ip-sum="model"><?php echo esc_html( ip_product_text( 'summary_empty' ) ); ?></span>

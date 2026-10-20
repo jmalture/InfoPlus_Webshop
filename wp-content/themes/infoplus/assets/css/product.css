@@ -160,43 +160,119 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .ip-product__fallback-image img { max-height: 100%; width: auto; object-fit: contain }
 
 /* ── Configurator steps (summary.php, states from product.js) ─────────────
-   A titled block per step, separated by a hairline. The badge shows the
-   number, or a check once the step is done; the status slot on the right
-   shows the chosen value (done), the Suite's lock message (locked) or its
-   "Kombination nicht verfügbar" (error). Colour is never the only signal:
-   done adds the check and the value, locked / error add their text. */
-.ip-step { display: grid; gap: var(--space-4); min-width: 0 }
-.ip-step + .ip-step { padding-top: var(--space-6); border-top: 1px solid var(--border) }
+   Folding steps: one list (.ip-cfg), a hairline between steps. With JS only
+   one step is expanded (.is-current); the others fold into one line with the
+   badge, the name, the chosen value and an "Ändern" button (.is-folded,
+   body hidden by product.js with a short height / opacity transition).
+   Without JS every step is a plain titled block. The badge shows the number,
+   or a check once the step is done; the status slot shows the chosen value
+   (done), the conflict reason (error) or the Suite's lock text. Colour is never
+   the only signal: done adds the check and the value, error adds its text. */
+.ip-cfg { display: grid; min-width: 0 }
+.ip-step { display: grid; min-width: 0 }
+.ip-step ~ .ip-step { margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--border) }
 .ip-step[hidden] { display: none }
-.ip-step__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin: 0; font: 600 20px/1.25 var(--font) }
+.ip-step__bar { display: flex; align-items: center; gap: var(--space-3); min-width: 0 }
+.ip-step__head { display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); min-width: 0; margin: 0; font: 600 20px/1.25 var(--font) }
+.ip-step__head:focus { outline: none }
+.ip-step__head:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; border-radius: 6px }
 .ip-step__badge {
   position: relative; display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px;
   border: 1.5px solid var(--c-grey-200); border-radius: 999px; background: var(--c-white);
   color: var(--text-primary); font: 700 15px/1 var(--font); font-variant-numeric: tabular-nums;
   transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
 }
-.ip-step__badge .ip-icon { position: absolute; width: 18px; height: 18px; stroke-width: 2.25; opacity: 0; transform: scale(.6); transition: opacity var(--dur-ui) var(--ease), transform 300ms var(--ease-spring, var(--ease)) }
+.ip-step__badge .ip-icon { position: absolute; width: 18px; height: 18px; stroke-width: 2.25; opacity: 0; transform: scale(.7); transition: opacity var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease) }
 .ip-step__title { min-width: 0 }
-.ip-step__status { flex: 1 1 12rem; min-width: 0; color: var(--text-secondary); font: 400 16px/1.35 var(--font); text-align: right }
+.ip-step__status { flex: 1 1 8rem; min-width: 0; color: var(--text-secondary); font: 400 16px/1.35 var(--font); text-align: right }
 .ip-step__value { overflow-wrap: anywhere }
+.ip-step__reason { display: block; font: 400 14px/1.3 var(--font) }
 .ip-step[data-ip-step-state="done"] .ip-step__badge { border-color: var(--c-primary-tint); background: var(--c-primary-tint); color: var(--c-secondary) }
 .ip-step[data-ip-step-state="done"] .ip-step__num { opacity: 0 }
 .ip-step[data-ip-step-state="done"] .ip-step__badge .ip-icon { opacity: 1; transform: none }
 .ip-step[data-ip-step-state="done"] .ip-step__status { color: var(--text-primary); font-weight: 600 }
 .ip-step[data-ip-step-state="locked"] .ip-step__status,
 .ip-step[data-ip-step-state="error"] .ip-step__status { color: var(--c-secondary); font-weight: 600 }
-.ip-step[data-ip-step-state="error"] .ip-step__badge { border-color: var(--c-secondary) }
-.ip-step__body { min-width: 0 }
+.ip-step[data-ip-step-state="error"] .ip-step__badge { border-color: var(--c-secondary); color: var(--c-secondary) }
+.ip-step__body { min-width: 0; padding-top: var(--space-4) }
+.ip-step__body[hidden] { display: none }
+/* "Ändern" / "Auswählen": only on folded steps, only with JS. */
+.ip-step__edit {
+  flex: none; display: none; align-items: center; min-height: 40px; padding: 0 14px;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--c-white);
+  color: var(--c-secondary); font: 600 15px/1 var(--font); cursor: pointer;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease);
+}
+.ip-step__edit:hover { border-color: var(--accent); background: var(--c-primary-tint) }
+.ip-step__edit:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
 /* "Menge" before the selection is complete: a short note instead of an empty stepper. */
 .ip-step__wait { display: none; margin: 0; color: var(--text-secondary); font: 400 16px/1.4 var(--font) }
 .ip-step--qty.is-waiting .ip-step__wait { display: block }
 .ip-step--qty.is-waiting .ip-buy { display: none }
+/* Lock message of a model that is only requestable, in place of the attribute steps. */
+.ip-step-lock { margin: var(--space-4) 0 0; padding: 12px 16px; border-radius: 12px; background: var(--c-primary-tint); color: var(--c-secondary); font: 600 16px/1.35 var(--font) }
+.ip-step-lock[hidden] { display: none }
 @media (max-width: 767px) {
   .ip-step__head { font-size: 19px }
-  .ip-step__status { flex-basis: 100%; padding-left: calc(30px + var(--space-3)); text-align: left }
+  html:not(.js) .ip-step__status { flex-basis: 100%; padding-left: calc(30px + var(--space-3)); text-align: left }
 }
 
-/* ── Model selector (component model-selector) ──────────────────────────── */
+/* Folding (html.js is set before first paint, so the folded layout never shifts). */
+.js .ip-cfg .ip-step ~ .ip-step { margin-top: 0; padding-top: 0 }
+.js .ip-step__bar { min-height: 60px; padding-block: 10px }
+.js .ip-step__head { font-size: 18px }
+.js .ip-step.is-folded .ip-step__bar { cursor: pointer }
+.js .ip-step.is-folded .ip-step__edit { display: inline-flex }
+@media (hover: hover) { .js .ip-step.is-folded:hover .ip-step__title { color: var(--c-secondary) } }
+.js .ip-step__body { padding: 0 0 var(--space-5, 20px) }
+.js .ip-step.is-current[data-ip-step-state="open"] .ip-step__badge { border-color: var(--accent); color: var(--c-secondary) }
+.js .ip-step.is-current .ip-step__title { color: var(--text-primary) }
+.js .ip-step--model .ip-step__body { padding-bottom: var(--space-4) }
+@media (max-width: 767px) {
+  .js .ip-step__bar { gap: var(--space-2); min-height: 56px }
+  .js .ip-step__head { font-size: 17px; column-gap: var(--space-2) }
+  .js .ip-step__status { font-size: 15px }
+  .js .ip-step__edit { min-height: 40px; padding: 0 10px; font-size: 14px }
+}
+
+/* Step bar ([data-ip-stepnav]): number (check when done) and short name per
+   step, the expanded one highlighted. Wraps from 768 px, one swipe row on phones. */
+.ip-stepnav { min-width: 0 }
+html:not(.js) .ip-stepnav { display: none }
+.ip-stepnav[hidden] { display: none }
+.ip-stepnav__list { position: relative; display: flex; gap: 6px; margin: 0; padding: 2px; list-style: none; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none }
+.ip-stepnav__list::-webkit-scrollbar { display: none }
+@media (min-width: 768px) { .ip-stepnav__list { flex-wrap: wrap; overflow: visible } }
+.ip-stepnav__item { flex: none }
+.ip-stepnav__item[hidden] { display: none }
+.ip-stepnav__btn {
+  position: relative; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 3px 12px 3px 3px;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--c-white);
+  color: var(--text-secondary); font: 600 14px/1 var(--font); white-space: nowrap; cursor: pointer;
+  transition: border-color var(--dur-ui) var(--ease), background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-stepnav__btn:hover { border-color: var(--c-grey-700); color: var(--text-primary) }
+.ip-stepnav__btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+.ip-stepnav__badge { position: relative; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; background: var(--c-grey-100); color: var(--text-primary); font: 700 13px/1 var(--font); font-variant-numeric: tabular-nums }
+.ip-stepnav__badge .ip-icon { position: absolute; width: 16px; height: 16px; stroke-width: 2.25; opacity: 0 }
+.ip-stepnav__item.is-done .ip-stepnav__badge { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-stepnav__item.is-done .ip-stepnav__num { opacity: 0 }
+.ip-stepnav__item.is-done .ip-stepnav__badge .ip-icon { opacity: 1 }
+.ip-stepnav__item.is-error .ip-stepnav__badge { background: var(--c-white); box-shadow: inset 0 0 0 1.5px var(--c-secondary); color: var(--c-secondary) }
+.ip-stepnav__item.is-current .ip-stepnav__btn { border-color: var(--accent); background: var(--c-primary-tint); color: var(--c-secondary); box-shadow: 0 0 0 1px var(--accent) }
+.ip-stepnav__item.is-current:not(.is-done) .ip-stepnav__badge { background: var(--accent); color: var(--c-white) }
+.ip-stepnav__item.is-current.is-done .ip-stepnav__badge { background: var(--c-white) }
+@media (max-width: 767px) {
+  .ip-stepnav { margin-inline: calc(-1 * var(--layout-margin, 16px)) }
+  .ip-stepnav__list { padding-inline: var(--layout-margin, 16px); scroll-padding-inline: var(--layout-margin, 16px) }
+  .ip-stepnav__btn { min-height: 34px; font-size: 13px }
+}
+
+/* ── Model selector (component model-selector) ──────────────────────────
+   Compact cards: phones two per row with the thumbnail beside the name,
+   from 768 px three and from 1101 px four per row with a short thumbnail
+   above the name. A model without picture (the Suite's WooCommerce
+   placeholder, product.js .ip-ms-noimg) is a text-only card. */
 .ip-product .ip-c-model-selector__title {
   margin: 0 0 var(--space-3); color: var(--ip-ms-title-color);
   font: var(--ip-label); letter-spacing: 0; text-transform: none;
@@ -204,16 +280,21 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 /* The plugin list is a right-to-left scroll column (and the old template forced
    rtl again); here it is a plain card grid. */
 .ip-product .ip-c-model-selector__options {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ip-ms-gap);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
   direction: ltr !important; /* plugin CSS: direction rtl */
   max-height: none; overflow: visible; padding: 0 !important;
 }
 @media (min-width: 768px) { .ip-product .ip-c-model-selector__options { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
+@media (min-width: 1101px) { .ip-product .ip-c-model-selector__options { grid-template-columns: repeat(4, minmax(0, 1fr)) } }
 
 .ip-product .ip-c-model-selector__option {
-  padding: var(--ip-ms-card-padding); gap: var(--space-2);
-  border: 1px solid var(--ip-ms-card-border-color); border-radius: var(--ip-ms-card-radius); background: var(--ip-ms-card-bg);
+  position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 10px;
+  min-height: 60px; padding: 6px 8px 6px 6px;
+  border: 1px solid var(--ip-ms-card-border-color); border-radius: 12px; background: var(--ip-ms-card-bg);
   transition: border-color var(--dur-ui) var(--ease), background-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease);
+}
+@media (min-width: 768px) {
+  .ip-product .ip-c-model-selector__option { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; align-items: start; gap: 6px; padding: 6px }
 }
 .ip-product .ip-c-model-selector__option:hover { border-color: var(--c-grey-700); transform: translateY(-2px); box-shadow: var(--shadow-1) }
 .ip-product .ip-c-model-selector__option.is-active {
@@ -223,20 +304,36 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .ip-product .ip-c-model-selector__option.is-active::before { display: none } /* plugin: blue side bar */
 .ip-product .ip-c-model-selector__option:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
 
+/* Phones: the info button sits on the thumbnail corner, so the name keeps the card width. */
 .ip-product .ip-c-model-selector__image {
-  aspect-ratio: 4 / 3; min-height: 0; margin: 0;
-  border-radius: var(--ip-ms-image-radius); background: var(--c-grey-100);
+  position: relative; width: 52px; height: 44px; aspect-ratio: auto; min-height: 0; margin: 0;
+  border-radius: 8px; background: var(--c-grey-100);
+}
+@media (max-width: 767px) {
+  .ip-product .ip-c-model-selector .ip-c-model-selector__info { top: -6px !important; right: -6px !important }
+}
+@media (min-width: 768px) {
+  .ip-product .ip-c-model-selector__image { position: static; width: 100%; height: auto; aspect-ratio: 2 / 1 }
 }
 .ip-product .ip-c-model-selector__option.is-active .ip-c-model-selector__image { background: var(--c-white) }
-.ip-product .ip-c-model-selector__image img { width: 100%; height: 100%; max-height: none; padding: 8%; object-fit: contain; border-radius: 0 }
-.ip-product .infoplus-model-selector__content { padding: 2px 4px 4px; text-align: left }
-.ip-product .ip-c-model-selector__label { margin: 0; color: var(--ip-ms-name-color); font: 600 16px/1.25 var(--font); hyphens: auto }
+.ip-product .ip-c-model-selector__image img { width: 100%; height: 100%; max-height: none; padding: 6%; object-fit: contain; border-radius: 0 }
+.ip-product .infoplus-model-selector__content { min-width: 0; padding: 0; text-align: left }
+@media (min-width: 768px) { .ip-product .infoplus-model-selector__content { padding: 0 2px 2px } }
+.ip-product .ip-c-model-selector__label { display: block; margin: 0; color: var(--ip-ms-name-color); font: 600 15px/1.2 var(--font); hyphens: auto; overflow-wrap: break-word }
+@media (min-width: 1101px) { .ip-product .ip-c-model-selector__label { font-size: 14px } }
 .ip-product .ip-c-model-selector__price { color: var(--ip-ms-price-color); font: 600 14px/1.3 var(--font); font-variant-numeric: tabular-nums }
+/* Text-only card: the image box disappears (its info button stays, positioned on the card). */
+.ip-product .ip-c-model-selector__option.ip-ms-noimg { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; align-items: center; padding: 8px 32px 8px 12px }
+.ip-product .ip-ms-noimg .ip-c-model-selector__image { display: contents }
+.ip-product .ip-ms-noimg .ip-c-model-selector__image img { display: none }
+.ip-product .ip-ms-noimg .infoplus-model-selector__content { padding: 0 }
+.ip-product .ip-c-model-selector .ip-ms-noimg .ip-c-model-selector__info { top: 6px !important; right: 6px !important }
+@media (min-width: 768px) { .ip-product .ip-c-model-selector__option.ip-ms-noimg { align-content: center; padding: 10px 32px 10px 12px } }
 
 /* Info button: plugin rules use !important (they had to beat Elementor), so these do too. */
 .ip-product .ip-c-model-selector .ip-c-model-selector__info {
-  top: 6px !important; right: 6px !important; bottom: auto !important;
-  width: 26px !important; height: 26px !important; min-width: 26px !important; min-height: 26px !important; max-width: 26px !important; max-height: 26px !important;
+  position: absolute !important; top: 6px !important; right: 6px !important; bottom: auto !important;
+  width: 24px !important; height: 24px !important; min-width: 24px !important; min-height: 24px !important; max-width: 24px !important; max-height: 24px !important;
   border: 1px solid var(--border) !important; background: var(--c-white) !important; color: var(--c-secondary) !important;
   font: 700 13px/1 var(--font) !important; box-shadow: var(--shadow-1) !important;
 }
@@ -302,6 +399,46 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .ip-product .infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info:hover {
   border-color: var(--accent) !important; background: var(--accent) !important; color: var(--c-white) !important;
 }
+
+/* Inline options in the folding steps (product.js: .ip-vd-inline on each row,
+   data-ip-layout="tiles" up to 8 options, "list" for more). The Suite's
+   option list is shown in place as a radio group; its combobox trigger and the
+   field label (the step heading names the attribute) are not used. The Suite
+   still slides the list up after a choice (jQuery inline height / display),
+   so the list rules below are !important. */
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__trigger { display: none !important }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__options {
+  position: static !important; display: grid !important; height: auto !important; max-height: none !important;
+  margin: 0 !important; padding: 0 !important; overflow: visible !important; opacity: 1 !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
+  border: 0; border-radius: 0; background: none; box-shadow: none;
+}
+@media (min-width: 768px) { .ip-product .ip-vd-inline .ip-c-variation-dropdowns__options { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
+/* Tiles with term images need the width for image, name and info button: one column on phones, two from 768 px. */
+.ip-product .ip-vd-inline[data-has-images="yes"] .ip-c-variation-dropdowns__options { grid-template-columns: minmax(0, 1fr) }
+@media (min-width: 768px) { .ip-product .ip-vd-inline[data-has-images="yes"] .ip-c-variation-dropdowns__options { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__option {
+  position: relative; flex-wrap: wrap; align-content: center; gap: 4px 10px; min-height: 52px; padding: 8px 10px;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--c-white); cursor: pointer;
+  transition: border-color var(--dur-ui) var(--ease), background-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease);
+}
+@media (hover: hover) { .ip-product .ip-vd-inline .ip-c-variation-dropdowns__option:hover { border-color: var(--c-grey-700); background: var(--c-white) } }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__option[aria-checked="true"] {
+  border-color: var(--accent); background: var(--c-primary-tint); box-shadow: 0 0 0 1px var(--accent);
+}
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__option[aria-checked="true"] .infoplus-dropdown__option-text { color: var(--c-secondary); font-weight: 600 }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__option:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+.ip-product .ip-vd-inline .infoplus-dropdown__option-text { flex: 1 1 0; min-width: 0; font-size: 16px; line-height: 1.2; overflow-wrap: anywhere }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__image { flex: none; background: var(--c-white) }
+.ip-product .ip-vd-inline .infoplus-dropdown__option-info { flex: none }
+.ip-product .ip-vd-inline .ip-opt-off .ip-opt-reason { font-size: 13px }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__option.ip-opt-off { background: var(--c-grey-100); border-style: dashed }
+.ip-product .ip-vd-inline .ip-c-variation-dropdowns__option.ip-opt-off:hover { border-color: var(--border); background: var(--c-grey-100) }
+/* More than 8 options: a denser text list. */
+.ip-product .ip-vd-inline[data-ip-layout="list"] .ip-c-variation-dropdowns__option { min-height: 44px; padding: 6px 10px }
+.ip-product .ip-vd-inline[data-ip-layout="list"] .infoplus-dropdown__option-text { font-size: 15px }
+.ip-product .ip-vd-inline .infoplus-dropdowns-lock { display: none !important } /* the step is hidden; product.js shows the message */
 
 /* "Dieses Modell ist nicht konfigurierbar" overlay for requestable models. */
 .ip-product .infoplus-dropdowns-lock { border-radius: 16px; background: rgb(255 255 255 / .8) }
@@ -466,6 +603,8 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .ip-summary__model { font: 600 19px/1.25 var(--font) }
 .ip-summary__variant { color: var(--text-secondary); font: 400 16px/1.35 var(--font) }
 .ip-summary__variant:empty { display: none }
+/* One span per option with its separator (product.js), so a line never starts with "·". */
+.ip-summary__opt { white-space: nowrap }
 .ip-summary__price { display: grid; justify-items: end; gap: 2px; flex: 0 1 auto; margin-left: auto; text-align: right }
 .ip-summary__price[hidden] { display: none }
 .ip-summary__total { font: 700 28px/1.1 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap }
@@ -646,5 +785,6 @@ body.infoplus-lightbox-open .ip-contact { visibility: hidden }
   .ip-product .ip-c-model-selector__option:hover { transform: none }
   .ip-actions .infoplus-anfrage-pulse, .ip-actions .infoplus-anfrage-pulse--long { animation: none !important }
   .ip-actionbar { transition: none }
-  .ip-step__badge, .ip-step__badge .ip-icon { transition: none }
+  .ip-step__badge, .ip-step__badge .ip-icon, .ip-step__edit, .ip-stepnav__btn { transition: none }
+  .ip-product .ip-vd-inline .ip-c-variation-dropdowns__option { transition: none }
 }

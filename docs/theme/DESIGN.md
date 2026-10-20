@@ -75,9 +75,12 @@ Baymard B2B research themes, configurator and B2B UX practice (links in the rebu
 - Search finds model names, SKUs and attribute words, results as product cards.
 
 ### Configuring (product page)
-- One-page configurator in numbered steps (1 Modell, 2 Format, 3 Optionen, 4 Menge), each
-  step a titled block; done steps show a check and their chosen value; unavailable options
-  are faded, never hidden without explanation.
+- One-page configurator in folding steps (owner decision): 1 Modell, one step per attribute
+  (real attribute labels, product order), then Menge. Only the current step is open; a done
+  step folds into one line (check, name, chosen value, "Ändern"); a step bar on top jumps to
+  any step. A choice moves on to the next step that is not done. Options show inline as tiles
+  (up to 8, with the term image) or a compact list; unavailable options are faded with their
+  reason, never hidden without explanation.
 - A summary card stays in view: desktop sticky in the right column, phones the bottom bar.
   It shows the chosen variant, unit price at the current quantity, total, and the next action.
 - Staffelpreise always visible next to quantity, current tier highlighted; prices labelled

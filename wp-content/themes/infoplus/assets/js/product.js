@@ -1,17 +1,40 @@
-/* Product page: configurator steps, summary card, the three order types, the
-   WooCommerce buy form and the sticky action bar for phones and tablets.
-   Vanilla, deferred.
+/* Product page: folding configurator steps, summary card, the three order
+   types, the WooCommerce buy form and the sticky action bar for phones and
+   tablets. Vanilla, deferred.
 
    One source of truth: snapshot() reads the Suite product state
    (window.infoplusProductState) and the values the Suite wrote into the page
    (unit price and total of the bulk calculator) once per animation frame.
    render() then writes that snapshot into
-   - the step headers ([data-ip-step], template-parts/product/summary.php):
+   - the steps ([data-ip-step], template-parts/product/summary.php):
      data-ip-step-state="open|done|locked|error" plus a check and the chosen
      value in [data-ip-step-status];
+   - the step bar ([data-ip-stepnav]): check when done, aria-current on the
+     expanded step;
    - the summary card ([data-ip-summary], order-summary.php): model, options,
      quantity, unit price, total, and one polite announcement per change;
    - the phone bar ([data-ip-actionbar], action-bar.php).
+
+   Folding steps (owner decision "Folding steps"). Steps: 1 Modell, one step per
+   variation attribute (each holds its own Suite variation-dropdowns component,
+   limited to that attribute), then Menge. Exactly one step is expanded
+   (class is-current); the others fold into one line: check, name, chosen value
+   and an "Ändern" button. The theme never decides what is selectable or
+   selected: the model cards and attribute options are the Suite's own
+   elements, clicked by the visitor (or by this file for arrow keys), and the
+   Suite's state and infoplus:* events say what is chosen. This file only
+   - shows the Suite options of an expanded step inline: tiles (up to 8 options)
+     or a compact chip list (more), instead of the Suite's dropdown panel;
+   - moves on after a choice: a click (or Enter / Space) on a model card or an
+     option opens the next step that is not done yet, else Menge, else nothing;
+     focus goes to that step's heading, the page scrolls only when the step is
+     out of view.
+   Initial step (decided once the Suite has applied its defaults): preselected
+   values count as done. Products with two or more models open Modell, because
+   the model decides order type, options and price and the preselection is the
+   shop's, not the buyer's. Products with one model open the first step that is
+   not done, else Menge. After a buy form POST (Woo renders this page again)
+   Menge opens, with the posted selection restored.
 
    Order type of the selected model (Infoplus Suite, per product and model):
    - editable:    #editor ("Produkt gestalten", external editor) + #anfrage.
@@ -22,19 +45,23 @@
                   button once a variation is found. The POST is plain WooCommerce.
    - requestable: #anfrage only, as the primary button
                   (requestable_with_variants counts as requestable here).
+                  For "requestable" the Suite locks the option components; the
+                  attribute steps are hidden then and the Suite's lock message
+                  shows under Modell ([data-ip-step-lock]).
    The Suite's variation-editor-link.js shows / hides #editor and #anfrage and
    publishes the resolved type as infoplusProductState.orderType (event
    "ordertype:changed", Suite 0.10.27). Without it the type is read from
    infoplusProductData.models[].order_type. This file writes the type to
    data-ip-order-type on [data-ip-actions] and the matching hint text.
 
-   Unavailable options: the Suite hides dropdown options that do not combine
-   with the current selection (class is-disabled, display none). Options that
-   exist for the selected model are shown again here, faded, aria-disabled and
-   with a short reason; clicks and Enter on them are stopped before the Suite
-   sees them. Options of other models stay hidden (they are not choices of this
-   model). The model cards and dropdown options also get the roles, names and
-   focus handling the Suite markup lacks (radio group, listbox options).
+   Unavailable options: the Suite hides options that do not combine with the
+   current selection (class is-disabled, display none). Options that exist for
+   the selected model are shown again here, faded, aria-disabled and with a
+   short reason; clicks and Enter on them are stopped before the Suite sees
+   them. Options of other models stay hidden (they are not choices of this
+   model). A chosen value that no longer combines marks its step "error".
+   Model cards and option tiles are radio groups (arrow keys move and choose,
+   Enter / Space choose and move on).
 
    After a buy form POST that Woo answers with this page (error notice, or
    success without the cart redirect) the form carries data-ip-posted, and the
@@ -53,6 +80,7 @@
   var config = doc.querySelector('[data-ip-config]');
   var T = {};
   try { T = JSON.parse(config ? config.getAttribute('data-ip-texts') || '{}' : '{}'); } catch (e) { T = {}; }
+  var placeholderSrc = config ? config.getAttribute('data-ip-placeholder') || '' : '';
 
   var editorBtn = actions.querySelector('[data-ip-action="editor"]');
   var inquiryBtn = actions.querySelector('[data-ip-action="inquiry"]');
@@ -67,13 +95,26 @@
   var reduceMotion = win.matchMedia && win.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var steps = {};
+  var order = []; // step keys in page order: model, attribute taxonomies, qty
   Array.prototype.forEach.call(doc.querySelectorAll('[data-ip-step]'), function (el) {
-    steps[el.getAttribute('data-ip-step')] = el;
+    var key = el.getAttribute('data-ip-step');
+    steps[key] = el;
+    order.push(key);
   });
+  var folding = order.length > 1;
+  var nav = doc.querySelector('[data-ip-stepnav]');
+  var navBtns = {};
+  if (nav) {
+    Array.prototype.forEach.call(nav.querySelectorAll('[data-ip-goto]'), function (b) {
+      navBtns[b.getAttribute('data-ip-goto')] = b;
+    });
+  }
+  var lockNote = doc.querySelector('[data-ip-step-lock]');
   var modelWidget = doc.querySelector('.ip-c-model-selector');
-  var dropdowns = doc.querySelector('.ip-c-variation-dropdowns');
+  var widgets = Array.prototype.slice.call(doc.querySelectorAll('.ip-c-variation-dropdowns'));
 
   var summary = doc.querySelector('[data-ip-summary]');
+  var summaryTitle = summary ? summary.querySelector('.ip-summary__title') : null;
   var sum = {};
   if (summary) {
     Array.prototype.forEach.call(summary.querySelectorAll('[data-ip-sum]'), function (el) {
@@ -104,6 +145,13 @@
   var liveReady = false;
   var liveText = '';
   var liveTimer = null;
+
+  var openKey = null;      // the expanded step
+  var settled = false;     // initial step decided
+  var silentPick = false;  // a selection made by arrow keys: no "move on"
+  var stepInfo = {};       // key -> { done, hidden } from the last render
+  var lastChoice = null;   // the step of the visitor's last choice
+  var editPending = false; // "Auswahl ändern" in the inquiry drawer, waiting for it to close
 
   /* ── Suite state ──────────────────────────────────────────────────────── */
 
@@ -161,11 +209,20 @@
   }
 
   function dropdownRows() {
-    return dropdowns ? Array.prototype.slice.call(dropdowns.querySelectorAll('.infoplus-dropdown[data-attribute]')) : [];
+    var rows = [];
+    widgets.forEach(function (w) {
+      Array.prototype.push.apply(rows, w.querySelectorAll('.infoplus-dropdown[data-attribute]'));
+    });
+    return rows;
   }
 
   function cssEscape(value) {
     return win.CSS && win.CSS.escape ? win.CSS.escape(value) : String(value).replace(/["\\]/g, '\\$&');
+  }
+
+  function optionText(row, value) {
+    var opt = row.querySelector('.infoplus-dropdown__option[data-value="' + cssEscape(value) + '"] .infoplus-dropdown__option-text');
+    return opt ? text(opt) : value;
   }
 
   /**
@@ -187,18 +244,31 @@
       });
     }
 
-    var locked = !!(dropdowns && dropdowns.classList.contains('is-requestable-locked'));
-    var lockText = locked ? text(dropdowns.querySelector('.infoplus-dropdowns-lock__message')) : '';
+    var lockedWidget = null;
+    widgets.forEach(function (w) { if (!lockedWidget && w.classList.contains('is-requestable-locked')) lockedWidget = w; });
+    var locked = !!lockedWidget;
+    var lockText = locked ? text(lockedWidget.querySelector('.infoplus-dropdowns-lock__message')) : '';
     var selected = (ps && ps.selectedAttributes) || {};
-    var rows = dropdownRows();
+    var avail = (ps && ps.availableAttributes) || {};
     var options = [];
+    var attrs = {};
+    var rows = dropdownRows();
     var allSet = rows.length > 0;
     rows.forEach(function (row) {
       var attr = row.getAttribute('data-attribute');
       var value = selected[attr];
-      if (!value) { allSet = false; return; }
-      var opt = row.querySelector('.infoplus-dropdown__option[data-value="' + cssEscape(value) + '"] .infoplus-dropdown__option-text');
-      options.push({ label: text(row.querySelector('.infoplus-dropdown__label')), value: opt ? text(opt) : value });
+      var label = text(row.querySelector('.infoplus-dropdown__label'));
+      if (!value) {
+        allSet = false;
+        attrs[attr] = { set: false, conflict: false, value: '' };
+        return;
+      }
+      var shown = optionText(row, value);
+      // The chosen value no longer combines with the other choices (Suite availability).
+      var list = avail[attr];
+      var conflict = !!(list && list.length && list.indexOf(value) === -1);
+      attrs[attr] = { set: true, conflict: conflict, value: shown };
+      options.push({ label: label, value: shown });
     });
 
     var found = variationId() > 0;
@@ -214,6 +284,7 @@
       locked: locked,
       lockText: lockText,
       options: options,
+      attrs: attrs,
       found: found,
       notFound: !found && allSet && !locked,
       errorText: text(errorEl),
@@ -261,15 +332,14 @@
     win.setTimeout(function () { el.classList.remove('infoplus-anfrage-pulse--long'); }, 3100);
   }
 
-  /** The first step that is not done yet (options, else model, else the configurator). */
+  /** Open the first step that is not done yet (from a disabled main button). */
   function scrollToOptions() {
-    var target = null;
-    ['model', 'options', 'qty'].some(function (key) {
-      var el = steps[key];
-      if (el && !el.hidden && el.getAttribute('data-ip-step-state') !== 'done') { target = el; return true; }
-      return false;
-    });
-    target = target || steps.options || config;
+    var key = nextStep(null);
+    if (key && steps[key]) {
+      openStep(key, { focus: true, reveal: true });
+      return;
+    }
+    var target = steps[order[0]] || config;
     if (target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
   }
 
@@ -330,61 +400,57 @@
 
   /* ── Restore a posted selection (page rendered from a buy form POST) ──── */
 
-  function restorePosted() {
+  function postedSelection() {
     var raw = buyForm ? buyForm.getAttribute('data-ip-posted') : '';
-    var ps = state();
-    if (!raw || !ps || typeof ps.setModel !== 'function') return;
-    var posted;
-    try { posted = JSON.parse(raw); } catch (e) { return; }
-    if (!posted || typeof posted !== 'object') return;
-
-    function apply() {
-      if (posted.model && ps.selectedModel !== posted.model) ps.setModel(posted.model);
-      var attrs = posted.attributes || {};
-      Object.keys(attrs).forEach(function (key) {
-        if (key === 'pa_model' || !attrs[key]) return;
-        if (ps.selectedAttributes && ps.selectedAttributes[key] === attrs[key]) return;
-        ps.setAttribute(key, attrs[key]);
-      });
-      var qty = parseInt(posted.qty, 10) || 0;
-      if (qty > 1 && typeof ps.setQty === 'function') {
-        // The bulk calculator sets the quantity to the minimum each time the
-        // tiers of a variation arrive (minqty:changed). Set ours after the last one.
-        var timer = null;
-        var stop = Date.now() + 6000;
-        var onMin = function () {
-          win.clearTimeout(timer);
-          if (Date.now() > stop) { doc.removeEventListener('infoplus:minqty:changed', onMin); return; }
-          timer = win.setTimeout(function () { ps.setQty(qty, 'external'); queue(); }, 250);
-        };
-        doc.addEventListener('infoplus:minqty:changed', onMin);
-        win.setTimeout(function () { doc.removeEventListener('infoplus:minqty:changed', onMin); }, 6500);
-      }
-      queue();
-    }
-
-    var data = ps.productData;
-    if (data && data._variationsDeferred && !(data.variations && data.variations.length)) {
-      // Deferred variations: the Suite applies its defaults right after this event.
-      var onLoaded = function () {
-        doc.removeEventListener('infoplus:variations:loaded', onLoaded);
-        win.setTimeout(apply, 0);
-      };
-      doc.addEventListener('infoplus:variations:loaded', onLoaded);
-    } else {
-      apply();
+    if (!raw) return null;
+    try {
+      var posted = JSON.parse(raw);
+      return posted && typeof posted === 'object' ? posted : null;
+    } catch (e) {
+      return null;
     }
   }
 
-  /* ── Steps ────────────────────────────────────────────────────────────── */
+  /** Runs once the Suite has its variations (deferred ones included). */
+  function restorePosted() {
+    var posted = postedSelection();
+    var ps = state();
+    if (!posted || !ps || typeof ps.setModel !== 'function') return;
+    if (posted.model && ps.selectedModel !== posted.model) ps.setModel(posted.model);
+    var attrs = posted.attributes || {};
+    Object.keys(attrs).forEach(function (key) {
+      if (key === 'pa_model' || !attrs[key]) return;
+      if (ps.selectedAttributes && ps.selectedAttributes[key] === attrs[key]) return;
+      ps.setAttribute(key, attrs[key]);
+    });
+    var qty = parseInt(posted.qty, 10) || 0;
+    if (qty > 1 && typeof ps.setQty === 'function') {
+      // The bulk calculator sets the quantity to the minimum each time the
+      // tiers of a variation arrive (minqty:changed). Set ours after the last one.
+      var timer = null;
+      var stop = Date.now() + 6000;
+      var onMin = function () {
+        win.clearTimeout(timer);
+        if (Date.now() > stop) { doc.removeEventListener('infoplus:minqty:changed', onMin); return; }
+        timer = win.setTimeout(function () { ps.setQty(qty, 'external'); queue(); }, 250);
+      };
+      doc.addEventListener('infoplus:minqty:changed', onMin);
+      win.setTimeout(function () { doc.removeEventListener('infoplus:minqty:changed', onMin); }, 6500);
+    }
+    queue();
+  }
 
-  function setStep(key, stepState, value) {
+  /* ── Step states ──────────────────────────────────────────────────────── */
+
+  function setStep(key, stepState, value, reason) {
     var el = steps[key];
     if (!el) return;
     el.setAttribute('data-ip-step-state', stepState);
+    var edit = el.querySelector('[data-ip-step-edit-label]');
+    if (edit) setText(edit, stepState === 'done' || stepState === 'error' ? (T.edit || '') : (T.choose || T.edit || ''));
     var slot = el.querySelector('[data-ip-step-status]');
     if (!slot) return;
-    var sig = stepState + '|' + value;
+    var sig = stepState + '|' + value + '|' + (reason || '');
     if (slot.getAttribute('data-sig') === sig) return;
     slot.setAttribute('data-sig', sig);
     slot.textContent = '';
@@ -402,24 +468,284 @@
     span.className = 'ip-step__value';
     span.textContent = value;
     slot.appendChild(span);
+    if (reason) {
+      var why = doc.createElement('span');
+      why.className = 'ip-step__reason';
+      why.textContent = reason;
+      slot.appendChild(why);
+    }
   }
 
   function renderSteps(s) {
-    setStep('model', s.model ? 'done' : 'open', s.modelName);
-
-    var values = s.options.map(function (o) { return o.value; }).join(' · ');
-    if (s.locked) setStep('options', 'locked', s.lockText);
-    else if (s.found) setStep('options', 'done', values);
-    else if (s.notFound && s.errorText) setStep('options', 'error', s.errorText);
-    else setStep('options', 'open', '');
-
-    if (steps.qty) {
-      // Requestable models have no quantity or price (the Suite hides the row): no step.
-      // Otherwise the step stays in the sequence and waits for a complete selection.
-      steps.qty.hidden = s.type === 'requestable' && !s.qtyShown;
-      steps.qty.classList.toggle('is-waiting', !(s.found && s.qtyShown));
-      setStep('qty', s.hasPrice ? 'done' : 'open', s.qty + (unitLabel ? ' ' + unitLabel : ''));
+    stepInfo = {};
+    order.forEach(function (key) {
+      var el = steps[key];
+      var info = { done: false, hidden: false };
+      if (key === 'model') {
+        setStep(key, s.model ? 'done' : 'open', s.modelName);
+        info.done = !!s.model;
+      } else if (key === 'qty') {
+        // Requestable models have no quantity or price (the Suite hides the row): no step.
+        // Otherwise the step stays in the sequence and waits for a complete selection.
+        info.hidden = s.type === 'requestable' && !s.qtyShown;
+        el.classList.toggle('is-waiting', !(s.found && s.qtyShown));
+        setStep(key, s.hasPrice ? 'done' : 'open', s.qty + (unitLabel ? ' ' + unitLabel : ''));
+        info.done = s.hasPrice;
+      } else {
+        var a = s.attrs[key] || { set: false, conflict: false, value: '' };
+        // The Suite locks the options of models that are only requestable: no attribute steps then.
+        info.hidden = s.locked;
+        if (s.locked) setStep(key, 'locked', '');
+        else if (a.conflict) setStep(key, 'error', a.value, T.unavailable || '');
+        else if (a.set) setStep(key, 'done', a.value);
+        else setStep(key, 'open', '');
+        info.done = a.set && !a.conflict;
+      }
+      if (el.hidden !== info.hidden) el.hidden = info.hidden;
+      stepInfo[key] = info;
+    });
+    // A complete selection without a variation and no single culprit: the Suite's error line.
+    if (s.notFound && s.errorText && !order.some(function (k) { return s.attrs[k] && s.attrs[k].conflict; })) {
+      var last = order.filter(function (k) { return s.attrs[k]; }).pop();
+      if (last) {
+        setStep(last, 'error', s.attrs[last].value, s.errorText);
+        stepInfo[last].done = false;
+      }
     }
+    if (lockNote) {
+      setText(lockNote, s.locked ? s.lockText : '');
+      lockNote.hidden = !s.locked || !s.lockText;
+    }
+    if (folding && settled && openKey && stepInfo[openKey] && stepInfo[openKey].hidden) {
+      // The open step went away (a requestable model): move on without stealing focus.
+      openStep(nextStep(null), {});
+    }
+    renderNav();
+  }
+
+  function renderNav() {
+    if (!nav) return;
+    var shownItems = 0;
+    order.forEach(function (key) {
+      var b = navBtns[key];
+      if (!b) return;
+      var info = stepInfo[key] || {};
+      var item = b.parentNode;
+      if (item.hidden !== !!info.hidden) item.hidden = !!info.hidden;
+      if (!info.hidden) shownItems++;
+      var st = steps[key].getAttribute('data-ip-step-state');
+      item.classList.toggle('is-done', st === 'done');
+      item.classList.toggle('is-error', st === 'error');
+      item.classList.toggle('is-current', key === openKey);
+      if (key === openKey) b.setAttribute('aria-current', 'step');
+      else b.removeAttribute('aria-current');
+      setText(b.querySelector('[data-ip-stepnav-state]'), ', ' + (st === 'done' ? (T.done || '').replace(/:$/, '') : (st === 'error' ? (T.unavailable || '') : (T.open || ''))));
+    });
+    // A single step (a requestable model: Modell only) needs no step bar.
+    var off = shownItems < 2;
+    if (nav.hidden !== off) nav.hidden = off;
+  }
+
+  /* ── Folding ──────────────────────────────────────────────────────────── */
+
+  function visibleSteps() {
+    return order.filter(function (k) { return !(stepInfo[k] && stepInfo[k].hidden) && !steps[k].hidden; });
+  }
+
+  function isDone(key) {
+    return !!(stepInfo[key] && stepInfo[key].done);
+  }
+
+  /**
+   * The step to open after a choice in "from" (null: from the start): the next
+   * visible step that is not done, else the first one before it, else Menge
+   * (stays open once everything is done), else none.
+   */
+  function nextStep(from) {
+    var list = visibleSteps();
+    var i = from ? list.indexOf(from) : -1;
+    var after = list.slice(i + 1).concat(i >= 0 ? list.slice(0, i) : []);
+    for (var j = 0; j < after.length; j++) {
+      if (after[j] !== 'qty' && !isDone(after[j])) return after[j];
+    }
+    if (list.indexOf('qty') !== -1) return 'qty';
+    return null;
+  }
+
+  /** Bottom of the sticky header, so a revealed step is not hidden under it. */
+  function headerOffset() {
+    var h = parseFloat(win.getComputedStyle(doc.documentElement).getPropertyValue('--header-h')) || 0;
+    var header = doc.querySelector('.ip-header, body > header');
+    if (header) {
+      var pos = win.getComputedStyle(header).position;
+      if (pos === 'sticky' || pos === 'fixed') h = Math.max(h, header.getBoundingClientRect().bottom);
+    }
+    return h;
+  }
+
+  /** Scroll only when the step's head is out of view (or its first lines would sit below the fold). */
+  function reveal(el) {
+    if (!el) return;
+    var top = headerOffset() + 12;
+    var r = el.getBoundingClientRect();
+    var barH = bar && bar.classList.contains('is-visible') ? bar.offsetHeight : 0;
+    var bottom = win.innerHeight - barH;
+    if (r.top >= top && r.top + Math.min(r.height, 200) <= bottom) return;
+    win.scrollBy({ top: r.top - top, behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  function animate(body, frames, done) {
+    if (body._ipAnim) body._ipAnim.cancel();
+    body.style.overflow = 'hidden';
+    var a = body.animate(frames, { duration: 200, easing: 'cubic-bezier(.22, 1, .36, 1)' });
+    body._ipAnim = a;
+    var end = function () {
+      if (body._ipAnim !== a) return;
+      body._ipAnim = null;
+      body.style.overflow = '';
+      if (done) done();
+    };
+    a.onfinish = end;
+    a.oncancel = end;
+  }
+
+  function setExpanded(key, on, smooth) {
+    var el = steps[key];
+    var body = el.querySelector('.ip-step__body');
+    var edit = el.querySelector('[data-ip-step-edit]');
+    el.classList.toggle('is-current', on);
+    el.classList.toggle('is-folded', !on);
+    if (edit) edit.setAttribute('aria-expanded', on ? 'true' : 'false');
+    if (!body || body.hidden === !on) return;
+    if (!smooth || reduceMotion || typeof body.animate !== 'function') {
+      if (body._ipAnim) body._ipAnim.cancel();
+      body.hidden = !on;
+      return;
+    }
+    if (on) {
+      body.hidden = false;
+      animate(body, [{ height: '0px', opacity: 0 }, { height: body.scrollHeight + 'px', opacity: 1 }]);
+    } else {
+      var h = body.offsetHeight;
+      animate(body, [{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }], function () {
+        if (!el.classList.contains('is-current')) body.hidden = true;
+      });
+    }
+  }
+
+  /**
+   * Expand one step (null: none), fold all others. opts.focus moves focus to
+   * its heading (or to the summary card when no step is left), opts.reveal
+   * scrolls it into view when needed, opts.instant skips the animation.
+   */
+  function openStep(key, opts) {
+    if (!folding) return;
+    opts = opts || {};
+    var changed = key !== openKey;
+    openKey = key;
+    order.forEach(function (k) { setExpanded(k, k === key, !opts.instant && settled); });
+    renderNav();
+    if (nav && key && navBtns[key]) {
+      // Keep the current chip in view in the horizontally scrolling bar (phones), without moving the page.
+      var item = navBtns[key].parentNode;
+      var list = nav.querySelector('.ip-stepnav__list');
+      if (list && list.scrollWidth > list.clientWidth + 1) {
+        var l = item.offsetLeft - list.offsetLeft;
+        if (l < list.scrollLeft || l + item.offsetWidth > list.scrollLeft + list.clientWidth) {
+          list.scrollTo({ left: Math.max(0, l - 24), behavior: reduceMotion || opts.instant ? 'auto' : 'smooth' });
+        }
+      }
+    }
+    if (opts.focus) {
+      var target = key ? steps[key].querySelector('.ip-step__head') : summaryTitle;
+      if (target) target.focus({ preventScroll: true });
+    }
+    if (opts.reveal) {
+      var el = key ? steps[key] : summary;
+      win.setTimeout(function () { reveal(el); }, changed && !reduceMotion ? 220 : 0);
+    }
+  }
+
+  /** After a choice in "key": move on once the Suite has updated its state. */
+  function moveOn(key) {
+    win.setTimeout(function () {
+      sync();
+      openStep(nextStep(key), { focus: true, reveal: true });
+    }, 0);
+  }
+
+  /** Initial step, once the Suite has applied its defaults (see the file header). */
+  function settle() {
+    if (settled || !folding) return;
+    sync();
+    var key;
+    if (postedSelection() && visibleSteps().indexOf('qty') !== -1) key = 'qty';
+    else if (modelCards().length > 1) key = 'model';
+    else key = nextStep('model');
+    openStep(key, { instant: true });
+    settled = true;
+  }
+
+  function enhanceSteps() {
+    order.forEach(function (key) {
+      var el = steps[key];
+      var barEl = el.querySelector('.ip-step__bar');
+      // The whole folded line reopens the step; the "Ändern" button is the keyboard control.
+      if (barEl) {
+        barEl.addEventListener('click', function () {
+          if (key !== openKey) openStep(key, { focus: true, reveal: true });
+        });
+      }
+      // A choice made by pointer, Enter or Space moves on. Capture phase: the Suite's
+      // handlers stop propagation. Faded options and info buttons are left alone.
+      el.addEventListener('click', function (e) {
+        if (!e.target.closest || key !== openKey) return;
+        if (e.target.closest('.ip-c-model-selector__info, .infoplus-dropdown__option-info, .ip-opt-off')) return;
+        if (!e.target.closest('.ip-c-model-selector__option, .infoplus-dropdown__option')) return;
+        lastChoice = key;
+        if (!silentPick) moveOn(key);
+      }, true);
+    });
+    Object.keys(navBtns).forEach(function (key) {
+      navBtns[key].addEventListener('click', function () {
+        openStep(key, { focus: true, reveal: true });
+      });
+    });
+  }
+
+  /**
+   * "Auswahl ändern" in the inquiry drawer (assets/js/inquiry.js): it fires the
+   * cancelable infoplus:inquiry-edit-selection and closes its modal dialog. This
+   * file takes over the focus: once the drawer is closed (infoplus:inquiry-close,
+   * focus cannot leave a modal dialog before), it opens the step of the last
+   * choice, else the first step that is not done, else Modell, and focuses its heading.
+   */
+  function editTarget() {
+    var list = visibleSteps();
+    if (lastChoice && list.indexOf(lastChoice) !== -1) return lastChoice;
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] !== 'qty' && !isDone(list[i])) return list[i];
+    }
+    return list[0] || null;
+  }
+
+  function editSelection() {
+    if (!editPending) return;
+    editPending = false;
+    sync();
+    var key = editTarget();
+    if (key) openStep(key, { focus: true, reveal: true });
+  }
+
+  if (folding) {
+    doc.addEventListener('infoplus:inquiry-edit-selection', function (e) {
+      e.preventDefault();
+      editPending = true;
+      win.setTimeout(editSelection, 400); // in case the close event does not come
+    });
+    doc.addEventListener('infoplus:inquiry-close', function () {
+      win.setTimeout(editSelection, 0);
+    });
   }
 
   /* ── Summary card ─────────────────────────────────────────────────────── */
@@ -428,10 +754,27 @@
     if (el && el.textContent !== value) el.textContent = value;
   }
 
+  /** The chosen options, one nowrap span each with its separator, so a line never starts with "·". */
+  function renderVariant(values) {
+    var el = sum.variant;
+    if (!el) return;
+    var sig = values.join('\u0001');
+    if (el.getAttribute('data-sig') === sig) return;
+    el.setAttribute('data-sig', sig);
+    el.textContent = '';
+    values.forEach(function (v, i) {
+      var span = doc.createElement('span');
+      span.className = 'ip-summary__opt';
+      span.textContent = v + (i < values.length - 1 ? ' ·' : '');
+      el.appendChild(span);
+      if (i < values.length - 1) el.appendChild(doc.createTextNode(' '));
+    });
+  }
+
   function renderSummary(s) {
     if (!summary) return;
     setText(sum.model, s.modelName || T.empty || '');
-    setText(sum.variant, s.locked ? '' : s.options.map(function (o) { return o.value; }).join(' · '));
+    renderVariant(s.locked ? [] : s.options.map(function (o) { return o.value; }));
     if (sum.price) sum.price.hidden = !s.hasPrice;
     if (s.hasPrice) {
       setText(sum.qty, s.qty + (unitLabel ? ' ' + unitLabel : ''));
@@ -505,7 +848,7 @@
     barSum.hidden = !meta && !s.hasPrice;
   }
 
-  /* ── Unavailable options and accessibility of the Suite controls ────── */
+  /* ── Options: inline tiles, unavailable options, radio group ─────────── */
 
   /** Values each attribute has in at least one variation of the selected model. */
   function modelValues() {
@@ -526,8 +869,15 @@
     return out;
   }
 
+  /** Options of a row that are shown (the model's options, faded or not). */
+  function shownOptions(row) {
+    return Array.prototype.filter.call(row.querySelectorAll('.infoplus-dropdown__option'), function (o) {
+      return o.style.display !== 'none';
+    });
+  }
+
   function renderOptions() {
-    if (!dropdowns) return;
+    if (!widgets.length) return;
     var ps = state();
     var values = modelValues();
     var selected = (ps && ps.selectedAttributes) || {};
@@ -551,7 +901,20 @@
         opt.classList.toggle('ip-opt-off', faded);
         if (faded) opt.setAttribute('aria-disabled', 'true');
         else opt.removeAttribute('aria-disabled');
-        opt.setAttribute('aria-selected', selected[attr] === value ? 'true' : 'false');
+        var checked = selected[attr] === value ? 'true' : 'false';
+        if (opt.getAttribute('aria-checked') !== checked) opt.setAttribute('aria-checked', checked);
+      });
+      // Up to 8 options: tiles with the term image. More: a compact chip list.
+      var shownList = shownOptions(row);
+      var layout = shownList.length > 8 ? 'list' : 'tiles';
+      if (row.getAttribute('data-ip-layout') !== layout) row.setAttribute('data-ip-layout', layout);
+      // Roving tabindex: the chosen option, else the first selectable one.
+      var stop = null;
+      shownList.forEach(function (o) { if (!stop && o.getAttribute('aria-checked') === 'true') stop = o; });
+      if (!stop) shownList.forEach(function (o) { if (!stop && !o.classList.contains('ip-opt-off')) stop = o; });
+      Array.prototype.forEach.call(row.querySelectorAll('.infoplus-dropdown__option'), function (o) {
+        var ti = o === stop ? '0' : '-1';
+        if (o.getAttribute('tabindex') !== ti) o.setAttribute('tabindex', ti);
       });
     });
   }
@@ -564,35 +927,93 @@
     e.stopPropagation(); // capture phase: the Suite's option handlers never see it
   }
 
+  /**
+   * Keys in an option group (capture phase, so the Suite's listbox keys do not
+   * run): arrows, Home and End move and choose without moving on, Enter and
+   * Space choose and move on. Keys on an info button only open its info.
+   */
+  function optionKeys(e) {
+    var t = e.target;
+    if (!t.closest) return;
+    if (t.closest('.infoplus-dropdown__option-info')) {
+      if (e.key === 'Enter' || e.key === ' ') e.stopPropagation(); // the button opens its info, nothing else
+      return;
+    }
+    var opt = t.closest('.infoplus-dropdown__option');
+    if (!opt || opt !== t) return;
+    var row = opt.closest('.infoplus-dropdown');
+    var list = shownOptions(row).filter(function (o) { return !o.classList.contains('ip-opt-off'); });
+    var i = list.indexOf(opt);
+    var next = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = list[(i + 1) % list.length];
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = list[(i - 1 + list.length) % list.length];
+    else if (e.key === 'Home') next = list[0];
+    else if (e.key === 'End') next = list[list.length - 1];
+    else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!opt.classList.contains('ip-opt-off')) opt.click(); // the Suite selects, the step moves on
+      return;
+    } else if (e.key === 'Escape') {
+      e.stopPropagation();
+      return;
+    } else {
+      return;
+    }
+    e.preventDefault();
+    e.stopPropagation();
+    if (!next || next === opt) return;
+    next.focus();
+    silentPick = true;
+    next.click();
+    silentPick = false;
+  }
+
   function enhanceDropdowns() {
-    if (!dropdowns) return;
-    dropdowns.addEventListener('click', guardFaded, true);
-    dropdowns.addEventListener('keydown', guardFaded, true);
+    widgets.forEach(function (w) {
+      w.addEventListener('click', guardFaded, true);
+      w.addEventListener('keydown', guardFaded, true);
+      if (folding) w.addEventListener('keydown', optionKeys, true);
+    });
+    if (!folding) return;
     dropdownRows().forEach(function (row, i) {
       var base = 'ip-vd-' + i;
       var label = row.querySelector('.infoplus-dropdown__label');
-      var trigger = row.querySelector('.infoplus-dropdown__trigger');
-      var value = row.querySelector('.infoplus-dropdown__selected-text');
       var list = row.querySelector('.infoplus-dropdown__options');
-      if (!label || !trigger || !list) return;
-      label.id = label.id || base + '-label';
-      if (value) value.id = value.id || base + '-value';
+      var step = row.closest('[data-ip-step]');
+      if (!label || !list) return;
       list.id = list.id || base + '-list';
-      trigger.setAttribute('aria-labelledby', label.id + (value ? ' ' + value.id : ''));
-      trigger.setAttribute('aria-haspopup', 'listbox');
-      trigger.setAttribute('aria-controls', list.id);
-      list.setAttribute('aria-labelledby', label.id);
-      // Focusable options, so the Suite's arrow key handling can move focus to them.
-      Array.prototype.forEach.call(list.querySelectorAll('.infoplus-dropdown__option'), function (opt) {
+      // Options inline as a radio group named by the step heading (the field label
+      // repeats the heading; product.css hides it in the step layout).
+      row.classList.add('ip-vd-inline');
+      list.setAttribute('role', 'radiogroup');
+      var head = step ? step.querySelector('.ip-step__head') : null;
+      if (head && head.id) list.setAttribute('aria-labelledby', head.id);
+      Array.prototype.forEach.call(list.querySelectorAll('.infoplus-dropdown__option'), function (opt, j) {
+        opt.setAttribute('role', 'radio');
         opt.setAttribute('tabindex', '-1');
+        var name = opt.querySelector('.infoplus-dropdown__option-text');
+        if (name) {
+          name.id = name.id || base + '-o' + j;
+          opt.setAttribute('aria-labelledby', name.id);
+        }
       });
-      // A click on the label opens the list like a native select.
-      label.addEventListener('click', function () { trigger.focus(); });
+      // The combobox trigger is not used in the inline layout (product.css hides it).
+      var trigger = row.querySelector('.infoplus-dropdown__trigger');
+      if (trigger) trigger.setAttribute('tabindex', '-1');
     });
   }
 
   function modelCards() {
     return modelWidget ? Array.prototype.slice.call(modelWidget.querySelectorAll('.ip-c-model-selector__option')) : [];
+  }
+
+  /** A model without picture (the Suite falls back to the WooCommerce placeholder): text-only card. */
+  function hasNoImage(card) {
+    var src = card.getAttribute('data-model-image') || '';
+    if (!src) return true;
+    if (placeholderSrc && src === placeholderSrc) return true;
+    return /woocommerce-placeholder/.test(src);
   }
 
   function renderModels() {
@@ -608,7 +1029,7 @@
     }
   }
 
-  /** Model cards as a radio group: Tab to the group, arrows move and choose, Enter / Space choose. */
+  /** Model cards as a radio group: Tab to the group, arrows move and choose, Enter / Space choose and move on. */
   function enhanceModels() {
     var cards = modelCards();
     if (!cards.length) return;
@@ -618,6 +1039,7 @@
     cards.forEach(function (card, i) {
       var name = card.querySelector('.ip-c-model-selector__label');
       card.setAttribute('role', 'radio');
+      card.classList.toggle('ip-ms-noimg', hasNoImage(card));
       if (name) {
         name.id = name.id || 'ip-ms-' + i;
         card.setAttribute('aria-labelledby', name.id);
@@ -631,7 +1053,9 @@
         if (!next) return;
         e.preventDefault();
         next.focus();
+        silentPick = true;
         next.click();
+        silentPick = false;
       });
     });
     renderModels();
@@ -639,14 +1063,27 @@
 
   /* ── Render loop ──────────────────────────────────────────────────────── */
 
+  /**
+   * The quantity the visitor set stays in the shared state too, whatever the
+   * Menge step shows (folded, or its input disabled by the bulk calculator while
+   * a variation loads). The inquiry drawer reads [data-ip-qty="value"], then
+   * infoplusProductState.currentQty. Plain assignment, no event: the Suite owns qty:changed.
+   */
+  function keepQty() {
+    var ps = state();
+    var q = qtyInput ? parseInt(qtyInput.value, 10) : NaN;
+    if (ps && q > 0 && parseInt(ps.currentQty, 10) !== q) ps.currentQty = q;
+  }
+
   function sync() {
     queued = false;
+    keepQty();
+    renderOptions();
     var s = snapshot();
     applyType(s.type);
     renderSteps(s);
     renderSummary(s);
     renderBar(s);
-    renderOptions();
     renderModels();
   }
 
@@ -668,7 +1105,7 @@
     if (qtyRow) mo.observe(qtyRow, { attributes: true, attributeFilter: ['style'] });
     mo.observe(actions, { childList: true });
     if (buyForm) mo.observe(buyForm.parentNode, { childList: true });
-    if (dropdowns) mo.observe(dropdowns, { attributes: true, attributeFilter: ['class'] });
+    widgets.forEach(function (w) { mo.observe(w, { attributes: true, attributeFilter: ['class'] }); });
   }
   ['model:changed', 'attribute:changed', 'variation:found', 'variation:notfound', 'variation:reset',
     'variations:loaded', 'qty:changed', 'minqty:changed', 'ordertype:changed'].forEach(function (name) {
@@ -706,15 +1143,38 @@
     }
   }
 
-  sync();
+  // First paint: the folding applies right away, so nothing jumps when the Suite loads.
+  // Modell open when there is a choice of models, else the first attribute step;
+  // settle() decides again once the Suite has applied its defaults.
+  if (folding) {
+    enhanceSteps();
+    sync();
+    openStep(modelCards().length > 1 ? 'model' : (order[1] || order[0]), { instant: true });
+  } else {
+    sync();
+  }
 
   // After the Suite has initialised (its handlers run on jQuery ready).
   var ready = function () {
     win.setTimeout(function () {
       enhanceDropdowns();
       enhanceModels();
-      restorePosted();
-      queue();
+      var data = productData();
+      var finish = function () {
+        restorePosted();
+        settle();
+        queue();
+      };
+      if (data && data._variationsDeferred && !(data.variations && data.variations.length)) {
+        // Deferred variations: the Suite applies its defaults right after this event.
+        var onLoaded = function () {
+          doc.removeEventListener('infoplus:variations:loaded', onLoaded);
+          win.setTimeout(finish, 0);
+        };
+        doc.addEventListener('infoplus:variations:loaded', onLoaded);
+      } else {
+        finish();
+      }
       // Announce changes from now on, not the defaults applied on load.
       win.setTimeout(function () { liveReady = true; }, 1500);
     }, 0);

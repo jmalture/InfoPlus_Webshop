@@ -8,9 +8,12 @@
  * template-parts/product/*.php. Styles and script: assets/css/product.css and
  * assets/js/product.js (bundle "product" in inc/assets.php).
  *
- * Right column (DESIGN.md, "E-shop UX for B2B buyers and resellers"): numbered
- * steps "1 Modell", "2 {real attribute labels}", "3 Menge" (summary.php,
- * purchase.php), the summary card with the main action (order-summary.php,
+ * Right column (DESIGN.md, "E-shop UX for B2B buyers and resellers"): folding
+ * steps "1 Modell", one step per variation attribute with its real label
+ * ("Frontscheibe", "Format", "Befestigung" ...), then "Menge" (summary.php,
+ * purchase.php); only one step is expanded, done steps fold into one line
+ * with their value and an "Ändern" button; a step bar on top jumps to any
+ * step. Then the summary card with the main action (order-summary.php,
  * actions.php; sticky from 1101 px), the facts under it (facts.php: lead time,
  * shipping, payment, phone; each row only with a real source) and the info box.
  * product.js drives step states, summary card and phone bar from one snapshot
@@ -229,6 +232,9 @@ function ip_product_texts() {
 			'step_prefix'    => 'Schritt %d:',
 			'step_done'      => 'erledigt:',
 			'step_open'      => 'noch offen',
+		'step_edit'      => 'Ändern',
+		'step_choose'    => 'Auswählen',
+		'steps_nav'      => 'Konfigurationsschritte',
 			'tiers_caption'  => 'Staffelpreise pro Stück',
 			'qty_wait'       => 'Staffelpreise und Menge erscheinen, sobald Ihre Auswahl vollständig ist.',
 			// Unavailable dropdown options stay visible, faded, with this reason (product.js).
