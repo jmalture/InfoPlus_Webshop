@@ -74,6 +74,16 @@ Old sources: Elementor page 12466 `account` (tabs Übersicht, Bestellungen, Proj
 | Logout without confirmation | Suite `skipLogoutConfirmation` | WooCommerce logout endpoint with nonce (no confirmation); Suite hook untouched | kept |
 | Order confirmation | Suite thank-you block | Theme `checkout/thankyou.php` | rebuilt |
 
+## Header quick menu
+
+The account icon in the header (1101 px and up) is a disclosure button with a panel: click or tap on any device, mouse hover with the mega menu's intent delay (open after 120 ms, close 250 ms after leaving icon and panel), Escape closes and returns focus, a click outside or focus leaving closes it (`assets/js/site.js`). Below 1101 px the same menu is a "Mein Konto" / "Anmelden" submenu in the mobile drawer (tap only). Code: `inc/account-menu.php` (data, built once per request), `template-parts/account-menu.php` (markup), styles in `header.css`.
+
+- Logged in: avatar, name, company, status pill; the last three orders (number, date, status, total, link to the order view; download icon when PDF Invoices offers the `invoice` account action); "Alle Bestellungen"; Übersicht, Bestellungen, Adressen, Kontodaten; Abmelden (`wc_logout_url()`). One `wc_get_orders()` query, no REST call.
+- Guests: Anmelden (login page with `redirect_to` the current page), Konto erstellen (only when WooCommerce registration is on, links to the registration card), Passwort vergessen.
+- Page cache: user-specific markup only for logged-in users (not served from the guest cache); the guest panel is the same for every guest of a URL.
+- The Suite's Elementor-era dropdown (`infoplus-menu-dropdown`, it looks for the widget `#log-in`) is dequeued by the theme.
+- Tested locally (2026-10-20) with a stand-in for the PDF Invoices action (the plugin is not installed locally).
+
 ## Order confirmation (order received)
 
 Success card (message, order number, date, status, payment method, Bestellreferenz when given, e-mail, total with VAT note, "Zum Kundenkonto" / "Weiter einkaufen", for guests "Weiter einkaufen" / "Anmelden oder Konto anlegen"), then a payment card with whatever the gateway prints on `woocommerce_thankyou_{gateway}` (bank transfer: instructions and bank details from the BACS settings), then `woocommerce_thankyou` (items, totals, addresses). Shipping appears only when the order has a shipping line (WooCommerce's own totals). Fixed against the four problems seen on staging: font, "Versand: Kostenlos", missing bank details, missing PO number, oversized phone.
