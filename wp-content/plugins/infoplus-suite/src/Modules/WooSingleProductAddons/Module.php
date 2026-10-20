@@ -557,7 +557,22 @@ final class Module implements ModuleInterface
     }
 
     /**
-     * Output product context JSON
+     * Output product context JSON: window.currentProduct, window.allWooVariations
+     * and window.currentProductImage.
+     *
+     * The variation list (model, format, befestigung, oberflaeche, variation_id per
+     * child) is printed once as window.allWooVariations; window.currentProduct.variations
+     * points at the same array. Before 0.10.26 the list was encoded twice, which made
+     * up about 390 KB of the Atlantis page (1380 variations).
+     *
+     * Readers (checked 2026-10-20 on staging and in this repo): variation-filter.js
+     * reads window.allWooVariations, and only when a form.variations_form is on the
+     * page. Nothing reads window.currentProduct.variations. elementor-bulk-calculator.js
+     * reads currentProduct.id and currentProduct.mindestanzahl.
+     *
+     * Filter infoplus_suite_product_context_variations (bool, default true, args
+     * $include and WC_Product): return false to skip the query and print an empty
+     * list. A theme that renders no form.variations_form can do that safely.
      */
     public function outputProductContextJson(): void
     {
@@ -601,8 +616,10 @@ final class Module implements ModuleInterface
             }
         }
 
+        $includeVariations = (bool) apply_filters('infoplus_suite_product_context_variations', true, $product);
+
         $variations = [];
-        if ($product->is_type('variable')) {
+        if ($includeVariations && $product->is_type('variable')) {
             global $wpdb;
             $children = $product->get_children();
 
@@ -651,13 +668,14 @@ final class Module implements ModuleInterface
             'image'            => $imageUrl ?: '',
             'categories'       => $categories,
             'primary_category' => $primary_category,
-            'variations'       => $variations,
+            'variations'       => [], // Set below to the same array as window.allWooVariations.
             'mindestanzahl'    => $mindestanzahl,
         ];
 
         echo '<script>';
-        echo 'window.currentProduct = ' . wp_json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
         echo 'window.allWooVariations = ' . wp_json_encode($variations, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
+        echo 'window.currentProduct = ' . wp_json_encode($payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
+        echo 'window.currentProduct.variations = window.allWooVariations;';
         echo 'window.currentProductImage = ' . wp_json_encode($imageUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . ';';
         echo '</script>';
     }
