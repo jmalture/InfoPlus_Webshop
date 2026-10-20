@@ -1,16 +1,17 @@
 <?php
 /**
- * Site header, ported from Elementor header template 17 ("infoplus_header + native").
+ * Site header. Content and links come from the old Elementor header 17
+ * (logo, Namensschilder with its product panel, Über infoplus, Kontakt,
+ * product search, account, cart); layout, layering and motion follow
+ * DESIGN.md (SDX cues): compact white bar with a hairline, calm 19 px nav,
+ * a floating product panel, round 40 px icon targets.
  *
- * Desktop (1101 px and up): logo, Namensschilder (link + mega menu panel),
- * Über infoplus, Kontakt, "|" separator, product search, account icon, cart icon.
- * Below 1101 px (Elementor tablet + mobile): logo + burger, which opens the
- * mobile menu dialog (replaces Elementor popup 141).
+ * Below 1101 px: logo, cart and burger; the burger opens the drawer
+ * (template-parts/mobile-menu.php).
  *
- * Header 17 is sticky, white at all times and has no logo swap. The light/dark
- * logo swap in the customizer CSS belongs to header 369 ("infoplus_header_home"),
- * which has no display conditions and never renders, so it is not ported.
- * site.js still toggles .is-stuck (the equivalent of .elementor-sticky--effects).
+ * The bar keeps a fixed height (--header-h, header.css) so the page never
+ * shifts; the stuck state only moves the background layer and the bar
+ * (transforms), see .is-stuck in header.css.
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -47,25 +48,17 @@ if ( ! function_exists( 'ip_header_logo' ) ) {
 
 if ( ! function_exists( 'ip_header_svg' ) ) {
 	/**
-	 * Header-only icons drawn like the old site (not in inc/icons.php).
-	 * burger/close: uploads/2025/06/mobile-burger-menu.svg and mobile-close.svg.
-	 * user: Font Awesome Free 5 "user-circle" solid (CC BY 4.0, fontawesome.com),
-	 * the icon header 17 used. person: uploads/2025/06/user-filled.svg (popup 141),
-	 * coordinates rounded. cart: filled cart standing in for Elementor's
-	 * "cart-solid" eicon. Always decorative; the link or button carries the name.
+	 * Icons the shared set in inc/icons.php lacks, drawn in the same style
+	 * (24 px grid, 1.75 stroke, currentColor). Decorative only.
 	 */
 	function ip_header_svg( $name ) {
-		$svgs = array(
-			'burger' => '<svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7H30M2 16H30M2 25H30"/></svg>',
-			'close'  => '<svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7L30 25M2 25L30 7"/></svg>',
-			'user'   => '<svg viewBox="0 0 496 512" width="32" height="32" fill="currentColor"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg>',
-			'person' => '<svg viewBox="0 0 30 30" width="30" height="30" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M23.36 23.87A12.15 12.15 0 0 0 27.19 15C27.19 8.27 21.73 2.81 15 2.81S2.81 8.27 2.81 15a12.15 12.15 0 0 0 3.83 8.87A12.14 12.14 0 0 0 15 27.19a12.14 12.14 0 0 0 8.36-3.32ZM7.68 22.27A9.36 9.36 0 0 1 15 18.75a9.36 9.36 0 0 1 7.32 3.52A10.29 10.29 0 0 1 15 25.31a10.29 10.29 0 0 1-7.32-3.04ZM19.69 11.25a4.69 4.69 0 1 1-9.38 0 4.69 4.69 0 0 1 9.38 0Z"/></svg>',
-			'cart'   => '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M1.5 2.5h2.9l.7 2.5h15.6a1 1 0 0 1 .97 1.24l-1.9 7.5a1.5 1.5 0 0 1-1.45 1.13H8.35l.45 1.6H19v2H8.05a1 1 0 0 1-.96-.73L3.65 4.5H1.5z"/><circle cx="9.5" cy="20.5" r="1.75"/><circle cx="17.5" cy="20.5" r="1.75"/></svg>',
+		$paths = array(
+			'arrow' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
 		);
-		if ( ! isset( $svgs[ $name ] ) ) {
+		if ( ! isset( $paths[ $name ] ) ) {
 			return '';
 		}
-		return str_replace( '<svg ', '<svg class="ip-hicon ip-hicon--' . esc_attr( $name ) . '" aria-hidden="true" focusable="false" ', $svgs[ $name ] );
+		return '<svg class="ip-icon ip-icon--' . esc_attr( $name ) . '" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths[ $name ] . '</svg>';
 	}
 }
 
@@ -94,108 +87,20 @@ if ( ! function_exists( 'ip_header_cart_url' ) ) {
 if ( ! function_exists( 'ip_header_search_form' ) ) {
 	/**
 	 * Product search form (GET, s + post_type=product, like the child theme
-	 * that limits search to products).
+	 * that limits search to products). Pill input with the icon inside.
 	 *
-	 * @param string $id Unique id prefix for this instance.
+	 * @param string $id Unique id for the input.
 	 */
 	function ip_header_search_form( $id ) {
 		$id = sanitize_html_class( $id );
 		?>
 		<form class="ip-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 			<label class="ip-sr" for="<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'Suche', 'infoplus' ); ?></label>
-			<input class="ip-search__input" type="search" id="<?php echo esc_attr( $id ); ?>" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Suchbegriff', 'infoplus' ); ?>" autocomplete="off">
+			<input class="ip-search__input" type="search" id="<?php echo esc_attr( $id ); ?>" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Namensschild suchen', 'infoplus' ); ?>" autocomplete="off">
 			<input type="hidden" name="post_type" value="product">
 			<button class="ip-search__submit" type="submit" aria-label="<?php esc_attr_e( 'Suche', 'infoplus' ); ?>"><?php echo ip_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?></button>
 		</form>
 		<?php
-	}
-}
-
-if ( ! function_exists( 'ip_header_nameplates' ) ) {
-	/**
-	 * Data for the Namensschilder mega menu and the drawer fallback.
-	 *
-	 * Source of truth: the children of the "Namensschilder" item in the menu
-	 * assigned to the 'mobile' location (Mobile Menu 247). Fallback when no
-	 * menu is assigned: all published products by menu_order, then title.
-	 *
-	 * @return array{url:string,title:string,items:array<int,array{title:string,url:string,image:int,product:bool,current:bool}>}
-	 */
-	function ip_header_nameplates() {
-		static $data = null;
-		if ( null !== $data ) {
-			return $data;
-		}
-		$data    = array(
-			'url'   => home_url( '/namensschilder/' ),
-			'title' => __( 'Namensschilder', 'infoplus' ),
-			'items' => array(),
-		);
-		$current = (int) get_queried_object_id();
-
-		$locations = get_nav_menu_locations();
-		if ( ! empty( $locations['mobile'] ) ) {
-			$menu_items = wp_get_nav_menu_items( (int) $locations['mobile'], array( 'update_post_term_cache' => false ) );
-			$children   = array();
-			foreach ( (array) $menu_items as $item ) {
-				if ( empty( $item->_invalid ) ) {
-					$children[ (int) $item->menu_item_parent ][] = $item;
-				}
-			}
-			// The top-level item titled "Namensschilder"; else the first one with children.
-			$parent = null;
-			foreach ( $children[0] ?? array() as $top ) {
-				if ( empty( $children[ (int) $top->ID ] ) ) {
-					continue;
-				}
-				if ( 'namensschilder' === sanitize_title( $top->title ) ) {
-					$parent = $top;
-					break;
-				}
-				$parent = $parent ? $parent : $top;
-			}
-			if ( $parent ) {
-				$data['url']   = $parent->url;
-				$data['title'] = $parent->title;
-				foreach ( $children[ (int) $parent->ID ] as $child ) {
-					$is_product      = 'product' === $child->object;
-					$data['items'][] = array(
-						'title'   => $child->title,
-						'url'     => $child->url,
-						'image'   => $is_product ? (int) get_post_thumbnail_id( (int) $child->object_id ) : 0,
-						'product' => $is_product,
-						'current' => 'post_type' === $child->type && (int) $child->object_id === $current,
-					);
-				}
-			}
-		}
-
-		if ( ! $data['items'] && post_type_exists( 'product' ) ) {
-			$ids = get_posts( array(
-				'post_type'              => 'product',
-				'post_status'            => 'publish',
-				'posts_per_page'         => 24,
-				'orderby'                => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
-				'fields'                 => 'ids',
-				'no_found_rows'          => true,
-				'update_post_term_cache' => false,
-			) );
-			if ( function_exists( 'ip_prime_posts' ) ) {
-				ip_prime_posts( $ids );
-			}
-			foreach ( $ids as $id ) {
-				// Product titles read "Atlantis Namensschild"; the menu shows "Atlantis".
-				$title           = preg_replace( '/\s+Namensschild(er)?$/iu', '', get_the_title( $id ) );
-				$data['items'][] = array(
-					'title'   => $title,
-					'url'     => get_permalink( $id ),
-					'image'   => (int) get_post_thumbnail_id( $id ),
-					'product' => true,
-					'current' => (int) $id === $current,
-				);
-			}
-		}
-		return $data;
 	}
 }
 
@@ -209,14 +114,186 @@ if ( ! function_exists( 'ip_header_is_current' ) ) {
 	}
 }
 
+if ( ! function_exists( 'ip_header_menu_tree' ) ) {
+	/**
+	 * Top-level items (with children) of the menu in the 'mobile' location
+	 * (Mobile Menu 247), shared by the mega panel and the drawer. Each item:
+	 * title, url, current, plates (true for the Namensschilder item), children.
+	 * Children also carry image (featured image ID) and product.
+	 *
+	 * Fallback without an assigned menu: Namensschilder (published products by
+	 * menu_order, then title), Über infoplus, Kontakt.
+	 *
+	 * @return array<int,array>
+	 */
+	function ip_header_menu_tree() {
+		static $tree = null;
+		if ( null !== $tree ) {
+			return $tree;
+		}
+		$tree    = array();
+		$current = (int) get_queried_object_id();
+
+		$is_current = static function ( $item ) use ( $current ) {
+			if ( 'post_type' === $item->type || 'taxonomy' === $item->type ) {
+				return $current && (int) $item->object_id === $current;
+			}
+			return ip_header_is_current( $item->url );
+		};
+
+		$locations = get_nav_menu_locations();
+		if ( ! empty( $locations['mobile'] ) ) {
+			$children = array();
+			foreach ( (array) wp_get_nav_menu_items( (int) $locations['mobile'], array( 'update_post_term_cache' => false ) ) as $item ) {
+				if ( empty( $item->_invalid ) ) {
+					$children[ (int) $item->menu_item_parent ][] = $item;
+				}
+			}
+			$thumb_ids = array();
+			foreach ( $children[0] ?? array() as $top ) {
+				$entry = array(
+					'title'    => $top->title,
+					'url'      => $top->url,
+					'current'  => $is_current( $top ),
+					'plates'   => false,
+					'children' => array(),
+				);
+				foreach ( $children[ (int) $top->ID ] ?? array() as $child ) {
+					$is_product          = 'product' === $child->object;
+					$image               = $is_product ? (int) get_post_thumbnail_id( (int) $child->object_id ) : 0;
+					$thumb_ids[]         = $image;
+					$entry['children'][] = array(
+						'title'   => $child->title,
+						'url'     => $child->url,
+						'image'   => $image,
+						'product' => $is_product,
+						'current' => $is_current( $child ),
+					);
+				}
+				$tree[] = $entry;
+			}
+			$thumb_ids = array_filter( $thumb_ids );
+			if ( $thumb_ids ) {
+				_prime_post_caches( $thumb_ids, false, true ); // One query for all card images.
+			}
+			// The Namensschilder item: titled so, else the first item with children.
+			$plates = null;
+			foreach ( $tree as $i => $entry ) {
+				if ( ! $entry['children'] ) {
+					continue;
+				}
+				if ( 'namensschilder' === sanitize_title( $entry['title'] ) ) {
+					$plates = $i;
+					break;
+				}
+				$plates = null === $plates ? $i : $plates;
+			}
+			if ( null !== $plates ) {
+				$tree[ $plates ]['plates'] = true;
+			}
+			return $tree;
+		}
+
+		$products = array();
+		if ( post_type_exists( 'product' ) ) {
+			$ids = get_posts( array(
+				'post_type'              => 'product',
+				'post_status'            => 'publish',
+				'posts_per_page'         => 24,
+				'orderby'                => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+			) );
+			if ( function_exists( 'ip_prime_posts' ) ) {
+				ip_prime_posts( $ids );
+			}
+			foreach ( $ids as $id ) {
+				$products[] = array(
+					// Product titles read "Atlantis Namensschild"; the menu shows "Atlantis".
+					'title'   => preg_replace( '/\s+Namensschild(er)?$/iu', '', get_the_title( $id ) ),
+					'url'     => get_permalink( $id ),
+					'image'   => (int) get_post_thumbnail_id( $id ),
+					'product' => true,
+					'current' => (int) $id === $current,
+				);
+			}
+		}
+		$links = array(
+			array( __( 'Namensschilder', 'infoplus' ), home_url( '/namensschilder/' ) ),
+			array( __( 'Über infoplus', 'infoplus' ), home_url( '/unternehmen/' ) ),
+			array( __( 'Kontakt', 'infoplus' ), home_url( '/kontakt/' ) ),
+		);
+		foreach ( $links as $i => $link ) {
+			$tree[] = array(
+				'title'    => $link[0],
+				'url'      => $link[1],
+				'current'  => ip_header_is_current( $link[1] ),
+				'plates'   => 0 === $i,
+				'children' => 0 === $i ? $products : array(),
+			);
+		}
+		return $tree;
+	}
+}
+
+if ( ! function_exists( 'ip_header_nameplates' ) ) {
+	/**
+	 * The Namensschilder entry of ip_header_menu_tree() (title, url, current,
+	 * items), with a /namensschilder/ default when the menu has none.
+	 *
+	 * @return array{title:string,url:string,current:bool,items:array}
+	 */
+	function ip_header_nameplates() {
+		foreach ( ip_header_menu_tree() as $entry ) {
+			if ( $entry['plates'] ) {
+				return array(
+					'title'   => $entry['title'],
+					'url'     => $entry['url'],
+					'current' => $entry['current'] || ip_header_is_current( $entry['url'] ),
+					'items'   => $entry['children'],
+				);
+			}
+		}
+		$url = home_url( '/namensschilder/' );
+		return array( 'title' => __( 'Namensschilder', 'infoplus' ), 'url' => $url, 'current' => ip_header_is_current( $url ), 'items' => array() );
+	}
+}
+
+if ( ! function_exists( 'ip_header_card_image' ) ) {
+	/**
+	 * Card image for a menu child: its featured image, the WooCommerce
+	 * placeholder for products without one, else ''. Returns safe HTML.
+	 * 'medium' keeps the wide nameplate shapes ('thumbnail' is a square crop).
+	 */
+	function ip_header_card_image( $item, $sizes ) {
+		$attr = array( 'class' => 'ip-card-img', 'alt' => '', 'loading' => 'lazy', 'decoding' => 'async', 'sizes' => $sizes );
+		if ( ! empty( $item['image'] ) ) {
+			return wp_get_attachment_image( $item['image'], 'medium', false, $attr );
+		}
+		if ( ! empty( $item['product'] ) && function_exists( 'wc_placeholder_img' ) ) {
+			unset( $attr['sizes'] );
+			return wc_placeholder_img( 'medium', $attr );
+		}
+		return '';
+	}
+}
+
+if ( ! function_exists( 'ip_header_count_label' ) ) {
+	/** "21 Modelle" / "1 Modell". */
+	function ip_header_count_label( $count ) {
+		return sprintf( /* translators: %d: number of products */ _n( '%d Modell', '%d Modelle', $count, 'infoplus' ), $count );
+	}
+}
+
 $ip_plates  = ip_header_nameplates();
+$ip_count   = count( $ip_plates['items'] );
 $ip_account = ip_header_account();
 $ip_links   = array(
 	array( __( 'Über infoplus', 'infoplus' ), home_url( '/unternehmen/' ) ),
 	array( __( 'Kontakt', 'infoplus' ), home_url( '/kontakt/' ) ),
 );
 $ip_mega_id = 'ip-mega-panel';
-$ip_plates_current = ip_header_is_current( $ip_plates['url'] );
 ?>
 <header class="ip-header" data-ip-header>
 	<div class="ip-header__bar">
@@ -224,55 +301,60 @@ $ip_plates_current = ip_header_is_current( $ip_plates['url'] );
 			<?php echo ip_header_logo(); // phpcs:ignore WordPress.Security.EscapeOutput -- wp_get_attachment_image() output or escaped text. ?>
 		</a>
 
-		<div class="ip-header__tools">
-			<nav class="ip-nav" aria-label="<?php esc_attr_e( 'Hauptmenü', 'infoplus' ); ?>">
-				<ul class="ip-nav__list">
-					<li class="ip-nav__item<?php echo $ip_plates['items'] ? ' ip-nav__item--mega' : ''; ?>"<?php echo $ip_plates['items'] ? ' data-ip-mega' : ''; ?>>
-						<a class="ip-nav__link" href="<?php echo esc_url( $ip_plates['url'] ); ?>"<?php echo $ip_plates_current ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $ip_plates['title'] ); ?></a>
-						<?php if ( $ip_plates['items'] ) : ?>
-							<button type="button" class="ip-nav__toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $ip_mega_id ); ?>">
-								<span class="ip-sr"><?php echo esc_html( sprintf( /* translators: %s: menu item, e.g. Namensschilder */ __( 'Untermenü %s', 'infoplus' ), $ip_plates['title'] ) ); ?></span>
-								<?php echo ip_icon( 'chevron' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
-							</button>
-							<?php
-							get_template_part( 'template-parts/mega-menu', null, array(
-								'id'    => $ip_mega_id,
-								'items' => $ip_plates['items'],
-								'label' => $ip_plates['title'],
-							) );
-							?>
+		<nav class="ip-nav" aria-label="<?php esc_attr_e( 'Hauptmenü', 'infoplus' ); ?>">
+			<ul class="ip-nav__list">
+				<li class="ip-nav__item<?php echo $ip_count ? ' ip-nav__item--mega' : ''; ?>"<?php echo $ip_count ? ' data-ip-mega' : ''; ?>>
+					<a class="ip-nav__link" href="<?php echo esc_url( $ip_plates['url'] ); ?>"<?php echo $ip_plates['current'] ? ' aria-current="page"' : ''; ?>>
+						<?php echo esc_html( $ip_plates['title'] ); ?>
+						<?php if ( $ip_count ) : ?>
+							<span class="ip-pill ip-nav__count" aria-hidden="true"><?php echo esc_html( $ip_count ); ?></span>
 						<?php endif; ?>
+					</a>
+					<?php if ( $ip_count ) : ?>
+						<button type="button" class="ip-nav__toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $ip_mega_id ); ?>">
+							<span class="ip-sr"><?php echo esc_html( sprintf( /* translators: 1: menu item, 2: "21 Modelle" */ __( '%1$s anzeigen, %2$s', 'infoplus' ), $ip_plates['title'], ip_header_count_label( $ip_count ) ) ); ?></span>
+							<?php echo ip_icon( 'chevron' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+						</button>
+						<?php
+						// Inside the item for tab order; positioned against .ip-header__bar (header.css).
+						get_template_part( 'template-parts/mega-menu', null, array(
+							'id'    => $ip_mega_id,
+							'title' => $ip_plates['title'],
+							'url'   => $ip_plates['url'],
+							'items' => $ip_plates['items'],
+						) );
+						?>
+					<?php endif; ?>
+				</li>
+				<?php foreach ( $ip_links as $ip_link ) : ?>
+					<li class="ip-nav__item">
+						<a class="ip-nav__link" href="<?php echo esc_url( $ip_link[1] ); ?>"<?php echo ip_header_is_current( $ip_link[1] ) ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $ip_link[0] ); ?></a>
 					</li>
-					<?php foreach ( $ip_links as $ip_link ) : ?>
-						<li class="ip-nav__item">
-							<a class="ip-nav__link" href="<?php echo esc_url( $ip_link[1] ); ?>"<?php echo ip_header_is_current( $ip_link[1] ) ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $ip_link[0] ); ?></a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
-			</nav>
+				<?php endforeach; ?>
+			</ul>
+		</nav>
 
-			<span class="ip-header__sep" aria-hidden="true">|</span>
-
+		<div class="ip-header__tools">
 			<?php ip_header_search_form( 'ip-search-header' ); ?>
 
 			<a class="ip-header__icon ip-header__account" href="<?php echo esc_url( $ip_account['url'] ); ?>" aria-label="<?php echo esc_attr( $ip_account['label'] ); ?>">
-				<?php echo ip_header_svg( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
-			</a>
-
-			<a class="ip-header__icon ip-cart" href="<?php echo esc_url( ip_header_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Warenkorb', 'infoplus' ); ?>">
-				<?php echo ip_header_svg( 'cart' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
-				<?php echo ip_cart_badge(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_cart_badge(). ?>
+				<?php echo ip_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
 			</a>
 		</div>
 
+		<a class="ip-header__icon ip-cart" href="<?php echo esc_url( ip_header_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Warenkorb', 'infoplus' ); ?>">
+			<?php echo ip_icon( 'cart' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+			<?php echo ip_cart_badge(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_cart_badge(). ?>
+		</a>
+
 		<button type="button" class="ip-header__icon ip-burger" data-ip-open="ip-mobile-menu" aria-haspopup="dialog" aria-controls="ip-mobile-menu" aria-label="<?php esc_attr_e( 'Menü', 'infoplus' ); ?>">
-			<?php echo ip_header_svg( 'burger' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+			<?php echo ip_icon( 'menu' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
 		</button>
+
 	</div>
 </header>
 <?php
 get_template_part( 'template-parts/mobile-menu', null, array(
-	'plates'  => $ip_plates,
-	'links'   => $ip_links,
+	'tree'    => ip_header_menu_tree(),
 	'account' => $ip_account,
 ) );

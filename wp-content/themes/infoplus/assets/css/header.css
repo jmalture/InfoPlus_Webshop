@@ -1,229 +1,343 @@
-/* Header, Namensschilder mega menu and mobile menu drawer.
-   Port of Elementor header 17 and popup 141 (values from _legacy/elementor and
-   the compiled post-17.css). Mobile first; breakpoints 768 and 1101 only.
-   Below 1101 px only logo + burger show (Elementor hid the nav container on
-   tablet and mobile); the drawer replaces the desktop nav there. */
+/* Header, Namensschilder mega menu and mobile drawer.
+   Content from the old Elementor header 17 / popup 141; look and motion per
+   DESIGN.md (SDX cues): white compact bar with a hairline, floating panels
+   (.ip-panel, --shadow-2), cards on Very Light Grey tiles, pills for counts,
+   short eased motion (off under prefers-reduced-motion).
+   Mobile first; breakpoints 768 and 1101 only. */
 
-/* ── Local values the kit tokens in main.css do not cover ──────────────── */
+/* ── Local values ───────────────────────────────────────────────────────── */
+/* Real header heights: the bar has a fixed height, so these are exact.
+   main.css also sets --header-h (64 / 83); this file loads after it and wins. */
+:root { --header-h: 64px }
+@media (min-width: 1101px) { :root { --header-h: 76px } }
+
 .ip-header,
 .ip-drawer {
-  --ip-header-pad: 20px;                 /* header 17 padding_mobile */
-  --ip-mega-offset: 15px;                /* header bottom padding, the panel starts at the title's bottom edge */
-  --ip-mega-distance: 20px;              /* mega menu "distance from content" */
-  --ip-mega-dur: 500ms;                  /* mega menu open_animation fadeIn */
-  --ip-drawer-dur: 800ms;                /* popup 141 slideInRight duration */
-  --ip-overlay: rgba(0, 0, 0, .8);       /* Elementor popup overlay default */
-  --ip-badge-bg: #d9534f;                /* Elementor menu cart counter default (kit sets none) */
-  --ip-hover-dur: 300ms;                 /* Elementor title/icon transition */
-}
-@media (min-width: 768px) {
-  .ip-header { --ip-header-pad: 15px 40px }
+  --ip-dur: 250ms;                        /* hover, chevrons, panel rise */
+  --ip-drawer-dur: 300ms;
+  --ip-stagger: 40ms;
+  --ip-overlay: rgb(25 27 28 / .45);
 }
 @media (prefers-reduced-motion: reduce) {
-  .ip-header, .ip-drawer { --ip-mega-dur: 0ms; --ip-drawer-dur: 0ms; --ip-hover-dur: 0ms }
+  .ip-header, .ip-drawer { --ip-dur: 0ms; --ip-drawer-dur: 0ms; --ip-stagger: 0ms }
 }
 
 /* ── Header bar ─────────────────────────────────────────────────────────── */
-/* Sticky, white, z-index 9999 as in Elementor. site.js adds .is-stuck once the
-   page scrolls (Elementor's .elementor-sticky--effects); header 17 has no
-   visual change for that state, so no rule uses it yet. */
+/* Fixed height, so nothing below moves. The white layer is ::before; when
+   site.js adds .is-stuck it slides up by --ip-shrink and gains a soft
+   shadow, and the bar moves up by half that (transforms only). The strip
+   it uncovers lets clicks through to the page (pointer-events). */
 .ip-header {
+  --ip-shrink: 6px;
   position: sticky;
   top: var(--wp-admin--admin-bar--height, 0px);
-  z-index: 9999;
-  padding: var(--ip-header-pad);
-  background: var(--c-white);
+  z-index: 1000;
+  height: var(--header-h);
   color: var(--text-primary);
+  pointer-events: none;
+}
+.ip-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c-white);
+  box-shadow: 0 1px 0 var(--border);
+  pointer-events: auto;
+  transition: transform var(--ip-dur) var(--ease), box-shadow var(--ip-dur) var(--ease);
+}
+.ip-header.is-stuck::before {
+  transform: translateY(calc(-1 * var(--ip-shrink)));
+  box-shadow: 0 1px 0 var(--border), 0 10px 28px -14px rgb(25 27 28 / .22);
 }
 .ip-header__bar {
+  position: relative;               /* containing block of the mega panel */
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-6);
-  max-width: var(--layout-max);
+  gap: var(--space-1);
+  height: 100%;
+  max-width: calc(var(--layout-max) + 2 * var(--layout-margin));
   margin-inline: auto;
+  padding-inline: var(--layout-margin);
+  pointer-events: none;             /* only the controls catch clicks */
+  transition: transform var(--ip-dur) var(--ease);
 }
+.ip-header__bar > * { pointer-events: auto }
+.ip-header.is-stuck .ip-header__bar { transform: translateY(calc(-.5 * var(--ip-shrink))) }
 
-.ip-logo { display: block; flex: none; color: var(--accent); text-decoration: none }
-.ip-logo__img { width: 100px; height: auto }
-.ip-logo__text { font: var(--type-sub) }
+.ip-logo {
+  display: block;
+  flex: none;
+  margin-inline-end: auto;
+  border-radius: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  transform-origin: left center;
+  transition: transform var(--ip-dur) var(--ease);
+}
+.ip-header.is-stuck .ip-logo { transform: scale(.94) }
+.ip-logo__img { width: 100px; height: auto; max-height: 40px; object-fit: contain; object-position: left center }
+.ip-logo__text { font: 700 24px/1 var(--font) }
 
-/* Icon links and buttons: Text colour, Primary on hover (all header icons). */
-.ip-header__icon,
-.ip-drawer__icon,
-.ip-drawer__close {
+/* Round 40 px icon targets (account, cart, burger, drawer close). */
+.ip-header__icon {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: 0;
-  background: none;
+  border-radius: 50%;
+  background: transparent;
   color: var(--text-primary);
   text-decoration: none;
-  transition: color var(--ip-hover-dur) ease;
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
 }
-.ip-header__icon:hover,
-.ip-drawer__icon:hover,
-.ip-drawer__close:hover { color: var(--accent) }
-.ip-hicon { display: block; width: 32px; height: 32px }
-.ip-hicon--cart { width: 30px; height: 30px }
+.ip-header__icon:hover { background: var(--c-primary-tint); color: var(--accent) }
+.ip-header__icon .ip-icon { width: 24px; height: 24px }
 
-/* Desktop group: nav, separator, search, account, cart. Gap 30 px. */
-.ip-header__tools { display: none }
-
-/* Cart counter (markup from ip_cart_badge(), updated as a cart fragment).
-   Hidden when empty, like hide_empty_indicator in Elementor. */
+/* Cart count (markup from ip_cart_badge(), refreshed as a cart fragment). */
 .ip-cart__count {
   position: absolute;
-  top: -.7em;
-  inset-inline-end: -.7em;
-  min-width: 1.6em;
-  height: 1.6em;
-  padding-inline: .3em;
-  border-radius: 1em;
-  background: var(--ip-badge-bg);
+  top: 2px;
+  right: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--c-primary);
   color: var(--c-white);
-  font: 600 12px/1.6em var(--font);
+  box-shadow: 0 0 0 2px var(--c-white);
+  font: 700 11px/18px var(--font);
   text-align: center;
 }
 .ip-cart__count.is-empty { display: none }
 
-/* ── Product search (header and drawer) ─────────────────────────────────── */
-/* Elementor search form, classic skin: 40 px high, transparent, 1 px bottom
-   border, Text 20 px input in Dark Grey (Text on focus), icon button. */
-.ip-search {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  border-bottom: 1px solid var(--text-primary);
-}
+.ip-nav,
+.ip-header__tools { display: none }
+
+/* ── Search (header and drawer) ─────────────────────────────────────────── */
+.ip-search { position: relative; display: flex; align-items: center; width: 100% }
 .ip-search__input {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   height: 40px;
-  padding: 0 calc(40px / 3);
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--text-secondary);
-  font: var(--type-text);
+  padding: 0 16px 0 40px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--c-grey-100);
+  color: var(--text-primary);
+  font: 400 16px/1 var(--font);
   appearance: none;
+  transition: background-color var(--ip-dur) var(--ease), border-color var(--ip-dur) var(--ease);
 }
-.ip-search__input:focus { color: var(--text-primary) }
-.ip-search__input:focus-visible { outline-offset: 0 }
+.ip-search__input::placeholder { color: var(--text-secondary); opacity: 1 }
+.ip-search__input:hover { border-color: var(--border) }
+.ip-search__input:focus { outline: 2px solid var(--focus); outline-offset: 2px; border-color: var(--border); background: var(--c-white) }
 .ip-search__submit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  min-width: 40px;
-  height: 40px;
+  position: absolute;
+  inset-inline-start: 4px;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: 0;
+  border-radius: 50%;
   background: transparent;
-  color: var(--text-primary);
-  font-size: 16px;
-  transition: color var(--ip-hover-dur) ease;
+  color: var(--text-secondary);
+  transition: color var(--ip-dur) var(--ease);
 }
-.ip-search__submit:hover,
-.ip-search__submit:focus-visible { color: var(--accent) }
+.ip-search__submit:hover { color: var(--accent) }
+.ip-search__submit .ip-icon { width: 18px; height: 18px }
 
 /* ── Desktop nav ────────────────────────────────────────────────────────── */
-.ip-nav__list { display: flex; align-items: center; margin: 0; padding: 0; list-style: none }
-.ip-nav__item { display: flex; align-items: center }
-.ip-nav__link,
-.ip-nav__toggle {
-  padding: .5rem 1rem;
-  border: 0;
-  background: none;
+.ip-nav__list { display: flex; align-items: center; gap: var(--space-1); margin: 0; padding: 0; list-style: none }
+.ip-nav__item { display: flex; align-items: center; gap: 2px }   /* not positioned: the panel anchors to the bar */
+.ip-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 10px;
+  border-radius: 10px;
   color: var(--text-primary);
-  font: var(--type-sub);
+  font: 600 19px/1.3 var(--font);
   text-decoration: none;
-  white-space: nowrap;
-  transition: color var(--ip-hover-dur) ease;
+  transition: color var(--ip-dur) var(--ease);
 }
 .ip-nav__link:hover,
-.ip-nav__toggle:hover,
-.ip-nav__item--mega.is-open > .ip-nav__link,
-.ip-nav__item--mega.is-open > .ip-nav__toggle { color: var(--accent) }
-.ip-nav__link[aria-current="page"] { color: var(--accent-hover) }   /* Elementor "active" = Secondary */
-
-/* Link and indicator share one title box in Elementor: 1rem outer padding, 5 px between. */
-.ip-nav__item--mega > .ip-nav__link { padding-inline-end: 0 }
-.ip-nav__toggle { display: inline-flex; align-items: center; align-self: stretch; padding-inline: 5px 1rem }
-.ip-nav__toggle .ip-icon { width: 20px; height: 20px; transform: rotate(90deg); transition: transform var(--ip-hover-dur) ease }
-.ip-nav__toggle[aria-expanded="true"] .ip-icon { transform: rotate(-90deg) }
-
-.ip-header__sep { font: 400 30px/1.3 var(--font); color: var(--text-primary) }
-
-/* ── Mega menu panel ────────────────────────────────────────────────────── */
-/* Full-width panel anchored to the sticky header (its containing block). The
-   transparent top padding is Elementor's 20 px "distance from content"; it
-   also bridges the pointer from the title to the panel. */
-.ip-mega {
+.ip-nav__item--mega.is-open > .ip-nav__link { color: var(--accent) }
+/* Current page: short magenta bar under the label. */
+.ip-nav__link[aria-current="page"]::after {
+  content: "";
   position: absolute;
-  inset-inline: 0;
-  top: calc(100% - var(--ip-mega-offset));
-  padding-top: var(--ip-mega-distance);
-  animation: ip-mega-in var(--ip-mega-dur) ease both;
+  inset-inline-start: 10px;
+  bottom: 2px;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
 }
-.ip-mega__box { background: var(--c-white) }
+.ip-nav__count { transition: transform 300ms var(--ease-spring) }
+.ip-nav__item--mega:hover .ip-nav__count,
+.ip-nav__item--mega.is-open .ip-nav__count { transform: scale(1.12) rotate(-8deg) }
+.ip-nav__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-nav__toggle .ip-icon { width: 18px; height: 18px; transform: rotate(90deg); transition: transform var(--ip-dur) var(--ease) }
+.ip-nav__item--mega:hover .ip-nav__toggle,
+.ip-nav__item--mega.is-open .ip-nav__toggle { background: var(--c-primary-tint); color: var(--accent) }
+.ip-nav__toggle[aria-expanded="true"] .ip-icon { transform: rotate(270deg) }
+.ip-nav a:focus-visible,
+.ip-nav button:focus-visible { outline-offset: 2px }
+
+/* ── Mega panel ─────────────────────────────────────────────────────────── */
+/* Anchored to the bar; site.js sets --ip-mega-left (aligned with the item,
+   clamped into the bar) and --ip-caret-x (caret under the item). The
+   transparent top padding bridges the pointer from the item to the panel. */
+.ip-mega {
+  --ip-bridge: calc((var(--header-h) - 40px) / 2);
+  position: absolute;
+  top: calc(100% - var(--ip-bridge));
+  left: var(--ip-mega-left, var(--layout-margin));
+  z-index: 1;
+  width: min(1000px, calc(100% - 2 * var(--layout-margin)));
+  padding-top: calc(var(--ip-bridge) + 12px);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 220ms ease,
+    transform 300ms var(--ease),
+    visibility 0s linear 300ms;
+}
+.ip-nav__item--mega.is-open .ip-mega {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition: opacity 220ms ease, transform 300ms var(--ease), visibility 0s;
+}
+.ip-mega__box { position: relative; padding: var(--space-3) }
+.ip-mega__box::before {                 /* caret */
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: var(--ip-caret-x, 48px);
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--c-white);
+  box-shadow: -1px -1px 0 rgb(25 27 28 / .06);
+  transform: rotate(45deg);
+}
 .ip-mega__grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  max-width: var(--layout-max);
-  margin: 0 auto;
-  padding: 20px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
-.ip-mega__cell { display: flex }
-.ip-mega__item {
+.ip-mega__cell {
+  display: flex;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 300ms ease, transform 350ms var(--ease);
+}
+.ip-nav__item--mega.is-open .ip-mega__cell {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(min(var(--i, 0), 10) * var(--ip-stagger));
+}
+.ip-mega__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  border-top: 1px solid var(--border);
+}
+.ip-mega__all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: 8px;
+  color: var(--c-secondary);             /* 16 px: secondary for contrast */
+  font: 600 16px/1.3 var(--font);
+  text-decoration: none;
+}
+.ip-mega__all:hover { text-decoration: underline; text-underline-offset: 3px }
+.ip-mega__all .ip-icon { width: 18px; height: 18px; transition: transform var(--ip-dur) var(--ease) }
+.ip-mega__all:hover .ip-icon { transform: translateX(4px) }
+
+/* Product card (mega panel and drawer). */
+.ip-pcard {
   display: flex;
   flex: 1;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  color: var(--text-secondary);
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: 14px;
+  color: var(--text-primary);
   text-decoration: none;
+  transition: background-color var(--ip-dur) var(--ease);
 }
-.ip-mega__media { display: block; width: 100%; height: 80px }
-.ip-mega__img {
+.ip-pcard:hover,
+.ip-pcard:focus-visible { background: var(--c-primary-tint) }
+.ip-pcard__thumb {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  padding: var(--space-2);
+  border-radius: 12px;
+  background: var(--c-grey-100);
+  overflow: hidden;
+}
+.ip-card-img {
   width: 100%;
-  height: 80px;
+  height: 100%;
   object-fit: contain;
-  transition: transform var(--ip-hover-dur) ease;
+  transition: transform 350ms var(--ease);
 }
-.ip-mega__item:hover .ip-mega__img,
-.ip-mega__item:focus-visible .ip-mega__img { transform: scale(1.1) }
-.ip-mega__title { font: 700 16px/1.3 var(--font); text-align: center }
+.ip-pcard:hover .ip-card-img,
+.ip-pcard:focus-visible .ip-card-img { transform: scale(1.06) }
+.ip-pcard__name { font: 600 15px/1.25 var(--font); text-align: center }
+.ip-pcard[aria-current="page"] .ip-pcard__name { color: var(--c-secondary) }
 
-@keyframes ip-mega-in { from { opacity: 0 } }
-
-/* ── Mobile menu drawer (popup 141) ─────────────────────────────────────── */
+/* ── Mobile drawer ──────────────────────────────────────────────────────── */
 .ip-drawer {
   position: fixed;
   inset: 0 0 0 auto;
-  width: 90vw;
+  width: min(420px, 92vw);
   max-width: none;
   height: 100dvh;
   max-height: none;
   margin: 0;
-  padding: 20px;
+  padding: 0;
   border: 0;
-  background: var(--surface-alt);   /* Very Light Grey */
+  border-radius: var(--radius-panel) 0 0 var(--radius-panel);
+  background: var(--c-white);
   color: var(--text-primary);
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
   transform: translateX(100%);
   transition:
-    transform var(--ip-drawer-dur) ease,
+    transform var(--ip-drawer-dur) var(--ease),
     overlay var(--ip-drawer-dur) allow-discrete,
     display var(--ip-drawer-dur) allow-discrete;
 }
-.ip-drawer[open] { display: flex; flex-direction: column; gap: 80px; transform: none }
+.ip-drawer[open] { display: flex; flex-direction: column; transform: none }
 @starting-style { .ip-drawer[open] { transform: translateX(100%) } }
 
 .ip-drawer::backdrop {
@@ -237,72 +351,109 @@
 .ip-drawer[open]::backdrop { opacity: 1 }
 @starting-style { .ip-drawer[open]::backdrop { opacity: 0 } }
 
-.ip-drawer__top { display: flex; justify-content: flex-end }
-.ip-drawer__body { display: flex; flex-direction: column; gap: 20px }
-
-.ip-drawer .ip-search { width: 100%; border-bottom-color: var(--text-secondary) }
-.ip-drawer .ip-search__input { padding: 0 }
-
-/* Menu: Archivo Narrow 600 uppercase, 1.5 px tracking; 20 px phone, 24 px tablet. */
-.ip-drawer__menu,
-.ip-drawer__menu .sub-menu { margin: 0; padding: 0; list-style: none }
-.ip-drawer__menu > li { display: flex; flex-wrap: wrap; align-items: center }
-.ip-drawer__menu > li > a {
-  padding-block: 13px;
-  color: var(--text-primary);
-  font: 600 20px/1.2 var(--font);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition: color var(--ip-hover-dur) ease;
+.ip-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-3) var(--space-2) var(--space-6);
 }
-.ip-drawer__menu a:hover,
-.ip-drawer__menu .current-menu-item > a,
-.ip-drawer__menu .current-menu-ancestor > a { color: var(--accent) }
+.ip-drawer__scroll {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-6) var(--space-6);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ip-drawer__menu,
+.ip-drawer__cards,
+.ip-drawer__sub { margin: 0; padding: 0; list-style: none }
+.ip-drawer__item { border-bottom: 1px solid var(--border) }
+.ip-drawer__row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2) }
+.ip-drawer__link {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 14px 0;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font: 600 20px/1.25 var(--font);
+  text-decoration: none;
+  transition: color var(--ip-dur) var(--ease);
+}
+.ip-drawer__link:hover,
+.ip-drawer__item.is-active > .ip-drawer__row .ip-drawer__link { color: var(--accent) }
 
 .ip-drawer__sub-toggle {
-  display: inline-flex;
-  align-items: center;
-  align-self: stretch;
-  padding: 0 10px;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   border: 0;
-  background: none;
-  color: inherit;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
 }
-.ip-drawer__sub-toggle .ip-icon { width: 20px; height: 20px; transform: rotate(90deg); transition: transform var(--ip-hover-dur) ease }
-.ip-drawer__sub-toggle[aria-expanded="true"] .ip-icon { transform: rotate(-90deg) }
+.ip-drawer__sub-toggle .ip-icon { width: 20px; height: 20px; transform: rotate(90deg); transition: transform var(--ip-dur) var(--ease) }
+.ip-drawer__sub-toggle:hover,
+.ip-drawer__sub-toggle[aria-expanded="true"] { background: var(--c-primary-tint); color: var(--accent) }
+.ip-drawer__sub-toggle[aria-expanded="true"] .ip-icon { transform: rotate(270deg) }
 
-/* Product submenu expands in place (custom CSS of popup 141). */
-.ip-drawer__menu .sub-menu { flex-basis: 100%; margin: 6px 0 4px; padding-left: 14px }
-.ip-drawer__menu .sub-menu a {
-  display: block;
-  padding: 6px 0;
-  color: var(--text-primary);
-  font: 400 17px/1.2 var(--font);
-  text-decoration: none;
-  transition: color var(--ip-hover-dur) ease;
+.ip-drawer__item:not(.is-open) > .ip-drawer__cards,
+.ip-drawer__item:not(.is-open) > .ip-drawer__sub { display: none }
+.ip-drawer__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+  padding-bottom: var(--space-4);
 }
-.js .ip-drawer__menu .sub-menu { display: none }
-.js .ip-drawer__menu .is-open > .sub-menu { display: block }
+.ip-drawer__cards > li,
+.ip-drawer__sub > li { display: flex; animation: ip-rise 300ms var(--ease) both; animation-delay: calc(min(var(--i, 0), 10) * var(--ip-stagger)) }
+.ip-pcard--small { gap: 6px; padding: 6px }
+.ip-pcard--small .ip-pcard__thumb { aspect-ratio: 16 / 9; padding: 6px; border-radius: 10px }
+.ip-pcard--small .ip-pcard__name { font-size: 14px }
+.ip-drawer__sub { padding: 0 0 var(--space-3) var(--space-3) }
+.ip-drawer__sublink { padding: var(--space-2) 0; color: var(--text-primary); font: 400 17px/1.3 var(--font); text-decoration: none }
+.ip-drawer__sublink:hover,
+.ip-drawer__sublink[aria-current="page"] { color: var(--accent) }
 
-.ip-drawer__divider { width: 100%; margin: 15px 0; border: 0; border-top: 1px solid var(--text-secondary) }
-.ip-drawer__actions { display: flex; align-items: center; justify-content: space-between; gap: 20px }
-.ip-drawer__icon .ip-hicon { width: 40px; height: 40px }
+.ip-drawer__foot {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--border);
+}
+.ip-drawer__foot .ip-btn { justify-content: center; position: relative; padding-inline: var(--space-3) }
+.ip-drawer__foot .ip-icon { width: 20px; height: 20px }
+/* The count sits inline inside the magenta button, inverted. */
+.ip-drawer__foot .ip-cart__count { position: static; background: var(--c-white); color: var(--c-secondary); box-shadow: none }
+
+@keyframes ip-rise { from { opacity: 0; transform: translateY(6px) } }
+@media (prefers-reduced-motion: reduce) {
+  .ip-drawer__cards > li, .ip-drawer__sub > li { animation: none }
+  .ip-nav__count, .ip-card-img { transition: none }
+}
 
 /* ── Tablet ─────────────────────────────────────────────────────────────── */
 @media (min-width: 768px) {
-  .ip-drawer { width: 80vw; padding: 40px }
-  .ip-drawer[open] { gap: 100px }
-  .ip-drawer__top { min-height: 46px }
-  .ip-drawer__body { gap: 40px }
-  .ip-drawer__menu > li > a { padding-block: 0; font-size: 24px }
-  .ip-drawer__menu > li + li { margin-top: 35px }
+  .ip-drawer { width: 440px }
 }
 
 /* ── Desktop ────────────────────────────────────────────────────────────── */
 @media (min-width: 1101px) {
-  .ip-logo__img { width: 120px }
-  .ip-header__tools { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: 30px }
-  .ip-search { width: 220px }
+  .ip-header { --ip-shrink: 10px }
+  .ip-header__bar { gap: var(--space-2) }
+  .ip-logo { margin-inline-end: var(--space-8) }
+  .ip-logo__img { width: 120px; max-height: 48px }
+  .ip-nav { display: block }
+  .ip-header__tools { display: flex; align-items: center; gap: var(--space-2); margin-inline-start: auto }
+  .ip-header__tools .ip-search { width: 210px; transition: width 300ms var(--ease) }
+  .ip-header__tools .ip-search:focus-within { width: 290px }
   .ip-burger { display: none }
 }

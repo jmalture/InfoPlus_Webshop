@@ -1,5 +1,5 @@
-/* Shared behaviour, vanilla, deferred: dialogs (mobile menu drawer and any
-   other [data-ip-open] dialog), drawer submenus, the Namensschilder mega menu
+/* Shared behaviour, vanilla, deferred: dialogs (mobile drawer and any other
+   [data-ip-open] dialog), drawer submenus, the Namensschilder mega menu
    disclosure and the sticky header state. One IIFE: helper names must stay
    unique inside it. jQuery is on the page for WooCommerce; not used here. */
 (function () {
@@ -34,11 +34,11 @@
     var close = t.closest('[data-ip-close]');
     if (close) { var cd = close.closest('dialog'); if (cd) cd.close(); return; }
 
-    // Drawer submenu disclosure (Namensschilder in the mobile menu).
+    // Drawer submenu disclosure.
     var sub = t.closest('.ip-drawer__sub-toggle');
     if (sub) {
-      var li = sub.parentElement;
-      var isOpen = li.classList.toggle('is-open');
+      var item = sub.closest('.ip-drawer__item');
+      var isOpen = item.classList.toggle('is-open');
       sub.setAttribute('aria-expanded', String(isOpen));
       return;
     }
@@ -47,9 +47,8 @@
     // cache restores never leave the drawer open. Navigation still happens.
     var link = t.closest('dialog a[href]');
     if (link && !e.defaultPrevented) {
-      var ld = link.closest('dialog');
       dialogOpener = null; // do not pull focus back to the burger while navigating
-      ld.close();
+      link.closest('dialog').close();
       return;
     }
 
@@ -75,26 +74,42 @@
     var megaTimer = 0;
     var hoverOpenedAt = 0;
     var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    var isMegaOpen = function () { return mega.classList.contains('is-open'); };
+
+    // Align the panel with its item (clamped into the bar) and aim the caret at it.
+    var placeMega = function () {
+      var bar = megaPanel.offsetParent;
+      if (!bar) return;
+      var barBox = bar.getBoundingClientRect();
+      var itemBox = mega.getBoundingClientRect();
+      var pad = parseFloat(getComputedStyle(bar).paddingLeft) || 0;
+      var left = itemBox.left - barBox.left - 24;
+      left = Math.max(pad, Math.min(left, barBox.width - pad - megaPanel.offsetWidth));
+      megaPanel.style.setProperty('--ip-mega-left', left + 'px');
+      var caret = itemBox.left + Math.min(itemBox.width, 140) / 2 - barBox.left - left - 7;
+      megaPanel.style.setProperty('--ip-caret-x', Math.max(20, caret) + 'px');
+    };
 
     var setMega = function (open) {
       clearTimeout(megaTimer);
-      if (open === !megaPanel.hidden) return;
-      megaPanel.hidden = !open;
-      megaBtn.setAttribute('aria-expanded', String(open));
+      if (open === isMegaOpen()) return;
+      if (open) placeMega();
       mega.classList.toggle('is-open', open);
+      megaBtn.setAttribute('aria-expanded', String(open));
     };
 
     megaBtn.addEventListener('click', function () {
       // A click right after hover opened the panel should not shut it again.
-      if (!megaPanel.hidden && Date.now() - hoverOpenedAt < 400) return;
-      setMega(megaPanel.hidden);
+      if (isMegaOpen() && Date.now() - hoverOpenedAt < 400) return;
+      setMega(!isMegaOpen());
     });
 
+    // Hover intent on the item (the panel is inside it, so moving into the panel keeps it open).
     mega.addEventListener('pointerenter', function (e) {
       if (e.pointerType !== 'mouse' || !finePointer.matches) return;
       clearTimeout(megaTimer);
       megaTimer = setTimeout(function () {
-        if (megaPanel.hidden) hoverOpenedAt = Date.now();
+        if (!isMegaOpen()) hoverOpenedAt = Date.now();
         setMega(true);
       }, 80);
     });
@@ -110,26 +125,27 @@
     });
 
     doc.addEventListener('keydown', function (e) {
-      if (e.key !== 'Escape' || megaPanel.hidden) return;
+      if (e.key !== 'Escape' || !isMegaOpen()) return;
       var focusInside = mega.contains(doc.activeElement);
       setMega(false);
       if (focusInside) megaBtn.focus();
     });
 
     doc.addEventListener('click', function (e) {
-      if (!megaPanel.hidden && !mega.contains(e.target)) setMega(false);
+      if (isMegaOpen() && !mega.contains(e.target)) setMega(false);
     });
 
+    window.addEventListener('resize', function () { if (isMegaOpen()) placeMega(); }, { passive: true });
     desktop.addEventListener('change', function (e) { if (!e.matches) setMega(false); });
   }
 
-  /* ── Sticky header state (Elementor's .elementor-sticky--effects) ── */
+  /* ── Sticky header state: .is-stuck once the page has scrolled ── */
   var header = doc.querySelector('[data-ip-header]');
   if (header) {
     var ticking = false;
     var updateStuck = function () {
       ticking = false;
-      header.classList.toggle('is-stuck', window.scrollY > 0);
+      header.classList.toggle('is-stuck', window.scrollY > 4);
     };
     window.addEventListener('scroll', function () {
       if (!ticking) { ticking = true; window.requestAnimationFrame(updateStuck); }
