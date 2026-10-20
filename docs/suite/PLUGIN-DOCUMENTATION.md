@@ -1,6 +1,6 @@
 # Infoplus Suite: Plugin Documentation
 
-> **Version:** 0.9.111 (plugin header), internal cache-bust constant `Plugin::VERSION` = 0.10.25
+> **Version:** 0.9.111 (plugin header), internal cache-bust constant `Plugin::VERSION` = 0.10.26 on `feature/view-renderer` (0.10.25 before)
 > **Author:** JM (Alture / Infoplus)
 > **License:** GPL-2.0-or-later
 > **Last Updated:** 2026-09-17 (matches production, git commit `f01aca6`)
@@ -85,7 +85,7 @@ infoplus-suite/
 │   ├── infoplus_api/            # Live InfoplusAPI plugin (secrets moved to wp-config constants)
 │   └── legacy/                  # The two predecessor plugins (inactive on production)
 └── src/
-    ├── Plugin.php               # Main plugin orchestrator, Plugin::VERSION = 0.10.25
+    ├── Plugin.php               # Main plugin orchestrator, Plugin::VERSION = 0.10.26
     ├── Admin/
     │   └── Dashboard.php        # WP Admin menu page + tab renderer
     ├── Contracts/
@@ -146,7 +146,7 @@ The admin page is registered under **IKONA IFE** in the WP sidebar (position 56)
 3. **`registerAdmin()`**: passes visible modules to `Dashboard`, registers the admin page
 4. **`registerHooks()`**: loads text domain `infoplus-suite` from `languages/` on `init` (the directory does not exist in the repo, so no translations load)
 
-`Plugin::VERSION` (currently `0.10.25`) is the cache-bust string most modules append to their asset URLs. It is independent of the plugin header version (`0.9.111`). See Section 8.
+`Plugin::VERSION` (currently `0.10.26`, 0.10.25 before `feature/view-renderer`) is the cache-bust string most modules append to their asset URLs. It is independent of the plugin header version (`0.9.111`). See Section 8.
 
 ### `src/Admin/Dashboard.php`
 
@@ -371,8 +371,8 @@ Injected via `wp_head` on product pages:
 
 | Variable | Content |
 |----------|---------|
-| `window.currentProduct` | Full product context (id, sku, name, image, categories, variations) |
-| `window.allWooVariations` | Flat array of variation attribute combos |
+| `window.currentProduct` | Full product context (id, sku, name, image, categories, variations, mindestanzahl). Since 0.10.26 `variations` is the same array object as `window.allWooVariations`. |
+| `window.allWooVariations` | Flat array of variation attribute combos. Empty when the filter `infoplus_suite_product_context_variations` returns false. |
 | `window.currentProductImage` | Main product image URL |
 | `window.infoplusEditorSettings` | Editor config (baseUrl, themeId, productUuid, cartEntryPath, backPath) |
 | `window.infoplusSonderkonturUpload` | Upload REST URL and nonce |
@@ -411,6 +411,14 @@ A temporary file storage system using WP transients (24h TTL) keyed by WooCommer
 
 `outputProductContextJson()` builds `window.currentProduct` / `window.allWooVariations`. It no longer calls `get_available_variations()`. It reads the child IDs and one `postmeta` query for four hardcoded attribute keys: `attribute_pa_model`, `attribute_pa_format`, `attribute_pa_befestigung`, `attribute_pa_oberflache`. Products with other attribute names will show empty values here.
 
+#### Product context JSON (0.10.26 change)
+
+Before 0.10.26 the variation list was JSON encoded twice, once as `window.currentProduct.variations` and once as `window.allWooVariations`. On the staging Atlantis page (product 3338, 1380 variations, checked 2026-10-20) each copy was about 194 KB, and LiteSpeed's inline script handling base64 encodes it into a `data:` URI, so the two copies made up about 517 KB of the 875 KB HTML. The list is now printed once as `window.allWooVariations`, and the script sets `window.currentProduct.variations = window.allWooVariations`, so both names still point at the same data.
+
+Readers of the list (search over `wp-content` on staging and this repo, 2026-10-20): `variation-filter.js` reads `window.allWooVariations` and returns early when there is no `.variations_form` on the page or the array is empty. Nothing reads `window.currentProduct.variations`. `elementor-bulk-calculator.js` reads only `currentProduct.id` and `currentProduct.mindestanzahl`. The inactive legacy plugin "Woo Single Product Addons" also read `allWooVariations`.
+
+New filter `infoplus_suite_product_context_variations` (bool, default true, arguments `$include` and the `WC_Product`). Returning false skips the `postmeta` query and prints an empty list. The classic theme does this when it renders no `form.variations_form`, which removes the list from its product pages.
+
 #### Cross-module usage
 
 - Reads **EditorLinkSettings** via static methods for editor URL config (guarded by `class_exists`)
@@ -423,7 +431,7 @@ A temporary file storage system using WP transients (24h TTL) keyed by WooCommer
 > **Slug:** `product-detail-suite`
 > **Purpose:** Custom Elementor widgets for product detail pages with shared state management.
 > **Has admin tab:** No (runs in background)
-> **Version:** 1.1.0 (`Module::VERSION`, used for this module's asset cache busting and for the product data transient key)
+> **Version:** 1.1.1 (`Module::VERSION`, 1.1.0 before `feature/view-renderer`, used for this module's asset cache busting and for the product data transient key)
 
 #### What it does
 
@@ -1022,8 +1030,8 @@ There are two version numbers plus two module constants. Verified 2026-09-17:
 | Value | Where | Current | Used for |
 |-------|-------|---------|----------|
 | Plugin header `Version:` | `infoplus-suite.php` | `0.9.111` | What WordPress shows in the plugin list. Not used in code. |
-| `Plugin::VERSION` | `src/Plugin.php` | `0.10.25` | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders, and the "Infoplus Suite" meta box admin assets (which append `.7`). |
-| `ProductDetailSuite\Module::VERSION` | `src/Modules/ProductDetailSuite/Module.php` | `1.1.0` | Cache-bust for all ProductDetailSuite frontend and admin assets, and part of the product data transient key. |
+| `Plugin::VERSION` | `src/Plugin.php` | `0.10.26` | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders, and the "Infoplus Suite" meta box admin assets (which append `.7`). |
+| `ProductDetailSuite\Module::VERSION` | `src/Modules/ProductDetailSuite/Module.php` | `1.1.1` | Cache-bust for all ProductDetailSuite frontend and admin assets, and part of the product data transient key. |
 | `IkonaIFE\Module::VERSION` | `src/Modules/IkonaIFE/Module.php` | `1.0.4` | Cache-bust for the sync dashboard assets. |
 
 Rules:
@@ -1744,6 +1752,8 @@ A PHP CLI harness outside the repo stubs the WordPress, WooCommerce and Elemento
 
 ### JavaScript that depends on Elementor DOM
 
+Status: the rows for `variation-dropdowns.js:718` and `721` and `product-state.js:587` and `597`, and the bulk calculator paragraph below, were done on 2026-10-20 (see "Changes for classic themes" below). The attribute values differ from the proposals in this table: `inquiry` instead of `anfrage`, and the event is `infoplus:inquiry-open`. The original text follows.
+
 Not changed in this branch. The default templates work without Elementor because every component script also boots on document ready from its `infoplus-*` root class. The dependencies below either do nothing outside Elementor or point at elements that only the Elementor template has. Proposed replacements use data attributes so the theme can mark its own elements.
 
 | File and line | Dependency | Effect without Elementor | Proposed replacement |
@@ -1768,4 +1778,20 @@ Related, outside `ProductDetailSuite/Assets/`: the qty row of the legacy bulk ca
 - Frontend handles are now registered on every frontend page, and `infoplusProductConfig` (including a `wp_rest` nonce) is built on every request. It is printed only where the script is enqueued.
 - Pages other than product pages that contain one of the five widgets now load the component scripts. This includes the Elementor editor preview of the product template, where `is_product()` is false and the scripts did not load before. The scripts' editor hooks were written for that case, but this has not been tested in the editor (unverified).
 - A theme override in `{theme}/infoplus-suite/` also replaces the markup of the Elementor widgets.
-- No JavaScript or CSS file changed, so `Module::VERSION` was not bumped and the product data transients stay valid.
+- No JavaScript or CSS file changed, so `Module::VERSION` was not bumped and the product data transients stay valid. Superseded on 2026-10-20: the changes for classic themes below touch JavaScript, so `Module::VERSION` is 1.1.1 and `Plugin::VERSION` is 0.10.26. The 1.1.1 bump orphans the product data transients `infoplus_pd_{id}_1.1.0` (they expire after 12 h) and the first view of each product rebuilds it.
+
+### Changes for classic themes (Plugin 0.10.26, ProductDetailSuite 1.1.1)
+
+Made for the classic Infoplus theme (single product page). Every change keeps the old selectors, so the Elementor product template keeps working. A theme marks its elements with data attributes.
+
+| File | Change | Elementor template |
+|------|--------|--------------------|
+| `ProductDetailSuite/Assets/variation-dropdowns.js` `pulseActionButton()` | Also pulses `[data-ip-action="inquiry"]` (requestable models) and `[data-ip-action="editor"]` (editable and buyable). | Unchanged: `#anfrage .elementor-button` and `#editor .elementor-button` still match. |
+| `ProductDetailSuite/Assets/product-state.js` readonly product field | Also matches `[data-ip-field="product"]`. Re-runs on the DOM event `infoplus:inquiry-open` on `document`, which a theme modal dispatches with `document.dispatchEvent(new CustomEvent('infoplus:inquiry-open'))`. | Unchanged: `#form-field-product` and `elementor/popup/show` still work. |
+| `WooSingleProductAddons/Assets/variation-editor-link.js` | The order type button manager finds the theme buttons: editor `#editor, [data-ip-action="editor"]` (link `#editor .elementor-button, a[data-ip-action="editor"]`), Anfrage `#anfrage, [data-ip-action="inquiry"]`, label `.elementor-button-text, [data-ip-label]`, quantity `#qty_value, [data-ip-qty="value"]`. The pulse also applies to the `[data-ip-action]` element itself. This file was not in the table above; without it the theme's editor link never got its URL. | Unchanged. |
+| `WooSingleProductAddons/Assets/elementor-bulk-calculator.js` | Lookups through selector constants: `#qty_value, [data-ip-qty="value"]`, `#qty_minus, [data-ip-qty="minus"]`, `#qty_plus, [data-ip-qty="plus"]`, `#Stuckpreis_value h2, [data-ip-qty="unit-price"]`, `#Gesamtpreis_value h2, [data-ip-qty="total-price"]`, `#Mindestanzahl_value, [data-ip-qty="min"]`. The row that is hidden for requestable models is `[data-ip-qty-row]` when the page has one, else `$('#qty_value').closest('.e-con')` as before. The limit message is inserted after `[data-ip-qty-controls]` when present. | Unchanged: no `[data-ip-qty-row]` on that page, so the `.e-con` fallback runs. |
+| `WooSingleProductAddons/Module.php` `outputProductContextJson()` | Variation list printed once, filter `infoplus_suite_product_context_variations` (see the 0.10.26 note in the WooSingleProductAddons section). | About 194 KB less HTML on Atlantis (about 260 KB after LiteSpeed's base64 encoding). |
+
+The theme side (data attributes on the buttons and the quantity row) is in the Infoplus theme, `template-parts/product/actions.php` and `purchase.php`.
+
+Verified on a local WordPress 6.9 with WooCommerce and this branch (no Elementor), with a variable test product of 33 variations: editable model (editor link gets `{baseUrl}?product=…&theme=…&cartEntryPath=…&backPath=…` after the variation is complete), buyable model ("In den Warenkorb"), requestable model (editor hidden, quantity row hidden, Anfrage pulses), tier click and plus button update Einzelpreis and Gesamtpreis, no console errors. The Elementor template was not tested after these changes (unverified); the old selectors are kept as they were.
