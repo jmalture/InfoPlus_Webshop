@@ -25,7 +25,19 @@
 		return root.classList.contains('is-open');
 	}
 
+	/*
+	 * Desktop transitions are enabled only around a toggle (.is-anim), so the
+	 * closed tab never animates on load, on resize or in full-page screenshots.
+	 */
+	var animTimer = 0;
 	function setOpen(open, focusTab) {
+		if (root.classList.contains('is-open') !== open) {
+			root.classList.add('is-anim');
+			clearTimeout(animTimer);
+			animTimer = setTimeout(function () {
+				root.classList.remove('is-anim');
+			}, 400);
+		}
 		root.classList.toggle('is-open', open);
 		tab.setAttribute('aria-expanded', open ? 'true' : 'false');
 		if (open && sheet.matches) {

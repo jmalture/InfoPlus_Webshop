@@ -184,11 +184,19 @@
 .ip-contact__form { justify-content: center; width: 100%; min-height: 48px; margin-top: 16px }
 
 @media (min-width: 768px) {
-  .js .ip-contact { position: fixed; top: 50%; right: 0; z-index: 10000; display: flex; align-items: center; transform: translate(var(--ip-cp-w), -50%); transition: transform var(--ip-cp-dur) var(--ease) }
-  .ip-contact.is-open { transform: translate(0, -50%) }
+  /* Desktop: the wrapper is only as wide as the tab and sits flush with the
+     right edge, low enough to clear the header. The tab is 40px wide, inside
+     the 48px page margin, so closed it never covers content at 1101px and up.
+     The panel hangs to the right of the tab, off screen until opened; opening
+     slides the panel in and moves the tab left by the panel width.
+     Transitions run only while JS toggles (.is-anim): the old transform on
+     the whole wrapper re-animated on every style change (first paint,
+     viewport resize, full-page screenshots), so the tab was caught drifting
+     in from about 190px left of the edge. */
+  .js .ip-contact { position: fixed; right: 0; bottom: 96px; z-index: 10000; display: block }
 
-  .ip-contact__tab { position: static; width: auto; height: auto; gap: 8px; padding: 16px 10px; border-radius: 14px 0 0 14px; box-shadow: var(--shadow-1); writing-mode: vertical-lr; font: 600 14px/1 var(--font); letter-spacing: 1.5px; text-transform: uppercase }
-  .ip-contact.is-open .ip-contact__tab { opacity: 1; transform: none; pointer-events: auto }
+  .ip-contact__tab { position: relative; right: auto; bottom: auto; z-index: 1; display: flex; flex-direction: row; align-items: center; width: auto; height: auto; gap: 8px; padding: 16px 10px; border-radius: 14px 0 0 14px; box-shadow: var(--shadow-1); writing-mode: vertical-lr; font: 600 14px/1 var(--font); letter-spacing: 1.5px; text-transform: uppercase; transition: background-color var(--dur-ui) var(--ease) }
+  .ip-contact.is-open .ip-contact__tab { opacity: 1; transform: translateX(calc(-1 * var(--ip-cp-w))); pointer-events: auto }
   .ip-contact__tab:focus-visible { outline-color: var(--c-secondary) }
   .ip-contact__tab-icon--phone { display: grid }
   .ip-contact__tab-icon--chat { display: none }
@@ -197,7 +205,13 @@
 
   .ip-contact__scrim { display: none }
 
-  .ip-contact__panel { position: relative; left: auto; right: auto; bottom: auto; z-index: auto; flex: none; width: var(--ip-cp-w); max-height: calc(100vh - 32px); padding: 24px; border-radius: var(--radius-panel) 0 0 var(--radius-panel); transform: none }
+  /* Bottom 24px below the tab, so the tab meets the panel's straight edge,
+     not its rounded corner. Height capped to the space above it, then scrolls. */
+  .ip-contact__panel { position: absolute; left: auto; right: 0; bottom: -24px; z-index: auto; width: var(--ip-cp-w); max-height: calc(100vh - 96px); padding: 24px; border-radius: var(--radius-panel) 0 0 var(--radius-panel); transform: translateX(100%); transition: none }
+  .ip-contact.is-open .ip-contact__panel { transform: none }
+  .ip-contact.is-anim .ip-contact__tab { transition: background-color var(--dur-ui) var(--ease), transform var(--ip-cp-dur) var(--ease) }
+  .ip-contact.is-anim .ip-contact__panel { transition: transform var(--ip-cp-dur) var(--ease), visibility 0s linear var(--ip-cp-dur) }
+  .ip-contact.is-anim.is-open .ip-contact__panel { transition-delay: 0s }
   .ip-contact__grabber { display: none }
   .ip-contact__close { top: -8px }
 }
