@@ -288,6 +288,7 @@ final class Components
                     'image_url' => '',
                     'tooltip' => '',
                     'modal_content' => '',
+                    'color' => '',
                 ];
                 continue;
             }
@@ -310,6 +311,8 @@ final class Components
                 'image_url' => $image_url,
                 'tooltip' => $tooltip,
                 'modal_content' => $modal_content,
+                // Optional swatch colour (term meta _infoplus_term_color, "Farbe (Hex)"), '' when none.
+                'color' => Fields\AttributeTermFields::termColor((int) $term->term_id),
             ];
         }
 

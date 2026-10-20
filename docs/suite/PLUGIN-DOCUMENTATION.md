@@ -563,6 +563,9 @@ When the product has more than 200 child variations (`Module::VARIATION_AJAX_THR
 | `_infoplus_term_image_id` | Attachment ID for term image |
 | `_infoplus_term_tooltip` | Tooltip text |
 | `_infoplus_term_modal_content` | Extended description / modal content |
+| `_infoplus_term_color` | Optional swatch colour `#rrggbb` (field "Farbe (Hex)", WordPress colour picker; saved through `sanitize_hex_color()`, an empty field deletes the meta). Since 0.10.31. |
+
+The "Farbe (Hex)" field sits on the add and edit screens of the taxonomies in `AttributeTermFields::$targetTaxonomies`. `AttributeTermFields::termColor($term_id)` reads it. `Components::termsData()` adds it to each term as `color` (`''` when unset), and `templates/variation-dropdowns.php` prints it as `data-color` on the option, only when set (options without colour keep their former markup). The Suite itself draws no swatch from it: the classic theme does (swatch order: term image, then this colour, then a colour guessed from the term name). Not per product: there is no product-level override as for images.
 
 #### Variation Meta Keys
 
@@ -985,6 +988,7 @@ Regenerated 2026-09-17 by grepping the quoted key strings in `src/`.
 | `_infoplus_term_image_id` | ProductDetailSuite | Term image attachment ID |
 | `_infoplus_term_tooltip` | ProductDetailSuite | Term tooltip text |
 | `_infoplus_term_modal_content` | ProductDetailSuite | Term extended description |
+| `_infoplus_term_color` | ProductDetailSuite | Term swatch colour `#rrggbb` (0.10.31) |
 
 ### User Meta
 

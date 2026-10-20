@@ -18,7 +18,8 @@
  *   product               WC_Product|null
  *   has_product           bool    true for a variable product
  *   dropdowns             array   attribute, label, slug, has_images, terms
- *                                 (terms: slug, name, image_url, tooltip, modal_content)
+ *                                 (terms: slug, name, image_url, tooltip, modal_content,
+ *                                 color: "#rrggbb" or '', printed as data-color only when set)
  *
  * Restyle hooks: root .ip-c-variation-dropdowns[data-ip-component="variation-dropdowns"],
  * parts .ip-c-variation-dropdowns__row (one attribute), __label, __trigger,
@@ -94,7 +95,8 @@ $option_info_tooltip_attr = false;
                             data-image="<?php echo esc_url($term['image_url']); ?>"
                             data-tooltip="<?php echo esc_attr($term['tooltip']); ?>"
                             data-modal-content="<?php echo esc_attr($term['modal_content']); ?>"
-                            role="option">
+                            <?php if (!empty($term['color'])): ?>data-color="<?php echo esc_attr($term['color']); ?>"
+                            <?php endif; ?>role="option">
 
                             <?php if ($term['image_url']): ?>
                                 <img src="<?php echo esc_url($term['image_url']); ?>"

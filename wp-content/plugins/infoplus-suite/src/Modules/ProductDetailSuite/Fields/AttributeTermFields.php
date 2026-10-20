@@ -36,6 +36,16 @@ class AttributeTermFields
     /**
      * Register hooks for attribute term fields
      */
+    /** Term meta: optional swatch colour, "#rrggbb" (sanitize_hex_color). Since 0.10.31. */
+    public const META_COLOR = '_infoplus_term_color';
+
+    /** The swatch colour of a term, '' when none is set. */
+    public static function termColor(int $term_id): string
+    {
+        $color = sanitize_hex_color((string) get_term_meta($term_id, self::META_COLOR, true));
+        return $color ? (string) $color : '';
+    }
+
     public function register(): void
     {
         // Add fields to term add/edit forms for each taxonomy
@@ -80,6 +90,12 @@ class AttributeTermFields
             <p class="description"><?php esc_html_e('This image will appear in dropdown selectors on the product page.', 'infoplus-suite'); ?></p>
         </div>
 
+        <div class="form-field infoplus-term-color-field">
+            <label for="infoplus_term_color"><?php esc_html_e('Farbe (Hex)', 'infoplus-suite'); ?></label>
+            <input type="text" name="infoplus_term_color" id="infoplus_term_color" value="" class="infoplus-term-color" data-default-color="" />
+            <p class="description"><?php esc_html_e('Optional. Colour swatch before the option name, e.g. #1F3A93. A term image wins over it.', 'infoplus-suite'); ?></p>
+        </div>
+
         <div class="form-field infoplus-term-tooltip-field">
             <label for="infoplus_term_tooltip"><?php esc_html_e('Tooltip Text', 'infoplus-suite'); ?></label>
             <input type="text" name="infoplus_term_tooltip" id="infoplus_term_tooltip" value="" />
@@ -103,6 +119,7 @@ class AttributeTermFields
         $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'thumbnail') : '';
         $tooltip = get_term_meta($term->term_id, '_infoplus_term_tooltip', true);
         $modal_content = get_term_meta($term->term_id, '_infoplus_term_modal_content', true);
+        $color = self::termColor($term->term_id);
         ?>
         <tr class="form-field infoplus-term-image-field">
             <th scope="row">
@@ -122,6 +139,16 @@ class AttributeTermFields
                     </button>
                 </div>
                 <p class="description"><?php esc_html_e('This image will appear in dropdown selectors on the product page.', 'infoplus-suite'); ?></p>
+            </td>
+        </tr>
+
+        <tr class="form-field infoplus-term-color-field">
+            <th scope="row">
+                <label for="infoplus_term_color"><?php esc_html_e('Farbe (Hex)', 'infoplus-suite'); ?></label>
+            </th>
+            <td>
+                <input type="text" name="infoplus_term_color" id="infoplus_term_color" value="<?php echo esc_attr($color); ?>" class="infoplus-term-color" data-default-color="" />
+                <p class="description"><?php esc_html_e('Optional. Colour swatch before the option name, e.g. #1F3A93. A term image wins over it.', 'infoplus-suite'); ?></p>
             </td>
         </tr>
 
@@ -162,6 +189,16 @@ class AttributeTermFields
         if (isset($_POST['infoplus_term_tooltip'])) {
             $tooltip = sanitize_text_field($_POST['infoplus_term_tooltip']);
             update_term_meta($term_id, '_infoplus_term_tooltip', $tooltip);
+        }
+
+        // Save colour (hex, empty removes it)
+        if (isset($_POST['infoplus_term_color'])) {
+            $color = sanitize_hex_color(trim((string) wp_unslash($_POST['infoplus_term_color'])));
+            if ($color) {
+                update_term_meta($term_id, self::META_COLOR, $color);
+            } else {
+                delete_term_meta($term_id, self::META_COLOR);
+            }
         }
 
         // Save modal content (allow basic HTML)
@@ -229,6 +266,10 @@ class AttributeTermFields
         }
 
         wp_enqueue_media();
+        // Colour picker for the "Farbe (Hex)" field.
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script('wp-color-picker');
+        wp_add_inline_script('wp-color-picker', "jQuery(function($){ $('.infoplus-term-color').wpColorPicker(); });");
 
         // Register and enqueue our script
         wp_register_script(
