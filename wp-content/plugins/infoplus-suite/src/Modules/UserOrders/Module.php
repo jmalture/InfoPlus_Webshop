@@ -68,8 +68,9 @@ final class Module implements ModuleInterface
         // Brand customer-facing transactional order emails with plugin colours.
         // Covers both the "Bestellung in Bearbeitung" (processing) and the
         // "Bestellung abgeschlossen" (completed) emails.
-        add_filter('woocommerce_email_styles',            [$this, 'brandOrderEmailStyles'],  10, 2);
-        add_action('woocommerce_email_before_order_table', [$this, 'renderOrderEmailBanner'], 10, 4);
+        add_filter('woocommerce_email_styles',            [$this, 'brandOrderEmailStyles'],    10, 2);
+        add_action('woocommerce_email_before_order_table', [$this, 'renderOrderEmailBanner'],  10, 4);
+        add_action('woocommerce_email_header',             [$this, 'fixEmailHeaderInlineStyles'], 10, 2);
     }
 
     private function assetUrl(string $path): string
@@ -1810,6 +1811,72 @@ final class Module implements ModuleInterface
     // -------------------------------------------------------------------------
 
     /**
+     * Fix logo alignment and spacing via output buffering so the overrides are
+     * applied as inline styles — necessary for Gmail and other clients that
+     * strip <head> CSS entirely.
+     *
+     * Captures the WooCommerce email header HTML and rewrites the inline
+     * style/align attributes on #template_header_image directly.
+     */
+    public function fixEmailHeaderInlineStyles($email_heading, $email): void
+    {
+        if (!$email || !in_array($email->id, self::BRANDED_EMAIL_IDS, true)) {
+            return;
+        }
+
+        ob_start();
+        // The header template has already started output; we capture what
+        // follows (the rest of the header) and patch it on ob_end_clean via
+        // a shutdown-style filter on the full email content instead.
+        // Use woocommerce_mail_content to rewrite the final HTML.
+        add_filter('woocommerce_mail_content', [$this, 'rewriteEmailHeaderLogoInline']);
+    }
+
+    /**
+     * Rewrite inline styles on the logo <td> and its <p> to force centering.
+     * Runs once per email via woocommerce_mail_content.
+     */
+    public function rewriteEmailHeaderLogoInline(string $content): string
+    {
+        // Remove this filter immediately so it only runs once per email.
+        remove_filter('woocommerce_mail_content', [$this, 'rewriteEmailHeaderLogoInline']);
+
+        // Center the <td id="template_header_image"> — replace its padding style, add text-align.
+        $content = preg_replace(
+            '/(<td\s+id=["\']template_header_image["\'][^>]*style=["\'])([^"\']*?)(["\'])/i',
+            '$1$2 text-align: center;$3',
+            $content
+        );
+
+        // Center the <p> inside it and remove left alignment.
+        $content = preg_replace(
+            '/(<td\s+id=["\']template_header_image["\'].*?<p\s[^>]*style=["\'])([^"\']*?)(["\'])/is',
+            '$1text-align: center; margin: 0 auto;$3',
+            $content
+        );
+
+        // Remove align="left" attribute on the <p>.
+        $content = preg_replace(
+            '/(<td\s+id=["\']template_header_image["\'].*?<p\s[^>]*)\balign=["\']left["\']/is',
+            '$1align="center"',
+            $content
+        );
+
+        // Add margin-bottom and remove margin-right on the <img> inside that <td>.
+        $content = preg_replace_callback(
+            '/(<td\s+id=["\']template_header_image["\'].*?<img\s[^>]*style=["\'])([^"\']*?)(["\'])/is',
+            function ($m) {
+                $style = preg_replace('/margin-right:\s*\d+px;?\s*/i', '', $m[2]);
+                $style = rtrim($style, '; ') . '; margin-bottom: 10px; margin-right: 0;';
+                return $m[1] . $style . $m[3];
+            },
+            $content
+        );
+
+        return $content;
+    }
+
+    /**
      * Inject brand-colour CSS into the "Abgeschlossene Bestellung" customer email.
      *
      * WooCommerce collects this CSS into a <style> block placed in the email <head>.
@@ -1855,6 +1922,11 @@ final class Module implements ModuleInterface
             #template_header                      { background-color: #e91e8c !important; }
             #template_header h1,
             #template_header p                    { color: #ffffff !important; }
+
+            /* Logo alignment + spacing */
+            #template_header_image                { text-align: center !important; }
+            #template_header_image p              { text-align: center !important; margin: 0 auto !important; }
+            #template_header_image p img          { margin-bottom: 10px !important; margin-right: 0 !important; }
 
             /* Section headings */
             h2                                    { color: #e91e8c !important; }
