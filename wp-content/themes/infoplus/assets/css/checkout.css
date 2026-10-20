@@ -1,0 +1,191 @@
+/* Checkout bundle: cart and checkout pages (wc-page.php) with the
+   WooCommerce Cart and Checkout blocks, plus the order-received frame.
+   Layout: #EFEFF6 band, section head + step indicator, the block's main
+   column and sidebar as white cards (stacked below 1101, side by side from
+   1101). Brand: Archivo Narrow, magenta primary buttons with radius 10,
+   inputs with a 3:1 border and the magenta focus ring.
+
+   Selectors start with .ip-wc and repeat Woo's own chain, so they win over
+   the block CSS, which Woo may print late (in the footer) when the block
+   renders inside the template. The Infoplus Suite plugin's cart/checkout
+   CSS is switched off on these pages (inc/shop.php), so no !important. */
+
+.ip-wc {
+  --ip-input-border: #8E9196; /* grey-700 mixed with white: 3:1 on white for form borders (WCAG 1.4.11) */
+  padding-block: var(--space-6) var(--section-gap);
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--border); /* the footer has the same grey */
+}
+@media (min-width: 768px) { .ip-wc { padding-top: var(--space-12) } }
+
+/* ── Head and steps ─────────────────────────────────────────────────────── */
+.ip-wc__head { display: grid; gap: var(--space-4); margin-bottom: var(--space-6) }
+.ip-wc__title { font: var(--type-heading) }
+.ip-steps { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; font: 600 15px/1.2 var(--font); color: var(--text-secondary) }
+.ip-steps__item { display: inline-flex; align-items: center; gap: 6px }
+.ip-steps__item + .ip-steps__item::before { content: ""; width: 12px; height: 1px; margin-right: 2px; background: var(--ip-input-border) }
+.ip-steps__num { display: inline-grid; place-items: center; width: 26px; height: 26px; border: 1px solid var(--ip-input-border); border-radius: 999px; background: var(--c-white); font-size: 13px }
+.ip-steps__item[aria-current="step"] { color: var(--text-primary) }
+.ip-steps__item[aria-current="step"] .ip-steps__num { border-color: var(--accent); background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-steps__item.is-done .ip-steps__num { border-color: var(--c-primary-tint); background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-steps__label { color: inherit; text-decoration: none }
+a.ip-steps__label:hover { color: var(--c-secondary); text-decoration: underline }
+@media (min-width: 768px) {
+  .ip-wc__head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; margin-bottom: var(--space-8) }
+  .ip-steps { gap: var(--space-2) var(--space-4); font-size: 16px }
+  .ip-steps__item { gap: var(--space-2) }
+  .ip-steps__item + .ip-steps__item::before { width: 20px; margin-right: var(--space-2) }
+}
+
+/* ── Base type inside the blocks ────────────────────────────────────────── */
+.ip-wc :is(.wc-block-cart, .wc-block-checkout) { font-family: var(--font); font-size: 17px; color: var(--text-primary) }
+.ip-wc .wp-block-woocommerce-checkout { padding-top: 0 }
+/* Woo sizes its small print with the theme.json presets (fallback 14px); Archivo Narrow needs more. */
+.ip-wc { --wp--preset--font-size--small: 16px; --wp--preset--font-size--medium: 22px }
+.ip-wc :is(.wc-block-cart, .wc-block-checkout) a { color: var(--c-secondary) }
+.ip-wc :is(.wc-block-cart, .wc-block-checkout) a:hover { color: var(--accent) }
+
+/* ── Layout: main column and sidebar as white cards ─────────────────────── */
+.ip-wc .wc-block-components-sidebar-layout { gap: var(--space-4); margin: 0 }
+.ip-wc .wc-block-components-sidebar-layout .wc-block-components-main,
+.ip-wc .wc-block-components-sidebar-layout .wc-block-components-sidebar {
+  width: 100%; padding: var(--space-4);
+  background: var(--c-white); border: 1px solid var(--border); border-radius: var(--radius-card);
+}
+@media (min-width: 768px) {
+  .ip-wc .wc-block-components-sidebar-layout .wc-block-components-main,
+  .ip-wc .wc-block-components-sidebar-layout .wc-block-components-sidebar { padding: var(--space-6) }
+}
+@media (min-width: 1101px) {
+  .ip-wc .wc-block-components-sidebar-layout { flex-wrap: nowrap; align-items: flex-start; gap: var(--space-6) }
+  .ip-wc .wc-block-components-sidebar-layout .wc-block-components-main { flex: 1 1 auto; width: auto; min-width: 0; padding: var(--space-8) }
+  .ip-wc .wc-block-components-sidebar-layout .wc-block-components-sidebar { flex: 0 0 400px; width: 400px }
+  .ip-wc .wc-block-checkout__sidebar.is-sticky { top: calc(var(--header-h) + var(--space-4)) }
+}
+
+/* ── Headings ───────────────────────────────────────────────────────────── */
+.ip-wc .wc-block-components-title.wc-block-components-title,
+.ip-wc .wc-block-components-checkout-step__title { font: 600 22px/1.25 var(--font) }
+.ip-wc .wc-block-cart .wc-block-cart__totals-title { padding-top: 0; color: var(--text-secondary); font: var(--type-badge); font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase }
+.ip-wc .wc-block-components-checkout-step__description { color: var(--text-secondary); font-size: 16px }
+
+/* ── Cart items ─────────────────────────────────────────────────────────── */
+.ip-wc table.wc-block-cart-items { margin: 0 }
+.ip-wc table.wc-block-cart-items .wc-block-cart-items__header { color: var(--text-secondary); font: 600 13px/1.2 var(--font); letter-spacing: 1.5px; text-transform: uppercase }
+.ip-wc table.wc-block-cart-items td { border-color: var(--border) }
+.ip-wc .wc-block-cart-item__image img,
+.ip-wc .wc-block-components-order-summary-item__image img { border-radius: 10px; background: var(--c-grey-100) }
+.ip-wc .wc-block-components-product-name,
+.ip-wc table.wc-block-cart-items .wc-block-cart-items__row .wc-block-components-product-name { color: var(--text-primary); font: 600 18px/1.25 var(--font); text-decoration: none }
+.ip-wc table.wc-block-cart-items .wc-block-cart-items__row a.wc-block-components-product-name:hover { color: var(--c-secondary) }
+.ip-wc .wc-block-components-product-metadata { color: var(--text-secondary); font-size: 15px }
+.ip-wc .wc-block-cart-item__remove-link { color: var(--c-secondary); font-size: 15px; text-decoration: underline; text-underline-offset: 2px }
+/* Port of snippet 2183: the quantity comes from the product configurator, not the cart. */
+.ip-wc table.wc-block-cart-items .wc-block-cart-items__row .wc-block-components-quantity-selector { display: none }
+/* Port of snippet 2183: uploaded logo thumbnails in the item meta. */
+.ip-wc .variation-UploadedFile img { object-fit: cover }
+/* "× qty" badge added by the Infoplus Suite (cart-qty-fix.js). */
+.ip-wc .ip-cart-qty-badge { color: var(--c-secondary); font-weight: 600 }
+.ip-wc .wc-block-checkout .ip-cart-qty-badge { color: var(--text-secondary) }
+
+/* The checkout order summary draws its own box; the sidebar card is the box here. */
+.ip-wc .wp-block-woocommerce-checkout-order-summary-block,
+.ip-wc .wp-block-woocommerce-checkout-order-summary-block .checkout-order-summary-block-fill { border: 0; border-radius: 0 }
+
+/* ── Totals ─────────────────────────────────────────────────────────────── */
+.ip-wc .wc-block-components-totals-wrapper { border-color: var(--border) }
+.ip-wc .wc-block-components-totals-item__label { font-size: 16px }
+.ip-wc .wc-block-components-totals-footer-item .wc-block-components-totals-item__label,
+.ip-wc .wc-block-components-totals-footer-item .wc-block-components-totals-item__value { font: 700 22px/1.2 var(--font) }
+.ip-wc .wc-block-components-totals-footer-item-tax,
+.ip-wc .wc-block-components-totals-item__description { color: var(--text-secondary); font-size: 14px }
+.ip-wc .wc-block-components-order-summary .wc-block-components-panel__button { font-weight: 600 }
+
+/* ── Panels and coupon ──────────────────────────────────────────────────── */
+.ip-wc .wc-block-components-panel__button { color: var(--text-primary); font: 600 17px/1.3 var(--font) }
+.ip-wc .wc-block-components-panel__button:hover { color: var(--c-secondary) }
+.ip-wc .wc-block-components-totals-coupon__form { gap: var(--space-2) }
+
+/* ── Form fields ────────────────────────────────────────────────────────── */
+.ip-wc .wc-block-components-form .wc-block-components-text-input :is(input[type=text], input[type=email], input[type=tel], input[type=number], input[type=password], input[type=url]),
+.ip-wc .wc-block-components-text-input :is(input[type=text], input[type=email], input[type=tel], input[type=number], input[type=password], input[type=url]),
+.ip-wc .wc-blocks-components-select .wc-blocks-components-select__select,
+.ip-wc .wc-block-components-textarea {
+  border: 1px solid var(--ip-input-border); border-radius: 10px; background-color: var(--c-white);
+  color: var(--text-primary); font-family: var(--font); font-size: 17px;
+  transition: border-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease);
+}
+.ip-wc .wc-blocks-components-select .wc-blocks-components-select__container { border-radius: 10px }
+.ip-wc .wc-block-components-form .wc-block-components-text-input :is(input, textarea):focus,
+.ip-wc .wc-block-components-text-input :is(input, textarea):focus,
+.ip-wc .wc-blocks-components-select .wc-blocks-components-select__select:focus,
+.ip-wc .wc-block-components-textarea:focus {
+  border-color: var(--accent); border-width: 1px; outline: 2px solid var(--focus); outline-offset: 1px; box-shadow: none;
+}
+.ip-wc .wc-block-components-text-input label,
+.ip-wc .wc-blocks-components-select__label { color: var(--text-secondary); font-family: var(--font) }
+.ip-wc .wc-block-components-text-input.has-error input,
+.ip-wc .has-error .wc-blocks-components-select__select { border-color: var(--c-secondary) }
+.ip-wc .wc-block-components-validation-error { color: var(--c-secondary); font-size: 14px }
+
+/* Checkboxes and radios */
+.ip-wc .wc-block-components-checkbox .wc-block-components-checkbox__input[type=checkbox] { border-color: var(--ip-input-border); border-radius: 5px }
+.ip-wc .wc-block-components-checkbox .wc-block-components-checkbox__input[type=checkbox]:checked { background-color: var(--accent); border-color: var(--accent) }
+.ip-wc .wc-block-components-checkbox .wc-block-components-checkbox__mark { fill: var(--c-white) }
+.ip-wc .wc-block-components-checkbox .wc-block-components-checkbox__input[type=checkbox]:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+.ip-wc .wc-block-components-radio-control .wc-block-components-radio-control__input { border-color: var(--ip-input-border) }
+.ip-wc .wc-block-components-radio-control .wc-block-components-radio-control__input:checked { border-color: var(--accent) }
+.ip-wc .wc-block-components-radio-control .wc-block-components-radio-control__input:checked::before { background: var(--accent) }
+.ip-wc .wc-block-components-radio-control .wc-block-components-radio-control__input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+.ip-wc .wc-block-components-radio-control-accordion-option { border-radius: 10px }
+.ip-wc .wc-block-components-radio-control--highlight-checked .wc-block-components-radio-control-accordion-option--checked-option-highlighted,
+.ip-wc .wc-block-components-radio-control--highlight-checked .wc-block-components-radio-control__option--checked-option-highlighted { box-shadow: inset 0 0 0 1px var(--accent); border-radius: 10px }
+
+/* ── Buttons: one magenta primary per view (proceed / place order) ──────── */
+.ip-wc .wc-block-components-button:not(.is-link) {
+  min-height: 52px; padding: var(--space-3) var(--space-6);
+  border: 0; border-radius: 10px; background: var(--accent); color: var(--c-white);
+  font: var(--type-badge); font-size: 18px; text-decoration: none; cursor: pointer;
+  transition: background-color var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease);
+}
+.ip-wc .wc-block-components-button:not(.is-link):hover { background: var(--accent-hover); color: var(--c-white) }
+.ip-wc .wc-block-components-button:not(.is-link):active { transform: translateY(1px) }
+.ip-wc .wc-block-components-button:not(.is-link):focus { box-shadow: none; outline: none }
+.ip-wc .wc-block-components-button:not(.is-link):focus-visible { outline: 2px solid var(--focus); outline-offset: 3px }
+.ip-wc .wc-block-components-button:not(.is-link)[aria-disabled=true],
+.ip-wc .wc-block-components-button:not(.is-link):disabled { opacity: .55; cursor: not-allowed }
+/* Secondary: coupon "Anwenden", outlined buttons. */
+.ip-wc .wc-block-components-totals-coupon__button.wc-block-components-button:not(.is-link),
+.ip-wc .wc-block-components-button:not(.is-link).outlined,
+.ip-wc .wc-block-components-button:not(.is-link).is-style-outline {
+  min-height: 50px; background: var(--c-white); color: var(--text-primary); box-shadow: inset 0 0 0 1px var(--ip-input-border); font-size: 16px;
+}
+.ip-wc .wc-block-components-totals-coupon__button.wc-block-components-button:not(.is-link):hover,
+.ip-wc .wc-block-components-button:not(.is-link).outlined:hover,
+.ip-wc .wc-block-components-button:not(.is-link).is-style-outline:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-wc .wc-block-cart__submit-button,
+.ip-wc .wc-block-components-checkout-place-order-button { width: 100% }
+.ip-wc .wc-block-components-checkout-return-to-cart-button { color: var(--c-secondary); font-weight: 600; text-decoration: none }
+.ip-wc .wc-block-components-checkout-return-to-cart-button:hover { text-decoration: underline }
+.ip-wc .wc-block-components-button.is-link { color: var(--c-secondary) }
+
+/* ── Notices ────────────────────────────────────────────────────────────── */
+.ip-wc .wc-block-components-notice-banner { border-radius: 10px; font-size: 16px }
+
+/* ── Terms line, address card ───────────────────────────────────────────── */
+.ip-wc .wc-block-checkout__terms { color: var(--text-secondary); font-size: 15px }
+.ip-wc .wc-block-components-address-card { border-color: var(--border); border-radius: 10px }
+.ip-wc .wc-block-components-address-card__edit { color: var(--c-secondary); font-weight: 600 }
+
+/* ── Infoplus Suite empty cart (render_block markup) ────────────────────── */
+/* The plugin prints its own "Warenkorb" h1 above the block; the theme head already has it. */
+.ip-wc .infoplus-cart-heading { display: none }
+.ip-wc .infoplus-empty-cart-wrap { font-family: var(--font); margin-bottom: 0 }
+
+/* ── Order received / order pay (classic templates) ─────────────────────── */
+.ip-wc--endpoint .ip-wc__body { padding: var(--space-4); background: var(--c-white); border: 1px solid var(--border); border-radius: var(--radius-card) }
+@media (min-width: 768px) { .ip-wc--endpoint .ip-wc__body { padding: var(--space-8) } }
+
+/* ── Woo's own empty-cart block (hidden on the live site by the Infoplus Suite overlay) ── */
+.ip-wc .wp-block-woocommerce-empty-cart-block { padding: var(--space-8) var(--space-4); background: var(--c-white); border: 1px solid var(--border); border-radius: var(--radius-card) }
+.ip-wc .wp-block-woocommerce-empty-cart-block h2 { font: 600 24px/1.25 var(--font) }
