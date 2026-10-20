@@ -721,6 +721,10 @@ The most feature-rich frontend module. Provides complete order management for cu
 
 `brandOrderEmailStyles()` (`woocommerce_email_styles`) appends brand CSS and `renderOrderEmailBanner()` (`woocommerce_email_before_order_table`) prints a banner for the emails listed in `BRANDED_EMAIL_IDS`: `customer_processing_order` and `customer_completed_order`. The 0.9.111 diff only changed the banner icon markup to flexbox centering.
 
+`fixEmailHeaderInlineStyles()` (`woocommerce_email_header`) registers `rewriteEmailHeaderLogoInline()` on `woocommerce_mail_content` for the same two e-mails; it centres the logo in the final HTML. Up to 0.10.29 it also called `ob_start()` and never closed that buffer (finding 20 in Section 16). Fixed in 0.10.32: the call is gone, the rewrite is unchanged.
+
+Since 0.10.32 all three callbacks (styles, banner, logo rewrite) do nothing when the active theme declares `add_theme_support('infoplus-emails')`. The Infoplus classic theme does (its `inc/emails.php` and `woocommerce/emails/` templates give every WooCommerce e-mail the shop design, so the pink banner and the extra CSS would clash). Filter `infoplus_suite_order_email_branding` (bool, default `!current_theme_supports('infoplus-emails')`) forces it either way. With any other theme (Elementor setup) nothing changes.
+
 #### REST Endpoints (namespace: `infoplus/v1`)
 
 | Method | Route | Permission | Purpose |
@@ -1598,6 +1602,7 @@ Observed while reading the code. None of these has been fixed; they are listed s
 | 16 | Section 7 of the 0.9.93 docs | Order type meta key was documented as `_infoplus_order_type_{term}`. Real key is `_infoplus_attr_order_type_{attr}_{term}`. Corrected in this version. | fixed (docs) |
 | 17 | `Custom404/Module.php` and `UserOrders/Module.php` | Both hardcode `calc(100vh - 684px)` from measured header (83 px) and footer (601 px) heights. A theme change breaks the layout silently. | still open |
 | 18 | `ProductDetailSuite/Widgets/VariationDropdowns.php` `renderDropdowns()` (up to `feature/catalog-import`) | Read `$info_behavior`, a local variable of `render()`, so the option info buttons never got `data-tooltip` and PHP logged "Undefined variable" once per option. Since `feature/view-renderer` the template keeps the old output on purpose (`$option_info_tooltip_attr = false`) without the warning. `variation-dropdowns.js` falls back to the option's own `data-tooltip`. See Section 19. | kept as is, warning gone |
+| 20 | `UserOrders/Module.php` `fixEmailHeaderInlineStyles()` | Called `ob_start()` on `woocommerce_email_header` for the processing and completed customer e-mails and never closed the buffer. Verified locally (WooCommerce 10.6.1, 2026-10-20): `ob_get_level()` was 0 before `get_content_html()` and 1 after it. The mail itself stayed complete only because the Suite callback is added before WooCommerce's own header callback (same priority 10), so the stray buffer opened before the header and stayed empty. Each such mail left one buffer open until the end of the request; with the opposite hook order it would have swallowed the e-mail header. | fixed in 0.10.32 (call removed; level stays 0) |
 | 19 | `WooSingleProductAddons/Module.php` `ajaxAddToCart()` | Calls `WC()->cart->add_to_cart()` directly, so `woocommerce_add_to_cart_validation` never runs (Min and Max Quantity for WooCommerce, Germanized and other validators are skipped), errors only show as button text, and `model_image_url` is stored as sent by the browser (escaped on output, but not checked). Found 2026-10-20. The theme buy form (Section 20) avoids all three; the Elementor template still uses the handler. | still open (Elementor path) |
 | 20 | Minimum order quantity | `elementor-bulk-calculator.js` clamps the quantity to the larger of `currentProduct.mindestanzahl` (post meta `mindestanzahl`) and the first Staffelpreise tier. Nothing checks this on the server, in either add-to-cart path. The info box shows `_infoplus_min_quantity`, a different key. Found 2026-10-20. | still open |
 
@@ -1904,7 +1909,7 @@ Local WordPress with WooCommerce 10.6.1, this branch and the classic theme (no E
 
 ## 21. Inquiry Form ("Individuelle Anfrage")
 
-Added in Plugin 0.10.29 (branch `feature/view-renderer`, 2026-10-20) for the classic Infoplus theme. Not deployed. It replaces the Elementor popup 14241 (Section 9) on the classic theme and is meant to serve the Kontakt page as well. The Elementor template is not changed.
+Added in Plugin 0.10.29 (branch `feature/view-renderer`, 2026-10-20) for the classic Infoplus theme. Not deployed. It replaces the Elementor popup 14241 (Section 9) on the classic theme and, since 0.10.32, the Elementor form 9cb78e8 of the Kontakt page (contact variant, inline in the page). The Elementor template is not changed.
 
 ### Split between Suite and theme
 
@@ -1939,6 +1944,8 @@ Step 2 "Ihre Kontaktdaten": Firma (recommended), Vorname and Nachname (required)
 Success state: reference number, the address of the confirmation e-mail and the text "So geht es weiter" from the settings.
 
 Elements with `data-ip-inq-only="product"` or `"contact"` show only in that variant; the theme script disables the inputs of the other one. The full list of data attributes is in the template header.
+
+Contact variant (Kontakt page), since 0.10.32: "Ihre Nachricht" comes before "Dateien" (the template orders the two blocks by the server-side `variant`, so the DOM order matches the screen), Lieferort (PLZ, Land) is product only, and the note under the step 2 title, the phone hint, the consent text, the submit label ("Nachricht senden", `data-label-contact` on `[data-ip-label]`) and the success heading ("Ihre Nachricht ist eingegangen") have their own wording. It covers the fields of the old Elementor Kontakt form 9cb78e8: Firma, Name (now Vorname and Nachname, both required), E-Mail (required), Rufnummer (Telefon), Nachricht (now required) and the honeypot.
 
 ### Product context
 
@@ -2004,8 +2011,10 @@ Reference numbers: `ANF-{year}-{0000}`, one counter per year in the option `info
 
 Sent with WooCommerce's e-mail header and footer and `WC_Email::send()` (shop sender, WooCommerce e-mail styles), or a small branded wrapper without WooCommerce. Both use the template `inquiry-email`.
 
-- Team: to the recipients from the settings (filter `infoplus_suite_inquiry_recipients`), `Reply-To` the customer, subject "Neue Anfrage {ref}: {product} ({company or name})". Files are attached under their original names while all files together stay within "Dateien anhängen bis" (default 10 MB); otherwise the mail lists download links to the admin (login needed). Button "Anfrage im Backend öffnen".
-- Customer (setting, default on): subject "Ihre Anfrage {ref} bei {site name}", `Reply-To` the first team recipient, the reference, the "So geht es weiter" text and a summary of the request.
+- Team: to the recipients from the settings (filter `infoplus_suite_inquiry_recipients`), `Reply-To` the customer, subject "Neue Anfrage {ref}: {product} ({company or name})" ("Kontaktformular" instead of the product for the contact variant without a product, heading "Neue Nachricht {ref}"). Files are attached under their original names while all files together stay within "Dateien anhängen bis" (default 10 MB); otherwise the mail lists download links to the admin (login needed). Button "Anfrage im Backend öffnen".
+- Customer (setting, default on): subject "Ihre Anfrage {ref} bei {site name}", `Reply-To` the first team recipient, the reference, the "So geht es weiter" text of the variant and a summary of the request.
+
+Look: the wrapper is whatever the active theme's WooCommerce e-mail header and footer are. With the Infoplus classic theme that is the shop design of all WooCommerce mails (theme `inc/emails.php`); since 0.10.32 the body template matches it (grey section headings, the reference in a grey box, magenta only for links and the button).
 
 ### Settings (IKONA IFE → tab "Anfragen")
 
@@ -2015,6 +2024,7 @@ Option `infoplus_inquiry_settings`:
 |-----|---------|-------|
 | `recipient` | empty: the site admin e-mail (`admin_email`) | Comma separated. **To be confirmed by the client before rollout.** On staging the default is the site admin e-mail. No address is written in code. |
 | `success_text` | "Wir prüfen Ihre Anfrage und melden uns innerhalb von 24 Stunden mit einem Angebot." | Shown in the success state and in the customer e-mail. Owner decision of 2026-10-20 to promise 24 hours. **To be confirmed by the client before rollout.** |
+| `success_text_contact` | "Wir lesen Ihre Nachricht und melden uns innerhalb von 24 Stunden bei Ihnen." | Since 0.10.32. The same for the contact variant (Kontakt page), whose messages are not offers. `Settings::successText($variant)`. **To be confirmed by the client before rollout.** |
 | `max_upload_mb` | 20 | Total of all files, 1 to 64 |
 | `max_files` | 10 | 1 to 20 |
 | `attach_limit_mb` | 10 | Larger totals are linked instead of attached; 0 never attaches |
@@ -2035,7 +2045,12 @@ Option `infoplus_inquiry_settings`:
 
 ### Theme side (Infoplus theme)
 
-`inc/inquiry.php` prints the drawer in `wp_footer` and loads `inquiry.css` and `inquiry.js` on product pages (variant product) and on the page with slug `kontakt` (variant contact); filter `ip_inquiry_variant`. It appends `#anfrage` to `ip_product_inquiry_url()`, so the no-JS link (Kontakt page with `?produkt=`) opens the drawer there with the product name.
+`inc/inquiry.php` loads `inquiry.css` and `inquiry.js` and prints the form once per page (filters `ip_inquiry_variant`, `ip_inquiry_placement`):
+
+- product pages: variant product in the drawer (`wp_footer`);
+- the page with slug `kontakt`: variant contact inline in the page card (`template-parts/inquiry-inline.php`, `<section id="anfrage" data-ip-inquiry-inline>`, on the theme action `infoplus_theme_contact_form`), with phone and e-mail below it. No drawer on that page.
+
+It appends `#anfrage` to `ip_product_inquiry_url()`, so the no-JS link (Kontakt page with `?produkt=`) lands on the inline form. The theme looks the name up (exact title of a published product): a found product is passed to `infoplus_suite_inquiry_form()` (card with image) and sent as `context.product_id`; any other name is sent as `context.product_name` only (unverified, see Product context). Inline mode in `inquiry.js`: always open, triggers and the hash scroll to the form and focus its heading, "Schließen" in the success state becomes "Weitere Nachricht schreiben", the form token is fetched on first focus.
 
 `assets/js/inquiry.js` opens the drawer on a click on `[data-ip-action="inquiry"]`, `[data-ip-inquiry-link]`, `[data-ip-inquiry-open]` or a link ending in `#anfrage` (capture phase, so the link does not navigate), on the DOM event `infoplus:inquiry-open` (its `detail` is the context), through `window.InfoplusInquiry.open(context)`, and on the hash `#anfrage`. After opening it dispatches `infoplus:inquiry-open` with `detail.source = 'drawer'`, which makes `product-state.js` re-run its readonly product field check (Section 19). The product context comes from `window.infoplusProductData` and `window.infoplusProductState` (selected model, `selectedAttributes`, `selectedVariation`, quantity from `[data-ip-qty="value"]` or `currentQty`). Further events: `infoplus:inquiry-close`, `infoplus:inquiry-sent` (`{ reference }`) and the cancelable `infoplus:inquiry-edit-selection` ("Auswahl ändern").
 
@@ -2050,3 +2065,8 @@ Local WordPress 6.9 with WooCommerce 10.6.1, this branch and the classic theme, 
 - Admin: list, status filter, detail box, status saved, file download as attachment for the admin, refused when logged out. Team e-mail with three attachments and Reply-To, customer e-mail with the 24-hour text.
 - Not tested: real mail delivery, the `.htaccess` deny rule (PHP built-in server), the Elementor template, WebKit.
 
+
+Kontakt page and e-mails, Plugin 0.10.32 (local WordPress 6.9, WooCommerce 10.6.1, classic theme, 2026-10-20, mail captured locally):
+
+- Kontakt page at 1440 and 390 px: one form, no drawer; keyboard only from the page top through both steps (error summary and focus on Nachricht when empty, focus on each step title, consent with Space, submit with Enter), guest submit stored and both mails sent with the contact texts; "Weitere Nachricht schreiben" starts a clean form. `?produkt=Atlantis%20Namensschild#anfrage`: product card with image, heading focused; an unknown name shows as text. Product page: drawer unchanged.
+- `ob_get_level()` 0 before and after rendering `customer_processing_order` with the fix (1 after it without). With the theme's `infoplus-emails` support the pink banner and extra CSS are absent; with `infoplus_suite_order_email_branding` forced on they are back as before, buffer level still 0.
