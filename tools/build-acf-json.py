@@ -23,6 +23,7 @@ import html
 import json
 import re
 import sys
+import time
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -502,6 +503,14 @@ def main():
     for build in (home, unternehmen, kontakt, faq):
         g = build()
         path = OUT / f"{g['key']}.json"
+        # "modified" tells Secure Custom Fields when a group changed: a newer
+        # stamp than the database copy shows "Sync available". Keep the old
+        # stamp when nothing changed, else use the current time.
+        g['modified'] = int(time.time())
+        if path.exists():
+            old = json.loads(path.read_text(encoding='utf-8'))
+            if {k: v for k, v in old.items() if k != 'modified'} == {k: v for k, v in g.items() if k != 'modified'}:
+                g['modified'] = old.get('modified', g['modified'])
         path.write_text(json.dumps(g, ensure_ascii=False, indent=4) + '\n', encoding='utf-8')
         print('wrote', path.relative_to(ROOT), len(g['fields']), 'fields')
     return 0
