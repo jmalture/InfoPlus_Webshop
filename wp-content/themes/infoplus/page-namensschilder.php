@@ -31,7 +31,9 @@ $ip_args  = array(
 if ( function_exists( 'WC' ) && WC()->query ) {
 	$ip_args['tax_query'] = WC()->query->get_tax_query(); // phpcs:ignore WordPress.DB.SlowDBQuery -- Woo catalog visibility, as on the shop.
 }
-$ip_query = new WP_Query( $ip_args );
+// With the in-place category filter (inc/catalog.php) its query is the same one; reuse it.
+$ip_ctx   = function_exists( 'ip_catalog_context' ) ? ip_catalog_context() : null;
+$ip_query = $ip_ctx ? $ip_ctx['query'] : new WP_Query( $ip_args );
 ip_prime_posts( wp_list_pluck( $ip_query->posts, 'ID' ) );
 $ip_woo = function_exists( 'wc_setup_loop' );
 ?>
@@ -77,7 +79,7 @@ $ip_woo = function_exists( 'wc_setup_loop' );
 				// WooCommerce inactive (preview, local dev): same cards without Woo.
 				echo '<ul class="products ip-shop-grid" role="list">';
 				foreach ( $ip_query->posts as $ip_i => $ip_post ) {
-					echo '<li class="ip-shop-grid__item">';
+					echo '<li class="ip-shop-grid__item"' . ( function_exists( 'ip_catalog_card_attrs' ) ? ip_catalog_card_attrs( $ip_post->ID ) : '' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_catalog_card_attrs().
 					get_template_part( 'template-parts/product-card', null, array( 'id' => $ip_post->ID, 'level' => 'h2', 'eager' => 0 === $ip_i && 1 === $ip_paged ) );
 					echo '</li>';
 				}

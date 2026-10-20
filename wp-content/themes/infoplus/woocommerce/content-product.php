@@ -13,6 +13,11 @@
  * - ip_card_sizes (string) sizes attribute, default = the 1/2/3/4 column grid.
  * - ip_lcp        (bool)   true when the first card's image is the page's LCP
  *                          (first page of a listing): loaded eagerly, high priority.
+ *                          With the in-place filter (inc/catalog.php) that is the
+ *                          first card that is not hidden.
+ *
+ * The <li> carries data-ip-cats (category slugs) and `hidden` when the card is
+ * outside the active category pill (ip_catalog_card_attrs(), inc/catalog.php).
  *
  * @see https://woocommerce.com/document/template-structure/
  * @package WooCommerce\Templates
@@ -27,10 +32,6 @@ global $product;
 if ( ! is_a( $product, WC_Product::class ) || ! $product->is_visible() ) {
 	return;
 }
-
-// Running index across the request: the first card of the page is the LCP candidate.
-$ip_index = (int) wc_get_loop_prop( 'ip_index', 0 );
-wc_set_loop_prop( 'ip_index', $ip_index + 1 );
 
 ob_start();
 /**
@@ -72,17 +73,23 @@ do_action( 'woocommerce_after_shop_loop_item_title' );
 do_action( 'woocommerce_after_shop_loop_item' );
 $ip_extra = trim( (string) ob_get_clean() );
 
+$ip_hidden = function_exists( 'ip_catalog_card_hidden' ) && ip_catalog_card_hidden( $product->get_id() );
+$ip_eager  = ! $ip_hidden && ! wc_get_loop_prop( 'ip_lcp_done', false ) && wc_get_loop_prop( 'ip_lcp', false );
+if ( ! $ip_hidden ) {
+	wc_set_loop_prop( 'ip_lcp_done', true ); // Only the first visible card can be the LCP.
+}
+
 $ip_args = array(
 	'id'    => $product->get_id(),
 	'level' => wc_get_loop_prop( 'ip_card_level', 'h2' ),
 	'extra' => $ip_extra,
-	'eager' => 0 === $ip_index && wc_get_loop_prop( 'ip_lcp', false ),
+	'eager' => $ip_eager,
 );
 $ip_sizes = wc_get_loop_prop( 'ip_card_sizes', '' );
 if ( $ip_sizes ) {
 	$ip_args['sizes'] = $ip_sizes;
 }
 ?>
-<li <?php wc_product_class( 'ip-shop-grid__item', $product ); ?>>
+<li <?php wc_product_class( 'ip-shop-grid__item', $product ); ?><?php echo function_exists( 'ip_catalog_card_attrs' ) ? ip_catalog_card_attrs( $product->get_id() ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_catalog_card_attrs(). ?>>
 	<?php get_template_part( 'template-parts/product-card', null, $ip_args ); ?>
 </li>

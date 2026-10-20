@@ -12,6 +12,12 @@
  * removed in inc/shop.php. The Namensschilder page renders the same layout
  * through page-namensschilder.php.
  *
+ * Category pills filter in place (inc/catalog.php): on a product category
+ * that has a pill, the grid holds the whole catalog in catalog order and the
+ * cards of other categories are hidden, so assets/js/archive.js can switch
+ * pills without a page load. The main query still decides 404, title and
+ * the Woo context of the page.
+ *
  * @see https://woocommerce.com/document/template-structure/
  * @package WooCommerce\Templates
  * @version 8.6.0
@@ -69,15 +75,19 @@ $ip_mode = is_search() ? 'search' : 'archive';
 			 */
 			do_action( 'woocommerce_before_shop_loop' );
 
-			ip_prime_posts( wp_list_pluck( $GLOBALS['wp_query']->posts, 'ID' ) ); // Card images in one query.
+			// The whole catalog when the pills filter in place, else the main query.
+			$ip_ctx   = function_exists( 'ip_catalog_context' ) ? ip_catalog_context() : null;
+			$ip_query = $ip_ctx ? $ip_ctx['query'] : $GLOBALS['wp_query'];
+
+			ip_prime_posts( wp_list_pluck( $ip_query->posts, 'ID' ) ); // Card images in one query.
 			wc_set_loop_prop( 'ip_card_level', 'h2' );
 			wc_set_loop_prop( 'ip_lcp', 1 === max( 1, (int) wc_get_loop_prop( 'current_page', 1 ) ) );
 
 			woocommerce_product_loop_start();
 
 			if ( wc_get_loop_prop( 'total' ) ) {
-				while ( have_posts() ) {
-					the_post();
+				while ( $ip_query->have_posts() ) {
+					$ip_query->the_post(); // Sets the global $product (wc_setup_product_data).
 
 					/**
 					 * Hook: woocommerce_shop_loop.
@@ -85,6 +95,9 @@ $ip_mode = is_search() ? 'search' : 'archive';
 					do_action( 'woocommerce_shop_loop' );
 
 					wc_get_template_part( 'content', 'product' );
+				}
+				if ( $ip_ctx ) {
+					wp_reset_postdata();
 				}
 			}
 

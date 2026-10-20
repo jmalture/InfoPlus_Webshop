@@ -17,6 +17,7 @@
 .ip-shop-head__title { font: var(--type-heading); text-wrap: balance }
 .ip-shop-head__intro { font: 400 18px/1.4 var(--font) }
 .ip-shop-head__intro > * + * { margin-top: .6em }
+.ip-shop-head__intro[hidden] { display: none }
 .ip-shop-head__count { margin: 0 }
 .ip-shop-head__count .ip-pill { min-height: 26px; padding: 0 10px; font-size: 13px }
 @media (min-width: 768px) {
@@ -64,6 +65,8 @@
 /* ── Product grid: 1 / 2 / 3 / 4 columns ────────────────────────────────── */
 .ip-shop-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); margin: var(--space-8) 0 0; padding: 0; list-style: none }
 .ip-shop-grid__item { display: flex; min-width: 0; margin: 0 }
+/* Cards outside the active category pill (inc/catalog.php). display:flex above would beat the UA rule. */
+.ip-shop-grid__item[hidden] { display: none }
 @media (min-width: 560px) { .ip-shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
 @media (min-width: 768px) { .ip-shop-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6) } }
 @media (min-width: 1101px) { .ip-shop-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) } }
