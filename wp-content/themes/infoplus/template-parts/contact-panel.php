@@ -25,6 +25,10 @@ $ip_cp_phone    = ip_setting( 'phone' );
 $ip_cp_email    = ip_setting( 'email' );
 $ip_cp_form_lbl = ip_setting( 'kontakt_form_label' );
 $ip_cp_form_url = $ip_cp_form_lbl ? ip_setting_page_url( 'kontakt_form_page', '/kontakt/' ) : '';
+// With the Suite form on the Kontakt page, land on the form (inc/inquiry.php); on that page the link scrolls to it.
+if ( $ip_cp_form_url && function_exists( 'infoplus_suite_inquiry_form' ) && false === strpos( $ip_cp_form_url, '#' ) ) {
+	$ip_cp_form_url .= '#anfrage';
+}
 
 if ( ! $ip_cp_hours && ! $ip_cp_phone && ! $ip_cp_email && ! $ip_cp_form_url ) {
 	return; // Nothing to show.

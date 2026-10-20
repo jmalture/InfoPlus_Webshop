@@ -61,6 +61,11 @@
 .ip-kontakt__form { display: grid; gap: var(--space-4); padding: var(--space-6) }
 .ip-kontakt__form-title { font: var(--type-sub); text-wrap: balance }
 .ip-kontakt__actions { display: flex; flex-wrap: wrap; gap: var(--space-3) }
+/* Inline inquiry form (inc/inquiry.php): phone and e-mail below it as the second way. */
+.ip-kontakt__form--inline { gap: 0 }
+.ip-kontakt__direct { display: grid; gap: var(--space-3); margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--border) }
+.ip-kontakt__direct-label { font: 600 13px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-kontakt__direct .ip-btn { min-height: 44px }
 .ip-placeholder { display: flex; gap: var(--space-4); padding: var(--space-4); border: 1px dashed var(--accent); border-radius: 12px; background: var(--c-primary-tint); font-size: 16px }
 .ip-placeholder p + p { margin-top: var(--space-2) }
 @media (min-width: 768px) {

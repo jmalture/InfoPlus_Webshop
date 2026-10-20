@@ -1,8 +1,12 @@
-/* Inquiry drawer ("Individuelle Anfrage"), vanilla, deferred.
+/* Inquiry form ("Individuelle Anfrage" and the Kontakt page form), vanilla, deferred.
 
-   Markup: template-parts/inquiry-drawer.php (<dialog id="ip-inquiry">) around the
-   Infoplus Suite form (templates/inquiry-form.php, form[data-ip-inquiry]). The
-   form's data-ip-inquiry-config holds the REST base, limits and German messages.
+   Markup: the Infoplus Suite form (templates/inquiry-form.php, form[data-ip-inquiry])
+   inside one host, never two per page (inc/inquiry.php):
+   - drawer: template-parts/inquiry-drawer.php (<dialog id="ip-inquiry">), product pages
+   - inline: template-parts/inquiry-inline.php (<section id="anfrage"
+     data-ip-inquiry-inline>), Kontakt page. Always open; its data-ip-inq-context
+     holds the product named in ?produkt= (found by the server, else the name).
+   The form's data-ip-inquiry-config holds the REST base, limits and German messages.
 
    Opening:
    - a click on [data-ip-action="inquiry"] (the product page button, also when the
@@ -11,6 +15,9 @@
    - document.dispatchEvent(new CustomEvent('infoplus:inquiry-open', { detail: context }))
    - window.InfoplusInquiry.open(context)
    - the hash #anfrage on page load (Kontakt page with ?produkt=, the no-JS fallback)
+   Inline mode: the same triggers (on this page) and the hash scroll to the form and
+   focus its heading instead; nothing opens or closes. After a sent message the
+   "Schließen" button becomes "Weitere Nachricht schreiben" and starts a new one.
 
    Context (all optional): { variant: 'product'|'contact', product_id, product_name,
    image, model, model_name, attributes: { pa_x: slug }, labels: [{ label, value }],
@@ -28,9 +35,11 @@
   'use strict';
   var doc = document;
   var win = window;
-  var dialog = doc.getElementById('ip-inquiry');
-  var form = dialog && dialog.querySelector('[data-ip-inquiry]');
-  if (!form || typeof dialog.showModal !== 'function') return;
+  var host = doc.querySelector('[data-ip-inquiry-drawer], [data-ip-inquiry-inline]');
+  var inline = !!(host && host.hasAttribute('data-ip-inquiry-inline'));
+  var dialog = inline ? null : host;
+  var form = host && host.querySelector('[data-ip-inquiry]');
+  if (!form || (!inline && typeof dialog.showModal !== 'function')) return;
 
   var cfg = {};
   try { cfg = JSON.parse(form.getAttribute('data-ip-inquiry-config') || '{}'); } catch (e) { cfg = {}; }
@@ -66,7 +75,7 @@
 
   var state = {
     step: 1,
-    variant: dialog.getAttribute('data-variant') || 'product',
+    variant: host.getAttribute('data-variant') || 'product',
     context: {},
     token: '',
     tokenAt: 0,
@@ -151,9 +160,9 @@
 
   function applyVariant(variant) {
     state.variant = variant === 'contact' ? 'contact' : 'product';
-    dialog.setAttribute('data-variant', state.variant);
+    host.setAttribute('data-variant', state.variant);
     form.setAttribute('data-variant', state.variant);
-    $$('[data-ip-inq-only]', dialog).forEach(function (el) {
+    $$('[data-ip-inq-only]', host).forEach(function (el) {
       var on = el.getAttribute('data-ip-inq-only') === state.variant;
       el.hidden = !on;
       $$('input, select, textarea, button', el).forEach(function (c) { c.disabled = !on; });
@@ -164,6 +173,10 @@
       msgField.placeholder = msgField.getAttribute('data-placeholder-' + state.variant) || '';
       msgField.required = state.variant === 'contact';
     }
+    // Submit label per variant ("Anfrage senden" / "Nachricht senden").
+    var label = btnSubmit.querySelector('[data-ip-label]');
+    var text = label && label.getAttribute('data-label-' + state.variant);
+    if (text) { label.textContent = text; label.setAttribute('data-idle', text); }
   }
 
   function termName(pd, key, slug) {
@@ -281,8 +294,21 @@
     if (body) body.scrollTop = 0;
   }
 
+  /* Inline: keep the top of the form in view after a step change (the drawer scrolls its body instead). */
+  function reveal() {
+    if (!inline) return;
+    var top = host.getBoundingClientRect().top;
+    var headerH = parseFloat(getComputedStyle(doc.documentElement).scrollPaddingTop) || 0;
+    if (top < headerH || top > win.innerHeight * 0.5) {
+      host.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+    }
+  }
+
+  function reduced() { return matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
   function focusStep(n) {
     var t = $('[data-ip-inq-step="' + n + '"] .ip-inq__step-title');
+    reveal();
     if (t) t.focus({ preventScroll: true });
   }
 
@@ -535,7 +561,7 @@
   }
   // A file dropped next to the zone must not replace the page.
   ['dragover', 'drop'].forEach(function (t) {
-    dialog.addEventListener(t, function (e) { if (!drop || !drop.contains(e.target)) e.preventDefault(); });
+    host.addEventListener(t, function (e) { if (!drop || !drop.contains(e.target)) e.preventDefault(); });
   });
 
   /* ── Submit ──────────────────────────────────────────────────────────── */
@@ -637,6 +663,7 @@
     btnSubmit.hidden = true;
     btnClose.hidden = false;
     if (body) body.scrollTop = 0;
+    reveal();
     $('.ip-inq__done-title').focus({ preventScroll: true });
     emit('inquiry-sent', { reference: data.reference });
   }
@@ -674,12 +701,20 @@
     if (state.step === 1) { btnNext.click(); return; }
     send();
   });
-  btnClose.addEventListener('click', function () { dialog.close(); });
+  btnClose.addEventListener('click', function () {
+    if (!inline) { dialog.close(); return; }
+    // Inline: start a new message; the product context of the page stays.
+    reset();
+    renderContext(state.context);
+    focusStep(1);
+  });
+  if (inline && host.getAttribute('data-ip-inq-again')) btnClose.textContent = host.getAttribute('data-ip-inq-again');
 
   /* ── Open / close ────────────────────────────────────────────────────── */
 
   function open(ctx, opener) {
     ctx = ctx || {};
+    if (inline) { focusInline(); return; }
     if (dialog.open) return;
     if (state.sent) reset();
     var variant = ctx.variant || (win.infoplusProductData ? 'product' : (dialog.getAttribute('data-variant') || 'product'));
@@ -700,9 +735,17 @@
     emit('inquiry-open', { source: 'drawer', context: base });
   }
 
-  function close() { if (dialog.open) dialog.close(); }
+  function close() { if (dialog && dialog.open) dialog.close(); }
 
-  dialog.addEventListener('close', function () {
+  /* Inline: bring the form into view and put focus on its heading. */
+  function focusInline() {
+    var t = title || host;
+    host.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+    if (t.focus) t.focus({ preventScroll: true });
+    ensureToken().catch(function () {});
+  }
+
+  if (dialog) dialog.addEventListener('close', function () {
     doc.body.classList.remove('ip-locked');
     var o = state.opener;
     state.opener = null;
@@ -717,7 +760,7 @@
 
   // The header close button. A click on the backdrop and Escape close the
   // dialog through site.js and the browser.
-  dialog.addEventListener('click', function (e) {
+  if (dialog) dialog.addEventListener('click', function (e) {
     var t = e.target;
     if (t.closest && t.closest('[data-ip-inq-dismiss]')) { close(); return; }
     // Links that open a new tab (privacy page) must not close the drawer:
@@ -756,8 +799,26 @@
   doc.addEventListener('click', function (e) {
     if (e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
     var t = e.target.closest ? e.target.closest(TRIGGERS) : null;
-    if (!t || dialog.contains(t)) return;
+    if (!t || host.contains(t)) return;
+    // A plain link to #anfrage on another page (e.g. the Kontakt panel's "Kontakt-Formular") navigates.
+    // Inline mode: every trigger link to another page navigates.
+    var elsewhere = t.tagName === 'A' && t.href && (t.pathname !== win.location.pathname || t.host !== win.location.host);
+    var marked = t.matches('[data-ip-action="inquiry"], [data-ip-inquiry-link], [data-ip-inquiry-open]');
+    if (elsewhere && (inline || !marked)) return;
     e.preventDefault();
+    if (inline) {
+      // An open panel or dialog (Kontakt panel, mobile menu) gets out of the way first.
+      var openDialog = t.closest('dialog[open]');
+      if (openDialog) openDialog.close();
+      var panel = t.closest('[data-ip-contact]');
+      var panelClose = panel && panel.querySelector('[data-ip-contact-close]');
+      if (panelClose) panelClose.click();
+      if (t.tagName === 'A' && win.location.hash !== '#anfrage' && history.replaceState) {
+        try { history.replaceState(history.state, '', '#anfrage'); } catch (err) { /* keep the URL */ }
+      }
+      focusInline();
+      return;
+    }
     var variant = t.getAttribute('data-ip-inquiry-open');
     // A click forwarded by the phone action bar is not trusted: return focus to the bar button.
     var opener = e.isTrusted ? t : (doc.activeElement && doc.activeElement !== doc.body ? doc.activeElement : t);
@@ -771,6 +832,11 @@
 
   function openFromHash() {
     if (win.location.hash !== '#anfrage') return;
+    if (inline) {
+      // After load: the browser's own jump to #anfrage would otherwise clear the focus again.
+      if (doc.readyState === 'complete') focusInline(); else win.addEventListener('load', focusInline, { once: true });
+      return;
+    }
     var params = new URLSearchParams(win.location.search);
     var name = params.get('produkt');
     var ctx = win.infoplusProductData ? null : { variant: 'contact', product_name: name || '' };
@@ -780,10 +846,28 @@
   win.addEventListener('hashchange', openFromHash);
   openFromHash();
 
+  /* Inline: the form is ready at once, in the contact variant, with the page's product context. */
+  if (inline) {
+    var pageCtx = {};
+    try { pageCtx = JSON.parse(host.getAttribute('data-ip-inq-context') || '{}') || {}; } catch (e) { pageCtx = {}; }
+    if (!pageCtx.product_name) {
+      var fromUrl = new URLSearchParams(win.location.search).get('produkt');
+      if (fromUrl) pageCtx.product_name = fromUrl.slice(0, 200);
+    }
+    applyVariant(host.getAttribute('data-variant') || 'contact');
+    state.context = pageCtx;
+    renderContext(pageCtx);
+    var wish = field('wish_date');
+    if (wish) wish.min = today();
+    showStep(1, false);
+    // The form token is fetched on first use, not on every page view.
+    form.addEventListener('focusin', function () { ensureToken().catch(function () {}); }, { once: true });
+  }
+
   win.InfoplusInquiry = {
     open: function (ctx) { open(ctx || null); },
     close: close,
     context: function () { return readProduct(); },
-    isOpen: function () { return dialog.open; }
+    isOpen: function () { return inline ? true : dialog.open; }
   };
 })();

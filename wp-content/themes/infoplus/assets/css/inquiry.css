@@ -1,10 +1,11 @@
-/* Inquiry drawer ("Individuelle Anfrage"): template-parts/inquiry-drawer.php around
-   the Infoplus Suite form (form.ip-inq). Loaded on product pages and the Kontakt page
-   (inc/inquiry.php). Right-hand drawer from 768 px, bottom sheet below.
+/* Inquiry form ("Individuelle Anfrage"), the Infoplus Suite form (form.ip-inq) in one
+   of two hosts (inc/inquiry.php): the drawer (template-parts/inquiry-drawer.php,
+   product pages; right-hand drawer from 768 px, bottom sheet below) or inline in
+   the Kontakt page card (template-parts/inquiry-inline.php, section .ip-inq-inline).
    Motion: drawer 250 ms, steps slide and fade, upload bars, the success check draws
    itself. No rotation anywhere. Everything is instant under prefers-reduced-motion. */
 
-.ip-inq-drawer {
+.ip-inq-drawer, .ip-inq-inline {
   --ip-inq-dur: 250ms;
   --ip-inq-step: 250ms;
   --ip-input-border: #8E9196; /* 3:1 on white for form borders (WCAG 1.4.11), as in checkout.css */
@@ -12,13 +13,15 @@
   --ip-ok: #15803D;
 }
 @media (prefers-reduced-motion: reduce) {
-  .ip-inq-drawer { --ip-inq-dur: 0ms; --ip-inq-step: 0ms }
+  .ip-inq-drawer, .ip-inq-inline { --ip-inq-dur: 0ms; --ip-inq-step: 0ms }
 }
 
 /* Variant switch: product page or Kontakt page texts. */
-.ip-inq-drawer [hidden] { display: none !important }
+.ip-inq-drawer [hidden], .ip-inq-inline [hidden] { display: none !important }
 .ip-inq-drawer[data-variant="product"] [data-ip-inq-only="contact"],
-.ip-inq-drawer[data-variant="contact"] [data-ip-inq-only="product"] { display: none !important }
+.ip-inq-drawer[data-variant="contact"] [data-ip-inq-only="product"],
+.ip-inq-inline[data-variant="product"] [data-ip-inq-only="contact"],
+.ip-inq-inline[data-variant="contact"] [data-ip-inq-only="product"] { display: none !important }
 
 /* ── Drawer shell: bottom sheet on phones ──────────────────────────────── */
 .ip-inq-drawer {
@@ -359,6 +362,25 @@ input[type="number"].ip-inq__input { -moz-appearance: textfield }
   .ip-inq.is-done .ip-inq__foot { grid-template-columns: 1fr }
 }
 
+/* ── Inline host: the form card of the Kontakt page ────────────────────── */
+.ip-inq-inline { display: grid; gap: var(--space-6); scroll-margin-top: calc(var(--header-h) + var(--space-4)) }
+.ip-inq-inline__head { display: grid; gap: var(--space-2) }
+.ip-inq-inline__title { font: var(--type-sub); text-wrap: balance }
+.ip-inq-inline__title:focus { outline: none }
+.ip-inq-inline__title:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px }
+.ip-inq-inline__sub { color: var(--text-secondary); font: 400 17px/1.45 var(--font) }
+.ip-inq-inline__noscript { padding: var(--space-3) var(--space-4); border-radius: 12px; background: var(--c-primary-tint); font: 600 16px/1.4 var(--font) }
+/* No scrolling body and no fixed footer: the page scrolls. */
+.ip-inq-inline .ip-inq { display: grid; gap: 0 }
+.ip-inq-inline .ip-inq__body { padding: 0; overflow: visible }
+.ip-inq-inline .ip-inq__foot { margin-top: var(--space-6); padding: var(--space-4) 0 0; background: none }
+.ip-inq-inline .ip-inq__done { padding-top: var(--space-4) }
+.ip-inq-inline .ip-inq__check, .ip-inq-inline .ip-inq__done-title { scroll-margin-top: calc(var(--header-h) + var(--space-4)) }
+@media (min-width: 768px) {
+  .ip-inq-inline .ip-inq__foot { padding-inline: 0 }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ip-inq-drawer *, .ip-inq-drawer *::before, .ip-inq-drawer *::after { animation: none !important; transition: none !important }
+  .ip-inq-drawer *, .ip-inq-drawer *::before, .ip-inq-drawer *::after,
+  .ip-inq-inline *, .ip-inq-inline *::before, .ip-inq-inline *::after { animation: none !important; transition: none !important }
 }
