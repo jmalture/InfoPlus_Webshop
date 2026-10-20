@@ -1,0 +1,452 @@
+/* Product bundle: the single product page (woocommerce/content-single-product.php,
+   template-parts/product/*). Mobile first; breakpoints 768 and 1101 only.
+   Tokens and .ip-btn/.ip-card/.ip-tile/.ip-kicker/.ip-sub come from main.css.
+
+   The Infoplus Suite components are styled through their ip-c-* classes and
+   the custom properties their templates list (--ip-ms-*, --ip-vd-*, --ip-pi-*,
+   --ip-ib-*, --ip-bt-*): set on .ip-product below, mapped onto the classes here
+   (the plugin CSS does not read them). Elements the Suite JS builds later carry
+   only their old classes (ibpt-*, infoplus-*), so those are targeted directly.
+   The plugin CSS (product-detail-suite.css, bulk-price-table.css) loads first and
+   puts !important on the info buttons and a few states; where this file has to
+   win there, it says so. */
+
+/* ── Tokens for the Suite components ────────────────────────────────────── */
+.ip-product {
+  /* Field label shared by model selector, dropdowns, quantity, info box */
+  --ip-label: 600 15px/1.2 var(--font);
+
+  /* model-selector */
+  --ip-ms-gap: 10px;
+  --ip-ms-card-padding: 8px;
+  --ip-ms-card-bg: var(--c-white);
+  --ip-ms-card-bg-active: var(--c-primary-tint);
+  --ip-ms-card-border-color: var(--border);
+  --ip-ms-card-border-color-active: var(--accent);
+  --ip-ms-card-radius: 14px;
+  --ip-ms-image-radius: 10px;
+  --ip-ms-title-color: var(--text-primary);
+  --ip-ms-name-color: var(--text-primary);
+  --ip-ms-price-color: var(--c-secondary);
+
+  /* variation-dropdowns (image size: the plugin reads --infoplus-dropdown-image-*) */
+  --ip-vd-gap: 16px;
+  --ip-vd-bg: var(--c-white);
+  --ip-vd-radius: 12px;
+  --ip-vd-padding: 10px 14px;
+  --ip-vd-label-color: var(--text-primary);
+  --ip-vd-option-color: var(--text-primary);
+  --ip-vd-option-hover-bg: var(--c-grey-100);
+  --infoplus-dropdown-image-height: 32px;
+  --infoplus-dropdown-image-width: 42px;
+
+  /* product-image */
+  --ip-pi-radius: var(--radius-card);
+  --ip-pi-bg: var(--c-grey-100);
+  --ip-pi-thumb-size: 64px;
+  --ip-pi-thumb-gap: 8px;
+  --ip-pi-thumb-radius: 10px;
+  --ip-pi-thumb-border: var(--border);
+  --ip-pi-thumb-border-active: var(--accent);
+  --ip-pi-lightbox-bg: rgb(25 27 28 / .94);
+
+  /* product-info-box */
+  --ip-ib-heading-color: var(--text-primary);
+  --ip-ib-heading-gap: 12px;
+  --ip-ib-text-color: var(--text-primary);
+  --ip-ib-icon-size: 20px;
+  --ip-ib-row-gap: 10px;
+  --ip-ib-icon-gap: 12px;
+
+  /* bulk-price-table */
+  --ip-bt-columns: 2;
+  --ip-bt-col-gap: 4px;
+  --ip-bt-row-gap: 4px;
+  --ip-bt-cell-bg: transparent;
+  --ip-bt-cell-padding: 10px 12px;
+  --ip-bt-cell-radius: 10px;
+  --ip-bt-label-color: var(--text-secondary);
+  --ip-bt-qty-color: var(--text-primary);
+  --ip-bt-price-color: var(--text-primary);
+  --ip-bt-active-bg: var(--c-white);
+  --ip-bt-active-qty-color: var(--c-secondary);
+  --ip-bt-active-price-color: var(--c-secondary);
+}
+@media (min-width: 768px) {
+  .ip-product { --ip-pi-thumb-size: 76px }
+}
+/* On body (class from inc/product.php): the bar, the body padding and the lifted Kontakt button use it. */
+.ip-view-product { --ip-actionbar-h: 72px }
+
+/* ── Band, notices, breadcrumb ──────────────────────────────────────────── */
+.ip-product { padding-block: var(--space-4) var(--section-gap) }
+@media (min-width: 768px) { .ip-product { padding-top: var(--space-8) } }
+
+.ip-product-notices .woocommerce-notices-wrapper:empty { display: none }
+.ip-product-notices .woocommerce-message,
+.ip-product-notices .woocommerce-info,
+.ip-product-notices .woocommerce-error {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-4);
+  margin: var(--space-4) 0 0; padding: 14px 18px; list-style: none;
+  border-radius: 12px; background: var(--c-primary-tint); color: var(--text-primary); font: 400 17px/1.4 var(--font);
+}
+.ip-product-notices .woocommerce-error { background: var(--c-grey-100); border-left: 3px solid var(--c-secondary) }
+.ip-product-notices a { color: var(--c-secondary); font-weight: 600 }
+
+.ip-product .ip-crumbs { margin-bottom: var(--space-6); font: var(--type-small); color: var(--text-secondary) }
+.ip-product .ip-crumbs ol { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-2); margin: 0; padding: 0; list-style: none }
+.ip-product .ip-crumbs li + li::before { content: "/"; margin-right: var(--space-2); color: var(--c-grey-200) }
+.ip-product .ip-crumbs a { color: inherit; text-decoration: none }
+.ip-product .ip-crumbs a:hover { color: var(--c-secondary); text-decoration: underline }
+.ip-product .ip-crumbs [aria-current] { color: var(--text-primary) }
+
+/* ── Layout: head, gallery, configurator ────────────────────────────────── */
+/* Phones and tablets: one column in the order title, gallery, configurator
+   (the summary wrapper is dissolved so its head can sit above the gallery).
+   Desktop: gallery left (sticky), summary right. */
+.ip-product__grid { display: grid; gap: var(--space-6) }
+.ip-product__summary { display: contents }
+.ip-product__head { order: -1; display: grid; gap: var(--space-3) }
+.ip-product__media { min-width: 0 }
+.ip-product__config { display: grid; gap: var(--space-8); min-width: 0 }
+
+@media (min-width: 1101px) {
+  .ip-product__grid { grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); gap: var(--space-16); align-items: start }
+  .ip-product__summary { display: grid; gap: var(--space-8); min-width: 0 }
+  .ip-product__media { position: sticky; top: calc(var(--header-h) + var(--space-6)) }
+}
+
+.ip-product__title { font: var(--type-heading); text-wrap: balance }
+.ip-product__lead { color: var(--text-secondary); font: 400 18px/1.45 var(--font) }
+.ip-product__lead > * + * { margin-top: .6em }
+@media (min-width: 768px) { .ip-product__lead { font-size: 20px } }
+
+.ip-product__wc-form[hidden] { display: none !important }
+
+/* ── Product image (component product-image) ────────────────────────────── */
+.ip-product .ip-c-product-image__main {
+  aspect-ratio: 4 / 3; min-height: 0;
+  border-radius: var(--ip-pi-radius); background: var(--ip-pi-bg);
+}
+.ip-product .ip-c-product-image__image { width: 100%; height: 100%; padding: 6%; object-fit: contain }
+.ip-product .infoplus-product-image__zoom-lens { border-radius: inherit }
+.ip-product .ip-c-product-image__fullscreen {
+  width: 44px; height: 44px; border-radius: 12px; color: var(--text-primary);
+  background: var(--c-white); box-shadow: var(--shadow-1);
+}
+.ip-product .ip-c-product-image__fullscreen:hover { background: var(--accent); color: var(--c-white) }
+@media (hover: none) { .ip-product .ip-c-product-image__fullscreen { opacity: 1 } }
+
+/* Thumbnails: one swipe row on phones, wrapping row from 768. */
+.ip-product .ip-c-product-image__gallery {
+  flex-wrap: nowrap; gap: var(--ip-pi-thumb-gap); margin: 0; padding: 2px 2px var(--space-1);
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: none;
+}
+.ip-product .ip-c-product-image__gallery::-webkit-scrollbar { display: none }
+@media (min-width: 768px) { .ip-product .ip-c-product-image__gallery { flex-wrap: wrap; overflow: visible } }
+.ip-product .infoplus-product-image__thumb {
+  flex: none; width: var(--ip-pi-thumb-size); height: var(--ip-pi-thumb-size); scroll-snap-align: start;
+  border: 1px solid var(--ip-pi-thumb-border); border-radius: var(--ip-pi-thumb-radius); background: var(--c-white);
+  transition: border-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease);
+}
+.ip-product .infoplus-product-image__thumb img { padding: 4px; object-fit: contain }
+.ip-product .infoplus-product-image__thumb:hover { border-color: var(--c-grey-700) }
+.ip-product .infoplus-product-image__thumb.is-active { border-color: var(--ip-pi-thumb-border-active); box-shadow: 0 0 0 1px var(--ip-pi-thumb-border-active) }
+
+.infoplus-lightbox { background: var(--ip-pi-lightbox-bg, rgb(25 27 28 / .94)) }
+.infoplus-lightbox__close, .infoplus-lightbox__prev, .infoplus-lightbox__next { border-radius: 14px }
+
+.ip-product__fallback-image { aspect-ratio: 4 / 3; display: grid; place-items: center; border-radius: var(--radius-card); background: var(--c-grey-100) }
+.ip-product__fallback-image img { max-height: 100%; width: auto; object-fit: contain }
+
+/* ── Model selector (component model-selector) ──────────────────────────── */
+.ip-product .ip-c-model-selector__title {
+  margin: 0 0 var(--space-3); color: var(--ip-ms-title-color);
+  font: var(--ip-label); letter-spacing: 0; text-transform: none;
+}
+/* The plugin list is a right-to-left scroll column (and the old template forced
+   rtl again); here it is a plain card grid. */
+.ip-product .ip-c-model-selector__options {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ip-ms-gap);
+  direction: ltr !important; /* plugin CSS: direction rtl */
+  max-height: none; overflow: visible; padding: 0 !important;
+}
+@media (min-width: 768px) { .ip-product .ip-c-model-selector__options { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
+
+.ip-product .ip-c-model-selector__option {
+  padding: var(--ip-ms-card-padding); gap: var(--space-2);
+  border: 1px solid var(--ip-ms-card-border-color); border-radius: var(--ip-ms-card-radius); background: var(--ip-ms-card-bg);
+  transition: border-color var(--dur-ui) var(--ease), background-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease);
+}
+.ip-product .ip-c-model-selector__option:hover { border-color: var(--c-grey-700); transform: translateY(-2px); box-shadow: var(--shadow-1) }
+.ip-product .ip-c-model-selector__option.is-active {
+  border-color: var(--ip-ms-card-border-color-active); background: var(--ip-ms-card-bg-active);
+  box-shadow: 0 0 0 1px var(--ip-ms-card-border-color-active); transform: none;
+}
+.ip-product .ip-c-model-selector__option.is-active::before { display: none } /* plugin: blue side bar */
+.ip-product .ip-c-model-selector__option:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+
+.ip-product .ip-c-model-selector__image {
+  aspect-ratio: 4 / 3; min-height: 0; margin: 0;
+  border-radius: var(--ip-ms-image-radius); background: var(--c-grey-100);
+}
+.ip-product .ip-c-model-selector__option.is-active .ip-c-model-selector__image { background: var(--c-white) }
+.ip-product .ip-c-model-selector__image img { width: 100%; height: 100%; max-height: none; padding: 8%; object-fit: contain; border-radius: 0 }
+.ip-product .infoplus-model-selector__content { padding: 2px 4px 4px; text-align: left }
+.ip-product .ip-c-model-selector__label { margin: 0; color: var(--ip-ms-name-color); font: 600 16px/1.25 var(--font); hyphens: auto }
+.ip-product .ip-c-model-selector__price { color: var(--ip-ms-price-color); font: 600 14px/1.3 var(--font); font-variant-numeric: tabular-nums }
+
+/* Info button: plugin rules use !important (they had to beat Elementor), so these do too. */
+.ip-product .ip-c-model-selector .ip-c-model-selector__info {
+  top: 6px !important; right: 6px !important; bottom: auto !important;
+  width: 26px !important; height: 26px !important; min-width: 26px !important; min-height: 26px !important; max-width: 26px !important; max-height: 26px !important;
+  border: 1px solid var(--border) !important; background: var(--c-white) !important; color: var(--c-secondary) !important;
+  font: 700 13px/1 var(--font) !important; box-shadow: var(--shadow-1) !important;
+}
+.ip-product .ip-c-model-selector .ip-c-model-selector__info:hover { border-color: var(--accent) !important; background: var(--accent) !important; color: var(--c-white) !important }
+.ip-product .ip-c-model-selector .ip-c-model-selector__info:focus-visible { outline: 2px solid var(--focus) !important; outline-offset: 2px !important }
+
+/* ── Variation dropdowns (component variation-dropdowns) ────────────────── */
+.ip-product .ip-c-variation-dropdowns { display: grid; gap: var(--ip-vd-gap) }
+.ip-product .ip-c-variation-dropdowns__label { margin: 0 0 var(--space-2); color: var(--ip-vd-label-color); font: var(--ip-label) }
+.ip-product .ip-c-variation-dropdowns__trigger {
+  min-height: 52px; padding: var(--ip-vd-padding); gap: var(--space-3);
+  border: 1px solid var(--border); border-radius: var(--ip-vd-radius); background: var(--ip-vd-bg);
+  transition: border-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease);
+}
+.ip-product .ip-c-variation-dropdowns__trigger:hover { border-color: var(--c-grey-700) }
+.ip-product .ip-c-variation-dropdowns__trigger:focus { outline: none }
+.ip-product .ip-c-variation-dropdowns__trigger:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) }
+.ip-product .infoplus-dropdown.is-open .ip-c-variation-dropdowns__trigger {
+  border-color: var(--accent); border-radius: var(--ip-vd-radius); box-shadow: 0 0 0 1px var(--accent);
+}
+.ip-product .infoplus-dropdown.has-selection .ip-c-variation-dropdowns__trigger { background: var(--c-white) }
+.ip-product .infoplus-dropdown__selected-text { color: var(--ip-vd-option-color); font: 400 17px/1.25 var(--font) }
+.ip-product .infoplus-dropdown:not(.has-selection) .infoplus-dropdown__selected-text { color: var(--text-secondary) }
+.ip-product .infoplus-dropdown__arrow { color: var(--text-primary); transition: transform 250ms var(--ease) }
+.ip-product .infoplus-dropdown__selected-image { border-radius: 6px !important; object-fit: contain; background: var(--c-grey-100) }
+
+/* Options: a floating panel below the trigger instead of a merged box. */
+.ip-product .ip-c-variation-dropdowns__options {
+  top: calc(100% + 6px); max-height: 320px; padding: 6px;
+  border: 0; border-radius: 16px; background: var(--ip-vd-bg); box-shadow: var(--shadow-2);
+  overscroll-behavior: contain;
+}
+.ip-product .ip-c-variation-dropdowns__option {
+  gap: var(--space-3); min-height: 44px; padding: 8px 10px; border-radius: 10px;
+  color: var(--ip-vd-option-color); transition: background-color var(--dur-ui) var(--ease);
+}
+.ip-product .ip-c-variation-dropdowns__option:hover { background: var(--ip-vd-option-hover-bg) }
+.ip-product .ip-c-variation-dropdowns__option.is-selected { background: var(--c-primary-tint) }
+.ip-product .ip-c-variation-dropdowns__option.is-selected .infoplus-dropdown__option-text { color: var(--c-secondary); font-weight: 600 }
+.ip-product .infoplus-dropdown__option-text { color: inherit; font: 400 17px/1.25 var(--font) }
+.ip-product .ip-c-variation-dropdowns__image { border-radius: 6px !important; object-fit: contain; background: var(--c-grey-100) }
+
+/* Info buttons in the options and in the trigger (plugin: !important). */
+.ip-product .infoplus-dropdown .infoplus-dropdown__option-info,
+.ip-product .infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info {
+  width: 24px !important; height: 24px !important; min-width: 24px !important; min-height: 24px !important; max-width: 24px !important; max-height: 24px !important;
+  border: 1px solid var(--border) !important; background: var(--c-white) !important; color: var(--c-secondary) !important;
+  font: 700 12px/1 var(--font) !important;
+}
+.ip-product .infoplus-dropdown .infoplus-dropdown__option-info:hover,
+.ip-product .infoplus-dropdown .infoplus-dropdown__option-info:focus-visible,
+.ip-product .infoplus-dropdown.has-selection.has-info .infoplus-dropdown__selected-info:hover {
+  border-color: var(--accent) !important; background: var(--accent) !important; color: var(--c-white) !important;
+}
+
+/* "Dieses Modell ist nicht konfigurierbar" overlay for requestable models. */
+.ip-product .infoplus-dropdowns-lock { border-radius: 16px; background: rgb(255 255 255 / .8) }
+.ip-product .infoplus-dropdowns-lock__message { color: var(--c-secondary); font: 600 18px/1.3 var(--font) }
+.ip-product .ip-variations-loading .infoplus-dropdown__trigger { border-color: var(--c-grey-100) }
+
+/* ── Info modal and tooltip (built by model-selector.js / variation-dropdowns.js) ── */
+.infoplus-info-modal__backdrop { background: rgb(25 27 28 / .5) }
+.infoplus-info-modal__content {
+  max-width: 520px; padding: var(--space-8) var(--space-6) var(--space-6);
+  border-radius: var(--radius-panel); box-shadow: var(--shadow-2); font-family: var(--font);
+}
+.infoplus-info-modal__close {
+  width: 40px; height: 40px; border-radius: 12px; background: var(--c-grey-100);
+  color: var(--text-primary); font: 400 26px/1 var(--font);
+}
+.infoplus-info-modal__close:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.infoplus-info-modal__image { max-width: 340px; border-radius: 12px; background: var(--c-grey-100) }
+.infoplus-info-modal__image img { padding: 6%; border-radius: 0 }
+.infoplus-info-modal__title { color: var(--text-primary); font: 600 22px/1.25 var(--font) }
+.infoplus-info-modal__description { color: var(--text-secondary); font: 400 17px/1.5 var(--font) }
+.infoplus-tooltip { padding: 8px 12px; border-radius: 10px; background: var(--c-grey-800); font: 400 14px/1.4 var(--font) }
+.infoplus-tooltip::after { border-top-color: var(--c-grey-800) }
+.infoplus-tooltip.is-below::after { border-top-color: transparent; border-bottom-color: var(--c-grey-800) }
+
+/* ── Staffelpreise, quantity, prices ────────────────────────────────────── */
+.ip-buy { display: grid; gap: var(--space-4) }
+
+/* Bulk table (component bulk-price-table): a light card, tabular numbers.
+   The card sits on the grid and the skeleton, which the Suite JS shows and
+   hides; for requestable models both are hidden and no empty card is left. */
+.ip-product .ip-c-bulk-price-table .ibpt-grid,
+.ip-product .ip-c-bulk-price-table .ibpt-skeleton {
+  grid-template-columns: repeat(var(--ip-bt-columns), minmax(0, 1fr));
+  column-gap: var(--ip-bt-col-gap); row-gap: var(--ip-bt-row-gap);
+  padding: 6px; border-radius: var(--radius-card); background: var(--c-grey-100);
+}
+.ip-product .ip-c-bulk-price-table .ibpt-cell {
+  min-height: 44px; padding: var(--ip-bt-cell-padding); gap: 4px;
+  border-radius: var(--ip-bt-cell-radius); background: var(--ip-bt-cell-bg);
+  font-variant-numeric: tabular-nums; transition: background-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease);
+}
+.ip-product .ip-c-bulk-price-table .ibpt-cell:hover { background: rgb(255 255 255 / .7) }
+.ip-product .ip-c-bulk-price-table .ibpt-cell:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px }
+.ip-product .ip-c-bulk-price-table .ibpt-cell__label { color: var(--ip-bt-label-color); font: 400 14px/1.2 var(--font) }
+.ip-product .ip-c-bulk-price-table .ibpt-cell__qty { color: var(--ip-bt-qty-color); font: 600 16px/1.2 var(--font) }
+.ip-product .ip-c-bulk-price-table .ibpt-cell__price { color: var(--ip-bt-price-color); font: 700 16px/1.2 var(--font) }
+.ip-product .ip-c-bulk-price-table .ibpt-cell.ibpt-cell--active { background: var(--ip-bt-active-bg); box-shadow: 0 0 0 1px var(--accent), var(--shadow-1) }
+.ip-product .ip-c-bulk-price-table .ibpt-cell--active .ibpt-cell__qty { color: var(--ip-bt-active-qty-color) }
+.ip-product .ip-c-bulk-price-table .ibpt-cell--active .ibpt-cell__price { color: var(--ip-bt-active-price-color) }
+.ip-product .ip-c-bulk-price-table .ibpt-skeleton__cell { height: 44px; border-radius: var(--ip-bt-cell-radius); background: linear-gradient(90deg, var(--c-white) 25%, var(--c-grey-200) 50%, var(--c-white) 75%); background-size: 200% 100% }
+.ip-product .ip-c-bulk-price-table .ibpt-no-prices-lock { border-radius: 12px; background: rgb(239 239 246 / .8) }
+.ip-product .ip-c-bulk-price-table .ibpt-no-prices-lock__message { color: var(--c-secondary); font: 600 17px/1.3 var(--font) }
+@media (min-width: 1101px) { .ip-product .ip-c-bulk-price-table .ibpt-cell { padding: 10px 14px } }
+
+/* Quantity stepper and prices ([data-ip-qty-row], driven by the Suite bulk calculator). */
+.ip-buy__row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-4) var(--space-6) }
+.ip-qty { display: grid; gap: var(--space-2) }
+.ip-qty__label { font: var(--ip-label) }
+.ip-qty__stepper {
+  display: inline-flex; align-items: stretch; height: 52px;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--c-white);
+  transition: border-color var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease);
+}
+.ip-qty__stepper:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) }
+.ip-qty__btn {
+  display: grid; place-items: center; width: 48px; padding: 0;
+  border: 0; border-radius: 11px; background: none; color: var(--text-primary);
+  transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-qty__btn .ip-icon { width: 20px; height: 20px }
+.ip-qty__btn:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-qty__btn:focus-visible { outline-offset: -2px }
+.ip-qty__input {
+  width: 72px; padding: 0; border: 0; background: none; text-align: center;
+  font: 600 19px/1 var(--font); font-variant-numeric: tabular-nums;
+}
+.ip-qty__input:focus { outline: none }
+.ip-product .qty-disabled, .ip-product .qty-limit-reached { opacity: .35; cursor: not-allowed }
+.ip-product .qty-disabled { pointer-events: none }
+/* Hint injected by the bulk calculator (inline plugin colours replaced by brand ones). */
+.ip-product .qty-limit-msg {
+  margin-top: var(--space-2); padding: 8px 12px; border: 0 !important; border-radius: 10px;
+  background: var(--c-primary-tint) !important; color: var(--c-secondary) !important; font: 600 14px/1.35 var(--font); text-align: left;
+}
+
+.ip-buy__prices { display: flex; gap: var(--space-6); margin: 0 }
+.ip-buy__price { display: grid; gap: 2px }
+.ip-buy__price dt { color: var(--text-secondary); font: 400 15px/1.2 var(--font) }
+.ip-buy__price dd { margin: 0; font: 600 20px/1.2 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap }
+.ip-buy__price--total dd { font-size: 26px; font-weight: 700 }
+.ip-buy__note { color: var(--text-secondary); font: var(--type-small) }
+
+/* ── Action buttons (#editor, #anfrage; states set by the Suite) ────────── */
+.ip-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-3) }
+.ip-actions__btn { justify-content: center; min-height: 56px; padding-inline: var(--space-6); border-radius: 12px; font: 600 19px/1.1 var(--font); text-align: center }
+.ip-actions__btn .ip-icon { width: 22px; height: 22px; transition: transform var(--dur-ui) var(--ease) }
+.ip-actions__btn:hover .ip-icon { transform: translateX(3px) }
+.ip-actions__btn.infoplus-btn-disabled { opacity: 1; background: var(--c-grey-200); color: var(--text-secondary); box-shadow: none }
+.ip-actions__btn.infoplus-btn-hidden { display: none !important }
+/* Requestable models: the inquiry is the only action, so it becomes the primary button. */
+.ip-actions__btn--editor.infoplus-btn-hidden ~ .ip-actions__btn--inquiry { background: var(--accent); color: var(--c-white); box-shadow: none }
+.ip-actions__btn--editor.infoplus-btn-hidden ~ .ip-actions__btn--inquiry:hover { background: var(--accent-hover) }
+.ip-actions .infoplus-btn-error-msg { grid-column: 1 / -1; margin: 0; color: var(--c-secondary); font: 600 15px/1.3 var(--font); text-align: left }
+/* Pulse on model change (plugin keyframes use #E91E8C; brand magenta here). */
+@keyframes ip-action-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(230 0 126 / .45) }
+  70% { box-shadow: 0 0 0 14px rgb(230 0 126 / 0) }
+  100% { box-shadow: 0 0 0 0 rgb(230 0 126 / 0) }
+}
+.ip-actions .infoplus-anfrage-pulse { animation: ip-action-pulse .7s var(--ease) !important }
+.ip-actions .infoplus-anfrage-pulse--long { animation: ip-action-pulse .75s var(--ease) 4 !important }
+
+/* ── Info box (component product-info-box): icon-tile rows ──────────────── */
+.ip-product .ip-c-product-info-box { padding: var(--space-4) var(--space-4) var(--space-4) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-card) }
+.ip-product .ip-c-product-info-box__heading { margin: 0 0 var(--ip-ib-heading-gap); color: var(--ip-ib-heading-color); font: var(--ip-label) }
+.ip-product .ip-c-product-info-box__rows { gap: var(--ip-ib-row-gap) }
+.ip-product .ip-c-product-info-box__row { gap: var(--ip-ib-icon-gap); min-height: 36px }
+.ip-product .ip-c-product-info-box__icon {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px;
+  background: var(--c-primary-tint); color: var(--accent) !important; /* beats the inline colour from the args */
+}
+.ip-product .ip-c-product-info-box__icon svg { width: var(--ip-ib-icon-size); height: var(--ip-ib-icon-size); fill: none } /* plugin: fill currentColor */
+/* The SKU row has no icon in the component; same tile with a tag icon. */
+.ip-product .ip-info-box__row--sku::before {
+  content: ""; flex: none; width: 36px; height: 36px; border-radius: 11px;
+  background: var(--c-primary-tint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E6007E' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z'/%3E%3Ccircle cx='7.5' cy='7.5' r='1.3'/%3E%3C/svg%3E") center / 20px no-repeat;
+}
+.ip-product .ip-c-product-info-box__label { color: var(--ip-ib-text-color); font: 400 17px/1.3 var(--font) }
+.ip-product .ip-c-product-info-box__value { font-weight: 600; font-variant-numeric: tabular-nums }
+.ip-product .ip-info-box__sku-label { font-weight: 400; color: var(--text-secondary) }
+.ip-product .ip-info-box__sku-value--no-sku { color: var(--c-secondary) }
+
+/* ── Description and "Individuelle Anfrage" cards ───────────────────────── */
+.ip-product__details { display: grid; gap: var(--space-6); margin-top: var(--section-gap) }
+@media (min-width: 1101px) {
+  .ip-product__details { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-8); align-items: start }
+  .ip-product__details > :only-child { grid-column: 1 / -1 }
+}
+.ip-product-desc, .ip-request { padding: var(--space-6) }
+@media (min-width: 768px) { .ip-product-desc, .ip-request { padding: var(--space-8) } }
+
+.ip-product-desc__title, .ip-request__title { font: var(--type-sub); text-wrap: balance }
+.ip-product-desc__body { margin-top: var(--space-4); font: 400 18px/1.55 var(--font) }
+.ip-product-desc__body ul, .ip-product-desc__body ol { padding-left: 1.2em }
+.ip-product-desc__body li + li { margin-top: .3em }
+.ip-product-desc__body a { color: var(--c-secondary) }
+
+.ip-request { display: grid; gap: var(--space-6) }
+.ip-request__head { display: grid; gap: var(--space-2) }
+.ip-request__head .ip-sub { font: 400 18px/1.45 var(--font) }
+.ip-request__list { display: grid; gap: var(--space-4); margin: 0; padding: 0; list-style: none }
+@media (min-width: 768px) and (max-width: 1100px) { .ip-request__list { grid-template-columns: repeat(3, minmax(0, 1fr)) } }
+.ip-request__item { display: flex; align-items: center; gap: var(--space-3) }
+.ip-request__text { display: grid; gap: 2px }
+.ip-request__text strong { font: 600 14px/1.2 var(--font); letter-spacing: 1px }
+.ip-request__text span { color: var(--text-secondary); font: 400 16px/1.3 var(--font) }
+.ip-request__cta .ip-btn { min-height: 52px; font-size: 18px }
+.ip-request__cta .ip-icon { width: 22px; height: 22px; transition: transform var(--dur-ui) var(--ease) }
+.ip-request__cta .ip-btn:hover .ip-icon { transform: translateX(3px) }
+
+/* ── Sticky action bar (phones and tablets) ─────────────────────────────── */
+.ip-actionbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9990;
+  display: flex; align-items: center; gap: var(--space-4);
+  min-height: var(--ip-actionbar-h); padding: 10px var(--layout-margin) calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--c-white); box-shadow: 0 -16px 32px -20px rgb(25 27 28 / .3), 0 -1px 0 var(--border);
+  transform: translateY(110%); transition: transform 300ms var(--ease), visibility 0s linear 300ms; visibility: hidden;
+}
+.ip-actionbar[hidden], .ip-actionbar.is-empty { display: none }
+.ip-actionbar.is-visible { transform: none; visibility: visible; transition-delay: 0s }
+.ip-actionbar__sum { display: grid; gap: 2px; min-width: 0; flex: 0 1 auto }
+.ip-actionbar__sum[hidden] { display: none }
+.ip-actionbar__label { color: var(--text-secondary); font: 400 13px/1.2 var(--font) }
+.ip-actionbar__value { overflow: hidden; font: 700 19px/1.2 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap; text-overflow: ellipsis }
+.ip-actionbar__qty { color: var(--text-secondary); font-size: 15px; font-weight: 400 }
+.ip-actionbar__btn { flex: 1 1 auto; justify-content: center; min-height: 50px; margin-left: auto; padding-inline: var(--space-4); border-radius: 12px; font-size: 17px; text-align: center; white-space: nowrap }
+.ip-actionbar__sum:not([hidden]) + .ip-actionbar__btn { flex: 0 0 auto }
+.ip-actionbar__btn.is-disabled { background: var(--c-grey-200); color: var(--text-secondary) }
+@media (max-width: 1100px) {
+  body.ip-actionbar-on { padding-bottom: var(--ip-actionbar-h) }
+}
+@media (max-width: 767px) {
+  /* Lift the round Kontakt button (footer.css) above the bar. */
+  body.ip-actionbar-on .ip-contact__tab { bottom: calc(var(--ip-actionbar-h) + 16px + env(safe-area-inset-bottom, 0px)) }
+}
+@media (min-width: 1101px) {
+  .ip-actionbar { display: none !important }
+}
+
+/* ── Motion off ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ip-product .ip-c-model-selector__option:hover { transform: none }
+  .ip-actions .infoplus-anfrage-pulse, .ip-actions .infoplus-anfrage-pulse--long { animation: none !important }
+  .ip-actionbar { transition: none }
+}
