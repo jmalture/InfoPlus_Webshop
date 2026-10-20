@@ -79,6 +79,9 @@ add_action( 'wp_head', function () {
 
 /** Preload the one face every first screen renders. */
 add_action( 'wp_head', function () {
+	if ( ! file_exists( IP_DIR . '/assets/fonts/archivo-narrow-var.woff2' ) ) {
+		return;
+	}
 	printf(
 		'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
 		esc_url( IP_URI . '/assets/fonts/archivo-narrow-var.woff2' )
