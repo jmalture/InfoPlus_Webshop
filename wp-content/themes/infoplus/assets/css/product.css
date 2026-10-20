@@ -153,6 +153,7 @@
    stacking context. While it is open, lift the column above the header,
    the configurator, the phone bar and the Kontakt tab. */
 body.infoplus-lightbox-open .ip-product__media { z-index: 10050 }
+body.infoplus-lightbox-open .ip-contact { visibility: hidden }
 .infoplus-lightbox__close, .infoplus-lightbox__prev, .infoplus-lightbox__next { border-radius: 14px }
 
 .ip-product__fallback-image { aspect-ratio: 4 / 3; display: grid; place-items: center; border-radius: var(--radius-card); background: var(--c-grey-100) }
