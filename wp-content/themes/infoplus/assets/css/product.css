@@ -771,6 +771,8 @@ html:not(.js) .ip-stepnav { display: none }
 .ip-actionbar__btn.is-disabled { background: var(--c-grey-200); color: var(--text-secondary) }
 @media (max-width: 1100px) {
   body.ip-actionbar-on { padding-bottom: var(--ip-actionbar-h) }
+  /* CookieYes "revisit consent" button: above the bar, not over the price. */
+  body.ip-actionbar-on .cky-btn-revisit-wrapper { bottom: calc(var(--ip-actionbar-h) + 16px + env(safe-area-inset-bottom, 0px)) !important }
 }
 @media (max-width: 767px) {
   /* Lift the round Kontakt button (footer.css) above the bar. */
