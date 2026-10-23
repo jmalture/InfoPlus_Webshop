@@ -5,7 +5,7 @@ Monorepo for the Infoplus nameplate shop (Namensschilder): the Infoplus Suite pl
 ## State of the repo
 
 - Created 2026-10-23 by merging two histories: the Suite (formerly MrBeardman/Infoplus-Suite, 45 commits) and the theme (formerly standalone, 40 commits). Paths were rewritten into this layout, so all commit hashes changed. Old hash to new hash: `docs/history/commit-map-suite.txt` and `docs/history/commit-map-theme.txt`. Hashes quoted in older docs are the old ones; look them up there.
-- `main`: current line, deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com) as Suite 0.10.35 + theme 0.5.1. Elementor and Elementor Pro are deleted on staging (2026-10-23), as are 20 other unused plugins. The Suite no longer contains Elementor widgets or dynamic tags (0.10.35); production still needs them until rollout.
+- `main`: current line, deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com) as Suite 0.10.35 + theme 0.5.2. Elementor and Elementor Pro are deleted on staging (2026-10-23), as are 20 other unused plugins. The Suite no longer contains Elementor widgets or dynamic tags (0.10.35); production still needs them until rollout.
 - `production`: the Suite as production runs it (old `main`, production-identical at old `f01aca6`, new `1b24e5c`, 2026-09-17, plus documentation commits). Production still uses Elementor and the old Suite line. Reference until rollout.
 - `feature/catalog-import` (0.9.113): CatalogImport module and the `tools/import-mapping/` pipeline. Already contained in `main`.
 - Tags `archive/*`: merged or retired branches (fix/order-details-ownership, fix/infoplusapi-customerdashboard-auth, chore/sync-staging, claude/admiring-archimedes, an older unrelated line from March 2026).
@@ -50,7 +50,7 @@ Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFi
 | `Plugin::VERSION` in `src/Plugin.php` | `= INFOPLUS_SUITE_VERSION` (0.10.25 on `production`) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. Up to 0.10.32 it was a separate literal and the header lagged behind at 0.9.113. |
 | `ProductDetailSuite\Module::VERSION` | 1.1.1 (1.1.0 on `production`) | Cache-bust for ProductDetailSuite assets and part of the transient key `infoplus_pd_{product_id}_{VERSION}`. |
 | `IkonaIFE\Module::VERSION` | 1.0.4 | Cache-bust for the sync dashboard assets. |
-| Theme `style.css` Version and `IP_VERSION` in `functions.php` | 0.5.1 | Theme release number; theme assets are versioned with it plus the file time, so every upload busts caches. |
+| Theme `style.css` Version and `IP_VERSION` in `functions.php` | 0.5.2 | Theme release number; theme assets are versioned with it plus the file time, so every upload busts caches. |
 
 Rule: after any JS or CSS change, bump the constant that the module's enqueue uses, then hard refresh. A ProductDetailSuite bump also invalidates every cached product data blob. Release rule for the Suite: every ZIP that goes to a site gets a new number in `infoplus-suite.php` (header and constant), so the Plugins screen shows which build is installed. The two module constants are still separate (R-08 partly done).
 
