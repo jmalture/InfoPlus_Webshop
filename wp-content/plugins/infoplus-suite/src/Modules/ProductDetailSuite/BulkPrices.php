@@ -78,24 +78,8 @@ final class BulkPrices
             }
         }
 
-        $table = $wpdb->prefix . 'wdp_rules';
-
-        // Guard: table might not exist when the WDP plugin is inactive
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        if ($wpdb->get_var("SHOW TABLES LIKE '{$table}'") !== $table) {
-            return [];
-        }
-
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        $rules = $wpdb->get_results(
-            "SELECT filters, bulk_adjustments FROM {$table} WHERE enabled = 1 AND deleted = 0 ORDER BY priority ASC, id ASC"
-        );
-
-        foreach ($rules as $rule) {
-            $filters = maybe_unserialize($rule->filters);
-            if (!is_array($filters)) {
-                continue;
-            }
+        foreach (self::rules() as $rule) {
+            $filters = $rule->filters;
 
             foreach ($filters as $filter) {
                 $values = $filter['value'] ?? [];
@@ -120,6 +104,42 @@ final class BulkPrices
         }
 
         return [];
+    }
+
+    /**
+     * The active WDP rules with their filters unserialised, read once per
+     * request (the finder looks up tiers for many SKUs in one request).
+     * Empty when the table does not exist (WDP plugin inactive).
+     *
+     * @return object[] {filters: array, bulk_adjustments: string}
+     */
+    private static function rules(): array
+    {
+        static $rules = null;
+        if ($rules !== null) {
+            return $rules;
+        }
+        global $wpdb;
+        $rules = [];
+        $table = $wpdb->prefix . 'wdp_rules';
+
+        // Guard: table might not exist when the WDP plugin is inactive
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$table}'") !== $table) {
+            return $rules;
+        }
+
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $rows = $wpdb->get_results(
+            "SELECT filters, bulk_adjustments FROM {$table} WHERE enabled = 1 AND deleted = 0 ORDER BY priority ASC, id ASC"
+        );
+        foreach ((array) $rows as $row) {
+            $filters = maybe_unserialize($row->filters);
+            if (is_array($filters)) {
+                $rules[] = (object) ['filters' => $filters, 'bulk_adjustments' => (string) $row->bulk_adjustments];
+            }
+        }
+        return $rules;
     }
 
     /**

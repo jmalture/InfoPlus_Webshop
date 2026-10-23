@@ -14,6 +14,7 @@ use Infoplus\Suite\Modules\ProductDetailSuite\Module as ProductDetailSuiteModule
 use Infoplus\Suite\Modules\Custom404\Module as Custom404Module;
 use Infoplus\Suite\Modules\CatalogImport\Module as CatalogImportModule;
 use Infoplus\Suite\Modules\Inquiry\Module as InquiryModule;
+use Infoplus\Suite\Modules\Finder\Module as FinderModule;
 
 final class Plugin
 {
@@ -57,6 +58,7 @@ final class Plugin
         new Custom404Module(),          // Custom branded 404 page (runs in background)
         new CatalogImportModule(),      // WooCommerce → Katalog-Import (CSV catalog import)
         new InquiryModule(),            // Inquiry form "Individuelle Anfrage": REST, CPT Anfragen, mails (settings tab)
+        new FinderModule(),             // Namensschild-Berater: candidate data for the theme's guided picker
     ];
 
         // Only these modules should have visible tabs in the dashboard

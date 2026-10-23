@@ -103,3 +103,15 @@ if (!function_exists('infoplus_suite_inquiry_form')) {
         View::render('inquiry-form', \Infoplus\Suite\Modules\Inquiry\Module::formArgs($args));
     }
 }
+
+if (!function_exists('infoplus_suite_finder_data')) {
+    /**
+     * Data of the Namensschild-Berater: candidates (one per product family and
+     * model), the three options with "ab" prices, currency and tax label.
+     * Cached 12 h, cleared on product save. See Modules/Finder/Catalog.php.
+     */
+    function infoplus_suite_finder_data(): array
+    {
+        return \Infoplus\Suite\Modules\Finder\Catalog::get();
+    }
+}
