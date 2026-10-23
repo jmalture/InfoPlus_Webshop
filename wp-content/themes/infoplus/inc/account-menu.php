@@ -113,15 +113,3 @@ function ip_account_menu_data() {
 	);
 	return $data;
 }
-
-/*
- * The Suite's Elementor-era dropdown (UserDashboard, menu-dropdown.js/.css)
- * looks for the Elementor widget #log-in, which this theme does not have; the
- * quick menu replaces it. Not loaded under this theme.
- */
-add_action( 'wp_enqueue_scripts', function () {
-	if ( ip_account_menu_enabled() ) {
-		wp_dequeue_script( 'infoplus-menu-dropdown' );
-		wp_dequeue_style( 'infoplus-menu-dropdown' );
-	}
-}, 100 );

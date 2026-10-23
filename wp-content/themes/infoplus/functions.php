@@ -11,12 +11,11 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'IP_VERSION', '0.5.0' ); // Keep in sync with style.css "Version".
+define( 'IP_VERSION', '0.5.1' ); // Keep in sync with style.css "Version".
 define( 'IP_DIR', get_template_directory() );
 define( 'IP_URI', get_template_directory_uri() );
 
 require IP_DIR . '/inc/setup.php';
-require IP_DIR . '/inc/elementor-guard.php';
 require IP_DIR . '/inc/fields.php';
 require IP_DIR . '/inc/options.php';
 require IP_DIR . '/inc/images.php';
