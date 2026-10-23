@@ -179,6 +179,47 @@
   .ip-demo__plate, .ip-demo__logo, .ip-demo__role, .ip-demo__chip, .ip-demo__cart { transition: none }
 }
 
+/* Hero: entry to the Namensschild-Berater (inc/finder.php). */
+.ip-hero__finder { display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-1); color: var(--text-primary); font: 600 17px/1.3 var(--font); text-decoration: none }
+.ip-hero__finder-icon { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--c-primary-tint); color: var(--accent) }
+.ip-hero__finder-icon .ip-icon { width: 18px; height: 18px }
+.ip-hero__finder > .ip-icon { width: 18px; height: 18px; color: var(--accent); transition: transform var(--dur-ui) var(--ease) }
+.ip-hero__finder:hover { color: var(--c-secondary) }
+.ip-hero__finder:hover > .ip-icon { transform: translateX(3px) }
+
+/* ── Drei Wege: the three options + entry to the finder (inc/finder.php) ── */
+.ip-ways__list { display: grid; gap: var(--space-4); margin: var(--space-8) 0 0; padding: 0; list-style: none; counter-reset: way }
+.ip-way { display: flex; flex-direction: column; height: 100%; overflow: hidden }
+.ip-way__visual { position: relative; display: grid; place-items: center; padding: var(--space-8) var(--space-6); background:
+  radial-gradient(circle, rgb(25 27 28 / .07) 1px, transparent 1.4px) 0 0 / 16px 16px, var(--surface-alt) }
+.ip-way__visual .ip-fplate { width: 70% }
+.ip-way__num { position: absolute; top: var(--space-4); left: var(--space-4); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--c-white); box-shadow: var(--shadow-1); font: 700 17px/1 var(--font); color: var(--c-secondary) }
+.ip-way__body { display: grid; gap: var(--space-3); align-content: start; flex: 1; padding: var(--space-6) }
+.ip-way__title { font: 600 26px/1.15 var(--font); text-wrap: balance }
+.ip-way__short { color: var(--text-secondary) }
+.ip-way__points { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none }
+.ip-way__points li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--space-2); font: 400 17px/1.35 var(--font) }
+.ip-way__points .ip-icon { width: 20px; height: 20px; color: var(--accent); stroke-width: 2.25 }
+.ip-way__fit { font: var(--type-small); color: var(--text-secondary) }
+.ip-way__foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-top: auto; padding-top: var(--space-3); border-top: 1px solid var(--border) }
+.ip-way__price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px }
+.ip-way__from { font: 600 16px/1 var(--font); color: var(--text-secondary) }
+.ip-way__price b { font: 700 30px/1 var(--font); color: var(--c-secondary); font-variant-numeric: tabular-nums }
+.ip-way__unit { flex-basis: 100%; font: var(--type-small); color: var(--text-secondary) }
+.ip-way__count { font: var(--type-small); color: var(--text-secondary) }
+.ip-way__cta { justify-self: start }
+.ip-ways__help { display: grid; gap: var(--space-4); justify-items: start; margin-top: var(--space-6); padding: var(--space-6); border-color: var(--c-primary-tint);
+  background: linear-gradient(100deg, var(--c-primary-tint), var(--c-white) 70%) }
+.ip-ways__help-title { font: 600 24px/1.2 var(--font) }
+.ip-ways__help-sub { margin-top: var(--space-1); color: var(--text-secondary) }
+.ip-ways__note { margin-top: var(--space-4); font: var(--type-small); color: var(--text-secondary) }
+@media (min-width: 768px) {
+  .ip-ways__help { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; padding: var(--space-6) var(--space-8) }
+}
+@media (min-width: 1101px) {
+  .ip-ways__list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6) }
+}
+
 /* ── Section top row: head left, "more" link right ──────────────────────── */
 .ip-section__top { display: grid; gap: var(--space-4); align-items: end }
 .ip-section__more { justify-self: start }

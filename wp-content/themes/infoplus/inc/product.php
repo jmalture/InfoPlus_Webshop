@@ -503,7 +503,7 @@ function ip_product_inquiry_url( $product ) {
 function ip_product_buy_form_posted( $product ) {
 	// phpcs:disable WordPress.Security.NonceVerification.Missing -- read-only echo of Woo's own (nonce-less) add-to-cart POST.
 	if ( empty( $_POST['infoplus_buy_form'] ) || ! isset( $_POST['add-to-cart'] ) || absint( $_POST['add-to-cart'] ) !== $product->get_id() ) {
-		return null;
+		return ip_product_link_selection( $product );
 	}
 	$attributes = array();
 	foreach ( $_POST as $key => $value ) {
@@ -519,6 +519,48 @@ function ip_product_buy_form_posted( $product ) {
 	);
 	// phpcs:enable
 	return $posted;
+}
+
+/**
+ * A selection passed in the link, so the Namensschild-Berater (inc/finder.php)
+ * can open a product with its model, fastening and quantity set:
+ * ?modell={pa_model slug}&befestigung={magnet|pin|clip}&menge={n}.
+ * Same shape as a buy form POST, restored the same way by product.js. Only
+ * values the product really has are used; anything else is dropped.
+ *
+ * @return array{model:string,attributes:array<string,string>,variation:int,qty:int}|null
+ */
+function ip_product_link_selection( $product ) {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only preselection, nothing is stored.
+	$model = isset( $_GET['modell'] ) && is_string( $_GET['modell'] ) ? sanitize_title( wp_unslash( $_GET['modell'] ) ) : '';
+	$kind  = isset( $_GET['befestigung'] ) && is_string( $_GET['befestigung'] ) ? sanitize_key( wp_unslash( $_GET['befestigung'] ) ) : '';
+	$qty   = isset( $_GET['menge'] ) ? min( 100000, absint( $_GET['menge'] ) ) : 0;
+	// phpcs:enable
+	if ( '' === $model || ! $product->is_type( 'variable' ) ) {
+		return null;
+	}
+	$models = wc_get_product_terms( $product->get_id(), 'pa_model', array( 'fields' => 'slugs' ) );
+	if ( is_wp_error( $models ) || ! in_array( $model, (array) $models, true ) ) {
+		return null;
+	}
+	$attributes = array( 'pa_model' => $model );
+	if ( in_array( $kind, array( 'magnet', 'pin', 'clip' ), true ) ) {
+		$patterns = array( 'magnet' => '/mag/', 'pin' => '/nadel/', 'clip' => '/clip|klemme/' );
+		$fasteners = wc_get_product_terms( $product->get_id(), 'pa_befestigung', array( 'fields' => 'slugs' ) );
+		foreach ( is_wp_error( $fasteners ) ? array() : (array) $fasteners as $slug ) {
+			if ( preg_match( $patterns[ $kind ], $slug ) ) {
+				$attributes['pa_befestigung'] = $slug;
+				break;
+			}
+		}
+	}
+	return array(
+		'model'      => $model,
+		'attributes' => $attributes,
+		'variation'  => 0,
+		'qty'        => max( 1, $qty ),
+		'source'     => 'link',
+	);
 }
 
 /**

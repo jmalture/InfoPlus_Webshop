@@ -240,6 +240,145 @@
             "new_lines": ""
         },
         {
+            "key": "field_ip_home_hero_finder_label",
+            "label": "Link zum Namensschild-Berater",
+            "name": "hero_finder_label",
+            "type": "text",
+            "instructions": "Kleiner Link unter den Buttons, führt zur Seite /berater/. Leer lassen, um ihn auszublenden.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Welches Schild passt zu mir? Berater starten"
+        },
+        {
+            "key": "field_ip_home_tab_ways",
+            "label": "Drei Wege",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_home_ways_show",
+            "label": "Abschnitt „Drei Wege“ anzeigen",
+            "name": "ways_show",
+            "type": "true_false",
+            "instructions": "Aus = der Abschnitt wird ausgeblendet, die Inhalte bleiben gespeichert.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_home_ways_kicker",
+            "label": "Kleine Zeile",
+            "name": "ways_kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Drei Wege"
+        },
+        {
+            "key": "field_ip_home_ways_title",
+            "label": "Überschrift (Teil 1)",
+            "name": "ways_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Wer beschriftet"
+        },
+        {
+            "key": "field_ip_home_ways_title_accent",
+            "label": "Überschrift (Teil 2, magenta)",
+            "name": "ways_title_accent",
+            "type": "text",
+            "instructions": "Der zweite Teil der Überschrift erscheint in Magenta. Leer lassen für eine einfarbige Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Ihre Namensschilder?"
+        },
+        {
+            "key": "field_ip_home_ways_text",
+            "label": "Text",
+            "name": "ways_text",
+            "type": "textarea",
+            "instructions": "Die drei Karten, ihre Texte und die Ab-Preise kommen aus dem Shop (Infoplus Suite, Berater).",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Selbst drucken, Logo von uns oder komplett fertig: wählen Sie den Weg, der zu Ihrem Team passt.",
+            "rows": 2,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_home_ways_help_title",
+            "label": "Berater-Leiste: Überschrift",
+            "name": "ways_help_title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Unsicher, welches Schild passt?"
+        },
+        {
+            "key": "field_ip_home_ways_help_text",
+            "label": "Berater-Leiste: Text",
+            "name": "ways_help_text",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Sechs kurze Fragen, eine Minute. Danach empfehlen wir Ihnen drei Modelle und sagen, warum."
+        },
+        {
+            "key": "field_ip_home_ways_help_label",
+            "label": "Berater-Leiste: Button",
+            "name": "ways_help_label",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "17",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Berater starten"
+        },
+        {
             "key": "field_ip_home_tab_models",
             "label": "Modelle",
             "name": "",
@@ -1349,5 +1488,5 @@
     "active": true,
     "description": "Inhalte der Startseite (front-page.php). Ort: Seite = Startseite (ID 8 auf Staging).",
     "show_in_rest": 0,
-    "modified": 1792506600
+    "modified": 1792764395
 }

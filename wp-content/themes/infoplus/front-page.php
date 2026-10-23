@@ -72,6 +72,18 @@ $ip_svg_next = function_exists( 'ip_shop_arrow' ) ? ip_shop_arrow() : '';
 						<?php endif; ?>
 					</div>
 				<?php endif; ?>
+				<?php
+				// Entry to the Namensschild-Berater (inc/finder.php), when the page exists.
+				$ip_finder_url = function_exists( 'ip_finder_url' ) ? ip_finder_url() : '';
+				$ip_finder_lbl = (string) $ip_f( 'hero_finder_label' );
+				if ( $ip_finder_url && $ip_finder_lbl ) :
+					?>
+					<a class="ip-hero__finder" href="<?php echo esc_url( $ip_finder_url ); ?>">
+						<span class="ip-hero__finder-icon"><?php echo ip_icon( 'help' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?></span>
+						<span><?php echo esc_html( $ip_finder_lbl ); ?></span>
+						<?php echo ip_icon( 'chevron' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+					</a>
+				<?php endif; ?>
 			</div>
 			<?php
 			// Live configurator demo (template-parts/hero-demo.php); the photo stays as the fallback when it is switched off.
@@ -100,6 +112,13 @@ $ip_svg_next = function_exists( 'ip_shop_arrow' ) ? ip_shop_arrow() : '';
 			<?php endif; ?>
 		</div>
 	</section>
+
+	<?php
+	/* ── Drei Wege: the three options and the finder (inc/finder.php) ──── */
+	if ( function_exists( 'ip_finder_ways_section' ) ) {
+		ip_finder_ways_section( $ip_pid );
+	}
+	?>
 
 	<?php
 	/* ── Models (product cards) ─────────────────────────────────────────── */

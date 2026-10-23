@@ -265,6 +265,21 @@ def home():
         g.f('hero_demo_prices', 'textarea', 'Vorschau: Staffelpreise', '10 | 7,92 €\n50 | 6,44 €\n100 | 5,45 €\n250 | 4,95 €', width=34, rows=4,
             instructions='Eine Stufe pro Zeile: Stückzahl | Preis pro Stück. Die Vorschau kennzeichnet die Preise als Beispiel.'),
 
+        g.f('hero_finder_label', 'text', 'Link zum Namensschild-Berater', 'Welches Schild passt zu mir? Berater starten',
+            instructions='Kleiner Link unter den Buttons, führt zur Seite /berater/. Leer lassen, um ihn auszublenden.'),
+
+        # The three options and the entry to the finder (inc/finder.php). Cards and "ab" prices come from the shop.
+        g.tab('ways', 'Drei Wege'),
+        g.show('ways', 'Drei Wege'),
+        g.f('ways_kicker', 'text', 'Kleine Zeile', 'Drei Wege', width=33),
+        g.f('ways_title', 'text', 'Überschrift (Teil 1)', 'Wer beschriftet', width=33),
+        g.f('ways_title_accent', 'text', 'Überschrift (Teil 2, magenta)', 'Ihre Namensschilder?', width=34, instructions=title_note),
+        g.f('ways_text', 'textarea', 'Text', 'Selbst drucken, Logo von uns oder komplett fertig: wählen Sie den Weg, der zu Ihrem Team passt.', rows=2,
+            instructions='Die drei Karten, ihre Texte und die Ab-Preise kommen aus dem Shop (Infoplus Suite, Berater).'),
+        g.f('ways_help_title', 'text', 'Berater-Leiste: Überschrift', 'Unsicher, welches Schild passt?', width=33),
+        g.f('ways_help_text', 'text', 'Berater-Leiste: Text', 'Sechs kurze Fragen, eine Minute. Danach empfehlen wir Ihnen drei Modelle und sagen, warum.', width=50),
+        g.f('ways_help_label', 'text', 'Berater-Leiste: Button', 'Berater starten', width=17),
+
         g.tab('models', 'Modelle'),
         g.show('models', 'Modelle'),
         g.f('models_kicker', 'text', 'Kleine Zeile', 'Modelle', width=33),

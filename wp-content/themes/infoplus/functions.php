@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'IP_VERSION', '0.4.0' ); // Keep in sync with style.css "Version".
+define( 'IP_VERSION', '0.5.0' ); // Keep in sync with style.css "Version".
 define( 'IP_DIR', get_template_directory() );
 define( 'IP_URI', get_template_directory_uri() );
 
@@ -31,5 +31,6 @@ require IP_DIR . '/inc/product.php';
 require IP_DIR . '/inc/content.php';
 require IP_DIR . '/inc/catalog.php';
 require IP_DIR . '/inc/inquiry.php';
+require IP_DIR . '/inc/finder.php';
 require IP_DIR . '/inc/emails.php';
 require IP_DIR . '/inc/assets.php';

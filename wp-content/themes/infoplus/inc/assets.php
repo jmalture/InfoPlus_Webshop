@@ -45,6 +45,10 @@ function ip_template_bundle() {
 	if ( is_singular( 'news' ) ) {
 		return 'news';
 	}
+	// Namensschild-Berater (inc/finder.php, page-berater.php).
+	if ( function_exists( 'ip_finder_is_page' ) && ip_finder_is_page() ) {
+		return 'finder';
+	}
 	// Unternehmen, Kontakt, FAQ and the plain info pages (page.php). The
 	// Namensschilder page is a listing: inc/shop.php gives it the archive bundle.
 	if ( is_page() && ! ( function_exists( 'ip_shop_is_plates_page' ) && ip_shop_is_plates_page() ) ) {
@@ -74,6 +78,10 @@ add_action( 'wp_enqueue_scripts', function () {
 
 	$bundle = ip_template_bundle();
 	if ( $bundle ) {
+		// CSS badge looks of the Namensschild-Berater (front page "Drei Wege", finder page).
+		if ( in_array( $bundle, array( 'home', 'finder' ), true ) ) {
+			ip_enqueue( 'ip-plates', 'assets/css/plates.css', array( 'ip-main' ) );
+		}
 		ip_enqueue( "ip-{$bundle}", "assets/css/{$bundle}.css", array( 'ip-main' ) );
 		ip_enqueue( "ip-{$bundle}", "assets/js/{$bundle}.js" );
 	}

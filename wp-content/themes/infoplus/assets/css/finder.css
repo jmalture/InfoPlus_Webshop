@@ -1,0 +1,288 @@
+/* Finder bundle: page-berater.php (Namensschild-Berater). Questions left,
+   live preview right (sticky from 1101), results below. Mobile first:
+   the preview sits on top in a compact strip. Badge looks: plates.css.
+   Breakpoints 768 and 1101 only. */
+
+.ip-finder { padding-block: var(--space-6) var(--section-gap) }
+.ip-finder .ip-crumbs { margin-bottom: var(--space-6) }
+.ip-finder__head { display: grid; gap: var(--space-3); max-width: 760px; margin-bottom: var(--space-8) }
+.ip-finder__title { font: var(--type-heading); text-wrap: balance }
+.ip-finder__title em { font-style: normal; color: var(--accent) }
+.ip-finder__lead { color: var(--text-secondary) }
+.ip-finder__fallback { padding: var(--space-6) }
+.ip-finder__fallback a { color: var(--c-secondary) }
+
+.ip-finder__grid { display: grid; gap: var(--space-4) }
+.ip-finder__stage { order: -1 }
+@media (min-width: 768px) { .ip-finder { padding-top: var(--space-12) } }
+@media (min-width: 1101px) {
+  .ip-finder__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--space-8); align-items: start }
+  .ip-finder__stage { order: 0; position: sticky; top: calc(var(--header-h) + var(--space-4)) }
+}
+
+/* ── Question panel ─────────────────────────────────────────────────────── */
+.ip-finder__panel { display: grid; gap: var(--space-6); padding: var(--space-6) var(--space-4); border-radius: var(--radius-panel) }
+@media (min-width: 768px) { .ip-finder__panel { padding: var(--space-8) } }
+
+.ip-finder__progress { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none }
+.ip-finder__dot { height: 6px; border-radius: 999px; background: var(--c-grey-100); overflow: hidden; position: relative }
+.ip-finder__dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 420ms var(--ease) }
+.ip-finder__dot.is-done::after { transform: scaleX(1) }
+.ip-finder__dot.is-current::after { transform: scaleX(.45); background: var(--c-secondary) }
+
+.ip-fq { min-width: 0; margin: 0; padding: 0; border: 0 }
+.ip-fq[hidden] { display: none }
+.ip-fq__step { font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase; color: var(--c-secondary) }
+.ip-fq__title { display: block; margin-top: var(--space-2); padding: 0; font: 600 26px/1.2 var(--font); text-wrap: balance; outline: none }
+.ip-fq__hint { margin-top: var(--space-2); color: var(--text-secondary); font-size: 18px }
+.ip-fq__options { display: grid; gap: var(--space-3); margin-top: var(--space-6) }
+@media (min-width: 768px) {
+  .ip-fq__title { font-size: 32px }
+  .ip-fq__options { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+  .ip-fq--option .ip-fq__options { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+  .ip-fq--material .ip-fq__options { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ip-fq.is-in { animation: ip-fq-in 380ms var(--ease) both }
+  .ip-fq.is-in-back { animation: ip-fq-back 380ms var(--ease) both }
+}
+@keyframes ip-fq-in { from { opacity: 0; transform: translateX(24px) } }
+@keyframes ip-fq-back { from { opacity: 0; transform: translateX(-24px) } }
+
+/* Option card: a label around a visually hidden radio. */
+.ip-fopt {
+  position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-4);
+  min-height: 76px; padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius-card);
+  background: var(--c-white); cursor: pointer;
+  transition: border-color var(--dur-ui) var(--ease), background-color var(--dur-ui) var(--ease), transform var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease);
+}
+.ip-fopt:hover { border-color: var(--c-primary-tint); background: #fff7fb; transform: translateY(-1px); box-shadow: var(--shadow-1) }
+.ip-fopt__input { position: absolute; opacity: 0; pointer-events: none }
+.ip-fopt:has(.ip-fopt__input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 3px }
+.ip-fopt:has(.ip-fopt__input:checked) { border-color: var(--accent); background: var(--c-primary-tint) }
+.ip-fopt__visual { display: grid; place-items: center; width: 64px }
+.ip-fopt__visual .ip-fplate { width: 64px }
+.ip-fopt__text { display: grid; gap: 2px; padding-right: 28px }
+.ip-fopt__label { font: 600 19px/1.2 var(--font) }
+.ip-fopt__sub { font: var(--type-small); color: var(--text-secondary) }
+.ip-fopt__check {
+  position: absolute; top: 50%; right: var(--space-4); translate: 0 -50%; display: grid; place-items: center;
+  width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--c-grey-200); color: transparent;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease), scale 300ms var(--ease-spring);
+}
+.ip-fopt__check .ip-icon { width: 16px; height: 16px; stroke-width: 2.5 }
+.ip-fopt:has(.ip-fopt__input:checked) .ip-fopt__check { background: var(--accent); border-color: var(--accent); color: var(--c-white); scale: 1.08 }
+/* Plate and count options stand upright from 768: visual on top. */
+@media (min-width: 768px) {
+  .ip-fq--option .ip-fopt, .ip-fq--material .ip-fopt {
+    grid-template-columns: 1fr; justify-items: start; align-content: start; gap: var(--space-3); padding: var(--space-4)
+  }
+  .ip-fq--option .ip-fopt__visual, .ip-fq--material .ip-fopt__visual { width: 100%; padding: var(--space-4) var(--space-2); border-radius: 12px; background: var(--surface-alt) }
+  .ip-fq--option .ip-fopt__visual .ip-fplate, .ip-fq--material .ip-fopt__visual .ip-fplate { width: 100%; max-width: 132px }
+  .ip-fq--option .ip-fopt__check, .ip-fq--material .ip-fopt__check { top: var(--space-6); right: var(--space-6); translate: none }
+}
+/* Quantity: little stacks of badges. */
+.ip-fcount { display: flex; gap: 3px; align-items: flex-end; height: 34px }
+.ip-fcount i { width: 10px; border-radius: 2px; background: var(--accent); opacity: .85 }
+.ip-fcount i:nth-child(1) { height: 30% } .ip-fcount i:nth-child(2) { height: 55% } .ip-fcount i:nth-child(3) { height: 78% } .ip-fcount i:nth-child(4) { height: 100% }
+
+.ip-finder__nav { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) }
+.ip-finder__nav :is([data-ip-finder-show], [data-ip-finder-next]) { margin-left: auto }
+.ip-finder__restart { display: inline-flex; align-items: center; gap: 6px; padding: var(--space-2); border: 0; background: none; color: var(--text-secondary); font: 600 15px/1 var(--font) }
+.ip-finder__restart:hover { color: var(--c-secondary) }
+.ip-finder__restart .ip-icon { width: 18px; height: 18px }
+.ip-finder__nav [hidden] { display: none }
+
+/* Answers after the last question: each one can be changed. */
+.ip-finder__answers { display: grid; gap: var(--space-2); margin: var(--space-6) 0 0; padding: 0; list-style: none }
+.ip-finder__answer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-3) var(--space-4); border-radius: 12px; background: var(--surface-alt) }
+.ip-finder__answer-q { font: var(--type-small); color: var(--text-secondary) }
+.ip-finder__answer-a { font: 600 18px/1.25 var(--font) }
+.ip-finder__answer button { flex: none; padding: var(--space-2); border: 0; background: none; color: var(--c-secondary); font: 600 15px/1 var(--font); text-decoration: underline; text-underline-offset: 3px }
+
+/* ── Live preview ───────────────────────────────────────────────────────── */
+.ip-fstage {
+  display: grid; gap: var(--space-3); padding: var(--space-4); border-radius: var(--radius-panel);
+  background:
+    radial-gradient(60% 50% at 50% 34%, rgb(230 0 126 / .08), transparent 70%),
+    radial-gradient(circle, rgb(25 27 28 / .08) 1px, transparent 1.4px) 0 0 / 18px 18px,
+    var(--surface-alt);
+}
+.ip-fstage__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) }
+.ip-fstage__tag, .ip-fstage__scene {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 6px 12px; border-radius: 999px;
+  background: var(--c-white); box-shadow: var(--shadow-1); font: 600 14px/1 var(--font); letter-spacing: .5px; color: var(--text-secondary)
+}
+.ip-fstage__scene { color: var(--c-secondary) }
+.ip-fstage__scene .ip-icon { width: 16px; height: 16px }
+.ip-fstage__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: ip-pulse 2s var(--ease) infinite }
+@keyframes ip-pulse { 50% { opacity: .35 } }
+.ip-fstage__bed { position: relative; display: grid; place-items: center; min-height: 170px; container-type: inline-size }
+@media (min-width: 768px) { .ip-fstage__bed { min-height: 240px } }
+@media (min-width: 1101px) { .ip-fstage { padding: var(--space-6) } .ip-fstage__bed { min-height: 300px } }
+
+/* The stack: ghost badges behind the badge for larger quantities (data-n 1..4). */
+.ip-fstage__stack { position: relative; width: min(84cqw, 420px); transition: translate 420ms var(--ease) }
+.ip-fstage__stack::before, .ip-fstage__stack::after {
+  content: ""; position: absolute; inset: 0; border-radius: 14px; background: var(--c-white);
+  box-shadow: 0 0 0 1px var(--c-grey-200), 0 14px 26px -18px rgb(25 27 28 / .4); opacity: 0;
+  transition: opacity 360ms var(--ease), transform 420ms var(--ease-spring);
+}
+.ip-fstage__stack[data-n="2"]::before, .ip-fstage__stack[data-n="3"]::before, .ip-fstage__stack[data-n="4"]::before { opacity: 1; transform: translate(10px, -10px) rotate(2deg) }
+.ip-fstage__stack[data-n="3"]::after, .ip-fstage__stack[data-n="4"]::after { opacity: 1; transform: translate(20px, -20px) rotate(4deg) }
+.ip-fstage__stack[data-n="4"]::before { transform: translate(12px, -12px) rotate(3deg) }
+.ip-fstage__stack[data-n="4"]::after { transform: translate(24px, -24px) rotate(6deg) }
+.ip-fstage__stack[data-n="3"], .ip-fstage__stack[data-n="4"] { translate: -10px 10px }
+.ip-fstage__qty {
+  position: absolute; right: 4%; bottom: 6%; margin: 0; padding: 6px 12px; border-radius: 999px; background: var(--c-grey-800); color: var(--c-white);
+  font: 700 16px/1 var(--font); font-variant-numeric: tabular-nums; box-shadow: var(--shadow-1)
+}
+
+/* The badge. Proportions 3:1.15, sizes in container units of the bed. */
+.ip-fbadge {
+  position: relative; z-index: 1; aspect-ratio: 3 / 1.15; border-radius: 14px; background: var(--pl-bg); color: var(--pl-ink);
+  box-shadow: var(--pl-ring), 0 2px 3px rgb(25 27 28 / .08), 0 26px 44px -20px rgb(25 27 28 / .45);
+  overflow: hidden;
+  transition: border-radius 520ms var(--ease-spring), background 420ms var(--ease), box-shadow 420ms var(--ease);
+}
+.ip-fbadge.is-swap { animation: ip-fbadge-swap 520ms var(--ease) }
+@keyframes ip-fbadge-swap { 40% { transform: rotateY(12deg) scale(.97) } }
+.ip-fbadge__logo { position: absolute; left: 6%; top: 50%; width: 16%; aspect-ratio: 1; translate: 0 -50%; transition: opacity 360ms var(--ease), scale 480ms var(--ease-spring) }
+.ip-fbadge__logo svg { width: 100%; height: 100% }
+.ip-fbadge__logo path { fill: var(--pl-logo-a) }
+.ip-fbadge__logo .ip-fbadge__logo-b { fill: var(--pl-logo-b); opacity: .85 }
+.ip-fbadge__lines {
+  position: absolute; left: 27%; right: 6%; top: 50%; translate: 0 -50%; display: grid; gap: 2px; padding: 3% 4%;
+  border-radius: 8px; outline: 2px dashed transparent; outline-offset: -2px;
+  transition: left 420ms var(--ease), background-color 360ms var(--ease), outline-color 360ms var(--ease);
+}
+.ip-fbadge__name { font: 700 clamp(18px, 6.4cqw, 34px)/1.05 var(--font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.ip-fbadge__role { font: 500 clamp(12px, 3.6cqw, 19px)/1.15 var(--font); color: var(--pl-ink-2); white-space: nowrap }
+.ip-fbadge__insert-tag {
+  position: absolute; right: 7%; top: 9%; padding: 2px 7px; border-radius: 999px; background: rgb(25 27 28 / .72); color: var(--c-white);
+  font: 600 11px/1.3 var(--font); letter-spacing: .5px; text-transform: uppercase; opacity: 0; transition: opacity 300ms var(--ease)
+}
+/* No logo: the name takes the whole face. */
+.ip-fbadge[data-logo="none"] .ip-fbadge__logo { opacity: 0; scale: .5 }
+.ip-fbadge[data-logo="none"] .ip-fbadge__lines { left: 7% }
+/* Self: everything is on the insert you print (logo included). Logo: logo printed, names on the insert. */
+.ip-fbadge[data-option="self"] .ip-fbadge__lines,
+.ip-fbadge[data-option="logo"] .ip-fbadge__lines { background: var(--pl-win); outline-color: rgb(25 27 28 / .32); color: #26282b }
+.ip-fbadge[data-option="self"] .ip-fbadge__role,
+.ip-fbadge[data-option="logo"] .ip-fbadge__role { color: #55595f }
+.ip-fbadge[data-option="self"] .ip-fbadge__lines { left: 5%; right: 5%; padding-left: 24% }
+.ip-fbadge[data-option="self"] .ip-fbadge__logo { left: 9%; width: 14%; z-index: 1; filter: grayscale(1) contrast(.9) }
+.ip-fbadge[data-option="self"][data-logo="none"] .ip-fbadge__lines { padding-left: 4% }
+.ip-fbadge:is([data-option="self"], [data-option="logo"]) .ip-fbadge__insert-tag { opacity: 1 }
+/* Sonderkontur: the outline follows the logo. */
+.ip-fbadge[data-logo="shape"] { border-radius: 48% 16% 16% 48% / 62% 22% 22% 62% }
+.ip-fbadge__contour { position: absolute; inset: 4px; border-radius: inherit; border: 2px dashed var(--accent); opacity: 0; transition: opacity 360ms var(--ease) }
+.ip-fbadge[data-logo="shape"] .ip-fbadge__contour { opacity: .7 }
+/* Fastening: a small round badge on the corner. */
+.ip-fbadge__fast {
+  position: absolute; right: -10px; bottom: -10px; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  background: var(--c-white); color: var(--c-secondary); box-shadow: var(--shadow-1); scale: 0; transition: scale 420ms var(--ease-spring)
+}
+.ip-fbadge__fast.is-on { scale: 1 }
+.ip-fbadge__fast .ip-icon { width: 22px; height: 22px }
+.ip-fstage__stack > .ip-fbadge__fast { right: -6px; bottom: -14px }
+
+.ip-fstage__chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 30px }
+.ip-fchip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px;
+  background: var(--c-white); font: 600 14px/1 var(--font); color: var(--text-primary)
+}
+.ip-fchip b { font-weight: 500; color: var(--text-secondary) }
+@media (prefers-reduced-motion: no-preference) { .ip-fchip.is-new { animation: ip-chip-in 420ms var(--ease-spring) } }
+@keyframes ip-chip-in { from { opacity: 0; transform: scale(.7) } }
+
+.ip-fstage__foot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-3); align-items: end; padding: var(--space-3); border-radius: 14px; background: var(--c-white); box-shadow: var(--shadow-1) }
+.ip-fstage__field { display: grid; gap: 4px; min-width: 0 }
+.ip-fstage__label { font: 600 12px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-fstage__input { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--c-white); font-size: 17px }
+.ip-fstage__input:focus { outline: 2px solid var(--focus); outline-offset: 1px }
+.ip-fstage__count { display: grid; justify-items: end; gap: 2px; text-align: right }
+.ip-fstage__num { font: 700 30px/1 var(--font); color: var(--c-secondary); font-variant-numeric: tabular-nums; transition: scale 300ms var(--ease-spring) }
+.ip-fstage__num.is-tick { scale: 1.18 }
+.ip-fstage__count-label { font: 600 12px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-fstage__fav { min-height: 1.4em; font: var(--type-small); color: var(--text-secondary) }
+.ip-fstage__fav b { color: var(--text-primary) }
+/* Phones: a compact preview, no name field. */
+@media (max-width: 767px) {
+  .ip-fstage__field { display: none }
+  .ip-fstage__foot { grid-template-columns: 1fr; justify-items: start; padding: var(--space-2) var(--space-3) }
+  .ip-fstage__count { grid-auto-flow: column; align-items: baseline; gap: 6px; justify-items: start }
+  .ip-fstage__num { font-size: 22px }
+}
+
+/* ── Results ────────────────────────────────────────────────────────────── */
+.ip-finder__results { margin-top: var(--section-gap); scroll-margin-top: calc(var(--header-h) + var(--space-4)) }
+.ip-finder__results-head { display: grid; gap: var(--space-3); max-width: 760px }
+.ip-finder__results-head .ip-head__title { outline: none }
+.ip-finder__results-head em { font-style: normal; color: var(--accent) }
+.ip-finder__picks { display: grid; gap: var(--space-4); margin: var(--space-8) 0 0; padding: 0; list-style: none }
+@media (min-width: 1101px) { .ip-finder__picks { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6) } }
+@media (prefers-reduced-motion: no-preference) {
+  .ip-fpick { animation: ip-pick-in 520ms var(--ease) both }
+  .ip-finder__picks > li:nth-child(2) .ip-fpick { animation-delay: 90ms }
+  .ip-finder__picks > li:nth-child(3) .ip-fpick { animation-delay: 180ms }
+}
+@keyframes ip-pick-in { from { opacity: 0; transform: translateY(18px) } }
+
+.ip-fpick { position: relative; display: flex; flex-direction: column; height: 100%; overflow: hidden }
+.ip-fpick--best { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow-1) }
+.ip-fpick__tag {
+  position: absolute; top: var(--space-4); left: var(--space-4); z-index: 1; display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 999px; background: var(--c-white); box-shadow: var(--shadow-1);
+  font: 700 13px/1 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-primary)
+}
+.ip-fpick--best .ip-fpick__tag { background: var(--accent); color: var(--c-white) }
+.ip-fpick__media { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; padding: var(--space-6); background: var(--surface-alt) }
+.ip-fpick__media img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply }
+.ip-fpick__media .ip-fplate { max-width: 220px }
+.ip-fpick__body { display: grid; gap: var(--space-3); align-content: start; flex: 1; padding: var(--space-6) }
+.ip-fpick__title { font: 600 26px/1.15 var(--font) }
+.ip-fpick__model { font: var(--type-badge); letter-spacing: .5px; color: var(--c-secondary) }
+.ip-fpick__claim { color: var(--text-secondary); font-size: 18px }
+.ip-fpick__why { display: grid; gap: var(--space-2); margin: 0; padding: var(--space-3) 0 0; list-style: none; border-top: 1px solid var(--border) }
+.ip-fpick__why-title { font: 600 13px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-fpick__why li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--space-2); font: 400 17px/1.35 var(--font) }
+.ip-fpick__why .ip-icon { width: 20px; height: 20px; color: var(--accent); stroke-width: 2.25 }
+.ip-fpick__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: var(--space-2) 0 0; padding: var(--space-4); border-radius: 12px; background: var(--surface-alt) }
+.ip-fpick__fact { display: grid; gap: 2px; min-width: 0 }
+.ip-fpick__fact dt { font: 600 12px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-fpick__fact dd { margin: 0; font: 600 17px/1.3 var(--font) }
+.ip-fpick__fact--price { grid-column: 1 / -1 }
+.ip-fpick__fact--price dd { font: 700 30px/1.05 var(--font); color: var(--c-secondary); font-variant-numeric: tabular-nums }
+.ip-fpick__fact--price dd small { font: 500 15px/1.3 var(--font); color: var(--text-secondary) }
+.ip-fpick__note { font: var(--type-small); color: var(--text-secondary) }
+.ip-fpick__actions { display: grid; gap: var(--space-2); padding: 0 var(--space-6) var(--space-6) }
+.ip-fpick__actions .ip-btn { width: 100% }
+
+.ip-finder__more { margin-top: var(--space-6); display: grid; justify-items: start; gap: var(--space-4) }
+.ip-finder__list { display: grid; gap: var(--space-2); width: 100%; margin: 0; padding: 0; list-style: none }
+.ip-finder__row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-4); align-items: center; padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border); border-radius: 12px; background: var(--c-white); color: inherit; text-decoration: none;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease)
+}
+.ip-finder__row:hover { background: var(--c-primary-tint); border-color: var(--c-primary-tint) }
+.ip-finder__row-name { font: 600 18px/1.25 var(--font) }
+.ip-finder__row-model { grid-column: 1; font: var(--type-small); color: var(--text-secondary) }
+.ip-finder__row-price { grid-row: span 2; grid-column: 2; font: 700 18px/1 var(--font); color: var(--c-secondary); white-space: nowrap }
+@media (min-width: 768px) { .ip-finder__list { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+
+.ip-finder__cta { display: grid; gap: var(--space-4); margin-top: var(--space-8); padding: var(--space-6) }
+.ip-finder__cta-title { font: 600 24px/1.2 var(--font) }
+.ip-finder__cta-text { margin-top: var(--space-1); color: var(--text-secondary) }
+.ip-finder__cta-actions { display: flex; flex-wrap: wrap; gap: var(--space-2) }
+@media (min-width: 1101px) {
+  .ip-finder__cta { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; padding: var(--space-8) }
+}
+.ip-finder__toast {
+  position: fixed; left: 50%; bottom: var(--space-6); z-index: 50; translate: -50% 0; padding: var(--space-3) var(--space-6); border-radius: 999px;
+  background: var(--c-grey-800); color: var(--c-white); font: 600 16px/1.2 var(--font); box-shadow: var(--shadow-2)
+}
+@media (prefers-reduced-motion: reduce) {
+  .ip-fbadge, .ip-fbadge__lines, .ip-fbadge__logo, .ip-fbadge__fast, .ip-fstage__stack, .ip-fstage__stack::before, .ip-fstage__stack::after, .ip-finder__dot::after { transition: none }
+}
