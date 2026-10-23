@@ -65,3 +65,7 @@ What changed:
 
 Still open (Suite `PLUGIN-DOCUMENTATION.md` Section 16, findings 28 to 30): autoloaded options of deleted plugins, the cart and checkout block prefetch on every page once the cart has items, no object cache and no page cache on staging.
 
+## Search basics (since 0.5.1)
+
+`inc/seo.php`: meta description, Open Graph and Twitter card tags in `wp_head`, and a Product JSON-LD in the footer of product pages. The description comes from the tagline (else the front page hero text), the product short description, the page excerpt or content, or the term description, cut to 160 characters (filter `ip_seo_description`). The JSON-LD offer range uses the lowest price per model from the Suite Berater catalog (`infoplus_suite_finder_data()`), so no variation is loaded. All of it switches off when Yoast, Rank Math, AIOSEO, SEOPress or The SEO Framework is active, or through the filter `ip_seo_enabled`. Checked on staging 2026-10-23 (Atlantis: offers 5.24 to 13.74 EUR over 1,380 variations). Launch steps: `docs/LAUNCH.md` section 9.
+

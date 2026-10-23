@@ -32,6 +32,7 @@ legacy/                              NOT deployed. Elementor export of staging (
 docs/suite/                          PLUGIN-DOCUMENTATION.md (module reference, REST routes, meta keys, findings in Section 16), PIPELINE.md, UPGRADE-ROADMAP.md, historical FEATURE-*.md and DATA-IMPORT-PLAN.md
 docs/theme/                          README.md, DESIGN.md (brand, SDX-inspired rules, B2B UX), ACCOUNT.md (account routing, inventory)
 docs/history/                        old to new commit maps from the move
+docs/LAUNCH.md                       production rollout: decisions, checklist, steps, smoke test, cache, rollback
 tools/build-acf-json.py              builds the theme field groups (never edit acf-json by hand)
 tools/build-zips.sh                  builds the two upload ZIPs
 tools/import-mapping/                Excel -> catalog_mapping.csv -> import.csv, plus WORK-ORDER.md
