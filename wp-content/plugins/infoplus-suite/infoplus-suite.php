@@ -2,12 +2,17 @@
 /**
  * Plugin Name: Infoplus Suite
  * Description: Modular WooCommerce enhancements (Single Product Addons, Product Variation Fields, etc).
- * Version:     0.9.113
+ * Version:     0.10.33
  * Author:      JM
  * License:     GPL-2.0-or-later
  */
 
 if (!defined('ABSPATH')) exit;
+
+// Release number. Keep it equal to "Version:" in the header above: WordPress shows
+// the header, the code (Plugin::VERSION, asset cache busting) uses this constant.
+// tools/build-zips.sh refuses to build when the two differ.
+define('INFOPLUS_SUITE_VERSION', '0.10.33');
 
 // Require the Plugin class first
 require_once __DIR__ . '/src/Plugin.php'; 

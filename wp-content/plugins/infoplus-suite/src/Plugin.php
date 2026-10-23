@@ -17,7 +17,8 @@ use Infoplus\Suite\Modules\Inquiry\Module as InquiryModule;
 
 final class Plugin
 {
-    public const VERSION = '0.10.33';
+    /** Same value as the plugin header, defined in infoplus-suite.php (one place to bump). */
+    public const VERSION = INFOPLUS_SUITE_VERSION;
 
     private string $file;
     private array $modules = [];
