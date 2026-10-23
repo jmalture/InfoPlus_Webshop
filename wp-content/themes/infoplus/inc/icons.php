@@ -25,6 +25,8 @@ function ip_icon( $name, $label = '' ) {
 		'chevron' => '<path d="M9 6l6 6-6 6"/>',
 		'chat'    => '<path d="M4 5h16v11H8l-4 4z"/>',
 		'briefcase' => '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
+		'users'     => '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.4 3.5-5.3 6.5-5.3s5.5 1.9 6.5 5.3"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M17.8 14.9c1.9.6 3.2 2.4 3.7 5.1"/>',
+		'calendar'  => '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
 		// Content pages (inc/content.php, the "Symbol" select fields).
 		'tag'     => '<path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.3"/><path d="M15 9l-6 6"/>',
 		'truck'   => '<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',

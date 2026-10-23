@@ -859,7 +859,14 @@
                         "zap": "Blitz / schnell",
                         "check": "Haken",
                         "phone": "Telefon",
-                        "mail": "E-Mail"
+                        "mail": "E-Mail",
+                        "printer": "Drucker / Druck",
+                        "refresh": "Kreislauf / Abruf",
+                        "file": "Dokument / Vertrag",
+                        "users": "Personen / Team",
+                        "calendar": "Kalender / Termin",
+                        "briefcase": "Koffer / Unternehmen",
+                        "pin": "Ort"
                     },
                     "default_value": "check"
                 },
@@ -1212,7 +1219,14 @@
                         "zap": "Blitz / schnell",
                         "check": "Haken",
                         "phone": "Telefon",
-                        "mail": "E-Mail"
+                        "mail": "E-Mail",
+                        "printer": "Drucker / Druck",
+                        "refresh": "Kreislauf / Abruf",
+                        "file": "Dokument / Vertrag",
+                        "users": "Personen / Team",
+                        "calendar": "Kalender / Termin",
+                        "briefcase": "Koffer / Unternehmen",
+                        "pin": "Ort"
                     },
                     "default_value": "check"
                 },
@@ -1530,5 +1544,5 @@
     "active": true,
     "description": "Inhalte der Startseite (front-page.php). Ort: Seite = Startseite (ID 8 auf Staging).",
     "show_in_rest": 0,
-    "modified": 1792787116
+    "modified": 1792788223
 }

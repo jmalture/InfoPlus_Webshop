@@ -49,6 +49,13 @@ ICON_CHOICES = {
     'check': 'Haken',
     'phone': 'Telefon',
     'mail': 'E-Mail',
+    'printer': 'Drucker / Druck',
+    'refresh': 'Kreislauf / Abruf',
+    'file': 'Dokument / Vertrag',
+    'users': 'Personen / Team',
+    'calendar': 'Kalender / Termin',
+    'briefcase': 'Koffer / Unternehmen',
+    'pin': 'Ort',
 }
 
 
@@ -440,7 +447,16 @@ def unternehmen():
                    'Aussage hinzufügen', 'text'),
         g.f('tagline', 'text', 'Schlusssatz unter den Kernaussagen', get('tagline')[0]),
         g.f('team_image', 'image', 'Teamfoto', 16017,
-            instructions='Breites Querformat. Alternativtext in der Mediathek pflegen (heute „Infoplus Team“).'),
+            instructions='Breites Querformat. Es ist das große Bild oben; Überschrift und Unterzeile liegen unten links darauf, '
+                         'die Kernaussagen unten rechts. Alternativtext in der Mediathek pflegen (heute „Infoplus Team“).'),
+        g.repeater('stats', 'Zahlen unter dem Bild', [
+            ('value', 'text', 'Zahl', {'width': 40, 'instructions': 'Zählt beim Hereinscrollen hoch, zum Beispiel „über 2.000“.'}),
+            ('label', 'text', 'Beschriftung', {'width': 60}),
+        ], [
+            {'value': 'über 35', 'label': 'Jahre Expertise'},
+            {'value': 'über 2.000', 'label': 'Kunden'},
+            {'value': 'über 5.000.000', 'label': 'produzierte Namensschilder'},
+        ], 'Zahl hinzufügen', 'label', instructions='Nur belegbare Zahlen (dieselben wie auf der Startseite). Leer lassen, um die Zeile auszublenden.'),
 
         g.tab('story', 'Geschichte'),
         g.f('story_title', 'text', 'Überschrift', h2[0]),
@@ -448,15 +464,35 @@ def unternehmen():
 
         g.tab('milestones', 'Meilensteine'),
         g.f('milestones_title', 'text', 'Überschrift', h2[1]),
+        g.f('milestones_text', 'text', 'Unterzeile', 'Von den ersten Standards für Arztpraxen bis heute.',
+            instructions='Eine Zeile unter der Überschrift.'),
         g.repeater('milestones', 'Meilensteine', [
-            ('year', 'text', 'Jahr', {'width': 20}),
-            ('text', 'textarea', 'Text', {'rows': 3, 'width': 80}),
-        ], [{'year': y, 'text': t} for y, t in zip(years, texts)], 'Meilenstein hinzufügen', 'year'),
+            ('year', 'text', 'Jahr', {'width': 15}),
+            ('title', 'text', 'Kurztitel', {'width': 55, 'instructions': 'Steht auf der Zeitleiste; der Text erscheint beim Darüberfahren oder Antippen.'}),
+            g.icon('icon', 'award'),
+            ('text', 'textarea', 'Text', {'rows': 3}),
+        ], [dict(year=y, text=t, **m) for y, t, m in zip(years, texts, [
+            {'title': 'Erste Standards für Praxen und Apotheken', 'icon': 'award'},
+            {'title': 'Magnetsystem INC/MAG und Atlantis', 'icon': 'layers'},
+            {'title': 'Namensschilder werden das Kerngeschäft', 'icon': 'briefcase'},
+            {'title': 'Neues Logo, klare Produktbereiche', 'icon': 'users'},
+        ])], 'Meilenstein hinzufügen', 'year'),
 
         g.tab('service', 'Service'),
         g.f('service_title', 'text', 'Überschrift', h2[2]),
         g.f('service_text', 'textarea', 'Text', para[2], rows=4),
-        g.f('service_quote', 'textarea', 'Hervorgehobener Absatz', para[3], rows=4),
+        g.f('service_quote', 'textarea', 'Hervorgehobener Absatz', para[3], rows=4,
+            instructions='Wird nur gezeigt, wenn unten keine Leistungen eingetragen sind (die Leistungen fassen diesen Absatz zusammen).'),
+        g.repeater('service_items', 'Leistungen', [
+            g.icon('icon', 'check'),
+            ('title', 'text', 'Titel', {'width': 70}),
+            ('text', 'textarea', 'Text', {'rows': 2}),
+        ], [
+            {'icon': 'printer', 'title': 'Handsiebdruck und Digitaldruck', 'text': 'Gestaltung und Druck kleiner und großer Auflagen.'},
+            {'icon': 'refresh', 'title': 'Abrufaufträge', 'text': 'Komfortabel für den regelmäßigen Schilderbedarf.'},
+            {'icon': 'file', 'title': 'Rahmenvereinbarungen', 'text': 'Über Ihren Bedarf für ein bis zwei Jahre.'},
+            {'icon': 'calendar', 'title': 'Event-Service', 'text': 'Namensschilder für Ihre Veranstaltungen.'},
+        ], 'Leistung hinzufügen', 'title'),
 
         g.tab('cta', 'Abschluss'),
         g.f('cta_title', 'text', 'Überschrift', h2[3], width=50),

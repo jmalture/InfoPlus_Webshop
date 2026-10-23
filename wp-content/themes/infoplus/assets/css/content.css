@@ -10,16 +10,165 @@
 .ip-page-head .ip-head__title { font: var(--type-mega); text-wrap: balance }
 .ip-page-head .ip-head__text { font: var(--type-text) }
 
-/* ── Unternehmen ────────────────────────────────────────────────────────── */
-.ip-about__highlights { display: grid; gap: var(--space-4); align-content: start }
-.ip-checks { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none }
-.ip-checks__item { display: flex; align-items: center; gap: var(--space-4); font: 600 19px/1.3 var(--font) }
-.ip-about__tagline { font: italic 600 22px/1.3 var(--font); color: var(--c-secondary) }
-.ip-about__team { position: relative; aspect-ratio: 16 / 10; margin: 0 0 var(--section-gap); border-radius: 20px; overflow: hidden; background: var(--surface-alt) }
-.ip-about__team img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover }
+/* ── Unternehmen (page-unternehmen.php) ─────────────────────────────────
+   SDX manner (docs/theme/DESIGN.md): a photo hero with text on a soft fade,
+   floating pills and one bobbing magenta tile; numbers that count; a
+   timeline you can point at; service as icon cards. Everything that moves
+   only moves once and is off under prefers-reduced-motion. */
+
+/* Hero */
+.ip-ahero { position: relative; display: grid; gap: var(--space-6); margin-bottom: var(--space-12) }
+.ip-ahero__media { position: relative; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden; background: var(--surface-alt); isolation: isolate }
+.ip-ahero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: ip-ahero-zoom 1.6s var(--ease) both }
+.ip-ahero__fold {
+  position: absolute; z-index: 2; top: 16px; right: 16px; display: grid; place-items: center; width: 56px; height: 56px; border-radius: 15px;
+  background: var(--accent); color: var(--c-white); rotate: 10deg; box-shadow: 0 16px 30px -12px rgb(158 0 86 / .65);
+  animation: ip-ahero-pop 600ms var(--ease-spring) .5s both, ip-ahero-bob 6.4s ease-in-out 1.2s infinite alternate;
+}
+.ip-ahero__fold .ip-icon { width: 28px; height: 28px }
+.ip-ahero__text { display: grid; gap: var(--space-3) }
+.ip-ahero__title { font: var(--type-mega); text-wrap: balance }
+.ip-ahero__sub { font: var(--type-text); color: var(--text-secondary) }
+.ip-ahero__pills { display: grid; gap: var(--space-3); justify-items: start }
+.ip-ahero__list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; justify-items: start }
+.ip-ahero__pill {
+  display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px 7px 7px; border-radius: 999px;
+  background: var(--c-white); box-shadow: var(--shadow-1); font: 600 17px/1.25 var(--font);
+  animation: ip-ahero-in 520ms var(--ease) calc(.35s + var(--ip-i) * 110ms) both;
+}
+.ip-ahero__check { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--c-primary-tint); color: var(--accent); flex: none }
+.ip-ahero__check .ip-icon { width: 17px; height: 17px; stroke-width: 2.4 }
+.ip-ahero__tagline { margin: 0; font: italic 600 22px/1.3 var(--font); color: var(--c-secondary); animation: ip-ahero-in 520ms var(--ease) calc(.35s + var(--ip-i) * 110ms) both }
+
+@keyframes ip-ahero-zoom { from { scale: 1.06; opacity: .6 } to { scale: 1; opacity: 1 } }
+@keyframes ip-ahero-in { from { opacity: 0; translate: 0 12px } to { opacity: 1; translate: 0 0 } }
+@keyframes ip-ahero-pop { from { opacity: 0; scale: .4; rotate: -20deg } to { opacity: 1; scale: 1; rotate: 10deg } }
+@keyframes ip-ahero-bob { from { translate: 0 -6px } to { translate: 0 6px } }
+
 @media (min-width: 768px) {
-  .ip-about__head { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end }
-  .ip-about__team { aspect-ratio: 21 / 9; border-radius: 24px }
+  /* Text and pills on the picture: dark fade at the bottom (pavement in the team photo). */
+  .ip-ahero.has-photo { display: block; border-radius: 24px; overflow: hidden }
+  .ip-ahero.has-photo .ip-ahero__media { aspect-ratio: 16 / 9; border-radius: 0 }
+  .ip-ahero.has-photo .ip-ahero__media::after {
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, transparent 38%, rgb(25 27 28 / .25) 60%, rgb(25 27 28 / .78) 100%);
+  }
+  .ip-ahero.has-photo .ip-ahero__fold { top: 28px; right: 28px; width: 72px; height: 72px; border-radius: 19px }
+  .ip-ahero.has-photo .ip-ahero__fold .ip-icon { width: 34px; height: 34px }
+  .ip-ahero.has-photo .ip-ahero__text, .ip-ahero.has-photo .ip-ahero__pills { position: absolute; z-index: 2; bottom: var(--space-8) }
+  .ip-ahero.has-photo .ip-ahero__text { left: var(--space-8); right: 48%; color: var(--c-white) }
+  .ip-ahero.has-photo .ip-ahero__kicker { color: #ffd1e8 }
+  .ip-ahero.has-photo .ip-ahero__sub { color: rgb(255 255 255 / .86) }
+  .ip-ahero.has-photo .ip-ahero__text > * { animation: ip-ahero-in 600ms var(--ease) .15s both }
+  .ip-ahero.has-photo .ip-ahero__pills { right: var(--space-8); justify-items: end }
+  .ip-ahero.has-photo .ip-ahero__list { justify-items: end }
+  .ip-ahero.has-photo .ip-ahero__tagline { color: var(--c-white); text-shadow: 0 2px 12px rgb(0 0 0 / .35) }
+}
+@media (min-width: 1101px) {
+  .ip-ahero.has-photo .ip-ahero__media { aspect-ratio: 21 / 9 }
+  .ip-ahero.has-photo .ip-ahero__text, .ip-ahero.has-photo .ip-ahero__pills { bottom: var(--space-12) }
+  .ip-ahero.has-photo .ip-ahero__text { left: var(--space-12) }
+  .ip-ahero.has-photo .ip-ahero__pills { right: var(--space-12) }
+  .ip-ahero__title { font-size: 72px; line-height: 1.02 }
+}
+
+/* Numbers */
+.ip-astats { display: grid; gap: var(--space-4); margin: 0 0 var(--space-12); padding: 0; list-style: none }
+.ip-astats__item { display: grid; gap: var(--space-1); padding: var(--space-6); border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--c-white) }
+.ip-astats__value { font: 700 44px/1 var(--font); color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -.5px }
+.ip-astats__label { font: 500 18px/1.3 var(--font); color: var(--text-secondary) }
+@media (min-width: 768px) {
+  .ip-astats { grid-template-columns: repeat(3, minmax(0, 1fr)) }
+  .ip-astats__value { font-size: 52px }
+}
+
+/* Story */
+.ip-astory__head { display: grid; gap: var(--space-2); align-content: start }
+@media (min-width: 1101px) { .ip-astory__head { position: sticky; top: calc(var(--header-h) + var(--space-8)) } }
+.ip-astory__body p:first-child { font-size: 1.12em; color: var(--text-primary) }
+
+/* Milestones: a line with the years; the card below shows the chosen one. */
+.ip-miles__head { display: grid; gap: var(--space-2); justify-items: center; margin-bottom: var(--space-12); text-align: center }
+.ip-miles__title { font: var(--type-heading); text-wrap: balance }
+.ip-miles__box { --ip-dot: 22px; display: grid; gap: var(--space-8) }
+.ip-miles__track { position: relative; display: grid; grid-template-columns: repeat(var(--ip-n), minmax(0, 1fr)); gap: var(--space-2) }
+.ip-miles__track::before, .ip-miles__track::after {
+  content: ""; position: absolute; top: calc(var(--ip-dot) / 2 - 1.5px); left: calc(50% / var(--ip-n)); right: calc(50% / var(--ip-n)); height: 3px; border-radius: 3px; background: var(--c-grey-200);
+}
+.ip-miles__track::after { background: linear-gradient(90deg, var(--accent), var(--c-secondary)); transform-origin: 0 50% }
+.ip-miles__tab {
+  position: relative; z-index: 1; display: grid; justify-items: center; align-content: start; gap: var(--space-2); padding: 0 4px var(--space-2);
+  border: 0; background: none; color: inherit; font: inherit; text-align: center; cursor: pointer;
+}
+.ip-miles__dot {
+  width: var(--ip-dot); height: var(--ip-dot); border-radius: 50%; background: var(--c-white); border: 3px solid var(--accent);
+  box-shadow: 0 0 0 6px var(--surface-alt); transition: background-color var(--dur-ui) var(--ease), scale 300ms var(--ease-spring);
+}
+.ip-miles__year { font: 700 22px/1 var(--font); letter-spacing: .5px; color: var(--text-primary); transition: color var(--dur-ui) var(--ease) }
+.ip-miles__short { display: none; max-width: 22ch; font: 500 16px/1.3 var(--font); color: var(--text-secondary); text-wrap: balance }
+.ip-miles__tab:hover .ip-miles__dot, .ip-miles__tab.is-on .ip-miles__dot { background: var(--accent); scale: 1.15 }
+.ip-miles__tab.is-on .ip-miles__year, .ip-miles__tab:hover .ip-miles__year { color: var(--c-secondary) }
+.ip-miles__tab.is-on .ip-miles__short { color: var(--text-primary) }
+.ip-miles__tab:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; border-radius: 10px }
+/* The little pointer from the active year down to the card. */
+.ip-miles__tab.is-on::after {
+  content: ""; position: absolute; left: 50%; bottom: calc(-1 * var(--space-8) - 1px); width: 18px; height: 18px; translate: -50% 50%; rotate: 45deg;
+  background: var(--c-white); border-left: 1px solid var(--border); border-top: 1px solid var(--border); z-index: 2;
+}
+.ip-miles__panels { position: relative }
+.ip-miles__panel {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4) var(--space-6); align-items: start;
+  padding: var(--space-6); border: 1px solid var(--border); border-radius: var(--radius-panel); background: var(--c-white); box-shadow: var(--shadow-1);
+}
+.ip-miles__panel[hidden] { display: none }
+.ip-miles__panel.is-in { animation: ip-miles-in 380ms var(--ease) both }
+.ip-miles__icon { width: 56px; height: 56px; border-radius: 16px }
+.ip-miles__icon .ip-icon { width: 28px; height: 28px }
+.ip-miles__copy { display: grid; gap: var(--space-2); max-width: 70ch }
+.ip-miles__panel-year { font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase; color: var(--c-secondary) }
+.ip-miles__panel-title { font: var(--type-sub); text-wrap: balance }
+.ip-miles__text { font: 400 19px/1.55 var(--font); color: var(--text-secondary) }
+@keyframes ip-miles-in { from { opacity: 0; translate: 0 10px } to { opacity: 1; translate: 0 0 } }
+/* Drawn once when the timeline scrolls into view (content.js adds .is-drawn). */
+.ip-miles__box.is-armed .ip-miles__track::after { scale: 0 1 }
+.ip-miles__box.is-armed .ip-miles__tab { opacity: 0; translate: 0 10px }
+.ip-miles__box.is-drawn .ip-miles__track::after { scale: 1 1; transition: scale 1.4s cubic-bezier(.5, 0, .3, 1) .15s }
+.ip-miles__box.is-drawn .ip-miles__tab { opacity: 1; translate: 0 0; transition: opacity 420ms var(--ease) calc(.2s + var(--ip-i) * 260ms), translate 420ms var(--ease) calc(.2s + var(--ip-i) * 260ms) }
+html:not(.js) .ip-miles__panel[hidden] { display: grid; margin-top: var(--space-4) }
+@media (min-width: 768px) {
+  .ip-miles__box { --ip-dot: 26px }
+  .ip-miles__short { display: block }
+  .ip-miles__year { font-size: 28px }
+  .ip-miles__panel { grid-template-columns: auto minmax(0, 1fr); padding: var(--space-8) var(--space-12) var(--space-8) var(--space-8) }
+}
+
+/* Service: lead text and icon cards */
+.ip-aservice { display: grid; gap: var(--space-8); padding-block: var(--section-gap) }
+.ip-aservice__head { display: grid; gap: var(--space-2); max-width: 68ch }
+.ip-aservice__title { font: var(--type-heading); text-wrap: balance }
+.ip-aservice__grid { display: grid; gap: var(--space-4); margin: 0; padding: 0; list-style: none }
+.ip-aservice__item { display: grid; gap: var(--space-3); align-content: start; padding: var(--space-6); transition: translate var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease) }
+.ip-aservice__item:hover { translate: 0 -2px; box-shadow: var(--shadow-1) }
+.ip-aservice__item:hover .ip-tile { rotate: -8deg; scale: 1.06 }
+.ip-aservice__item-title { font: 600 22px/1.2 var(--font) }
+.ip-aservice__item-text { font: 400 17px/1.45 var(--font); color: var(--text-secondary) }
+@media (min-width: 768px) { .ip-aservice__grid { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (min-width: 1101px) {
+  .ip-aservice { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-12); align-items: start }
+  .ip-aservice__head { position: sticky; top: calc(var(--header-h) + var(--space-8)) }
+}
+.ip-acta { margin-top: 0 }
+
+/* Rise in once ([data-ip-rv], content.js adds .is-in). */
+html.js [data-ip-rv]:not(.is-in) { opacity: 0; translate: 0 18px }
+html.js [data-ip-rv].is-in { opacity: 1; translate: 0 0; transition: opacity 600ms var(--ease) var(--dl, 0s), translate 600ms var(--ease) var(--dl, 0s) }
+
+@media (prefers-reduced-motion: reduce) {
+  .ip-ahero__img, .ip-ahero__fold, .ip-ahero__pill, .ip-ahero__tagline, .ip-ahero.has-photo .ip-ahero__text > * { animation: none !important }
+  html.js [data-ip-rv]:not(.is-in) { opacity: 1; translate: none }
+  .ip-miles__box.is-armed .ip-miles__track::after { scale: 1 1 }
+  .ip-miles__box.is-armed .ip-miles__tab { opacity: 1; translate: none }
+  .ip-miles__panel.is-in { animation: none }
 }
 
 /* Two-column text section: heading left, body right (desktop). */
@@ -28,19 +177,6 @@
 .ip-split__body { max-width: 72ch }
 @media (min-width: 1101px) {
   .ip-split { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--space-12); padding-block: var(--space-12) }
-}
-
-/* Milestones */
-.ip-timeline { display: grid; gap: 0; margin: 0; padding: 0; list-style: none }
-.ip-timeline__item { position: relative; display: grid; gap: var(--space-2); padding: 0 0 var(--space-8) var(--space-8) }
-.ip-timeline__item::before { content: ""; position: absolute; left: 6px; top: 10px; bottom: -10px; width: 2px; background: var(--border) }
-.ip-timeline__item:last-child::before { display: none }
-.ip-timeline__item::after { content: ""; position: absolute; left: 0; top: 4px; width: 14px; height: 14px; border: 3px solid var(--accent); border-radius: 999px; background: var(--c-white) }
-.ip-timeline__year { justify-self: start; font: var(--type-badge); letter-spacing: 1.5px; text-transform: uppercase; color: var(--c-secondary) }
-.ip-timeline__text { font: 400 18px/1.6 var(--font) }
-.ip-timeline__item:last-child { padding-bottom: 0 }
-@media (min-width: 768px) {
-  .ip-timeline__item { grid-template-columns: 96px minmax(0, 1fr); gap: var(--space-6); padding-left: var(--space-8) }
 }
 
 .ip-quote { padding: var(--space-4) var(--space-6); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; background: var(--c-primary-tint) }

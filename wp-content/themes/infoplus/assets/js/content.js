@@ -129,3 +129,127 @@
   holds.hidden = document.hidden;
   motionSetting();
 })();
+
+/* Unternehmen (page-unternehmen.php): rise in once ([data-ip-rv]), count
+   the numbers up ([data-ip-count]) and the milestones timeline
+   ([data-ip-miles]: WAI-ARIA tabs; hover with a mouse previews a year,
+   click, tap or the arrow keys choose one; the line draws itself once when
+   it scrolls into view). Without IntersectionObserver or under
+   prefers-reduced-motion everything is shown finished. */
+(function () {
+  'use strict';
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canWatch = 'IntersectionObserver' in window && !reduce;
+
+  /* Rise in. */
+  var rv = document.querySelectorAll('[data-ip-rv]');
+  if (rv.length) {
+    if (!canWatch) {
+      Array.prototype.forEach.call(rv, function (el) { el.classList.add('is-in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-in');
+          io.unobserve(e.target);
+        });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+      Array.prototype.forEach.call(rv, function (el) { io.observe(el); });
+    }
+  }
+
+  /* Count up: the number inside the text ("über 2.000") runs from 0, the
+     words around it stay. German thousands dots are kept. */
+  var counts = document.querySelectorAll('[data-ip-count]');
+  if (counts.length && canWatch) {
+    var fmt = function (n, dots) { var s = String(Math.round(n)); return dots ? s.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : s; };
+    var run = function (el) {
+      var text = el.getAttribute('data-ip-count-text');
+      var m = text.match(/(\d[\d.]*)/);
+      if (!m) return;
+      var target = Number(m[1].replace(/\./g, ''));
+      var dots = m[1].indexOf('.') !== -1;
+      var before = text.slice(0, m.index), after = text.slice(m.index + m[1].length);
+      var t0 = 0, dur = 1400;
+      var step = function (t) {
+        if (!t0) t0 = t;
+        var p = Math.min(1, (t - t0) / dur);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = before + fmt(target * eased, dots) + after;
+        if (p < 1) window.requestAnimationFrame(step);
+        else el.textContent = text;
+      };
+      window.requestAnimationFrame(step);
+    };
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        run(e.target);
+      });
+    }, { threshold: 0.6 });
+    Array.prototype.forEach.call(counts, function (el) {
+      el.setAttribute('data-ip-count-text', el.textContent.trim());
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) return; // Already on screen: leave the final number.
+      cio.observe(el);
+    });
+  }
+
+  /* Milestones timeline. */
+  var box = document.querySelector('[data-ip-miles]');
+  if (!box) return;
+  var tabs = Array.prototype.slice.call(box.querySelectorAll('[role="tab"]'));
+  if (!tabs.length) return;
+  var fine = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var hoverTimer = 0;
+
+  function select(tab, focus) {
+    if (tab.getAttribute('aria-selected') === 'true') { if (focus) tab.focus(); return; }
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      t.classList.toggle('is-on', on);
+      var panel = document.getElementById(t.getAttribute('aria-controls'));
+      if (!panel) return;
+      panel.hidden = !on;
+      panel.classList.remove('is-in');
+      if (on && !reduce) { void panel.offsetWidth; panel.classList.add('is-in'); }
+    });
+    if (focus) tab.focus();
+  }
+
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener('click', function () { select(tab, false); });
+    if (fine) {
+      tab.addEventListener('mouseenter', function () {
+        window.clearTimeout(hoverTimer);
+        hoverTimer = window.setTimeout(function () { select(tab, false); }, 90);
+      });
+      tab.addEventListener('mouseleave', function () { window.clearTimeout(hoverTimer); });
+    }
+    tab.addEventListener('keydown', function (e) {
+      var next = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = tabs[(i + 1) % tabs.length];
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = tabs[(i - 1 + tabs.length) % tabs.length];
+      else if (e.key === 'Home') next = tabs[0];
+      else if (e.key === 'End') next = tabs[tabs.length - 1];
+      if (next) { e.preventDefault(); select(next, true); }
+    });
+  });
+
+  if (canWatch) {
+    var r = box.getBoundingClientRect();
+    if (!(r.top < window.innerHeight && r.bottom > 0)) {
+      box.classList.add('is-armed');
+      var mio = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        mio.disconnect();
+        box.classList.add('is-drawn');
+        window.setTimeout(function () { box.classList.remove('is-armed'); }, 2600);
+      }, { threshold: 0.35 });
+      mio.observe(box);
+    }
+  }
+})();

@@ -115,7 +115,7 @@
             "label": "Teamfoto",
             "name": "team_image",
             "type": "image",
-            "instructions": "Breites Querformat. Alternativtext in der Mediathek pflegen (heute „Infoplus Team“).",
+            "instructions": "Breites Querformat. Es ist das große Bild oben; Überschrift und Unterzeile liegen unten links darauf, die Kernaussagen unten rechts. Alternativtext in der Mediathek pflegen (heute „Infoplus Team“).",
             "required": 0,
             "wrapper": {
                 "width": "",
@@ -127,6 +127,66 @@
             "preview_size": "medium",
             "library": "all",
             "mime_types": "jpg,jpeg,png,webp,svg"
+        },
+        {
+            "key": "field_ip_unternehmen_stats",
+            "label": "Zahlen unter dem Bild",
+            "name": "stats",
+            "type": "repeater",
+            "instructions": "Nur belegbare Zahlen (dieselben wie auf der Startseite). Leer lassen, um die Zeile auszublenden.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "value": "über 35",
+                    "label": "Jahre Expertise"
+                },
+                {
+                    "value": "über 2.000",
+                    "label": "Kunden"
+                },
+                {
+                    "value": "über 5.000.000",
+                    "label": "produzierte Namensschilder"
+                }
+            ],
+            "layout": "block",
+            "button_label": "Zahl hinzufügen",
+            "collapsed": "field_ip_unternehmen_stats_label",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_unternehmen_stats_value",
+                    "label": "Zahl",
+                    "name": "value",
+                    "type": "text",
+                    "instructions": "Zählt beim Hereinscrollen hoch, zum Beispiel „über 2.000“.",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "40",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_unternehmen_stats_label",
+                    "label": "Beschriftung",
+                    "name": "label",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "60",
+                        "class": "",
+                        "id": ""
+                    }
+                }
+            ]
         },
         {
             "key": "field_ip_unternehmen_tab_story",
@@ -191,6 +251,20 @@
             "default_value": "Meilensteine"
         },
         {
+            "key": "field_ip_unternehmen_milestones_text",
+            "label": "Unterzeile",
+            "name": "milestones_text",
+            "type": "text",
+            "instructions": "Eine Zeile unter der Überschrift.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Von den ersten Standards für Arztpraxen bis heute."
+        },
+        {
             "key": "field_ip_unternehmen_milestones",
             "label": "Meilensteine",
             "name": "milestones",
@@ -205,19 +279,27 @@
             "default_value": [
                 {
                     "year": "1985",
-                    "text": "Bereits 1985 erkannte infoplus die Bedeutung von Namensschildern und entwickelte zunächst Standards für Arztpraxen und Apotheken. Schon bald wurden mit den LaserContur- und Papyrus-Namensschildern exklusive Spitzenprodukte für nahezu alle Bereiche aus Industrie, Handel und Vertrieb gefertigt."
+                    "text": "Bereits 1985 erkannte infoplus die Bedeutung von Namensschildern und entwickelte zunächst Standards für Arztpraxen und Apotheken. Schon bald wurden mit den LaserContur- und Papyrus-Namensschildern exklusive Spitzenprodukte für nahezu alle Bereiche aus Industrie, Handel und Vertrieb gefertigt.",
+                    "title": "Erste Standards für Praxen und Apotheken",
+                    "icon": "award"
                 },
                 {
                     "year": "1993",
-                    "text": "Nach der Entwicklung des INC/MAG-Systems (ein spezielles Magnetsystem zur Namensschilderbefestigung) stellt infoplus im Jahr 2002 das revolutionäre Systemschild „Atlantis\" vor. Über 15 Jahre Namensschilder-Erfahrung sind in einem Schild zusammengefasst."
+                    "text": "Nach der Entwicklung des INC/MAG-Systems (ein spezielles Magnetsystem zur Namensschilderbefestigung) stellt infoplus im Jahr 2002 das revolutionäre Systemschild „Atlantis\" vor. Über 15 Jahre Namensschilder-Erfahrung sind in einem Schild zusammengefasst.",
+                    "title": "Magnetsystem INC/MAG und Atlantis",
+                    "icon": "layers"
                 },
                 {
                     "year": "2005",
-                    "text": "Im Jahr 2005 überstieg das Namensschildersegment erstmals die ursprünglichen Aktivitäten im Bereich Arzt und Zahnarzt. Um dieser Entwicklung gerecht zu werden, aber auch um die Herausforderungen der größten Kunden wahrnehmen zu können, wurde im Laufe des Jahres 2006 die Firma umstrukturiert, der Name aktualisiert und die einzelnen Tätigkeitsbereiche separiert."
+                    "text": "Im Jahr 2005 überstieg das Namensschildersegment erstmals die ursprünglichen Aktivitäten im Bereich Arzt und Zahnarzt. Um dieser Entwicklung gerecht zu werden, aber auch um die Herausforderungen der größten Kunden wahrnehmen zu können, wurde im Laufe des Jahres 2006 die Firma umstrukturiert, der Name aktualisiert und die einzelnen Tätigkeitsbereiche separiert.",
+                    "title": "Namensschilder werden das Kerngeschäft",
+                    "icon": "briefcase"
                 },
                 {
                     "year": "Heute",
-                    "text": "Die zukunftsorientierten Veränderungen spiegeln sich am deutlichsten im neuen Logo, der konsequenten Trennung der Produktbereiche, aber auch in unseren motivierten Mitarbeitern wieder."
+                    "text": "Die zukunftsorientierten Veränderungen spiegeln sich am deutlichsten im neuen Logo, der konsequenten Trennung der Produktbereiche, aber auch in unseren motivierten Mitarbeitern wieder.",
+                    "title": "Neues Logo, klare Produktbereiche",
+                    "icon": "users"
                 }
             ],
             "layout": "block",
@@ -234,10 +316,61 @@
                     "instructions": "",
                     "required": 0,
                     "wrapper": {
-                        "width": "20",
+                        "width": "15",
                         "class": "",
                         "id": ""
                     }
+                },
+                {
+                    "key": "field_ip_unternehmen_milestones_title",
+                    "label": "Kurztitel",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "Steht auf der Zeitleiste; der Text erscheint beim Darüberfahren oder Antippen.",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "55",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_unternehmen_milestones_icon",
+                    "label": "Symbol",
+                    "name": "icon",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    },
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "choices": {
+                        "tag": "Prozent / Rabatt",
+                        "truck": "Lieferwagen / Versand",
+                        "clock": "Uhr / Zeit",
+                        "layers": "Stapel / Menge",
+                        "chat": "Sprechblase / Beratung",
+                        "award": "Auszeichnung / Erfahrung",
+                        "pen": "Stift / Gestaltung",
+                        "zap": "Blitz / schnell",
+                        "check": "Haken",
+                        "phone": "Telefon",
+                        "mail": "E-Mail",
+                        "printer": "Drucker / Druck",
+                        "refresh": "Kreislauf / Abruf",
+                        "file": "Dokument / Vertrag",
+                        "users": "Personen / Team",
+                        "calendar": "Kalender / Termin",
+                        "briefcase": "Koffer / Unternehmen",
+                        "pin": "Ort"
+                    },
+                    "default_value": "award"
                 },
                 {
                     "key": "field_ip_unternehmen_milestones_text",
@@ -247,7 +380,7 @@
                     "instructions": "",
                     "required": 0,
                     "wrapper": {
-                        "width": "80",
+                        "width": "",
                         "class": "",
                         "id": ""
                     },
@@ -299,7 +432,7 @@
             "label": "Hervorgehobener Absatz",
             "name": "service_quote",
             "type": "textarea",
-            "instructions": "",
+            "instructions": "Wird nur gezeigt, wenn unten keine Leistungen eingetragen sind (die Leistungen fassen diesen Absatz zusammen).",
             "required": 0,
             "wrapper": {
                 "width": "",
@@ -309,6 +442,114 @@
             "default_value": "Für unsere Kunden haben wir verschiedene bewährte Dienstleistungen entwickelt, u. a. Logistik-Services (komfortable Abrufaufträge für den regelmäßigen Schilderbedarf; Rahmenvereinbarungen über ihren 1- bis 2-Jahresbedarf) und den Event-Service sowie eine Vielzahl attraktiver Kundenvorteile.",
             "rows": 4,
             "new_lines": ""
+        },
+        {
+            "key": "field_ip_unternehmen_service_items",
+            "label": "Leistungen",
+            "name": "service_items",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "icon": "printer",
+                    "title": "Handsiebdruck und Digitaldruck",
+                    "text": "Gestaltung und Druck kleiner und großer Auflagen."
+                },
+                {
+                    "icon": "refresh",
+                    "title": "Abrufaufträge",
+                    "text": "Komfortabel für den regelmäßigen Schilderbedarf."
+                },
+                {
+                    "icon": "file",
+                    "title": "Rahmenvereinbarungen",
+                    "text": "Über Ihren Bedarf für ein bis zwei Jahre."
+                },
+                {
+                    "icon": "calendar",
+                    "title": "Event-Service",
+                    "text": "Namensschilder für Ihre Veranstaltungen."
+                }
+            ],
+            "layout": "block",
+            "button_label": "Leistung hinzufügen",
+            "collapsed": "field_ip_unternehmen_service_items_title",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_unternehmen_service_items_icon",
+                    "label": "Symbol",
+                    "name": "icon",
+                    "type": "select",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    },
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "choices": {
+                        "tag": "Prozent / Rabatt",
+                        "truck": "Lieferwagen / Versand",
+                        "clock": "Uhr / Zeit",
+                        "layers": "Stapel / Menge",
+                        "chat": "Sprechblase / Beratung",
+                        "award": "Auszeichnung / Erfahrung",
+                        "pen": "Stift / Gestaltung",
+                        "zap": "Blitz / schnell",
+                        "check": "Haken",
+                        "phone": "Telefon",
+                        "mail": "E-Mail",
+                        "printer": "Drucker / Druck",
+                        "refresh": "Kreislauf / Abruf",
+                        "file": "Dokument / Vertrag",
+                        "users": "Personen / Team",
+                        "calendar": "Kalender / Termin",
+                        "briefcase": "Koffer / Unternehmen",
+                        "pin": "Ort"
+                    },
+                    "default_value": "check"
+                },
+                {
+                    "key": "field_ip_unternehmen_service_items_title",
+                    "label": "Titel",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "70",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_unternehmen_service_items_text",
+                    "label": "Text",
+                    "name": "text",
+                    "type": "textarea",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "rows": 2,
+                    "new_lines": ""
+                }
+            ]
         },
         {
             "key": "field_ip_unternehmen_tab_cta",
@@ -405,5 +646,5 @@
     "active": true,
     "description": "Inhalte der Seite /unternehmen/ (page-unternehmen.php). Quelle: HTML-Widget e43551a der alten Seite.",
     "show_in_rest": 0,
-    "modified": 1792483200
+    "modified": 1792788223
 }
