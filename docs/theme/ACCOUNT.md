@@ -81,7 +81,7 @@ The account icon in the header (1101 px and up) is a disclosure button with a pa
 - Logged in: avatar, name, company, status pill; the last three orders (number, date, status, total, link to the order view; download icon when PDF Invoices offers the `invoice` account action); "Alle Bestellungen"; Übersicht, Bestellungen, Adressen, Kontodaten; Abmelden (`wc_logout_url()`). One `wc_get_orders()` query, no REST call.
 - Guests: Anmelden (login page with `redirect_to` the current page), Konto erstellen (only when WooCommerce registration is on, links to the registration card), Passwort vergessen.
 - Page cache: user-specific markup only for logged-in users (not served from the guest cache); the guest panel is the same for every guest of a URL.
-- The Suite's Elementor-era dropdown (`infoplus-menu-dropdown`, it looks for the widget `#log-in`) is dequeued by the theme.
+- The Suite's Elementor-era dropdown (`infoplus-menu-dropdown`, it looks for the widget `#log-in`) is dequeued by the theme. Superseded in theme 0.5.1: Suite 0.10.35 no longer has the dropdown, so the dequeue was removed.
 - Tested locally (2026-10-20) with a stand-in for the PDF Invoices action (the plugin is not installed locally).
 
 ## Order confirmation (order received)

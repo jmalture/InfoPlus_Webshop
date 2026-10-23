@@ -166,6 +166,8 @@ Superseded in 0.10.33: `infoplus-suite.php` defines `INFOPLUS_SUITE_VERSION` bef
 
 ## 4. Module Reference
 
+> **Since 0.10.35 (2026-10-23):** Elementor and Elementor Pro are deleted on staging and the theme renders every component through the Suite templates (Section 19). All Elementor widgets, dynamic tags and the Loop Grid integration were removed from the Suite, together with the nine dead copies in `UserDashboard/Assets/` (R-02), `menu-dropdown.*`, `user-stat-card.css`, `product-gallery-sizer.js` and the debug templates `test-orders*.php`. Their rows below are kept and marked "Removed in 0.10.35" because they explain the production line, which still uses them. Remaining Elementor references are guards only (`elementor-preview` query checks, `class_exists` checks) and the asset name `elementor-bulk-calculator.js`, which the theme still loads.
+
 ---
 
 ### 4.1 EditorLinkSettings
@@ -366,7 +368,7 @@ Enqueues multiple frontend scripts on product pages that handle variation filter
 | `Assets/variation-filter.js` | Filters available variations based on selected attributes. |
 | `Assets/elementor-bulk-calculator.js` | Legacy Elementor bulk calculator (`#qty_value`, `#bulk_table`). Since 0.9.111 it no longer renders its own price grid. It syncs its qty with `infoplusProductState` (`qty:changed`, `source: 'calculator'`), emits `minqty:changed`, and hides the qty row for requestable models. Since 0.10.28, after it clamps the quantity to the minimum of a newly loaded variation, it also calls `infoplusProductState.setQty(min, 'calculator')`, so `currentQty` and the active Staffelpreise tier match the quantity field (before, the table kept the old quantity and highlighted no tier until the visitor changed the quantity). |
 | `Assets/custom-model-dropdown.js` | Custom styled model dropdown behavior. |
-| `Assets/product-gallery-sizer.js` | Handles product gallery image sizing/layout. |
+| `Assets/product-gallery-sizer.js` | Handles product gallery image sizing/layout. **Removed in 0.10.35** (Elementor deleted). |
 | `Assets/variation-editor-link.js` | Updates the "Open Editor" button URL when a variation is selected. Since 0.9.111 it handles `requestable_with_variants` like `requestable` and pulses the active button (`infoplus-anfrage-pulse--long`, 3.1 s). Since 0.10.27 it publishes the resolved order type (`infoplusProductState.orderType`, event `ordertype:changed`) and, on a page with `form[data-ip-buy-form]`, leaves the "buyable" action to that form instead of its admin-ajax cart button (Section 20). Since 0.10.28 it keeps `#anfrage` visible for "buyable" models on such a page. |
 | `Assets/sonderkontur-upload-toggle.js` | Toggle UI for the Sonderkontur file upload area. |
 | `Assets/sonderkontur-upload.css` | Styling for the upload UI. |
@@ -488,12 +490,12 @@ Since 0.9.111 the module also has a performance path for products with many vari
 | `Module.php` | Widget registration, REST endpoints, admin/frontend asset enqueueing, product data building (full and "lite"), product state output with transient cache, cache invalidation on product save, `woocommerce_ajax_variation_threshold` filter, WDP bulk prices API interception via `rest_pre_dispatch` (since 0.10.33 the lookup and its cache live in `BulkPrices.php`). |
 | `BulkPrices.php` | **New in 0.10.33.** `BulkPrices::forSku($sku)` (tiers with the 24 h transient `infoplus_prices_{md5(sku)}`) and `BulkPrices::lowestFrom($sku)`. Holds the former private methods `getBulkPricesBySku()` (now `query()`), `toDisplayPrices()` and `parseWdpRanges()` of `Module.php`, unchanged. Used by the prices route and by `WooSingleProductAddons\MinQuantity`. |
 | **Widgets/** | |
-| `Widgets/ModelSelector.php` | Elementor widget: visual model selector (card grid with images, names, prices). Since 0.9.111 `renderModelCards()` computes min price per model with one SQL query over child variations instead of `get_available_variations()`. |
-| `Widgets/VariationDropdowns.php` | Elementor widget: attribute dropdown selectors that update based on model selection. Since 0.9.111 each option carries `data-image`, and the selected image tag has `loading="eager"`, `data-no-lazy="1"` and class `litespeed-no-lazy` to stop lazy-load plugins from blanking it. |
-| `Widgets/ProductImage.php` | Elementor widget: dynamic product image that changes with variation selection. Since 0.9.111 the initial gallery is resolved from the product's `pa_model` terms, not from variations. |
-| `Widgets/ProductOrderPanel.php` | Elementor widget: quantity selector, inline bulk price grid, price display (Einzelpreis + Gesamtpreis), action buttons (Editor / Anfrage / Cart). |
-| `Widgets/BulkPriceTable.php` | Elementor widget: standalone bulk price table with clickable tier cells. |
-| `Widgets/ProductInfoBox.php` | **New in 0.9.111.** Elementor widget `infoplus-product-info-box`: rows for SKU of the selected variation, minimum order quantity and delivery time. Controls: heading, per-row show/hide, SKU label, unit text, default delivery days (15), prefix/suffix, icons and colors, typography. Server side it reads `_infoplus_min_quantity` and `_infoplus_delivery_days`. |
+| `Widgets/ModelSelector.php` | Elementor widget: visual model selector (card grid with images, names, prices). Since 0.9.111 `renderModelCards()` computes min price per model with one SQL query over child variations instead of `get_available_variations()`. **Removed in 0.10.35** (Elementor deleted). |
+| `Widgets/VariationDropdowns.php` | Elementor widget: attribute dropdown selectors that update based on model selection. Since 0.9.111 each option carries `data-image`, and the selected image tag has `loading="eager"`, `data-no-lazy="1"` and class `litespeed-no-lazy` to stop lazy-load plugins from blanking it. **Removed in 0.10.35** (Elementor deleted). |
+| `Widgets/ProductImage.php` | Elementor widget: dynamic product image that changes with variation selection. Since 0.9.111 the initial gallery is resolved from the product's `pa_model` terms, not from variations. **Removed in 0.10.35** (Elementor deleted). |
+| `Widgets/ProductOrderPanel.php` | Elementor widget: quantity selector, inline bulk price grid, price display (Einzelpreis + Gesamtpreis), action buttons (Editor / Anfrage / Cart). **Removed in 0.10.35** (Elementor deleted). |
+| `Widgets/BulkPriceTable.php` | Elementor widget: standalone bulk price table with clickable tier cells. **Removed in 0.10.35** (Elementor deleted). |
+| `Widgets/ProductInfoBox.php` | **New in 0.9.111.** Elementor widget `infoplus-product-info-box`: rows for SKU of the selected variation, minimum order quantity and delivery time. Controls: heading, per-row show/hide, SKU label, unit text, default delivery days (15), prefix/suffix, icons and colors, typography. Server side it reads `_infoplus_min_quantity` and `_infoplus_delivery_days`. **Removed in 0.10.35** (Elementor deleted). |
 | **Fields/** | |
 | `Fields/AttributeTermFields.php` | Adds image, tooltip, and modal content fields to WooCommerce attribute term edit pages. |
 | `Fields/ProductAttributeImages.php` | **Main admin meta box "Infoplus Suite"**, three tabs: Attribute Overrides (per-product attribute images + order type per model term), IBE/IFE (UUID, Print API, Mindestanzahl, Lieferzeit), Default Variation (per-model cascading dropdowns). |
@@ -641,12 +643,12 @@ Provides REST API endpoints for user profile management, handles login/logout re
 | File | Role |
 |------|------|
 | `Module.php` | REST endpoints, login/logout redirects, two shortcodes, Elementor widget registration, frontend scripts. |
-| `Widgets/UserStatCard.php` | **New in 0.9.111.** Elementor widget `infoplus-user-stat-card` ("User Stat Cards", category `infoplus-product`). A repeater of cards, each with a data source, label, icon and colors, rendered as a CSS grid (`.ip-stat-grid`). |
-| `Assets/user-stat-card.css` | **New in 0.9.111.** Grid and card styles for the widget. Registered as `infoplus-user-stat-card` in `registerWidgets()`. |
+| `Widgets/UserStatCard.php` | **New in 0.9.111.** Elementor widget `infoplus-user-stat-card` ("User Stat Cards", category `infoplus-product`). A repeater of cards, each with a data source, label, icon and colors, rendered as a CSS grid (`.ip-stat-grid`). **Removed in 0.10.35** (Elementor deleted). |
+| `Assets/user-stat-card.css` | **New in 0.9.111.** Grid and card styles for the widget. Registered as `infoplus-user-stat-card` in `registerWidgets()`. **Removed in 0.10.35** (Elementor deleted). |
 | `Assets/user-dashboard.js` | Frontend JS for profile management API calls. |
-| `Assets/menu-dropdown.js` | Navigation dropdown menu behavior (login/register/account/logout links). |
-| `Assets/menu-dropdown.css` | Dropdown menu styling. |
-| `Assets/admin-*.{js,css}`, `model-selector.js`, `product-detail-suite.css`, `product-image.js`, `product-state.js`, `variation-dropdowns.js` | Copies of ProductDetailSuite assets. Never enqueued by this module. Some copies drifted in 0.9.111 (they received the same `elementorFrontend.hooks` guard and image fix as the originals) but `product-state.js` did not receive the deferred-loading code. Roadmap R-02 (still open). |
+| `Assets/menu-dropdown.js` | Navigation dropdown menu behavior (login/register/account/logout links). **Removed in 0.10.35** (Elementor deleted). |
+| `Assets/menu-dropdown.css` | Dropdown menu styling. **Removed in 0.10.35** (Elementor deleted). |
+| `Assets/admin-*.{js,css}`, `model-selector.js`, `product-detail-suite.css`, `product-image.js`, `product-state.js`, `variation-dropdowns.js` | Copies of ProductDetailSuite assets. Never enqueued by this module. Some copies drifted in 0.9.111 (they received the same `elementorFrontend.hooks` guard and image fix as the originals) but `product-state.js` did not receive the deferred-loading code. Roadmap R-02 (still open). **Removed in 0.10.35** (Elementor deleted). |
 
 #### UserStatCard data sources
 
@@ -721,27 +723,27 @@ The most feature-rich frontend module. Provides complete order management for cu
 | File | Role |
 |------|------|
 | `Module.php` | REST endpoints, rewrite rules, template routing, Thank You page rendering, widget/tag registration, cart/checkout inline styles, empty-cart overlay, checkout login link rewrite, email branding. |
-| `ElementorLoopIntegration.php` | Integrates with Elementor Loop Grid to use orders as a custom data source. |
+| `ElementorLoopIntegration.php` | Integrates with Elementor Loop Grid to use orders as a custom data source. **Removed in 0.10.35** (Elementor deleted). |
 | **Widgets/** | |
-| `Widgets/UserOrdersGrid.php` | Elementor widget: displays order list in a card grid with search/filter. Since 0.9.111 the `wc_get_orders` call passes an explicit status list (pending, processing, on-hold, completed, cancelled, refunded, failed) so draft/checkout-draft orders are excluded. |
-| `Widgets/OrderDetails.php` | Elementor widget: displays single order details (reads from URL query var). Item image: order item meta `_infoplus_model_image_url` first, then the product image at size `medium`, shown in a 120x60 box with `object-fit: contain` (2:1 ratio for 300x150 badge products). Since 0.9.111 it ships a full A4 print stylesheet (`@media print`): hides header, footer, back button, actions and images; compact three-column customer grid; suppresses link URLs. |
+| `Widgets/UserOrdersGrid.php` | Elementor widget: displays order list in a card grid with search/filter. Since 0.9.111 the `wc_get_orders` call passes an explicit status list (pending, processing, on-hold, completed, cancelled, refunded, failed) so draft/checkout-draft orders are excluded. **Removed in 0.10.35** (Elementor deleted). |
+| `Widgets/OrderDetails.php` | Elementor widget: displays single order details (reads from URL query var). Item image: order item meta `_infoplus_model_image_url` first, then the product image at size `medium`, shown in a 120x60 box with `object-fit: contain` (2:1 ratio for 300x150 badge products). Since 0.9.111 it ships a full A4 print stylesheet (`@media print`): hides header, footer, back button, actions and images; compact three-column customer grid; suppresses link URLs. **Removed in 0.10.35** (Elementor deleted). |
 | **DynamicTags/** | |
-| `DynamicTags/OrderTagBase.php` | Abstract base class for all order dynamic tags. |
-| `DynamicTags/OrderNumber.php` | Dynamic tag: `{order_number}` |
-| `DynamicTags/OrderDate.php` | Dynamic tag: `{order_date}` |
-| `DynamicTags/OrderStatus.php` | Dynamic tag: `{order_status}` |
-| `DynamicTags/OrderTotal.php` | Dynamic tag: `{order_total}` |
-| `DynamicTags/OrderItemsList.php` | Dynamic tag: `{order_items_list}` |
-| `DynamicTags/OrderItemsCount.php` | Dynamic tag: `{order_items_count}` |
-| `DynamicTags/OrderPaymentMethod.php` | Dynamic tag: `{order_payment_method}` |
-| `DynamicTags/OrderViewUrl.php` | Dynamic tag: `{order_view_url}` |
+| `DynamicTags/OrderTagBase.php` | Abstract base class for all order dynamic tags. **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderNumber.php` | Dynamic tag: `{order_number}` **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderDate.php` | Dynamic tag: `{order_date}` **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderStatus.php` | Dynamic tag: `{order_status}` **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderTotal.php` | Dynamic tag: `{order_total}` **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderItemsList.php` | Dynamic tag: `{order_items_list}` **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderItemsCount.php` | Dynamic tag: `{order_items_count}` **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderPaymentMethod.php` | Dynamic tag: `{order_payment_method}` **Removed in 0.10.35** (Elementor deleted). |
+| `DynamicTags/OrderViewUrl.php` | Dynamic tag: `{order_view_url}` **Removed in 0.10.35** (Elementor deleted). |
 | **Assets/** | |
 | `Assets/user-orders.js` | Frontend JS for order interactions. Enqueued for logged-in users with `window.infoplusUserOrders`. |
 | `Assets/user-orders.css` | Order display styling. Enqueued for logged-in users only. |
 | `Assets/woo-pages.css` | **New in 0.9.111** (631 lines). External stylesheet for WooCommerce Blocks cart, checkout and thank-you pages. Enqueued for everyone (guests included) when `is_cart()`, `is_checkout()` or `is_wc_endpoint_url('order-received')`. Sections: design tokens, base font, cart (items panel, 2:1 item images, qty badge, sidebar, totals, coupon, proceed button), checkout steps, floating-label form inputs, address card, radio accordion options (shipping, payment, saved addresses), payment section, place order button, notices, classic shortcode fallback. |
 | `Assets/cart-qty-fix.js` | **New in 0.9.111.** Vanilla JS on cart and checkout. Reads `wp.data.select('wc/store/cart').getCartData().items` and appends a `.ip-cart-qty-badge` ("× qty") to each product name in cart rows (only when the native quantity selector is not visible) and in the checkout order summary. Re-runs on store changes and DOM mutations. The file comment calls it a temporary solution. |
-| `test-orders.php` | Debug shortcode template. |
-| `test-orders-advanced.php` | Advanced debug template. |
+| `test-orders.php` | Debug shortcode template. **Removed in 0.10.35** (Elementor deleted). |
+| `test-orders-advanced.php` | Advanced debug template. **Removed in 0.10.35** (Elementor deleted). |
 
 #### Cart, checkout and empty cart (WooCommerce Blocks)
 
@@ -826,7 +828,7 @@ Registers a custom Elementor dynamic tag for user profile images and filters Wor
 | File | Role |
 |------|------|
 | `Module.php` | Dynamic tag registration, `get_avatar_url` filter with multi-plugin fallback. |
-| `DynamicTags/UserProfileImage.php` | Elementor dynamic tag implementation for user avatar. |
+| `DynamicTags/UserProfileImage.php` | Elementor dynamic tag implementation for user avatar. **Removed in 0.10.35** (Elementor deleted). |
 
 #### Avatar Resolution Order
 
@@ -1628,7 +1630,7 @@ Observed while reading the code. None of these has been fixed; they are listed s
 | 3 | `WooSingleProductAddons/Module.php` `outputProductContextJson()` | Variation attribute keys are hardcoded (`pa_model`, `pa_format`, `pa_befestigung`, `pa_oberflache`). Products using other attributes get empty values in `window.allWooVariations`. | still open |
 | 4 | `ProductDetailSuite/Assets/product-state.js` `loadDeferredVariations()` | Falls back to the literal `/wp-json/infoplus/v1/` when `infoplusProductConfig` is missing. Breaks on sites without pretty permalinks or with a custom REST prefix. | still open |
 | 5 | `ProductDetailSuite/Module.php` `buildVariationsData()` | Reads `_infoplus_model_image_id`, `_infoplus_model_description`, `_infoplus_model_tooltip` which nothing writes any more (`Fields/VariationFields.php` is deprecated and empty). Dead reads or stale data. | still open |
-| 6 | `UserDashboard/Assets/` | Nine duplicated ProductDetailSuite files, never enqueued. They partially drifted in 0.9.111. Roadmap R-02. | still open |
+| 6 | `UserDashboard/Assets/` | Nine duplicated ProductDetailSuite files, never enqueued. They partially drifted in 0.9.111. Roadmap R-02. | fixed in 0.10.35 (files deleted) |
 | 7 | `WooProductVariationFields/Assets/admin-fields.js` | Not enqueued by any PHP. Dead file. | still open |
 | 8 | `reference/infoplus_api/InforplusAPI.php` `validate_api_key()` | Defined but not used by any route. `INFOPLUS_API_KEY` currently protects nothing; every InfoplusAPI route is public. Contradicts `reference/README.md`, which says the key "validates incoming requests to /infoplus/v1/*". | still open |
 | 9 | `reference/infoplus_api/entities/Cart.php` `update_cart()` | Redirect base URL is hardcoded to `https://navajowhite-rhinoceros-679020.hostingersite.com/cart`, which is a Hostinger staging host, not the production domain. Whether production has a different value is unverified (the reference copy is stated to be the live copy). | still open |
@@ -1642,8 +1644,26 @@ Observed while reading the code. None of these has been fixed; they are listed s
 | 17 | `Custom404/Module.php` and `UserOrders/Module.php` | Both hardcode `calc(100vh - 684px)` from measured header (83 px) and footer (601 px) heights. A theme change breaks the layout silently. | still open |
 | 18 | `ProductDetailSuite/Widgets/VariationDropdowns.php` `renderDropdowns()` (up to `feature/catalog-import`) | Read `$info_behavior`, a local variable of `render()`, so the option info buttons never got `data-tooltip` and PHP logged "Undefined variable" once per option. Since `feature/view-renderer` the template keeps the old output on purpose (`$option_info_tooltip_attr = false`) without the warning. `variation-dropdowns.js` falls back to the option's own `data-tooltip`. See Section 19. | kept as is, warning gone |
 | 20 | `UserOrders/Module.php` `fixEmailHeaderInlineStyles()` | Called `ob_start()` on `woocommerce_email_header` for the processing and completed customer e-mails and never closed the buffer. Verified locally (WooCommerce 10.6.1, 2026-10-20): `ob_get_level()` was 0 before `get_content_html()` and 1 after it. The mail itself stayed complete only because the Suite callback is added before WooCommerce's own header callback (same priority 10), so the stray buffer opened before the header and stayed empty. Each such mail left one buffer open until the end of the request; with the opposite hook order it would have swallowed the e-mail header. | fixed in 0.10.32 (call removed; level stays 0) |
-| 19 | `WooSingleProductAddons/Module.php` `ajaxAddToCart()` | Calls `WC()->cart->add_to_cart()` directly, so `woocommerce_add_to_cart_validation` never runs (Min and Max Quantity for WooCommerce, Germanized and other validators are skipped), errors only show as button text, and `model_image_url` is stored as sent by the browser (escaped on output, but not checked). Found 2026-10-20. The theme buy form (Section 20) avoids all three; the Elementor template still uses the handler. | still open (Elementor path); since 0.10.33 the handler checks the minimum quantity itself |
+| 19 | `WooSingleProductAddons/Module.php` `ajaxAddToCart()` | Calls `WC()->cart->add_to_cart()` directly, so `woocommerce_add_to_cart_validation` never runs (Min and Max Quantity for WooCommerce, Germanized and other validators are skipped), errors only show as button text, and `model_image_url` is stored as sent by the browser (escaped on output, but not checked). Found 2026-10-20. The theme buy form (Section 20) avoids all three; the Elementor template still uses the handler. | still open (Elementor path); since 0.10.33 the handler checks the minimum quantity itself. Since 0.10.35 no Elementor template exists on staging; the handler is still registered and still reachable (unverified whether anything calls it besides `variation-editor-link.js` on pages without the buy form). |
 | 20 | Minimum order quantity | `elementor-bulk-calculator.js` clamps the quantity to the larger of `currentProduct.mindestanzahl` (post meta `mindestanzahl`) and the first Staffelpreise tier. Nothing checks this on the server, in either add-to-cart path. The info box shows `_infoplus_min_quantity`, a different key. Found 2026-10-20. | fixed in 0.10.33 (`WooSingleProductAddons/MinQuantity.php` checks all three sources on add, update, cart, checkout and Store API; editor lines excluded). The calculator takes the lowest `from` over all tiers, not the first; the server uses the same. |
+
+### Findings from the staging test run (2026-10-23)
+
+Staging after Elementor was deleted, Suite 0.10.34 and theme 0.5.0, tested as guest and as the admin account. Tested flows: Berater deep link to the product, buy form, Warenkorb, checkout with Vorkasse (order 25883, cancelled afterwards), thank-you page, invoice PDF, account pages, Berater sample Anfrage (ANF-2026-0001), Kontakt form (ANF-2026-0002), order types (editable shows the editor link, drucksonderkontur only offers the Anfrage), phone layouts at 390 px. All passed. Observed, not fixed:
+
+| # | Where | Finding | Status |
+|---|-------|---------|--------|
+| 21 | WooCommerce > Settings > Payments | The cash on delivery method title is in English ("Cash on delivery"). | still open (settings) |
+| 22 | WooCommerce > Settings > Payments, Direct bank transfer | The bank details are placeholders (IBAN `DE00...`, BIC `SPKXXX`). They are printed on the thank-you page, in the order e-mail and on the invoice. | still open (needs real data from Infoplus) |
+| 23 | Cart block | No quantity stepper in the cart rows; the quantity is shown as the `cart-qty-fix.js` badge only. Whether this is wanted (quantities follow Staffelpreise tiers) is unverified. | open question |
+| 24 | Account overview "Gesamtausgaben" | Showed 100 EUR for the admin account. Not checked against its orders; unverified which orders and statuses the figure sums. | to check |
+| 25 | Admin user billing e-mail | The admin account's saved billing e-mail is a third-party address and is prefilled in the checkout. Test orders from that account go there unless the field is changed. | still open (data) |
+| 26 | `test-orders.php`, `test-orders-advanced.php` | Directly reachable under the plugin URL on production (branch `production` still has them). Removed from `main` in 0.10.35. | open on production |
+| 27 | `wp-config.php` | `WP_DEBUG` is on on staging. Must be off on production. | staging only |
+| 28 | `wp_options` | Autoloaded options of deleted plugins: `berocket_ee` (about 81 KB) and the `revslider-addons` option (about 36 KB) load on every request. Deleting them is a data deletion and needs approval. | still open |
+| 29 | WooCommerce blocks | When the cart has items, WooCommerce prefetches the cart and checkout block scripts (about 2.9 MB) on every page. | still open |
+| 30 | Hosting | No persistent object cache and no page cache on staging. | still open |
+| 31 | Listing cards, product page | `wc_product_class()` loads the prices of every variation of a variable product: about 4 s on `/namensschilder/` and 2.3 s on a product page. | fixed in theme 0.5.1 (static classes, theme README "Performance") |
 
 ---
 

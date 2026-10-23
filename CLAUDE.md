@@ -5,7 +5,7 @@ Monorepo for the Infoplus nameplate shop (Namensschilder): the Infoplus Suite pl
 ## State of the repo
 
 - Created 2026-10-23 by merging two histories: the Suite (formerly MrBeardman/Infoplus-Suite, 45 commits) and the theme (formerly standalone, 40 commits). Paths were rewritten into this layout, so all commit hashes changed. Old hash to new hash: `docs/history/commit-map-suite.txt` and `docs/history/commit-map-theme.txt`. Hashes quoted in older docs are the old ones; look them up there.
-- `main`: current line, deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com) as Suite 0.10.34 + theme 0.5.0 (plus later fixes written straight to staging, all committed). Elementor and its add-ons are deactivated on staging; 20 unused plugins were deleted there on 2026-10-23.
+- `main`: current line, deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com) as Suite 0.10.35 + theme 0.5.1. Elementor and Elementor Pro are deleted on staging (2026-10-23), as are 20 other unused plugins. The Suite no longer contains Elementor widgets or dynamic tags (0.10.35); production still needs them until rollout.
 - `production`: the Suite as production runs it (old `main`, production-identical at old `f01aca6`, new `1b24e5c`, 2026-09-17, plus documentation commits). Production still uses Elementor and the old Suite line. Reference until rollout.
 - `feature/catalog-import` (0.9.113): CatalogImport module and the `tools/import-mapping/` pipeline. Already contained in `main`.
 - Tags `archive/*`: merged or retired branches (fix/order-details-ownership, fix/infoplusapi-customerdashboard-auth, chore/sync-staging, claude/admiring-archimedes, an older unrelated line from March 2026).
@@ -17,13 +17,13 @@ Monorepo for the Infoplus nameplate shop (Namensschilder): the Infoplus Suite pl
 
 ```
 wp-content/plugins/infoplus-suite/   the Suite plugin (deployed as folder "Infoplus Suite" on staging)
-  infoplus-suite.php                 entry point, plugin header and INFOPLUS_SUITE_VERSION (0.10.34)
-  src/Plugin.php                     orchestrator, Plugin::VERSION (0.10.34 on main), registers the modules
+  infoplus-suite.php                 entry point, plugin header and INFOPLUS_SUITE_VERSION (0.10.35)
+  src/Plugin.php                     orchestrator, Plugin::VERSION (= INFOPLUS_SUITE_VERSION on main), registers the modules
   src/Admin/Dashboard.php            WP Admin menu "IKONA IFE" (slug infoplus-suite), module tabs
   src/Contracts/ModuleInterface.php  slug(), label(), register()
   src/Modules/<Name>/Module.php      one module each, see below
   src/Modules/<Name>/Assets/         JS and CSS, enqueued by the module itself
-  src/Modules/<Name>/Widgets/        Elementor widgets (legacy, unused by the theme)
+  (src/Modules/<Name>/Widgets/       Elementor widgets: removed in 0.10.35, still on the production branch)
   src/View.php, templates/           component renderer; the theme overrides templates in infoplus-suite/{component}.php
 wp-content/themes/infoplus/          the theme (inc/, template-parts/, woocommerce/, assets/, acf-json/)
 wp-content/mu-plugins/               theme preview helper (only needed while another theme is active)
@@ -45,11 +45,11 @@ Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFi
 
 | Where | Value | Meaning |
 |-------|-------|---------|
-| `infoplus-suite.php` header and `INFOPLUS_SUITE_VERSION` | 0.10.34 (header 0.9.111 on `production`) | Since 0.10.33 one release number: the header is what WordPress shows, the constant (next to it, same file) is what the code uses. Bump both together. `tools/build-zips.sh` refuses to build when they differ. |
+| `infoplus-suite.php` header and `INFOPLUS_SUITE_VERSION` | 0.10.35 (header 0.9.111 on `production`) | Since 0.10.33 one release number: the header is what WordPress shows, the constant (next to it, same file) is what the code uses. Bump both together. `tools/build-zips.sh` refuses to build when they differ. |
 | `Plugin::VERSION` in `src/Plugin.php` | `= INFOPLUS_SUITE_VERSION` (0.10.25 on `production`) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. Up to 0.10.32 it was a separate literal and the header lagged behind at 0.9.113. |
 | `ProductDetailSuite\Module::VERSION` | 1.1.1 (1.1.0 on `production`) | Cache-bust for ProductDetailSuite assets and part of the transient key `infoplus_pd_{product_id}_{VERSION}`. |
 | `IkonaIFE\Module::VERSION` | 1.0.4 | Cache-bust for the sync dashboard assets. |
-| Theme `style.css` Version and `IP_VERSION` in `functions.php` | 0.5.0 | Theme release number; theme assets are versioned with it plus the file time, so every upload busts caches. |
+| Theme `style.css` Version and `IP_VERSION` in `functions.php` | 0.5.1 | Theme release number; theme assets are versioned with it plus the file time, so every upload busts caches. |
 
 Rule: after any JS or CSS change, bump the constant that the module's enqueue uses, then hard refresh. A ProductDetailSuite bump also invalidates every cached product data blob. Release rule for the Suite: every ZIP that goes to a site gets a new number in `infoplus-suite.php` (header and constant), so the Plugins screen shows which build is installed. The two module constants are still separate (R-08 partly done).
 
@@ -110,4 +110,5 @@ Production still has literal values inside the plugin; rotate both once producti
 - Page paths `/account`, `/log-in`, `/namensschilder`, `/order` are hardcoded in UserDashboard, UserOrders and Custom404.
 - Header (83 px) and footer (601 px) heights are hardcoded in Custom404 and the checkout styles.
 - Sync buttons in the IFE Sync tab are deliberately disabled in `IkonaIFE/Assets/dashboard.js`.
-- `src/Modules/UserDashboard/Assets/` holds nine dead copies of ProductDetailSuite files (R-02). Edit the originals in `ProductDetailSuite/Assets/`.
+- `src/Modules/UserDashboard/Assets/` held nine dead copies of ProductDetailSuite files (R-02). Deleted on `main` in 0.10.35; the `production` branch still has them. Edit the originals in `ProductDetailSuite/Assets/`.
+- Theme speed: never call `wc_product_class()` for variable products in a loop or on the product page (it loads every variation price). Plugin assets the theme does not use are dropped in the theme's `inc/performance.php`. Measurements in `docs/theme/README.md` "Performance".

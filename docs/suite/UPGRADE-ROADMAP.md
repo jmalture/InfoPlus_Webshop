@@ -82,6 +82,8 @@ if (count($existing) >= 10) {
 
 ## 🔴 R-02: Delete Duplicate Assets from UserDashboard
 
+> **Status (2026-10-23): done in 0.10.35.** The nine copies, `menu-dropdown.*` and `user-stat-card.css` were deleted together with the Elementor widgets. The note below is the earlier state.
+>
 > **Status (2026-09-17): open.** All nine files listed below still exist in `src/Modules/UserDashboard/Assets/`. `UserDashboard\Module::enqueueFrontend()` still loads only `menu-dropdown.*` and `user-dashboard.js`; `registerWidgets()` adds `user-stat-card.css` (new, keep). The copies have started to drift: in 0.9.111 `model-selector.js`, `product-image.js` and `variation-dropdowns.js` received the same small fixes as the originals, but `product-state.js` did not receive the deferred-loading code. Deleting them is still safe (no PHP references).
 
 **Problem:** `src/Modules/UserDashboard/Assets/` contains 10 files that are exact copies of files from `ProductDetailSuite/Assets/`. They are never enqueued by UserDashboard's `enqueueFrontend()` method (which only loads `menu-dropdown.*` and `user-dashboard.js`). These duplicates will cause bugs when someone edits one copy but not the other.

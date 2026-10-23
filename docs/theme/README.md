@@ -48,3 +48,20 @@ Front page: section "Drei Wege" after the hero (field group tab "Drei Wege": swi
 ## Cart preview in the header (since 0.5.0)
 
 On desktop the cart icon opens a preview on mouse hover, in the same panel as the account quick menu (`.ip-account__panel`); keyboard focus on the icon shows it too. The icon stays a link to the Warenkorb. Markup: `ip_minicart_html()` in `inc/woocommerce.php` (first four lines with picture, model, quantity and line total, "+ N weitere Positionen", subtotal, "Zum Warenkorb" and "Zur Kasse"; an empty state with the shop and the Berater). It is also a cart fragment: `site.js` fetches `?wc-ajax=get_refreshed_fragments` the first time the panel opens, so a cached page never shows an old cart. Not shown on the cart and checkout pages (`ip_minicart_enabled()`, filter of the same name). Lines from the online editor use their `ife_thumbnail_url` and `display` text.
+
+## Performance (since 0.5.1)
+
+Measured on staging as a guest, server response time of one request without page cache (EMCP `get-page-html`). Before: theme 0.5.0 with Elementor deleted, 2026-10-23.
+
+| Page | Before | After | Queries before | Queries after |
+|------|--------|-------|----------------|---------------|
+| `/namensschilder/` | 5489 ms | 624 ms | 9725 | 663 |
+| `/product/atlantis-namensschild/` | 3374 ms | 757 ms | 5931 | 405 |
+
+What changed:
+
+- `woocommerce/content-product.php` and `woocommerce/content-single-product.php` print static product classes (`product type-product post-{id} product-type-{type}`) instead of `wc_product_class()`. For a variable product WooCommerce builds the class list from the prices of every variation, which was most of the time on both pages. No theme CSS or JS uses the other classes Woo would add (checked with grep, 2026-10-23).
+- `inc/performance.php` dequeues plugin assets no theme view uses and trims Germanized on listing cards. Every rule has a key in the filter `ip_performance_trims` (`wpda`, `dashicons`, `wdp`, `ppcp_minicart`, `add_to_cart`, `wc_css`, `cart_grids`, `gzd_loop`); remove a key to restore that asset or hook. The file comment lists what each rule removes and why.
+
+Still open (Suite `PLUGIN-DOCUMENTATION.md` Section 16, findings 28 to 30): autoloaded options of deleted plugins, the cart and checkout block prefetch on every page once the cart has items, no object cache and no page cache on staging.
+
