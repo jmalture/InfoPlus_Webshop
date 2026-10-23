@@ -185,7 +185,20 @@
     };
     var acctHover = function (e) { return e.pointerType === 'mouse' && acctFine.matches && desktop.matches; };
 
-    acctBtn.addEventListener('click', function () {
+    // A click on the icon while the panel is open goes to the account overview
+    // (data-ip-href; the login page for guests): with a mouse the hover has
+    // already shown the panel, so the click means "take me there"; on touch or
+    // with the keyboard the first press opens the panel, the second one goes.
+    var acctHref = acctBtn.getAttribute('data-ip-href');
+    var acctPointer = '';
+    acctBtn.addEventListener('pointerdown', function (e) { acctPointer = e.pointerType; });
+    acctBtn.addEventListener('click', function (e) {
+      var mouse = acctPointer === 'mouse' && acctFine.matches && desktop.matches && e.detail > 0;
+      acctPointer = '';
+      if (acctHref && (acctOpen() || mouse)) {
+        window.location.href = acctHref;
+        return;
+      }
       if (acctOpen() && Date.now() - acctHoverAt < 400) return; // hover just opened it
       setAcct(!acctOpen());
     });

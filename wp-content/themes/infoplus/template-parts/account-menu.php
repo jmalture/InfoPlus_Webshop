@@ -30,13 +30,16 @@ $ip_ctx = ( $args['context'] ?? 'panel' ) === 'drawer' ? 'drawer' : 'panel';
 		</ul>
 	<?php else : ?>
 		<div class="ip-acct__head">
-			<?php echo function_exists( 'ip_account_avatar' ) ? ip_account_avatar( $ip_d['uid'], 44 ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts. ?>
-			<div class="ip-acct__who">
-				<p class="ip-acct__name"><?php echo esc_html( $ip_d['name'] ); ?></p>
-				<?php if ( $ip_d['company'] ) : ?>
-					<p class="ip-acct__company"><?php echo esc_html( $ip_d['company'] ); ?></p>
-				<?php endif; ?>
-			</div>
+			<?php // Avatar and name lead to the account overview (Übersicht). ?>
+			<a class="ip-acct__me" href="<?php echo esc_url( $ip_d['home'] ); ?>">
+				<?php echo function_exists( 'ip_account_avatar' ) ? ip_account_avatar( $ip_d['uid'], 44 ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- built from escaped parts. ?>
+				<span class="ip-acct__who">
+					<span class="ip-acct__name"><?php echo esc_html( $ip_d['name'] ); ?></span>
+					<?php if ( $ip_d['company'] ) : ?>
+						<span class="ip-acct__company"><?php echo esc_html( $ip_d['company'] ); ?></span>
+					<?php endif; ?>
+				</span>
+			</a>
 			<?php if ( $ip_d['status'] ) : ?>
 				<p class="ip-acct__status"><span class="ip-sr"><?php esc_html_e( 'Kontostatus:', 'infoplus' ); ?></span><span class="ip-pill"><?php echo esc_html( $ip_d['status'] ); ?></span></p>
 			<?php endif; ?>

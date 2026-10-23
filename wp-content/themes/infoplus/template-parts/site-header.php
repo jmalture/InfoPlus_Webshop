@@ -361,7 +361,13 @@ $ip_mega_id = 'ip-mega-panel';
 			<?php if ( function_exists( 'ip_account_menu_enabled' ) && ip_account_menu_enabled() ) : ?>
 				<?php // Account quick menu (inc/account-menu.php): disclosure button, panel opens on click and, with a mouse, on hover (site.js). ?>
 				<div class="ip-account" data-ip-account>
-					<button type="button" class="ip-header__icon ip-header__account" aria-expanded="false" aria-controls="ip-account-panel" aria-label="<?php echo esc_attr( is_user_logged_in() ? __( 'Mein Konto, Menü', 'infoplus' ) : __( 'Anmelden, Menü', 'infoplus' ) ); ?>">
+					<?php
+					// data-ip-href: where a click goes once the panel is open (site.js): the
+					// account overview, or the login page for guests.
+					$ip_acct_d    = function_exists( 'ip_account_menu_data' ) ? ip_account_menu_data() : array();
+					$ip_acct_href = ! empty( $ip_acct_d['logged_in'] ) ? ( $ip_acct_d['home'] ?? '' ) : ( $ip_acct_d['login'] ?? '' );
+					?>
+					<button type="button" class="ip-header__icon ip-header__account" aria-expanded="false" aria-controls="ip-account-panel" data-ip-href="<?php echo esc_url( $ip_acct_href ); ?>" aria-label="<?php echo esc_attr( is_user_logged_in() ? __( 'Mein Konto, Menü', 'infoplus' ) : __( 'Anmelden, Menü', 'infoplus' ) ); ?>">
 						<?php echo ip_icon( 'user' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
 					</button>
 					<div class="ip-account__panel" id="ip-account-panel">

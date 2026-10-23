@@ -108,6 +108,7 @@ function ip_account_menu_data() {
 		'status'    => function_exists( 'ip_account_status_label' ) ? ip_account_status_label( $uid ) : '',
 		'orders'    => $rows,
 		'all'       => wc_get_account_endpoint_url( 'orders' ),
+		'home'      => wc_get_account_endpoint_url( 'dashboard' ),
 		'links'     => $links,
 		'logout'    => wc_logout_url(),
 	);
