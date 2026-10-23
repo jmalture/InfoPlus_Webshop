@@ -293,3 +293,66 @@
     else if (mq.addListener) mq.addListener(stop);
   }
 })();
+
+/* Home bundle: contact band status ([data-ip-hours],
+   template-parts/contact-band.php). The opening hours come as a week from
+   the server (1 = Monday ... 7 = Sunday, "H:MM" from and to); the current
+   day and time are taken in German time (Europe/Berlin), so the line is
+   right for every visitor and on a cached page. Shows "Jetzt erreichbar,
+   bis 17:00 Uhr" or "Geschlossen, heute / morgen / ab Mo 8:00 Uhr", and
+   rings today's day chip. Updated every minute. Public holidays are not
+   known. */
+(function () {
+  'use strict';
+  var box = document.querySelector('[data-ip-hours]');
+  if (!box || !window.Intl || !Intl.DateTimeFormat) return;
+  var week;
+  try { week = JSON.parse(box.getAttribute('data-ip-hours')); } catch (e) { return; }
+  if (!week) return;
+  var text = box.querySelector('[data-ip-hours-text]');
+  var names = ['', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  var fmt;
+  try {
+    fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Berlin', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  } catch (e) { return; }
+  var dayNum = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
+
+  function minutes(hm) { var p = String(hm).split(':'); return Number(p[0]) * 60 + Number(p[1] || 0); }
+  function now() {
+    var parts = {};
+    fmt.formatToParts(new Date()).forEach(function (p) { parts[p.type] = p.value; });
+    return { day: dayNum[parts.weekday], min: Number(parts.hour) * 60 + Number(parts.minute) };
+  }
+
+  function update() {
+    var t = now();
+    if (!t.day) return;
+    var today = week[t.day];
+    var label;
+    var open = false;
+    if (today && t.min >= minutes(today.from) && t.min < minutes(today.to)) {
+      open = true;
+      label = 'Jetzt erreichbar, bis ' + today.to + ' Uhr';
+    } else if (today && t.min < minutes(today.from)) {
+      label = 'Geschlossen, heute ab ' + today.from + ' Uhr';
+    } else {
+      label = '';
+      for (var i = 1; i <= 7; i++) {
+        var d = ((t.day - 1 + i) % 7) + 1;
+        if (week[d]) {
+          label = 'Geschlossen, ' + (i === 1 ? 'morgen' : 'ab ' + names[d]) + ' ' + week[d].from + ' Uhr';
+          break;
+        }
+      }
+    }
+    if (!label) return;
+    text.textContent = label;
+    box.classList.toggle('is-open', open);
+    box.hidden = false;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-ip-day]'), function (chip) {
+      chip.classList.toggle('is-today', Number(chip.getAttribute('data-ip-day')) === t.day);
+    });
+  }
+  update();
+  window.setInterval(update, 60000);
+})();

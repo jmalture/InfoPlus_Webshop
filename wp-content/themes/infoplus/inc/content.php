@@ -187,6 +187,47 @@ function ip_contact_rows( $which = array( 'phone', 'email' ) ) {
 	return $rows;
 }
 
+/**
+ * Opening hours rows (ip_hours_rows()) as a week: 1 (Monday) to 7 (Sunday)
+ * => array( 'from' => 'H:MM', 'to' => 'H:MM' ), closed days absent. Reads
+ * day labels like "MO–DO", "Mo-Fr", "FR", "Sa, So" (first two letters of
+ * the German day names) and times like "8:00–17:00", "8–17 Uhr" or
+ * "08.00 - 16.30". Returns null when a line cannot be read, so callers can
+ * fall back to printing the lines as they are. Public holidays are not
+ * known here.
+ *
+ * @return array<int, array{from:string,to:string}>|null
+ */
+function ip_hours_week( $rows ) {
+	$days = array( 'mo' => 1, 'di' => 2, 'mi' => 3, 'do' => 4, 'fr' => 5, 'sa' => 6, 'so' => 7 );
+	$week = array();
+	foreach ( (array) $rows as $row ) {
+		$label = function_exists( 'mb_strtolower' ) ? mb_strtolower( (string) ( $row['label'] ?? '' ) ) : strtolower( (string) ( $row['label'] ?? '' ) );
+		if ( ! preg_match( '/(\d{1,2})(?:[:.](\d{2}))?\s*(?:uhr)?\s*(?:-|–|—|bis)\s*(\d{1,2})(?:[:.](\d{2}))?/u', (string) ( $row['value'] ?? '' ), $t ) ) {
+			return null;
+		}
+		$from = sprintf( '%d:%02d', (int) $t[1], (int) ( $t[2] ?? 0 ) );
+		$to   = sprintf( '%d:%02d', (int) $t[3], (int) ( $t[4] ?? 0 ) );
+		$hit  = array();
+		foreach ( preg_split( '/\s*[,\/&+]\s*|\s+und\s+/u', $label ) as $part ) {
+			if ( preg_match( '/^\s*([a-zäöü]{2})[a-zäöü.]*\s*(?:(?:-|–|—|bis)\s*([a-zäöü]{2})[a-zäöü.]*)?\s*$/u', $part, $m ) && isset( $days[ $m[1] ] ) ) {
+				$a = $days[ $m[1] ];
+				$b = ( isset( $m[2] ) && '' !== $m[2] && isset( $days[ $m[2] ] ) ) ? $days[ $m[2] ] : $a;
+				for ( $d = $a; $d <= $b; $d++ ) {
+					$hit[] = $d;
+				}
+			} else {
+				return null;
+			}
+		}
+		foreach ( $hit as $d ) {
+			$week[ $d ] = array( 'from' => $from, 'to' => $to );
+		}
+	}
+	ksort( $week );
+	return $week ? $week : null;
+}
+
 /** One contact row as an .ip-reach item (tile + label + value). Prints. */
 function ip_contact_row( $row ) {
 	$tag = $row['url'] ? 'a' : 'div';
