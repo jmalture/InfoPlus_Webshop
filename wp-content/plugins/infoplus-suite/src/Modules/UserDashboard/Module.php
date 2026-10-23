@@ -35,9 +35,6 @@ final class Module implements ModuleInterface
         // Register shortcode for full profile settings form
         add_shortcode('infoplus_profile_settings', [$this, 'renderProfileSettings']);
 
-        // Register Elementor widgets
-        add_action('elementor/widgets/register', [$this, 'registerWidgets']);
-
         // Skip WordPress logout confirmation page — log out immediately
         add_action('login_form_logout', [$this, 'skipLogoutConfirmation']);
     }
@@ -56,51 +53,16 @@ final class Module implements ModuleInterface
     {
         $ver = Plugin::VERSION;
 
-        // Always load menu dropdown styles and script
-        wp_enqueue_style(
-            'infoplus-menu-dropdown',
-            $this->assetUrl('menu-dropdown.css'),
-            [],
-            $ver
-        );
-        
-        wp_enqueue_script(
-            'infoplus-menu-dropdown',
-            $this->assetUrl('menu-dropdown.js'),
-            ['jquery'],
-            $ver,
-            true
-        );
-
-        // Pass URLs and login status to JavaScript
-        wp_localize_script('infoplus-menu-dropdown', 'infoplusMenuDropdown', [
-            'isLoggedIn' => is_user_logged_in(),
-            'loginUrl' => home_url('/log-in'),
-            'registerUrl' => home_url('/log-in/?eael-register=1'), 
-            'accountUrl' => home_url('/account'),
-            'logoutUrl' => wp_logout_url(home_url()),
-        ]);
-
-        // On the login/register page, redirect to login form after successful registration
-        if (!is_user_logged_in() && $this->isLoginPage()) {
-            wp_add_inline_script('jquery', '
-                jQuery(function($) {
-                    var $msg = $(".eael-register-form-wrapper .eael-form-msg.valid");
-                    if ($msg.length) {
-                        setTimeout(function() {
-                            window.location.href = "' . esc_url(home_url('/log-in/')) . '";
-                        }, 2000);
-                    }
-                });
-            ');
-        }
-
-        // Only load dashboard scripts if user is logged in
+        // Registered for every logged-in request, enqueued only where the
+        // [infoplus_profile_settings] form renders (renderProfileSettings()).
+        // Up to 0.10.34 it loaded on every page for logged-in users; the
+        // Elementor-era menu dropdown (menu-dropdown.js/.css, Essential Addons
+        // login form) was removed with Elementor.
         if (!is_user_logged_in()) {
             return;
         }
 
-        wp_enqueue_script(
+        wp_register_script(
             'infoplus-user-dashboard',
             $this->assetUrl('user-dashboard.js'),
             ['jquery', 'wp-api'],
@@ -480,6 +442,7 @@ final class Module implements ModuleInterface
         if (!is_user_logged_in()) {
             return '';
         }
+        wp_enqueue_script('infoplus-user-dashboard');
 
         $countries = function_exists('WC') ? WC()->countries->get_countries() : [];
 
@@ -947,22 +910,6 @@ final class Module implements ModuleInterface
     {
         // Force redirect to /account for all WooCommerce logins
         return home_url('/account');
-    }
-
-    /**
-     * Register Elementor widgets
-     */
-    public function registerWidgets($widgets_manager): void
-    {
-        wp_register_style(
-            'infoplus-user-stat-card',
-            $this->assetUrl('user-stat-card.css'),
-            [],
-            Plugin::VERSION
-        );
-
-        require_once __DIR__ . '/Widgets/UserStatCard.php';
-        $widgets_manager->register(new Widgets\UserStatCard());
     }
 
     /**

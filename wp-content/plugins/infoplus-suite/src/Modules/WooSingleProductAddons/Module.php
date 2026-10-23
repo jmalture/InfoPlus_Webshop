@@ -78,7 +78,6 @@ final class Module implements ModuleInterface
         wp_enqueue_script('woo-variation-filter',      $this->assetUrl('variation-filter.js'),         ['jquery'], $ver, true);
         wp_enqueue_script('elementor-bulk-calculator', $this->assetUrl('elementor-bulk-calculator.js'),['jquery'], $ver, true);
         wp_enqueue_script('custom-model-dropdown',     $this->assetUrl('custom-model-dropdown.js'),    ['jquery'], $ver, true);
-        wp_enqueue_script('product-gallery-sizer',     $this->assetUrl('product-gallery-sizer.js'),    ['jquery'], $ver, true);
         wp_enqueue_script('variation-editor-link',     $this->assetUrl('variation-editor-link.js'),    ['jquery', 'infoplus-product-state'], $ver, true);
         wp_enqueue_script('sonderkontur-upload-toggle', $this->assetUrl('sonderkontur-upload-toggle.js'), ['jquery'], $ver, true);
         wp_enqueue_style('sonderkontur-upload-styles', $this->assetUrl('sonderkontur-upload.css'), [], $ver);

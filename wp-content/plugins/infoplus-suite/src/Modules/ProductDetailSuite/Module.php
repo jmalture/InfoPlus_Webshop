@@ -37,12 +37,6 @@ final class Module implements ModuleInterface
         // Register custom fields for variations and attributes
         $this->registerFieldHandlers();
 
-        // Register Elementor widgets
-        add_action('elementor/widgets/register', [$this, 'registerWidgets']);
-
-        // Register widget category
-        add_action('elementor/elements/categories_registered', [$this, 'registerWidgetCategory']);
-
         // Register frontend assets everywhere, enqueue them globally on product pages
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontendAssets']);
 
@@ -87,45 +81,6 @@ final class Module implements ModuleInterface
 
         $productAttributeImages = new Fields\ProductAttributeImages();
         $productAttributeImages->register();
-    }
-
-    /**
-     * Register Elementor widget category
-     */
-    public function registerWidgetCategory($elements_manager): void
-    {
-        $elements_manager->add_category(
-            'infoplus-product',
-            [
-                'title' => __('Infoplus Product', 'infoplus-suite'),
-                'icon' => 'fa fa-shopping-bag',
-            ]
-        );
-    }
-
-    /**
-     * Register Elementor widgets
-     */
-    public function registerWidgets($widgets_manager): void
-    {
-        // Only register if Elementor is loaded
-        if (!did_action('elementor/loaded')) {
-            return;
-        }
-
-        require_once __DIR__ . '/Widgets/ModelSelector.php';
-        require_once __DIR__ . '/Widgets/VariationDropdowns.php';
-        require_once __DIR__ . '/Widgets/ProductImage.php';
-        require_once __DIR__ . '/Widgets/ProductOrderPanel.php';
-        require_once __DIR__ . '/Widgets/BulkPriceTable.php';
-        require_once __DIR__ . '/Widgets/ProductInfoBox.php';
-
-        $widgets_manager->register(new Widgets\ModelSelector());
-        $widgets_manager->register(new Widgets\VariationDropdowns());
-        $widgets_manager->register(new Widgets\ProductImage());
-        $widgets_manager->register(new Widgets\ProductOrderPanel());
-        $widgets_manager->register(new Widgets\BulkPriceTable());
-        $widgets_manager->register(new Widgets\ProductInfoBox());
     }
 
     /**

@@ -2,7 +2,6 @@
 namespace Infoplus\Suite\Modules\ElementorUserAvatar;
 
 use Infoplus\Suite\Contracts\ModuleInterface;
-use Elementor\Controls_Manager;
 
 if (!defined('ABSPATH')) exit;
 
@@ -13,27 +12,8 @@ final class Module implements ModuleInterface
 
     public function register(): void
     {
-        // Register custom Elementor dynamic tag
-        add_action('elementor/dynamic_tags/register', [$this, 'registerDynamicTags']);
-        
         // Alternative: Hook into get_avatar to make WordPress use uploaded images
         add_filter('get_avatar_url', [$this, 'customAvatarUrl'], 10, 3);
-    }
-
-    /**
-     * Register custom Elementor dynamic tag for user profile picture
-     */
-    public function registerDynamicTags($dynamic_tags_manager): void
-    {
-        // Only proceed if Elementor is active
-        if (!did_action('elementor/loaded')) {
-            return;
-        }
-
-        // Register our custom dynamic tag
-        require_once __DIR__ . '/DynamicTags/UserProfileImage.php';
-        
-        $dynamic_tags_manager->register(new \Infoplus\Suite\Modules\ElementorUserAvatar\DynamicTags\UserProfileImage());
     }
 
     /**

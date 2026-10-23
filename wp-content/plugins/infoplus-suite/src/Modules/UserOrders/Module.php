@@ -8,7 +8,6 @@ if (!defined('ABSPATH')) exit;
 
 final class Module implements ModuleInterface
 {
-    private ?ElementorLoopIntegration $loopIntegration = null;
 
     public function slug(): string  { return 'user-orders'; }
     public function label(): string { return __('User Orders', 'infoplus-suite'); }
@@ -20,21 +19,6 @@ final class Module implements ModuleInterface
         
         // Register REST API endpoints
         add_action('rest_api_init', [$this, 'registerRestRoutes']);
-        
-        // Register Elementor dynamic tags
-        add_action('elementor/dynamic_tags/register', [$this, 'registerDynamicTags']);
-        
-        // Register dynamic tag group
-        add_action('elementor/dynamic_tags/register', [$this, 'registerDynamicTagGroup'], 1);
-        
-        // Initialize Elementor Loop Grid integration
-        add_action('elementor/init', [$this, 'initLoopIntegration']);
-        
-        // Register Elementor Widget
-        add_action('elementor/widgets/register', [$this, 'registerWidgets']);
-        
-        // Add test shortcode for debugging
-        add_shortcode('infoplus_test_orders', [$this, 'testOrdersShortcode']);
         
         // Enqueue styles for order items
         add_action('wp_enqueue_scripts', [$this, 'enqueueStyles']);
@@ -76,28 +60,6 @@ final class Module implements ModuleInterface
     private function assetUrl(string $path): string
     {
         return INFOPLUS_SUITE_URL . 'src/Modules/UserOrders/Assets/' . ltrim($path, '/');
-    }
-
-    /**
-     * Initialize the Elementor Loop Grid integration
-     */
-    public function initLoopIntegration(): void
-    {
-        require_once __DIR__ . '/ElementorLoopIntegration.php';
-        $this->loopIntegration = new ElementorLoopIntegration();
-        $this->loopIntegration->init();
-    }
-
-    /**
-     * Register custom Elementor widgets
-     */
-    public function registerWidgets($widgets_manager): void
-    {
-        require_once __DIR__ . '/Widgets/UserOrdersGrid.php';
-        require_once __DIR__ . '/Widgets/OrderDetails.php';
-        
-        $widgets_manager->register(new Widgets\UserOrdersGrid());
-        $widgets_manager->register(new Widgets\OrderDetails());
     }
 
     /**
@@ -306,89 +268,6 @@ final class Module implements ModuleInterface
             'payment_method' => $order->get_payment_method_title(),
             'view_url' => $order->get_view_order_url(),
         ];
-    }
-
-    /**
-     * Register dynamic tag group
-     */
-    public function registerDynamicTagGroup($dynamic_tags_manager): void
-    {
-        $dynamic_tags_manager->register_group('infoplus-orders', [
-            'title' => __('Infoplus Orders', 'infoplus-suite'),
-        ]);
-    }
-
-    /**
-     * Register custom Elementor dynamic tags for orders
-     */
-    public function registerDynamicTags($dynamic_tags_manager): void
-    {
-        if (!did_action('elementor/loaded')) {
-            return;
-        }
-
-        require_once __DIR__ . '/DynamicTags/OrderTagBase.php';
-        require_once __DIR__ . '/DynamicTags/OrderNumber.php';
-        require_once __DIR__ . '/DynamicTags/OrderDate.php';
-        require_once __DIR__ . '/DynamicTags/OrderStatus.php';
-        require_once __DIR__ . '/DynamicTags/OrderTotal.php';
-        require_once __DIR__ . '/DynamicTags/OrderItemsList.php';
-        require_once __DIR__ . '/DynamicTags/OrderViewUrl.php';
-        require_once __DIR__ . '/DynamicTags/OrderItemsCount.php';
-        require_once __DIR__ . '/DynamicTags/OrderPaymentMethod.php';
-        
-        $dynamic_tags_manager->register(new DynamicTags\OrderNumber());
-        $dynamic_tags_manager->register(new DynamicTags\OrderDate());
-        $dynamic_tags_manager->register(new DynamicTags\OrderStatus());
-        $dynamic_tags_manager->register(new DynamicTags\OrderTotal());
-        $dynamic_tags_manager->register(new DynamicTags\OrderItemsList());
-        $dynamic_tags_manager->register(new DynamicTags\OrderViewUrl());
-        $dynamic_tags_manager->register(new DynamicTags\OrderItemsCount());
-        $dynamic_tags_manager->register(new DynamicTags\OrderPaymentMethod());
-    }
-
-    /**
-     * Test shortcode to debug orders display
-     */
-    public function testOrdersShortcode($atts): string
-    {
-        if (!is_user_logged_in()) {
-            return '<div style="padding:20px;background:#fee;border:1px solid #fcc;color:#c00;border-radius:4px;">Please log in to view orders.</div>';
-        }
-
-        ob_start();
-        $user_id = get_current_user_id();
-        $user = wp_get_current_user();
-        $orders = wc_get_orders(['customer_id' => $user_id, 'limit' => -1, 'orderby' => 'date', 'order' => 'DESC']);
-        
-        ?>
-        <div style="font-family:Arial,sans-serif;max-width:1000px;margin:20px auto;">
-            <h2 style="color:#e91e8c;">Orders API Test</h2>
-            <div style="background:#f5f5f5;padding:20px;border-radius:8px;margin:20px 0;">
-                <h3>User Info</h3>
-                <p><strong>Name:</strong> <?php echo esc_html($user->display_name); ?></p>
-                <p><strong>Email:</strong> <?php echo esc_html($user->user_email); ?></p>
-                <p><strong>User ID:</strong> <?php echo $user_id; ?></p>
-            </div>
-            <div style="background:#f5f5f5;padding:20px;border-radius:8px;margin:20px 0;">
-                <h3>WooCommerce Orders (Direct)</h3>
-                <?php if (empty($orders)): ?>
-                    <p style="color:#c00;">No orders found for this user.</p>
-                <?php else: ?>
-                    <p style="color:#22c55e;">Found <?php echo count($orders); ?> order(s)</p>
-                    <?php foreach ($orders as $order): ?>
-                        <div style="background:white;padding:15px;margin:10px 0;border:1px solid #ddd;border-radius:4px;">
-                            <strong>Order #<?php echo $order->get_order_number(); ?></strong><br>
-                            Date: <?php echo $order->get_date_created()->date('F j, Y'); ?><br>
-                            Status: <?php echo $order->get_status(); ?><br>
-                            Total: <?php echo $order->get_formatted_order_total(); ?>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
     }
 
     /**
