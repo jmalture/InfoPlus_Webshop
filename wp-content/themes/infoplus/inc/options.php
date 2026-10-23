@@ -84,8 +84,31 @@ function ip_setting( $name ) {
 	if ( ! function_exists( 'get_field' ) ) {
 		return $default;
 	}
+	ip_setting_prime();
 	$value = get_field( $name, 'option', false );
 	return null === $value ? $default : $value;
+}
+
+/**
+ * Loads every settings value with one query on the first ip_setting() call.
+ * The plugin reads each field as two options (options_{name} and the field
+ * key _options_{name}). Options that were never saved are not autoloaded, so
+ * without this every footer and Kontakt panel value cost two queries (70 on
+ * each page view, measured 2026-10-23). wp_prime_option_caches() also marks
+ * the missing ones, so WordPress does not ask again. WordPress 6.4 and later.
+ */
+function ip_setting_prime() {
+	static $done = false;
+	if ( $done || ! function_exists( 'wp_prime_option_caches' ) ) {
+		return;
+	}
+	$done  = true;
+	$names = array();
+	foreach ( array_keys( ip_setting_defaults() ) as $key ) {
+		$names[] = 'options_' . $key;
+		$names[] = '_options_' . $key;
+	}
+	wp_prime_option_caches( $names );
 }
 
 /** Attachment IDs from a gallery/image setting (array, single ID or "1,2,3"). */

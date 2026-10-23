@@ -117,11 +117,29 @@ add_action( 'wp', function () {
 		add_action( 'woocommerce_after_shop_loop_item', function () use ( $fn ) {
 			static $html = array();
 			if ( ! isset( $html[ $fn ] ) ) {
-				ob_start();
-				call_user_func( $fn );
-				$html[ $fn ] = (string) ob_get_clean();
+				$html[ $fn ] = ip_performance_gzd_line( $fn );
 			}
 			echo $html[ $fn ]; // phpcs:ignore WordPress.Security.EscapeOutput -- Germanized template output.
 		}, $prio );
 	}
 }, 99990 );
+
+/**
+ * Germanized's tax or shipping line of a listing card, kept for 12 hours.
+ * Rendering it once still loaded every variation of the first card's
+ * product (87 products, about 350 queries on /namensschilder/, measured
+ * 2026-10-23). The key holds the Germanized version, the tax display
+ * setting and the language, so a change there renders it again.
+ */
+function ip_performance_gzd_line( $fn ) {
+	$key  = 'ip_gzd_' . md5( $fn . '|' . ( defined( 'WC_GERMANIZED_VERSION' ) ? WC_GERMANIZED_VERSION : '' ) . '|' . get_option( 'woocommerce_tax_display_shop' ) . '|' . get_locale() );
+	$html = get_transient( $key );
+	if ( false === $html ) {
+		ob_start();
+		call_user_func( $fn );
+		$html = (string) ob_get_clean();
+		set_transient( $key, $html, 12 * HOUR_IN_SECONDS );
+	}
+	return (string) $html;
+}
+
