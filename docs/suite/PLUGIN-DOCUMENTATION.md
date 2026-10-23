@@ -359,6 +359,7 @@ Enqueues multiple frontend scripts on product pages that handle variation filter
 | File | Role |
 |------|------|
 | `Module.php` | Script enqueueing, REST endpoints for file uploads, cart/order integration hooks, product context JSON output, editor settings injection, AJAX add-to-cart, buy form filters for the classic theme (0.10.27, Section 20), model image in cart and order line items. |
+| `MinQuantity.php` | **New in 0.10.33.** Server-side Mindestbestellmenge. See "Server-side minimum quantity" below. |
 | `Assets/variation-filter.js` | Filters available variations based on selected attributes. |
 | `Assets/elementor-bulk-calculator.js` | Legacy Elementor bulk calculator (`#qty_value`, `#bulk_table`). Since 0.9.111 it no longer renders its own price grid. It syncs its qty with `infoplusProductState` (`qty:changed`, `source: 'calculator'`), emits `minqty:changed`, and hides the qty row for requestable models. Since 0.10.28, after it clamps the quantity to the minimum of a newly loaded variation, it also calls `infoplusProductState.setQty(min, 'calculator')`, so `currentQty` and the active Staffelpreise tier match the quantity field (before, the table kept the old quantity and highlighted no tier until the visitor changed the quantity). |
 | `Assets/custom-model-dropdown.js` | Custom styled model dropdown behavior. |
@@ -409,6 +410,38 @@ A temporary file storage system using WP transients (24h TTL) keyed by WooCommer
 
 Since 0.10.27 the classic theme does not use this handler. It posts a normal WooCommerce add-to-cart form instead; see Section 20. The handler and its caller are unchanged for the Elementor template.
 
+Since 0.10.33 the handler checks the minimum quantity (`MinQuantity::forProduct()`) before it adds the line and answers `wp_send_json_error(['message' => 'Die Mindestbestellmenge beträgt N Stück.', 'min' => N], 400)` when the quantity is lower.
+
+#### Server-side minimum quantity (0.10.33)
+
+Replaces the BeRocket plugin "Min/Max Quantities", which was deleted on staging on 2026-10-23 (it had no rules). Before 0.10.33 only `elementor-bulk-calculator.js` enforced the minimum, in the browser (finding 20 in Section 16). `MinQuantity` is created in `Module::register()` and applies the same rule on the server.
+
+The minimum for a product or variation (`MinQuantity::forProduct($product_id, $variation_id)`) is the largest of:
+
+1. post meta `_infoplus_min_quantity` of the variation, else of the parent product,
+2. post meta `mindestanzahl` of the parent product (the ACF field that `window.currentProduct.mindestanzahl` carries),
+3. the lowest `from` over the Staffelpreise tiers of the variation SKU (`ProductDetailSuite\BulkPrices::lowestFrom()`, the same value as `getMinBulkQty()` in the calculator),
+4. 1.
+
+Filter `infoplus_suite_min_quantity` (`int $min, int $product_id, int $variation_id`) can change the result, for example per customer role.
+
+Data on staging (2026-10-23): no product has `_infoplus_min_quantity`; two products have `mindestanzahl` = 1. Of the 634 active Advanced Dynamic Pricing rules, 376 start at 10, 257 start at 1 and one has no tiers, so in practice the minimum is 10 or 1 and comes from the tiers.
+
+Hooks:
+
+| Hook | Callback | What it does |
+|------|----------|--------------|
+| `woocommerce_add_to_cart_validation` (priority 25) | `validateAdd()` | Rejects the add when the requested quantity plus the shop lines of the same variation already in the Warenkorb stay below the minimum. Covers the theme buy form (Section 20). |
+| `woocommerce_update_cart_validation` | `validateUpdate()` | Quantity change in the classic (shortcode) Warenkorb. 0 (remove) is always allowed. |
+| `woocommerce_check_cart_items` | `checkCart()` | Adds an error notice per variation below the minimum. WooCommerce runs this hook on the cart and checkout pages and before an order is placed, so the order is blocked. |
+| `woocommerce_store_api_product_quantity_minimum` | `storeApiMinimum()` | Cart and Checkout blocks (Store API). The Warenkorb and Kasse pages on staging use these blocks (pages 27 and 28), so the quantity selector of the Cart block cannot go below the minimum and the Store API rejects lower quantities. This value is per line. |
+
+Message (error notice): `Die Mindestbestellmenge für „{Produktname}“ beträgt N Stück.` (Store API lines show WooCommerce's own text instead, translated by the German language pack.)
+
+Lines added by the online editor are skipped everywhere (`MinQuantity::isEditorLine()`: cart item data `project_id`, set by InfoplusAPI `cart/updateCart` in `reference/infoplus_api/entities/Cart.php`). That route calls `WC()->cart->add_to_cart()` directly, so `woocommerce_add_to_cart_validation` never ran for it anyway. Whether the editor enforces a minimum of its own is unverified.
+
+No maximum is enforced. The calculator derives a maximum from the `to` of the last tier, but the last tier is normally open-ended (`to` 99999 or more, normalised to `''`).
+
 #### Model image in cart and orders
 
 `model_image_url` is stored as cart item data `_infoplus_model_image_url`, copied to the order line item meta of the same name on `woocommerce_checkout_create_order_line_item`, and used by `cartItemModelImage()` (`woocommerce_cart_item_thumbnail`) and `orderItemModelImage()` (`woocommerce_order_item_thumbnail`). The OrderDetails widget reads the same order item meta.
@@ -449,7 +482,8 @@ Since 0.9.111 the module also has a performance path for products with many vari
 
 | File | Role |
 |------|------|
-| `Module.php` | Widget registration, REST endpoints, admin/frontend asset enqueueing, product data building (full and "lite"), product state output with transient cache, cache invalidation on product save, `woocommerce_ajax_variation_threshold` filter, WDP bulk prices API interception via `rest_pre_dispatch` with transient cache. |
+| `Module.php` | Widget registration, REST endpoints, admin/frontend asset enqueueing, product data building (full and "lite"), product state output with transient cache, cache invalidation on product save, `woocommerce_ajax_variation_threshold` filter, WDP bulk prices API interception via `rest_pre_dispatch` (since 0.10.33 the lookup and its cache live in `BulkPrices.php`). |
+| `BulkPrices.php` | **New in 0.10.33.** `BulkPrices::forSku($sku)` (tiers with the 24 h transient `infoplus_prices_{md5(sku)}`) and `BulkPrices::lowestFrom($sku)`. Holds the former private methods `getBulkPricesBySku()` (now `query()`), `toDisplayPrices()` and `parseWdpRanges()` of `Module.php`, unchanged. Used by the prices route and by `WooSingleProductAddons\MinQuantity`. |
 | **Widgets/** | |
 | `Widgets/ModelSelector.php` | Elementor widget: visual model selector (card grid with images, names, prices). Since 0.9.111 `renderModelCards()` computes min price per model with one SQL query over child variations instead of `get_available_variations()`. |
 | `Widgets/VariationDropdowns.php` | Elementor widget: attribute dropdown selectors that update based on model selection. Since 0.9.111 each option carries `data-image`, and the selected image tag has `loading="eager"`, `data-no-lazy="1"` and class `litespeed-no-lazy` to stop lazy-load plugins from blanking it. |
@@ -1287,6 +1321,8 @@ Since 0.9.111 the intercepted result is cached in the transient `infoplus_prices
 
 After the InfoplusAPI merge the interception can become a normal route registration and the InfoplusAPI handler can be dropped.
 
+Since 0.10.33 `interceptBulkPricesRoute()` only returns `BulkPrices::forSku($sku)`. The lookup described below (`getBulkPricesBySku()`, `parseWdpRanges()`, `toDisplayPrices()`) moved unchanged into `ProductDetailSuite/BulkPrices.php` as static methods (`getBulkPricesBySku` is now `query`), together with the transient cache, so the server-side minimum quantity check reads the same tiers. Response, cache key and lifetime are the same.
+
 ### Solution: `rest_pre_dispatch` interception
 
 `Module::interceptBulkPricesRoute()` is hooked to the `rest_pre_dispatch` filter at priority 10. WordPress calls this filter before dispatching to any registered route handler. Returning a non-null value short-circuits dispatch entirely, the WDP handler never runs.
@@ -1603,8 +1639,8 @@ Observed while reading the code. None of these has been fixed; they are listed s
 | 17 | `Custom404/Module.php` and `UserOrders/Module.php` | Both hardcode `calc(100vh - 684px)` from measured header (83 px) and footer (601 px) heights. A theme change breaks the layout silently. | still open |
 | 18 | `ProductDetailSuite/Widgets/VariationDropdowns.php` `renderDropdowns()` (up to `feature/catalog-import`) | Read `$info_behavior`, a local variable of `render()`, so the option info buttons never got `data-tooltip` and PHP logged "Undefined variable" once per option. Since `feature/view-renderer` the template keeps the old output on purpose (`$option_info_tooltip_attr = false`) without the warning. `variation-dropdowns.js` falls back to the option's own `data-tooltip`. See Section 19. | kept as is, warning gone |
 | 20 | `UserOrders/Module.php` `fixEmailHeaderInlineStyles()` | Called `ob_start()` on `woocommerce_email_header` for the processing and completed customer e-mails and never closed the buffer. Verified locally (WooCommerce 10.6.1, 2026-10-20): `ob_get_level()` was 0 before `get_content_html()` and 1 after it. The mail itself stayed complete only because the Suite callback is added before WooCommerce's own header callback (same priority 10), so the stray buffer opened before the header and stayed empty. Each such mail left one buffer open until the end of the request; with the opposite hook order it would have swallowed the e-mail header. | fixed in 0.10.32 (call removed; level stays 0) |
-| 19 | `WooSingleProductAddons/Module.php` `ajaxAddToCart()` | Calls `WC()->cart->add_to_cart()` directly, so `woocommerce_add_to_cart_validation` never runs (Min and Max Quantity for WooCommerce, Germanized and other validators are skipped), errors only show as button text, and `model_image_url` is stored as sent by the browser (escaped on output, but not checked). Found 2026-10-20. The theme buy form (Section 20) avoids all three; the Elementor template still uses the handler. | still open (Elementor path) |
-| 20 | Minimum order quantity | `elementor-bulk-calculator.js` clamps the quantity to the larger of `currentProduct.mindestanzahl` (post meta `mindestanzahl`) and the first Staffelpreise tier. Nothing checks this on the server, in either add-to-cart path. The info box shows `_infoplus_min_quantity`, a different key. Found 2026-10-20. | still open |
+| 19 | `WooSingleProductAddons/Module.php` `ajaxAddToCart()` | Calls `WC()->cart->add_to_cart()` directly, so `woocommerce_add_to_cart_validation` never runs (Min and Max Quantity for WooCommerce, Germanized and other validators are skipped), errors only show as button text, and `model_image_url` is stored as sent by the browser (escaped on output, but not checked). Found 2026-10-20. The theme buy form (Section 20) avoids all three; the Elementor template still uses the handler. | still open (Elementor path); since 0.10.33 the handler checks the minimum quantity itself |
+| 20 | Minimum order quantity | `elementor-bulk-calculator.js` clamps the quantity to the larger of `currentProduct.mindestanzahl` (post meta `mindestanzahl`) and the first Staffelpreise tier. Nothing checks this on the server, in either add-to-cart path. The info box shows `_infoplus_min_quantity`, a different key. Found 2026-10-20. | fixed in 0.10.33 (`WooSingleProductAddons/MinQuantity.php` checks all three sources on add, update, cart, checkout and Store API; editor lines excluded). The calculator takes the lowest `from` over all tiers, not the first; the server uses the same. |
 
 ---
 

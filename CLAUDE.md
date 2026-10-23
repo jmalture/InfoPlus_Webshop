@@ -18,7 +18,7 @@ Monorepo for the Infoplus nameplate shop (Namensschilder): the Infoplus Suite pl
 ```
 wp-content/plugins/infoplus-suite/   the Suite plugin (deployed as folder "Infoplus Suite" on staging)
   infoplus-suite.php                 entry point, plugin header (Version 0.9.113)
-  src/Plugin.php                     orchestrator, Plugin::VERSION (0.10.32 on main), registers the modules
+  src/Plugin.php                     orchestrator, Plugin::VERSION (0.10.33 on main), registers the modules
   src/Admin/Dashboard.php            WP Admin menu "IKONA IFE" (slug infoplus-suite), module tabs
   src/Contracts/ModuleInterface.php  slug(), label(), register()
   src/Modules/<Name>/Module.php      one module each, see below
@@ -46,7 +46,7 @@ Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFi
 | Where | Value | Meaning |
 |-------|-------|---------|
 | `infoplus-suite.php` header | 0.9.113 (0.9.111 on `production`) | What WordPress shows. Bumped by hand at release. Not used in code. |
-| `Plugin::VERSION` in `src/Plugin.php` | 0.10.32 (0.10.25 on `production`) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. |
+| `Plugin::VERSION` in `src/Plugin.php` | 0.10.33 (0.10.25 on `production`) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. |
 | `ProductDetailSuite\Module::VERSION` | 1.1.1 (1.1.0 on `production`) | Cache-bust for ProductDetailSuite assets and part of the transient key `infoplus_pd_{product_id}_{VERSION}`. |
 | `IkonaIFE\Module::VERSION` | 1.0.4 | Cache-bust for the sync dashboard assets. |
 | Theme `style.css` Version and `IP_VERSION` in `functions.php` | 0.4.0 | Theme release number; theme assets are versioned with it plus the file time, so every upload busts caches. |
