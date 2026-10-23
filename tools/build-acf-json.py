@@ -347,9 +347,20 @@ def home():
             g.icon('icon', 'check'),
             ('title', 'text', 'Titel', {'width': 70}),
         ], points, 'Leistung hinzufügen', 'title'),
+        g.f('service_anim_show', 'true_false', 'Animationen statt Fotos', 1,
+            instructions='Ja = die Karten zeigen kleine Animationen (Qualität: ein Schild wird gezeichnet, Preise: Staffelpreise, '
+                         'Service: Beratung bis Versand). Welche, steht bei jeder Karte unter „Animation“. '
+                         'Nein = die Fotos der Karten werden gezeigt. Wer reduzierte Bewegung eingestellt hat, sieht ein fertiges Standbild.'),
         g.repeater('service_cards', 'Karten', [
             ('image', 'image', 'Bild', {'width': 30}),
-            ('title', 'text', 'Titel', {'width': 70}),
+            ('title', 'text', 'Titel', {'width': 40}),
+            ('anim', 'select', 'Animation', {'width': 30, 'default_value': 'auto', 'choices': {
+                'auto': 'Automatisch (nach Position)',
+                'quality': 'Qualität: Schild wird gezeichnet',
+                'prices': 'Preise: Staffelpreise',
+                'service': 'Service: Beratung bis Versand',
+                'photo': 'Keine, Foto zeigen',
+            }, 'instructions': 'Automatisch: 1. Karte Qualität, 2. Preise, 3. Service. Die Preise kommen aus „Vorschau: Staffelpreise“ (Reiter Hero).'}),
             ('text', 'textarea', 'Text', {'rows': 2}),
         ], cards, 'Karte hinzufügen', 'title'),
 
@@ -470,6 +481,15 @@ def kontakt():
             instructions='Leer lassen, um ohne Bild zu zeigen.'),
         g.f('intro', 'textarea', 'Einleitung', plain(text(E, 'e550a07')), rows=3,
             instructions='Kontaktdaten und Öffnungszeiten kommen aus den Website-Einstellungen (Reiter „Kontakt“).'),
+        g.f('demo_show', 'true_false', 'Animiertes Beispiel statt Bild', 1, width=33,
+            instructions='Ja = neben der Einleitung läuft ein kurzes Beispiel-Gespräch: Frage, Antwort, Angebot per E-Mail. '
+                         'Nein = das Bild wird gezeigt. Wer reduzierte Bewegung eingestellt hat, sieht ein fertiges Standbild.'),
+        g.f('demo_chats', 'textarea', 'Beispiel-Gespräche',
+            'Wir brauchen 120 Namensschilder mit Logo für unsere Messe. | Gern! Für Messen empfehlen wir Atlantis mit Magnet. Ihr Angebot schicken wir Ihnen per E-Mail.\n'
+            'Können Sie unser Logo in Firmenfarbe drucken? | Ja. Schicken Sie uns Ihr Logo, Sie bekommen vorab einen Entwurf zur Freigabe.\n'
+            'Wir brauchen die Schilder schon nächste Woche. | Kein Problem: mit badge24, unserem Express-Service, geht es besonders schnell.',
+            width=67, rows=4,
+            instructions='Ein Beispiel pro Zeile: Frage | Antwort. Kurz halten, etwa zwei Zeilen pro Teil. Die Vorschau ist als „Beispiel“ gekennzeichnet.'),
         g.f('form_title', 'text', 'Überschrift über dem Formular', text(E, '4e8e7c5', 'title'), width=50),
         g.f('fallback_title', 'text', 'Ohne Formular: Überschrift', 'Schreiben Sie uns eine E-Mail', width=50,
             instructions='Solange kein Formular-Modul aktiv ist, sehen Besucher stattdessen E-Mail- und Telefon-Buttons.'),

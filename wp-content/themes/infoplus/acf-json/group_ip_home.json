@@ -1232,6 +1232,23 @@
             ]
         },
         {
+            "key": "field_ip_home_service_anim_show",
+            "label": "Animationen statt Fotos",
+            "name": "service_anim_show",
+            "type": "true_false",
+            "instructions": "Ja = die Karten zeigen kleine Animationen (Qualität: ein Schild wird gezeichnet, Preise: Staffelpreise, Service: Beratung bis Versand). Welche, steht bei jeder Karte unter „Animation“. Nein = die Fotos der Karten werden gezeigt. Wer reduzierte Bewegung eingestellt hat, sieht ein fertiges Standbild.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
             "key": "field_ip_home_service_cards",
             "label": "Karten",
             "name": "service_cards",
@@ -1291,9 +1308,34 @@
                     "instructions": "",
                     "required": 0,
                     "wrapper": {
-                        "width": "70",
+                        "width": "40",
                         "class": "",
                         "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_home_service_cards_anim",
+                    "label": "Animation",
+                    "name": "anim",
+                    "type": "select",
+                    "instructions": "Automatisch: 1. Karte Qualität, 2. Preise, 3. Service. Die Preise kommen aus „Vorschau: Staffelpreise“ (Reiter Hero).",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "30",
+                        "class": "",
+                        "id": ""
+                    },
+                    "allow_null": 0,
+                    "multiple": 0,
+                    "ui": 0,
+                    "return_format": "value",
+                    "default_value": "auto",
+                    "choices": {
+                        "auto": "Automatisch (nach Position)",
+                        "quality": "Qualität: Schild wird gezeichnet",
+                        "prices": "Preise: Staffelpreise",
+                        "service": "Service: Beratung bis Versand",
+                        "photo": "Keine, Foto zeigen"
                     }
                 },
                 {
@@ -1488,5 +1530,5 @@
     "active": true,
     "description": "Inhalte der Startseite (front-page.php). Ort: Seite = Startseite (ID 8 auf Staging).",
     "show_in_rest": 0,
-    "modified": 1792764395
+    "modified": 1792787116
 }

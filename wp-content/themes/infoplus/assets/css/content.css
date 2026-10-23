@@ -77,6 +77,88 @@
   .ip-kontakt__media { aspect-ratio: 4 / 3 }
 }
 
+/* ── Kontakt: animated example conversation (template-parts/contact-demo.php)
+   Same language as the front page demo: dotted bed with a soft magenta
+   glow, white chat card, container units so every piece scales with the
+   box. Square below 1101 px (room for three short messages), 4/3 beside the
+   intro on desktop. The thread is anchored at the bottom: when it grows,
+   older lines leave at the top, nothing below moves. content.js drives the
+   states; the server renders a finished one (no JS, reduced motion). */
+.ip-cdemo { aspect-ratio: 1 / 1; container-type: inline-size; isolation: isolate }
+.ip-cdemo__stage {
+  position: absolute; inset: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 3cqw; padding: 5cqw;
+  background:
+    radial-gradient(60% 55% at 70% 30%, rgb(230 0 126 / .08), transparent 70%),
+    radial-gradient(circle, rgb(25 27 28 / .08) 1px, transparent 1.4px) 0 0 / 18px 18px;
+  font-size: clamp(12px, 3.4cqw, 16px);
+}
+.ip-cdemo__bar {
+  display: flex; align-items: center; gap: 3cqw; padding: 2.4cqw 3cqw; margin-right: 52px;
+  border-radius: 999px; background: var(--c-white); box-shadow: var(--shadow-1);
+}
+.ip-cdemo__avatar { flex: none; display: grid; place-items: center; width: 2.6em; height: 2.6em; border-radius: 50%; background: var(--c-primary-tint); color: var(--accent) }
+.ip-cdemo__avatar svg, .ip-cdemo__file svg, .ip-cdemo__tick svg { width: 58%; height: 58%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round }
+.ip-cdemo__who { display: grid; gap: 3px; min-width: 0 }
+.ip-cdemo__name { font: 600 1em/1.1 var(--font) }
+.ip-cdemo__status { display: inline-flex; align-items: center; gap: 6px; font: 400 .85em/1.1 var(--font); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.ip-cdemo__dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #1f9d55; box-shadow: 0 0 0 3px rgb(31 157 85 / .15) }
+.ip-cdemo__tag { margin-left: auto; padding: 3px 8px; border-radius: 999px; background: var(--c-grey-100); font: 500 .8em/1.2 var(--font); color: var(--text-secondary) }
+
+.ip-cdemo__thread { display: flex; flex-direction: column; justify-content: flex-end; gap: 2.4cqw; min-height: 0; overflow: hidden }
+.ip-cdemo__msg {
+  max-width: 82%; padding: .7em .95em; font: 400 1em/1.35 var(--font); text-wrap: pretty;
+  opacity: 0; translate: 0 10px; transition: opacity 320ms var(--ease), translate 420ms var(--ease);
+}
+.ip-cdemo__msg--in { align-self: flex-end; border-radius: 18px 18px 4px 18px; background: var(--c-grey-800); color: var(--c-white) }
+.ip-cdemo__reply { position: relative; display: flex; flex-direction: column; align-items: flex-start }
+.ip-cdemo__msg--out { border-radius: 18px 18px 18px 4px; background: var(--c-white); box-shadow: var(--shadow-1) }
+.ip-cdemo__msg.is-on, .ip-cdemo__offer.is-on { opacity: 1; translate: none }
+.ip-cdemo__typing {
+  position: absolute; left: 0; top: 0; display: none; gap: 5px; padding: .85em 1em; border-radius: 18px 18px 18px 4px; background: var(--c-white); box-shadow: var(--shadow-1);
+}
+.ip-cdemo__typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--c-grey-700); opacity: .35; animation: ip-cdemo-dot 1s infinite }
+.ip-cdemo__typing span:nth-child(2) { animation-delay: .15s }
+.ip-cdemo__typing span:nth-child(3) { animation-delay: .3s }
+.ip-cdemo.is-typing .ip-cdemo__typing { display: inline-flex }
+@keyframes ip-cdemo-dot { 0%, 60%, 100% { opacity: .35; translate: 0 0 } 30% { opacity: 1; translate: 0 -3px } }
+.ip-cdemo__offer {
+  align-self: flex-start; display: flex; align-items: center; gap: .75em; padding: .6em .8em .6em .6em;
+  border: 1px solid var(--border); border-radius: 14px; background: var(--c-white);
+  opacity: 0; translate: 0 10px; transition: opacity 320ms var(--ease), translate 420ms var(--ease);
+}
+.ip-cdemo__file { display: grid; place-items: center; width: 2.4em; height: 2.4em; border-radius: 10px; background: var(--c-primary-tint); color: var(--accent) }
+.ip-cdemo__offer-text { display: grid; gap: 2px; font: 400 .9em/1.15 var(--font); color: var(--text-secondary) }
+.ip-cdemo__offer-text b { font-weight: 600; color: var(--text-primary) }
+.ip-cdemo__tick { display: grid; place-items: center; width: 1.7em; height: 1.7em; border-radius: 50%; background: var(--accent); color: var(--c-white); scale: 0; transition: scale 420ms var(--ease-spring) 180ms }
+.ip-cdemo__tick svg { stroke-width: 2.4 }
+.ip-cdemo__offer.is-on .ip-cdemo__tick { scale: 1 }
+.ip-cdemo__thread.is-clearing > * { opacity: 0; translate: 0 -12px; transition: opacity 260ms ease-in, translate 260ms ease-in }
+
+/* Pause / play (WCAG 2.2.2), same button as the front page demo. */
+.ip-cdemo__pause {
+  position: absolute; top: 5cqw; right: 5cqw; z-index: 2; display: grid; place-items: center;
+  width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--c-white); color: var(--text-primary); box-shadow: var(--shadow-1); cursor: pointer;
+  transition: background-color var(--dur-ui) var(--ease);
+}
+.ip-cdemo__pause:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-cdemo__pause svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+.ip-cdemo__pause .ip-demo__play-icon { display: none }
+.ip-cdemo__pause[aria-pressed="true"] .ip-demo__pause-icon { display: none }
+.ip-cdemo__pause[aria-pressed="true"] .ip-demo__play-icon { display: block }
+.ip-cdemo__pause[hidden] { display: none }
+.ip-cdemo:has(.ip-cdemo__pause[hidden]) .ip-cdemo__bar { margin-right: 0 } /* No button (reduced motion): the bar takes the full width. */
+@media (min-width: 1101px) {
+  .ip-cdemo { aspect-ratio: 4 / 3 }
+  .ip-cdemo__stage { font-size: clamp(14px, 2.9cqw, 18px); padding: 4.5cqw; gap: 2.4cqw }
+  .ip-cdemo__thread { gap: 1.8cqw }
+  .ip-cdemo__msg { max-width: 76% }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ip-cdemo__msg, .ip-cdemo__offer, .ip-cdemo__tick { transition: none }
+  .ip-cdemo__typing span { animation: none }
+}
+
 /* ── FAQ: native details/summary ────────────────────────────────────────── */
 .ip-faq__grid { display: grid; gap: var(--space-8); align-items: start }
 .ip-accordion { display: grid; gap: var(--space-3) }

@@ -39,7 +39,16 @@ $ip_phone    = (string) ip_setting( 'phone' );
 	<div class="ip-shell">
 		<?php ip_breadcrumb( array( array( __( 'Home', 'infoplus' ), home_url( '/' ) ), array( get_the_title(), '' ) ) ); ?>
 
-		<div class="ip-page-head ip-kontakt__head<?php echo $ip_image ? ' has-media' : ''; ?>">
+		<?php
+		// Animated example conversation instead of the photo (template-parts/contact-demo.php).
+		$ip_demo = '';
+		if ( ip_flag( 'demo_show', $ip_pid, true ) ) {
+			ob_start();
+			get_template_part( 'template-parts/contact-demo', null, array( 'chats' => (string) $ip_f( 'demo_chats' ) ) );
+			$ip_demo = trim( (string) ob_get_clean() );
+		}
+		?>
+		<div class="ip-page-head ip-kontakt__head<?php echo ( $ip_demo || $ip_image ) ? ' has-media' : ''; ?>">
 			<?php
 			ip_section_head( array(
 				'kicker' => (string) $ip_f( 'kicker' ),
@@ -48,7 +57,9 @@ $ip_phone    = (string) ip_setting( 'phone' );
 				'tag'    => 'h1',
 			) );
 			?>
-			<?php if ( $ip_image ) : ?>
+			<?php if ( $ip_demo ) : ?>
+				<?php echo $ip_demo; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in the template part. ?>
+			<?php elseif ( $ip_image ) : ?>
 				<div class="ip-kontakt__media">
 					<?php echo ip_img( $ip_image, '(min-width: 1101px) 560px, (min-width: 768px) 45vw, 100vw', array( 'alt' => '', 'loading' => 'eager', 'fetchpriority' => 'high' ), 'ip-1200' ); // phpcs:ignore WordPress.Security.EscapeOutput -- core image HTML. ?>
 				</div>

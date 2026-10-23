@@ -245,3 +245,51 @@
   holds.hidden = document.hidden;
   motionSetting();
 })();
+
+/* Home bundle: the animated pictures of the "Serviceversprechen" cards
+   ([data-ip-sanim], template-parts/service-anim.php). The server renders
+   the finished picture. Here a picture that is not on screen yet is armed
+   (.is-armed: every animation waits at its first frame) and plays once
+   (.is-play) when at least 45 % of it is visible; the pointer entering the
+   card plays it again. Under prefers-reduced-motion, or without
+   IntersectionObserver, nothing is armed and the finished picture stays. */
+(function () {
+  'use strict';
+  var pics = document.querySelectorAll('[data-ip-sanim]');
+  if (!pics.length || !('IntersectionObserver' in window)) return;
+  var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  if (mq && mq.matches) return;
+
+  function play(el) {
+    if (el.getAttribute('data-ip-sanim-busy')) return;
+    el.classList.remove('is-play', 'is-armed');
+    void el.offsetWidth; // Restart the CSS animations from their first frame.
+    el.classList.add('is-armed', 'is-play');
+    el.setAttribute('data-ip-sanim-busy', '1');
+    window.setTimeout(function () { el.removeAttribute('data-ip-sanim-busy'); }, 2800);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      io.unobserve(entry.target);
+      play(entry.target);
+    });
+  }, { threshold: 0.45 });
+
+  Array.prototype.forEach.call(pics, function (el) {
+    var r = el.getBoundingClientRect();
+    var visible = r.top < window.innerHeight && r.bottom > 0 && r.left < window.innerWidth && r.right > 0;
+    if (!visible) el.classList.add('is-armed'); // Already on screen: keep the finished picture, play on observe.
+    io.observe(el);
+    var card = el.closest('.ip-photo-card');
+    if (card && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+      card.addEventListener('mouseenter', function () { play(el); });
+    }
+  });
+  if (mq) {
+    var stop = function () { if (mq.matches) Array.prototype.forEach.call(pics, function (el) { el.classList.remove('is-armed', 'is-play'); }); };
+    if (mq.addEventListener) mq.addEventListener('change', stop);
+    else if (mq.addListener) mq.addListener(stop);
+  }
+})();

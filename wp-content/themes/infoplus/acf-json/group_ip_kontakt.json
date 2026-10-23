@@ -65,6 +65,39 @@
             "new_lines": ""
         },
         {
+            "key": "field_ip_kontakt_demo_show",
+            "label": "Animiertes Beispiel statt Bild",
+            "name": "demo_show",
+            "type": "true_false",
+            "instructions": "Ja = neben der Einleitung läuft ein kurzes Beispiel-Gespräch: Frage, Antwort, Angebot per E-Mail. Nein = das Bild wird gezeigt. Wer reduzierte Bewegung eingestellt hat, sieht ein fertiges Standbild.",
+            "required": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "ui": 1,
+            "ui_on_text": "Ja",
+            "ui_off_text": "Nein"
+        },
+        {
+            "key": "field_ip_kontakt_demo_chats",
+            "label": "Beispiel-Gespräche",
+            "name": "demo_chats",
+            "type": "textarea",
+            "instructions": "Ein Beispiel pro Zeile: Frage | Antwort. Kurz halten, etwa zwei Zeilen pro Teil. Die Vorschau ist als „Beispiel“ gekennzeichnet.",
+            "required": 0,
+            "wrapper": {
+                "width": "67",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Wir brauchen 120 Namensschilder mit Logo für unsere Messe. | Gern! Für Messen empfehlen wir Atlantis mit Magnet. Ihr Angebot schicken wir Ihnen per E-Mail.\nKönnen Sie unser Logo in Firmenfarbe drucken? | Ja. Schicken Sie uns Ihr Logo, Sie bekommen vorab einen Entwurf zur Freigabe.\nWir brauchen die Schilder schon nächste Woche. | Kein Problem: mit badge24, unserem Express-Service, geht es besonders schnell.",
+            "rows": 4,
+            "new_lines": ""
+        },
+        {
             "key": "field_ip_kontakt_form_title",
             "label": "Überschrift über dem Formular",
             "name": "form_title",
@@ -139,5 +172,5 @@
     "active": true,
     "description": "Texte der Seite /kontakt/ (page-kontakt.php).",
     "show_in_rest": 0,
-    "modified": 1792483200
+    "modified": 1792787116
 }

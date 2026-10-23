@@ -306,11 +306,32 @@ $ip_svg_next = function_exists( 'ip_shop_arrow' ) ? ip_shop_arrow() : '';
 					</div>
 					<?php if ( $ip_cards ) : ?>
 						<ul class="ip-swipe ip-service__cards ip-cols-<?php echo (int) min( 4, count( $ip_cards ) ); ?>" role="list" data-ip-swipe>
-							<?php foreach ( $ip_cards as $ip_row ) : ?>
-								<?php $ip_cimg = (int) ( is_array( $ip_row['image'] ?? null ) ? ( $ip_row['image']['ID'] ?? 0 ) : ( $ip_row['image'] ?? 0 ) ); ?>
+							<?php
+							// Animated pictures instead of the photos (template-parts/service-anim.php).
+							// Per card: select "anim"; empty or "auto" (also rows saved before the field
+							// existed) follows the position: 1 quality, 2 prices, 3 service, others photo.
+							$ip_anim_on   = ip_flag( 'service_anim_show', $ip_pid, true );
+							$ip_anim_auto = array( 'quality', 'prices', 'service' );
+							?>
+							<?php foreach ( $ip_cards as $ip_ci => $ip_row ) : ?>
+								<?php
+								$ip_cimg  = (int) ( is_array( $ip_row['image'] ?? null ) ? ( $ip_row['image']['ID'] ?? 0 ) : ( $ip_row['image'] ?? 0 ) );
+								$ip_canim = '';
+								if ( $ip_anim_on ) {
+									$ip_kind = (string) ( $ip_row['anim'] ?? '' );
+									$ip_kind = ( '' === $ip_kind || 'auto' === $ip_kind ) ? ( $ip_anim_auto[ $ip_ci ] ?? '' ) : $ip_kind;
+									if ( '' !== $ip_kind && 'photo' !== $ip_kind ) {
+										ob_start();
+										get_template_part( 'template-parts/service-anim', null, array( 'kind' => $ip_kind, 'prices' => (string) $ip_f( 'hero_demo_prices' ) ) );
+										$ip_canim = trim( (string) ob_get_clean() );
+									}
+								}
+								?>
 								<li class="ip-swipe__item">
-									<article class="ip-photo-card ip-card">
-										<?php if ( $ip_cimg ) : ?>
+									<article class="ip-photo-card ip-card<?php echo $ip_canim ? ' has-anim' : ''; ?>">
+										<?php if ( $ip_canim ) : ?>
+											<div class="ip-photo-card__media ip-photo-card__media--anim"><?php echo $ip_canim; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in the template part. ?></div>
+										<?php elseif ( $ip_cimg ) : ?>
 											<div class="ip-photo-card__media"><?php echo ip_img( $ip_cimg, '(min-width: 1101px) 440px, (min-width: 768px) 33vw, 84vw', array( 'alt' => '' ), 'ip-800' ); // phpcs:ignore WordPress.Security.EscapeOutput -- core image HTML. ?></div>
 										<?php endif; ?>
 										<div class="ip-photo-card__body">
