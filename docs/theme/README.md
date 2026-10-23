@@ -5,15 +5,17 @@ Plan and template-by-template map: "Infoplus rebuild map" (Claude doc).
 
 Customer account, login and order confirmation: `ACCOUNT.md` (routing, the one-time settings change, feature inventory, findings).
 
-## Layout
+## Layout (monorepo since 2026-10-23)
 
-- `_legacy/`        read-only export of everything that lived in Elementor on staging (2026-10-20). Reference only, never deployed. See `_legacy/README.md`.
-- `mu-plugins/`     `infoplus-theme-preview.php`: admin-only preview of the new theme. Copy to `wp-content/mu-plugins/`.
-- theme files       follow in `infoplus/` (deployed to `wp-content/themes/infoplus/`).
+- `wp-content/themes/infoplus/`   the theme (deployed to `wp-content/themes/infoplus/`).
+- `wp-content/mu-plugins/`        `infoplus-theme-preview.php`: admin-only preview of the new theme, only needed while another theme is active.
+- `legacy/`                       read-only export of everything that lived in Elementor on staging (2026-10-20). Reference only, never deployed. See `legacy/README.md`.
+- `tools/build-acf-json.py`       builds the field groups in `acf-json/`.
+- Theme paths in this file (`inc/...`, `assets/...`, `template-parts/...`) are relative to `wp-content/themes/infoplus/`.
 
 ## Deploy
 
-Staging: files are uploaded through the EMCP Tools connection. Production: not decided yet.
+ZIP upload in wp-admin (Themes > Add > Upload, "Replace current with uploaded"). Build the ZIP with `tools/build-zips.sh`. Before uploading, compare staging with the repo (files may have been changed over FTP).
 
 ## Kontakt form
 

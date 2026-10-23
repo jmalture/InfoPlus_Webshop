@@ -1,34 +1,43 @@
-# Infoplus Suite: project brief
+# Infoplus Webshop: project brief
 
-WordPress plugin for the Infoplus nameplate shop (Namensschilder). PHP 7.4+, WooCommerce, Elementor Pro, jQuery, WordPress REST API. German customer-facing UI. Owner: JM (Alture s.r.o.). Read this first, then `PLUGIN-DOCUMENTATION.md` for module detail and `PIPELINE.md` for how the plugins fit together.
+Monorepo for the Infoplus nameplate shop (Namensschilder): the Infoplus Suite plugin, the classic PHP theme "infoplus" that replaces Elementor, docs, the Elementor export and tools. WordPress, WooCommerce (HPOS), Germanized, PHP 7.4+, jQuery, WordPress REST API. German customer-facing UI (formal Sie). Owner: JM (Alture s.r.o.). Read this first, then `docs/suite/PLUGIN-DOCUMENTATION.md` for the plugin modules, `docs/suite/PIPELINE.md` for how the plugins fit together, and `docs/theme/README.md`, `docs/theme/DESIGN.md`, `docs/theme/ACCOUNT.md` for the theme.
 
 ## State of the repo
 
-- `main` matches production byte for byte at commit `f01aca6` (2026-09-17). Later commits on `main` are documentation only.
-- Branch `feature/catalog-import` (0.9.113) adds the CatalogImport module and the `import-mapping/` pipeline. Deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com), not on production. Status in `import-mapping/WORK-ORDER.md`.
-- Production history from April to September 2026 was synced in one commit (`3179bb5`), so `git log` does not explain individual features from that period. `PLUGIN-DOCUMENTATION.md` Section 18 summarises them.
-- No deploy tooling, CI config, build step or tests in the repo. Composer install is not needed (PSR-4 fallback autoloader in `infoplus-suite.php`). How files reach production is not recorded here (unverified).
+- Created 2026-10-23 by merging two histories: the Suite (formerly MrBeardman/Infoplus-Suite, 45 commits) and the theme (formerly standalone, 40 commits). Paths were rewritten into this layout, so all commit hashes changed. Old hash to new hash: `docs/history/commit-map-suite.txt` and `docs/history/commit-map-theme.txt`. Hashes quoted in older docs are the old ones; look them up there.
+- `main`: current line, deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com) as Suite 0.10.32 + theme 0.4.0. Elementor and its add-ons are deactivated on staging.
+- `production`: the Suite as production runs it (old `main`, production-identical at old `f01aca6`, new `1b24e5c`, 2026-09-17, plus documentation commits). Production still uses Elementor and the old Suite line. Reference until rollout.
+- `feature/catalog-import` (0.9.113): CatalogImport module and the `tools/import-mapping/` pipeline. Already contained in `main`.
+- Tags `archive/*`: merged or retired branches (fix/order-details-ownership, fix/infoplusapi-customerdashboard-auth, chore/sync-staging, claude/admiring-archimedes, an older unrelated line from March 2026).
+- Production history from April to September 2026 was synced in one commit (old `3179bb5`, new `6dee0ee`), so `git log` does not explain individual features from that period. `docs/suite/PLUGIN-DOCUMENTATION.md` Section 18 summarises them.
+- A WooCommerce REST key and secret that were committed in `reference/infoplus_api/entities/Products.php` were redacted from the whole history during the move (`ck_REDACTED_ROTATE_THIS_KEY`). The real key still works on production and still sits in the old repository: rotate it.
+- No CI or tests. Deploy = ZIP upload in wp-admin, ZIPs built with `tools/build-zips.sh`. Before uploading, compare staging with the repo: files may have been changed over FTP.
 
 ## Repo layout
 
 ```
-infoplus-suite.php        entry point, plugin header (Version: 0.9.111 on main, 0.9.113 on feature/catalog-import)
-composer.json             PSR-4 map Infoplus\Suite\ => src/, nothing else
-src/Plugin.php            orchestrator, Plugin::VERSION (0.10.28 on feature/view-renderer, 0.10.25 before), registers the nine modules (ten on feature/catalog-import)
-src/Admin/Dashboard.php   WP Admin menu "IKONA IFE" (slug infoplus-suite), renders the visible module tabs
-src/Contracts/ModuleInterface.php   slug(), label(), register()
-src/Modules/<Name>/Module.php       one module each, see below
-src/Modules/<Name>/Assets/          JS and CSS, enqueued by the module itself
-src/Modules/<Name>/Widgets/         Elementor widgets
-assets/                   plugin icons
-reference/                NOT deployed. InfoplusAPI live copy and the two legacy plugins. See reference/README.md
-PLUGIN-DOCUMENTATION.md   module reference, REST routes, meta keys, known issues (kept current)
-PIPELINE.md               end-to-end flows across all four plugins, merge reconciliation list
-UPGRADE-ROADMAP.md        R-01 to R-15 with status lines
-FEATURE-*.md              four older feature briefs, historical
-DATA-IMPORT-PLAN.md       original proposal for the catalog import (2026-09-18), historical
-import-mapping/           feature/catalog-import only: Excel -> catalog_mapping.csv -> import.csv, plus WORK-ORDER.md
+wp-content/plugins/infoplus-suite/   the Suite plugin (deployed as folder "Infoplus Suite" on staging)
+  infoplus-suite.php                 entry point, plugin header (Version 0.9.113)
+  src/Plugin.php                     orchestrator, Plugin::VERSION (0.10.32 on main), registers the modules
+  src/Admin/Dashboard.php            WP Admin menu "IKONA IFE" (slug infoplus-suite), module tabs
+  src/Contracts/ModuleInterface.php  slug(), label(), register()
+  src/Modules/<Name>/Module.php      one module each, see below
+  src/Modules/<Name>/Assets/         JS and CSS, enqueued by the module itself
+  src/Modules/<Name>/Widgets/        Elementor widgets (legacy, unused by the theme)
+  src/View.php, templates/           component renderer; the theme overrides templates in infoplus-suite/{component}.php
+wp-content/themes/infoplus/          the theme (inc/, template-parts/, woocommerce/, assets/, acf-json/)
+wp-content/mu-plugins/               theme preview helper (only needed while another theme is active)
+reference/                           NOT deployed. InfoplusAPI live copy and the two legacy plugins. See reference/README.md
+legacy/                              NOT deployed. Elementor export of staging (2026-10-20). See legacy/README.md
+docs/suite/                          PLUGIN-DOCUMENTATION.md (module reference, REST routes, meta keys, findings in Section 16), PIPELINE.md, UPGRADE-ROADMAP.md, historical FEATURE-*.md and DATA-IMPORT-PLAN.md
+docs/theme/                          README.md, DESIGN.md (brand, SDX-inspired rules, B2B UX), ACCOUNT.md (account routing, inventory)
+docs/history/                        old to new commit maps from the move
+tools/build-acf-json.py              builds the theme field groups (never edit acf-json by hand)
+tools/build-zips.sh                  builds the two upload ZIPs
+tools/import-mapping/                Excel -> catalog_mapping.csv -> import.csv, plus WORK-ORDER.md
 ```
+
+Paths in the sections below (`src/...`, `templates/...`) are relative to `wp-content/plugins/infoplus-suite/`.
 
 Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFields`, `EditorLinkSettings` (admin tab), `IkonaIFE` (admin tab), `ElementorUserAvatar`, `UserDashboard`, `UserOrders`, `ProductDetailSuite`, `Custom404`. On `feature/catalog-import` also `CatalogImport` (WooCommerce → Katalog-Import, last).
 
@@ -36,10 +45,11 @@ Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFi
 
 | Where | Value | Meaning |
 |-------|-------|---------|
-| `infoplus-suite.php` header | 0.9.111 | What WordPress shows. Bumped by hand at release. Not used in code. |
-| `Plugin::VERSION` in `src/Plugin.php` | 0.10.28 (0.10.25 before feature/view-renderer) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. |
-| `ProductDetailSuite\Module::VERSION` | 1.1.1 (1.1.0 before feature/view-renderer) | Cache-bust for ProductDetailSuite assets and part of the transient key `infoplus_pd_{product_id}_{VERSION}`. |
+| `infoplus-suite.php` header | 0.9.113 (0.9.111 on `production`) | What WordPress shows. Bumped by hand at release. Not used in code. |
+| `Plugin::VERSION` in `src/Plugin.php` | 0.10.32 (0.10.25 on `production`) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. |
+| `ProductDetailSuite\Module::VERSION` | 1.1.1 (1.1.0 on `production`) | Cache-bust for ProductDetailSuite assets and part of the transient key `infoplus_pd_{product_id}_{VERSION}`. |
 | `IkonaIFE\Module::VERSION` | 1.0.4 | Cache-bust for the sync dashboard assets. |
+| Theme `style.css` Version and `IP_VERSION` in `functions.php` | 0.4.0 | Theme release number; theme assets are versioned with it plus the file time, so every upload busts caches. |
 
 Rule: after any JS or CSS change, bump the constant that the module's enqueue uses, then hard refresh. A ProductDetailSuite bump also invalidates every cached product data blob. The two top-level numbers have drifted; roadmap R-08 wants one source of truth, not done yet.
 
@@ -66,7 +76,7 @@ Add the class to the array in `Plugin::registerModules()`. All modules are insta
 
 - `infoplus-suite/v1`: only `src/Modules/IkonaIFE/SyncController.php` (`manage_woocommerce`).
 - `infoplus/v1`: `registerRestRoutes()` in `UserDashboard`, `UserOrders`, `WooSingleProductAddons`, `ProductDetailSuite`. Plus `ProductDetailSuite::interceptBulkPricesRoute()` on `rest_pre_dispatch`, which answers `GET /infoplus/v1/products/prices` before InfoplusAPI's handler runs.
-- `infoplus/v1` is also used by the separate InfoplusAPI plugin (`reference/infoplus_api/`): `products`, `products/synchronization`, `cart/updateCart`, `customerdashboard*` and others. Full table in `PLUGIN-DOCUMENTATION.md` Section 6.
+- `infoplus/v1` is also used by the separate InfoplusAPI plugin (`reference/infoplus_api/`): `products`, `products/synchronization`, `cart/updateCart`, `customerdashboard*` and others. Full table in `docs/suite/PLUGIN-DOCUMENTATION.md` Section 6.
 - Grep `register_rest_route` in `src/` and `reference/infoplus_api/` to regenerate the table. Nothing else registers routes.
 
 ## InfoplusAPI merge plan
@@ -90,7 +100,7 @@ Production still has literal values inside the plugin; rotate both once producti
 - Plain English, short sentences. No em dashes or en dashes anywhere; use commas, colons or periods.
 - German domain terms stay German: Namensschilder, Sonderkontur, Anfrage, Staffelpreise, Warenkorb.
 - Keep existing text where it is still correct. Add rather than rewrite. Mark superseded statements instead of deleting them when they explain history.
-- When the code and the docs disagree, list it as a finding (`PLUGIN-DOCUMENTATION.md` Section 16) and do not fix the code in a documentation session.
+- When the code and the docs disagree, list it as a finding (`docs/suite/PLUGIN-DOCUMENTATION.md` Section 16) and do not fix the code in a documentation session.
 - Commit messages: `docs: <what>` for documentation, `feat:` / `fix:` for code, one topic per commit. Do not push without being asked.
 
 ## Things that bite

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Builds the content field groups of the Infoplus theme into infoplus/acf-json/.
+Builds the content field groups of the Infoplus theme into wp-content/themes/infoplus/acf-json/.
 
 Run from anywhere:  python3 -I tools/build-acf-json.py
 Never edit the JSON by hand: change this script and re-run it, then commit both.
 
 Every field gets a default_value equal to the text the old Elementor page shows
-today, read from the verbatim exports in _legacy/ wherever the text lives there,
+today, read from the verbatim exports in legacy/ wherever the text lives there,
 so a page renders exactly the old content before anyone opens it in the admin.
 Repeater, gallery and relationship defaults are not applied by SCF itself; the
 theme does that (inc/fields.php: ip_field() for the front end, the
@@ -28,8 +28,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-LEGACY = ROOT / '_legacy'
-OUT = ROOT / 'infoplus' / 'acf-json'
+LEGACY = ROOT / 'legacy'
+OUT = ROOT / 'wp-content' / 'themes' / 'infoplus' / 'acf-json'
 STAGING = 'https://navajowhite-rhinoceros-679020.hostingersite.com'
 
 FRONT_PAGE_ID = 8
