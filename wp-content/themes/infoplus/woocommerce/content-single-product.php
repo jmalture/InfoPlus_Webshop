@@ -43,7 +43,8 @@ if ( ! $product instanceof WC_Product ) {
 
 $ip_has_suite = ip_product_has_suite();
 ?>
-<div id="product-<?php the_ID(); ?>" <?php wc_product_class( 'ip-product', $product ); ?>>
+<?php // Static classes, not wc_product_class(): see woocommerce/content-product.php (variation prices of every variation). ?>
+<div id="product-<?php the_ID(); ?>" class="<?php echo esc_attr( 'ip-product product type-product post-' . (int) $product->get_id() . ' product-type-' . sanitize_html_class( $product->get_type() ) ); ?>">
 	<div class="ip-shell">
 		<?php ip_breadcrumb( ip_product_breadcrumb_items( $product ) ); ?>
 

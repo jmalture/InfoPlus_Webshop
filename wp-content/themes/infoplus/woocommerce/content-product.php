@@ -90,6 +90,16 @@ if ( $ip_sizes ) {
 	$ip_args['sizes'] = $ip_sizes;
 }
 ?>
-<li <?php wc_product_class( 'ip-shop-grid__item', $product ); ?><?php echo function_exists( 'ip_catalog_card_attrs' ) ? ip_catalog_card_attrs( $product->get_id() ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_catalog_card_attrs(). ?>>
+<?php
+/*
+ * Static classes instead of wc_product_class(): for a variable product Woo works
+ * out "sale", "purchasable" and stock classes from every variation's price
+ * (Atlantis has 1,380), which cost most of the listing's 3.6 s render and about
+ * 9,700 queries (profiled on staging 2026-10-23). No style or script here uses
+ * those classes.
+ */
+$ip_li_class = 'ip-shop-grid__item product type-product post-' . (int) $product->get_id() . ' product-type-' . sanitize_html_class( $product->get_type() );
+?>
+<li class="<?php echo esc_attr( $ip_li_class ); ?>"<?php echo function_exists( 'ip_catalog_card_attrs' ) ? ip_catalog_card_attrs( $product->get_id() ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_catalog_card_attrs(). ?>>
 	<?php get_template_part( 'template-parts/product-card', null, $ip_args ); ?>
 </li>

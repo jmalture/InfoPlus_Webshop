@@ -33,4 +33,5 @@ require IP_DIR . '/inc/catalog.php';
 require IP_DIR . '/inc/inquiry.php';
 require IP_DIR . '/inc/finder.php';
 require IP_DIR . '/inc/emails.php';
+require IP_DIR . '/inc/performance.php';
 require IP_DIR . '/inc/assets.php';
