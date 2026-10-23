@@ -30,3 +30,17 @@ Notes:
 - WooCommerce's block e-mail editor (feature `block_email_editor`) replaces these PHP templates when switched on. Off locally; staging unverified.
 - The web font loads only in clients that allow it (Apple Mail); everywhere else Arial / Helvetica, Outlook forced to Arial. Whether the server sends the woff2 with a CORS header is unverified.
 
+## Namensschild-Berater (since 0.5.0)
+
+Guided picker for new customers at `/berater/` (page 25879 on staging, template `page-berater.php` by slug). Internal showcase.
+
+- `inc/finder.php`: questions (`ip_finder_questions()`, filter `ip_finder_questions`), card icons, the CSS badge helper `ip_finder_plate()`, `ip_finder_url()`, the front page section `ip_finder_ways_section()`, and the inquiry drawer on the finder page (`ip_inquiry_variant` returns `product`, which has the "Kostenlose Muster" switch).
+- `assets/js/finder.js`: reads `#ip-finder-data` (Suite `infoplus_suite_finder_data()` plus the questions), filters and scores the candidates, drives the live preview and renders the results. Rule based: every rule that adds points adds its sentence to the "Warum" list. Hard filters: fastening, minimum quantity against the chosen quantity band, Serienfertigung only for 250+, material and Sonderkontur; when nothing is left, material and contour become soft and the result says so.
+- Picks: "Beste Wahl" (highest score), "Preis-Tipp" (lowest unit price at the chosen quantity among candidates with at least 60 % of the best score, another family), "Premium" (highest premium trait in the same pool, a third family).
+- The answers are kept in the URL (`?use=&change=&logo=&material=&fastener=&qty=`). `?weg=self|logo|print` answers the second question in advance (links from the front page cards).
+- Result buttons open the product with `?modell={slug}&menge={n}&befestigung={magnet|pin|clip}`. `inc/product.php` `ip_product_link_selection()` turns that into the same selection a buy form POST gives, and `product.js` restores it (model, fastening, quantity; the steps are ticked and Menge is open). Models with a requestable order type open the inquiry drawer instead.
+- "Kostenloses Muster" and "Beratung" open the inquiry drawer with the product, the quantity and the answers in the message; samples switch on for "Muster".
+- `assets/css/plates.css`: the badge looks drawn in CSS (`.ip-fplate` small, `.ip-fbadge` preview), shared by the home and finder bundles. The values follow the hero demo looks in `home.css`.
+
+Front page: section "Drei Wege" after the hero (field group tab "Drei Wege": switch, head, help bar texts) with the three options, their live "ab" prices and model counts, and a link under the hero buttons (`hero_finder_label`).
+

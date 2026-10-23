@@ -42,6 +42,7 @@
 19. [Theme Renderer](#19-theme-renderer)
 20. [Order Types and the Buy Flow](#20-order-types-and-the-buy-flow)
 21. [Inquiry Form ("Individuelle Anfrage")](#21-inquiry-form-individuelle-anfrage)
+22. [Finder (Namensschild-Berater)](#22-finder-namensschild-berater)
 
 ---
 
@@ -2108,3 +2109,50 @@ Kontakt page and e-mails, Plugin 0.10.32 (local WordPress 6.9, WooCommerce 10.6.
 
 - Kontakt page at 1440 and 390 px: one form, no drawer; keyboard only from the page top through both steps (error summary and focus on Nachricht when empty, focus on each step title, consent with Space, submit with Enter), guest submit stored and both mails sent with the contact texts; "Weitere Nachricht schreiben" starts a clean form. `?produkt=Atlantis%20Namensschild#anfrage`: product card with image, heading focused; an unknown name shows as text. Product page: drawer unchanged.
 - `ob_get_level()` 0 before and after rendering `customer_processing_order` with the fix (1 after it without). With the theme's `infoplus-emails` support the pink banner and extra CSS are absent; with `infoplus_suite_order_email_branding` forced on they are back as before, buffer level still 0.
+
+---
+
+## 22. Finder (Namensschild-Berater)
+
+Added in 0.10.34 (2026-10-23), with theme 0.5.0. Status: internal showcase. Module `src/Modules/Finder/`, registered last in `Plugin::registerModules()`.
+
+The module only provides data. The theme renders the page (`page-berater.php`, slug `berater`), the questions, the live preview and the results, and scores in the browser (`assets/js/finder.js`). See `docs/theme/README.md`.
+
+### Files
+
+| File | Role |
+|------|------|
+| `Module.php` | Registers `GET /infoplus/v1/finder` (public, returns `Catalog::get()`) and clears the cache on `save_post_product`, `woocommerce_update_product` and `woocommerce_save_product_variation`. |
+| `Catalog.php` | Builds the data. One candidate per published variable product and `pa_model` term that has a priced variation. Cached 12 h in the transient `infoplus_finder_{Plugin::VERSION}` (dots replaced by underscores). |
+| `Traits.php` | Placeholder traits per product slug, the three options and the model slug rules. |
+
+`infoplus_suite_finder_data()` in `src/template-functions.php` returns `Catalog::get()`.
+
+### Candidate fields
+
+`id` (`{product_id}:{model_slug}`), `pid`, `family` (product name without "Namensschild(er)"), `product`, `model`, `modelName`, `label` (short customer-facing model name from `Traits::optionFor()`), `option` (`self`, `logo`, `print`), `contour`, `ownContour`, `engraved`, `series`, `orderType` (`ProductAttributeImages::getTermOrderType()`), `fasteners` (`magnet`, `pin`, `clip` from the `pa_befestigung` slugs of the model's variations: `mag` = magnet, `clip` or `klemme` = clip, `nadel` = pin), `fastenerNames`, `variants`, `base` (lowest variation price through `wc_get_price_to_display()`), `tiers` (`[{from, to, price}]` from `BulkPrices::forSku()` of one variation of the model, `to` 0 = open), `minQty` (`MinQuantity::forProduct()`), `days` (product meta `fertigungszeit`), `image` (first model gallery image, else the product image), `url` (permalink with `?modell={slug}`), `traits`.
+
+`options` holds, per option, the label and copy from `Traits::options()` plus `models`, `families`, `from` (lowest base or tier price, Serienfertigung left out) and `days`. `meta` holds `currency`, `tax` ("inkl. MwSt." or "zzgl. MwSt." from `woocommerce_tax_display_shop`) and `built`.
+
+### Model slug rules (`Traits::optionFor()`)
+
+- `komplette-selbstbeschriftung`: option `self`.
+- slug contains `name-zur-selbstbeschriftung` (underscores read as hyphens): option `logo`.
+- everything else (`druck`, `lasergravur`, `digitaldruck-namensschilder`, `untereloxaldruck-namensschilder`, `serienfertigung-oaw`): option `print`.
+- `sonderkontur` sets `contour`, `lasergrav` sets `engraved`, `serienfertigung` sets `series`.
+
+### Placeholder traits
+
+The shop does not store material, look or use cases. `Traits::FAMILIES` has drafted values for the 21 published families (material, preview look, premium 1 to 3, robust, hygienic, use cases, contour, eco, one sentence). They were derived from product titles, descriptions and images on 2026-10-23 and are not checked by Infoplus. Unknown slugs get defaults and `placeholder: true`. Filters: `infoplus_suite_finder_traits` (`$traits`, `$product_slug`) and `infoplus_suite_finder_options` (`$options`).
+
+### Findings from the data (2026-10-23)
+
+- Product descriptions of Business, Chalk Board and Classic are copies of the AluProfil text.
+- Image, Prestige, Quadro and Top show a placeholder picture on the listing.
+- `fertigungszeit` is 15 for every product that has it, so the finder cannot show faster delivery for self-labelling models.
+- Order types are set only for some models of Atlantis and Alucontur; everything else is `editable` by default.
+
+### Change in `ProductDetailSuite\BulkPrices` (0.10.34)
+
+The active WDP rules are read and their filters unserialised once per request (`BulkPrices::rules()`, static). Before, every SKU lookup read the whole table again, which the finder does for about 50 SKUs when it builds its cache. Results are unchanged.
+
