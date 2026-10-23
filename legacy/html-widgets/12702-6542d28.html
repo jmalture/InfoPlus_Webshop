@@ -1,0 +1,301 @@
+<div class="reseller-margin-calculator" style="background: white;  border-radius: 12px;  margin-bottom: 30px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h3 style="margin: 0; font-size: 20px; font-weight: 600; color: #1a1a1a;">
+      Händlermargenrechner
+    </h3>
+    <div style="display: flex; gap: 12px;">
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #666;">
+        <input type="radio" name="overhead_type" value="percentage" checked onchange="updateOverheadType()">
+        Overhead %
+      </label>
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #666;">
+        <input type="radio" name="overhead_type" value="fixed" onchange="updateOverheadType()">
+        Fixed €/piece
+      </label>
+    </div>
+  </div>
+
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+      <thead>
+        <tr style="background-color: #f8f9fa; border-bottom: 2px solid #e0e0e0;">
+          <th style="padding: 12px; text-align: left; font-weight: 600; color: #666; white-space: nowrap;">Product</th>
+          <th style="padding: 12px; text-align: center; font-weight: 600; color: #666;">Qty</th>
+          <th style="padding: 12px; text-align: right; font-weight: 600; color: #666; white-space: nowrap;">Your Cost</th>
+          <th style="padding: 12px; text-align: right; font-weight: 600; color: #666;">Overhead</th>
+          <th style="padding: 12px; text-align: right; font-weight: 600; color: #666; white-space: nowrap;">Total Cost</th>
+          <th style="padding: 12px; text-align: right; font-weight: 600; color: #e91e8c; white-space: nowrap;">Your Price</th>
+          <th style="padding: 12px; text-align: right; font-weight: 600; color: #22c55e; white-space: nowrap;">Your Profit</th>
+          <th style="padding: 12px; text-align: right; font-weight: 600; color: #22c55e;">Margin</th>
+        </tr>
+      </thead>
+      <tbody id="margin-table-body">
+        <!-- Row 1 -->
+        <tr data-row="0" style="border-bottom: 1px solid #f0f0f0;">
+          <td style="padding: 12px;">
+            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 4px;">Design A - Blue Theme</div>
+            <div style="font-size: 12px; color: #999;">Alucontur 60x15mm</div>
+          </td>
+          <td style="padding: 12px; text-align: center; font-weight: 600;">25</td>
+          <td style="padding: 12px; text-align: right; color: #666;">
+            <span class="unit-cost">10.63</span> €
+          </td>
+          <td style="padding: 12px; text-align: right;">
+            <input 
+              type="number" 
+              class="overhead-input"
+              value="10" 
+              min="0" 
+              step="0.1"
+              onchange="calculateRow(0)"
+              style="width: 70px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; text-align: right; font-family: inherit;"
+            >
+            <span class="overhead-unit">%</span>
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 600; color: #666;">
+            <span class="total-cost">11.69</span> €
+          </td>
+          <td style="padding: 12px; text-align: right;">
+            <input 
+              type="number" 
+              class="selling-price-input"
+              value="15.00" 
+              min="0" 
+              step="0.1"
+              onchange="calculateRow(0)"
+              style="width: 80px; padding: 6px 8px; border: 2px solid #e91e8c; border-radius: 4px; text-align: right; font-weight: 600; color: #e91e8c; font-family: inherit;"
+            > €
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 700; color: #22c55e; font-size: 15px;">
+            <span class="profit">82.75</span> €
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 700; color: #22c55e;">
+            <span class="margin">28.3</span>%
+          </td>
+        </tr>
+
+        <!-- Row 2 -->
+        <tr data-row="1" style="border-bottom: 1px solid #f0f0f0;">
+          <td style="padding: 12px;">
+            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 4px;">Design B - Red Theme</div>
+            <div style="font-size: 12px; color: #999;">Alucontur 60x15mm</div>
+          </td>
+          <td style="padding: 12px; text-align: center; font-weight: 600;">15</td>
+          <td style="padding: 12px; text-align: right; color: #666;">
+            <span class="unit-cost">11.25</span> €
+          </td>
+          <td style="padding: 12px; text-align: right;">
+            <input 
+              type="number" 
+              class="overhead-input"
+              value="10" 
+              min="0" 
+              step="0.1"
+              onchange="calculateRow(1)"
+              style="width: 70px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; text-align: right; font-family: inherit;"
+            >
+            <span class="overhead-unit">%</span>
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 600; color: #666;">
+            <span class="total-cost">12.38</span> €
+          </td>
+          <td style="padding: 12px; text-align: right;">
+            <input 
+              type="number" 
+              class="selling-price-input"
+              value="16.00" 
+              min="0" 
+              step="0.1"
+              onchange="calculateRow(1)"
+              style="width: 80px; padding: 6px 8px; border: 2px solid #e91e8c; border-radius: 4px; text-align: right; font-weight: 600; color: #e91e8c; font-family: inherit;"
+            > €
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 700; color: #22c55e; font-size: 15px;">
+            <span class="profit">54.30</span> €
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 700; color: #22c55e;">
+            <span class="margin">29.2</span>%
+          </td>
+        </tr>
+
+        <!-- Row 3 -->
+        <tr data-row="2" style="border-bottom: 1px solid #f0f0f0;">
+          <td style="padding: 12px;">
+            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 4px;">Design C - Classic</div>
+            <div style="font-size: 12px; color: #999;">Classic 75x25mm</div>
+          </td>
+          <td style="padding: 12px; text-align: center; font-weight: 600;">50</td>
+          <td style="padding: 12px; text-align: right; color: #666;">
+            <span class="unit-cost">7.12</span> €
+          </td>
+          <td style="padding: 12px; text-align: right;">
+            <input 
+              type="number" 
+              class="overhead-input"
+              value="10" 
+              min="0" 
+              step="0.1"
+              onchange="calculateRow(2)"
+              style="width: 70px; padding: 6px 8px; border: 1px solid #e0e0e0; border-radius: 4px; text-align: right; font-family: inherit;"
+            >
+            <span class="overhead-unit">%</span>
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 600; color: #666;">
+            <span class="total-cost">7.83</span> €
+          </td>
+          <td style="padding: 12px; text-align: right;">
+            <input 
+              type="number" 
+              class="selling-price-input"
+              value="10.50" 
+              min="0" 
+              step="0.1"
+              onchange="calculateRow(2)"
+              style="width: 80px; padding: 6px 8px; border: 2px solid #e91e8c; border-radius: 4px; text-align: right; font-weight: 600; color: #e91e8c; font-family: inherit;"
+            > €
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 700; color: #22c55e; font-size: 15px;">
+            <span class="profit">133.50</span> €
+          </td>
+          <td style="padding: 12px; text-align: right; font-weight: 700; color: #22c55e;">
+            <span class="margin">34.1</span>%
+          </td>
+        </tr>
+      </tbody>
+      
+      <!-- Totals Row -->
+      <tfoot>
+        <tr style="background-color: #f8f9fa; border-top: 2px solid #e0e0e0; font-weight: 700;">
+          <td colspan="2" style="padding: 16px; font-size: 16px; color: #1a1a1a;">PROJECT TOTAL</td>
+          <td style="padding: 16px; text-align: right; color: #666;">
+            <span id="total-infoplus-cost">838.50</span> €
+          </td>
+          <td style="padding: 16px;"></td>
+          <td style="padding: 16px; text-align: right; color: #666; font-size: 16px;">
+            <span id="total-your-cost">922.35</span> €
+          </td>
+          <td style="padding: 16px; text-align: right; color: #e91e8c; font-size: 16px;">
+            <span id="total-selling-price">1193.00</span> €
+          </td>
+          <td style="padding: 16px; text-align: right; color: #22c55e; font-size: 18px;">
+            <span id="total-profit">270.65</span> €
+          </td>
+          <td style="padding: 16px; text-align: right; color: #22c55e; font-size: 16px;">
+            <span id="total-margin">29.3</span>%
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Info Box -->
+  <div style="margin-top: 20px; padding: 16px; background-color: #fff5fb; border-left: 4px solid #e91e8c; border-radius: 6px; font-size: 13px; color: #666;">
+    <strong style="color: #e91e8c;">Private Ansicht:</strong> Dieser Preisrechner ist nur für Sie als Wiederverkäufer sichtbar.
+
+Wenn Sie dieses Projekt teilen, sehen Kunden nur die Spalte „Ihr Preis“ (ohne Ihre Kosten- oder Gewinninformationen).
+  </div>
+</div>
+
+<script>
+function updateOverheadType() {
+  const type = document.querySelector('input[name="overhead_type"]:checked').value;
+  const units = document.querySelectorAll('.overhead-unit');
+  
+  units.forEach(unit => {
+    unit.textContent = type === 'percentage' ? '%' : '€';
+  });
+  
+  // Recalculate all rows
+  const rows = document.querySelectorAll('[data-row]');
+  rows.forEach((row, index) => {
+    calculateRow(index);
+  });
+}
+
+function calculateRow(rowIndex) {
+  const row = document.querySelector(`[data-row="${rowIndex}"]`);
+  const qty = parseInt(row.querySelector('td:nth-child(2)').textContent);
+  const unitCost = parseFloat(row.querySelector('.unit-cost').textContent);
+  const overheadInput = parseFloat(row.querySelector('.overhead-input').value) || 0;
+  const sellingPrice = parseFloat(row.querySelector('.selling-price-input').value) || 0;
+  const overheadType = document.querySelector('input[name="overhead_type"]:checked').value;
+  
+  // Calculate total cost per unit
+  let totalCostPerUnit;
+  if (overheadType === 'percentage') {
+    totalCostPerUnit = unitCost * (1 + overheadInput / 100);
+  } else {
+    totalCostPerUnit = unitCost + overheadInput;
+  }
+  
+  // Calculate profit
+  const profitPerUnit = sellingPrice - totalCostPerUnit;
+  const totalProfit = profitPerUnit * qty;
+  const marginPercent = sellingPrice > 0 ? (profitPerUnit / sellingPrice * 100) : 0;
+  
+  // Update UI
+  row.querySelector('.total-cost').textContent = totalCostPerUnit.toFixed(2);
+  row.querySelector('.profit').textContent = totalProfit.toFixed(2);
+  row.querySelector('.margin').textContent = marginPercent.toFixed(1);
+  
+  // Update profit color (red if negative)
+  const profitEl = row.querySelector('.profit');
+  const marginEl = row.querySelector('.margin');
+  if (totalProfit < 0) {
+    profitEl.style.color = '#ef4444';
+    marginEl.style.color = '#ef4444';
+  } else {
+    profitEl.style.color = '#22c55e';
+    marginEl.style.color = '#22c55e';
+  }
+  
+  // Recalculate totals
+  calculateTotals();
+}
+
+function calculateTotals() {
+  const rows = document.querySelectorAll('[data-row]');
+  let totalInfoplusCost = 0;
+  let totalYourCost = 0;
+  let totalSellingPrice = 0;
+  let totalProfit = 0;
+  
+  rows.forEach(row => {
+    const qty = parseInt(row.querySelector('td:nth-child(2)').textContent);
+    const unitCost = parseFloat(row.querySelector('.unit-cost').textContent);
+    const totalCostPerUnit = parseFloat(row.querySelector('.total-cost').textContent);
+    const sellingPrice = parseFloat(row.querySelector('.selling-price-input').value) || 0;
+    
+    totalInfoplusCost += unitCost * qty;
+    totalYourCost += totalCostPerUnit * qty;
+    totalSellingPrice += sellingPrice * qty;
+    totalProfit += (sellingPrice - totalCostPerUnit) * qty;
+  });
+  
+  const totalMargin = totalSellingPrice > 0 ? (totalProfit / totalSellingPrice * 100) : 0;
+  
+  document.getElementById('total-infoplus-cost').textContent = totalInfoplusCost.toFixed(2);
+  document.getElementById('total-your-cost').textContent = totalYourCost.toFixed(2);
+  document.getElementById('total-selling-price').textContent = totalSellingPrice.toFixed(2);
+  document.getElementById('total-profit').textContent = totalProfit.toFixed(2);
+  document.getElementById('total-margin').textContent = totalMargin.toFixed(1);
+  
+  // Update total profit color
+  const profitEl = document.getElementById('total-profit');
+  const marginEl = document.getElementById('total-margin');
+  if (totalProfit < 0) {
+    profitEl.style.color = '#ef4444';
+    marginEl.style.color = '#ef4444';
+  } else {
+    profitEl.style.color = '#22c55e';
+    marginEl.style.color = '#22c55e';
+  }
+}
+
+// Initialize calculations on load
+document.addEventListener('DOMContentLoaded', function() {
+  calculateRow(0);
+  calculateRow(1);
+  calculateRow(2);
+});
+</script>

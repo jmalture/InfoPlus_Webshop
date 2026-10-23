@@ -1,0 +1,668 @@
+{
+ "id": 2667,
+ "post_type": "page",
+ "title": "FAQ",
+ "slug": "faq",
+ "status": "publish",
+ "template_type": "wp-post",
+ "conditions": null,
+ "page_settings": {
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "c7d1141",
+   "elType": "container",
+   "settings": {
+    "flex_gap": {
+     "column": "50",
+     "row": "50",
+     "isLinked": true,
+     "unit": "px",
+     "size": 50
+    },
+    "padding": {
+     "unit": "px",
+     "top": "80",
+     "right": "40",
+     "bottom": "80",
+     "left": "40",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "40",
+     "right": "20",
+     "bottom": "40",
+     "left": "20",
+     "isLinked": false
+    },
+    "padding_tablet": {
+     "unit": "px",
+     "top": "40",
+     "right": "40",
+     "bottom": "40",
+     "left": "40",
+     "isLinked": true
+    },
+    "flex_gap_tablet": {
+     "column": "40",
+     "row": "40",
+     "isLinked": true,
+     "unit": "px",
+     "size": 40
+    },
+    "flex_gap_mobile": {
+     "column": "",
+     "row": "",
+     "isLinked": true,
+     "unit": "px",
+     "size": null
+    }
+   },
+   "elements": [
+    {
+     "id": "124a3d3",
+     "elType": "widget",
+     "settings": {
+      "title": "FAQ",
+      "__globals__": {
+       "typography_typography": "globals/typography?id=secondary",
+       "title_color": "globals/colors?id=primary"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "00a167e",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "66f8743",
+       "elType": "widget",
+       "settings": {
+        "editor": "<div class=\"custom-page--content content block\"><div class=\"content--custom\"><p>In der FAQ werden oft gestellte Fragen beantwortet. Sollten Sie keine Antworten gefunden haben, wenden Sie sich gern an</p></div></div>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "d58fb10",
+       "elType": "widget",
+       "widgetType": "nested-accordion",
+       "settings": {
+        "items": [
+         {
+          "item_title": "Wie finde ich den passenden Artikel",
+          "_id": "73f84f2"
+         },
+         {
+          "item_title": "Ich benötige mehrere Schilder mit Text und unserem farbigen Logo. Können unsere individuellen Wünsche von Ihnen berücksichtigt werden?",
+          "_id": "fcdd19c"
+         },
+         {
+          "item_title": "Können wir ein Muster haben?",
+          "_id": "f9ee621"
+         },
+         {
+          "_id": "3aaed4f",
+          "item_title": "Wie schnell kann ich meine bestellten Produkte erhalten?"
+         },
+         {
+          "_id": "96dd86d",
+          "item_title": "Liefern Sie auch direkt an unseren Kunden aus?"
+         },
+         {
+          "_id": "b29d13d",
+          "item_title": "Was beinhalten Vorkosten?"
+         },
+         {
+          "_id": "cf49376",
+          "item_title": "Gibt es Mehr-/Mindermengen?"
+         },
+         {
+          "_id": "e6783fd",
+          "item_title": "Können wir auch kleine Mengen bei Ihnen erhalten?"
+         },
+         {
+          "_id": "b433a88",
+          "item_title": "Welche Angaben sind für Dateien, Logodaten und Farben erforderlich?"
+         },
+         {
+          "_id": "04afbc1",
+          "item_title": "Was verstehen Sie unter Produktänderungen?"
+         },
+         {
+          "_id": "309a6bd",
+          "item_title": "Was ist 4C-Digitaldruck?"
+         },
+         {
+          "_id": "11ee740",
+          "item_title": "Was ist eine Lasergravur?"
+         },
+         {
+          "_id": "dfb9521",
+          "item_title": "Was sind die Vorteile der Lasergravur?"
+         },
+         {
+          "_id": "09984d6",
+          "item_title": "Was ist Siebdruck?"
+         },
+         {
+          "_id": "191f7cd",
+          "item_title": "Wie lange dauert ein Trockenvorgang?"
+         },
+         {
+          "_id": "9721926",
+          "item_title": "Sind Magnet-Namensschilder unbedenklich für Träger von Herzschrittmachern?"
+         },
+         {
+          "_id": "45bbb02",
+          "item_title": "Was passiert mit meinen Daten?"
+         },
+         {
+          "_id": "b9f27de",
+          "item_title": "Was ist neu bei der Online-Zahlung durch die PSD2?"
+         },
+         {
+          "item_title": "Gibt es einen Verhaltenscodex?",
+          "_id": "183636a"
+         }
+        ],
+        "__globals__": {
+         "active_title_color": "globals/colors?id=primary",
+         "hover_icon_color": "globals/colors?id=primary",
+         "active_icon_color": "globals/colors?id=primary"
+        },
+        "accordion_padding": {
+         "unit": "px",
+         "top": "10",
+         "right": "10",
+         "bottom": "10",
+         "left": "10",
+         "isLinked": true
+        },
+        "icon_spacing": {
+         "unit": "px",
+         "size": 5,
+         "sizes": []
+        },
+        "content_padding": {
+         "unit": "px",
+         "top": "20",
+         "right": "20",
+         "bottom": "20",
+         "left": "20",
+         "isLinked": true
+        }
+       },
+       "elements": [
+        {
+         "id": "65eface",
+         "elType": "container",
+         "settings": {
+          "_title": "item #1",
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "6091264",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Sie können in der Navigation nach Produkten suchen oder über die Schildersuche unsere Produktvorschläge erhalten. Wir bieten Ihnen verschiedene Filter in den entsprechenden Produktübersichten an.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "099ac4c",
+         "elType": "container",
+         "settings": {
+          "_title": "item #2",
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "80fe540",
+           "elType": "container",
+           "settings": {
+            "flex_direction": "column"
+           },
+           "elements": [
+            {
+             "id": "4243809",
+             "elType": "widget",
+             "settings": {
+              "editor": "<p>In unserem Shop finden Sie eine große Auswahl unserer Standardprodukte. Darüber hinaus fertigen wir Ihnen Ihre Schilder in fast allen Ausführungen und Formaten. Senden Sie uns Ihren Entwurf unter Angabe der Maße, Farben, Texte etc. und wir erstellen Ihnen gern ein individuelles Angebot.</p>"
+             },
+             "elements": [],
+             "widgetType": "text-editor"
+            }
+           ],
+           "isInner": true
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "209ae87",
+         "elType": "container",
+         "settings": {
+          "_title": "item #3",
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "a3fb4e3",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Gerne senden wir Ihnen Muster zur Ansicht zu. Bei aufwändiger Bemusterung (große Mengen, hochwertige Muster oder Musterkoffer) behalten wir uns die Berechnung von Mustern vor, wenn sie nicht zurückgesandt werden.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "5658ab1",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #4"
+         },
+         "elements": [
+          {
+           "id": "223db66",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Viele unserer Kunden beliefern wir unter größtem Zeitdruck pünktlich. Wenn der Liefertermin für Sie von größter Wichtigkeit ist, geben Sie dies rechtzeitig zu erkennen. Bitte berechnen Sie in Ihrem eigenen Interesse einen Zeitpuffer ein und bestellen Sie rechtzeitig. Knappe punktgenaue Lieferungen bedürfen eines optimalen Ablaufs der Abwicklung, erteilen Sie daher Ihre Layout-Freigaben fristgemäß. Wir sind stets bemüht, schnellstmöglich zu liefern. Für einige Produktausführungen bieten wir zudem unseren badge24 Schnell-Lieferservice an.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "d21c6f5",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #5"
+         },
+         "elements": [
+          {
+           "id": "ac7babc",
+           "elType": "widget",
+           "settings": {
+            "editor": "<div class=\"collapse--content js--collapse-target is--collapsed is--active\">Wenn Sie es wünschen, senden wir direkt und neutral verpackt mit Ihrem Lieferschein an Ihren Kunden! Projektschutz kann vereinbart werden.</div>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "940ff7b",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #6"
+         },
+         "elements": [
+          {
+           "id": "b96c1e2",
+           "elType": "widget",
+           "settings": {
+            "editor": "<div class=\"collapse--content js--collapse-target is--collapsed is--active\">Wenn Sie es wünschen, senden wir direkt und neutral verpackt mit Ihrem Lieferschein an Ihren Kunden! Projektschutz kann vereinbart werden.</div>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "1d8eb48",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #7"
+         },
+         "elements": [
+          {
+           "id": "50e8140",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Es ist möglich, dass beim Gravur- oder Druckvorgang das Namensschild beschädigt wird. Ein einzelnes Nachdrucken oder Nachgravieren ist zu kostspielig. Die Serienproduktion erfolgt in Nutzen. Deshalb ist eine produktionsbedingte Unter- oder Überlieferung in Höhe von 10% möglich und zu akzeptieren.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "823261c",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #8"
+         },
+         "elements": [
+          {
+           "id": "73c23af",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Unser Angebot ist an Industrie, Handel und Werbemittelhandel gerichtet. Kleinstmengen werden ggf. mit Mindermengenzuschlägen versehen. Unsere Schilder sind i.d.R. ab einer Stückzahl von 10 erhältlich. Bei Erteilung eines Abrufauftrags oder bei abgeschlossener Rahmenvereinbarung (ab 10 Stck.) sind Abrufe ab 1 Stck. möglich. Ebenso sind personalisierte Schilder im Online-Shop bereits ab 1 Stck. bestellbar.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "d305a39",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #9"
+         },
+         "elements": [
+          {
+           "id": "dce348f",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Wir benötigen vektorisierte Dateien im .eps-, .pdf- oder .ai-Format in CMYK oder Volltonfarben (z.B. Pantone Coated oder HKS). Alle Schriften im Logo sind bitte in Pfade umzuwandeln. Eingefügte Bilder senden Sie bitte als hochauflösende .jpg- oder .tif-Dateien. Bilder/Logos in Halbtönen, die als 4c oder Graustufen gedruckt werden sollen, sollten eine Größe von mindestens 300 dpi in 1:1-Größe haben. Für die Fertigung im Siebdruck bitten wir um genaue Farbangaben in Pantone, HKS oder RAL bzw. einen farbverbindlichen Andruck (Muster).<br />Bitte bedenken Sie, dass Untergrundart und Untergrundfarbe einen Druck geringfügig beeinflussen können. Leichte Farbabweichungen sind kein Grund zur Reklamation.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "3d04fe4",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #10"
+         },
+         "elements": [
+          {
+           "id": "cb35e01",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Unsere Produkte werden ständig weiterverbessert. Wir sind stets bemüht, Ihnen beste Qualität zu liefern. Wir behalten uns vor, auf technische Neuerungen zu reagieren. Es ist möglich,  dass Ihr Produkt bei einer Nachlieferung eventuell etwas anders aussieht oder es zu geringfügigen Farbabweichungen kommen kann.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "5675675",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #11"
+         },
+         "elements": [
+          {
+           "id": "5595cd2",
+           "elType": "widget",
+           "settings": {
+            "editor": "<div class=\"collapse--content js--collapse-target is--collapsed is--active\">Wir drucken mit modernen Digitaldruckmaschinen, die Ihnen eine hohe Druckqualität bringen. Vielfarbige Logos bzw. Motive können preisgünstig und schnell produziert werden. Der Druck erfolgt abhängig von der Produktvariante bzw. -ausführung im kratzfesten Hinterdruck, im kratzresistenten Digital-Aufdruck bzw. im nicht kratzfesten Reliefdruck (Aufdruck).</div>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "f12ba61",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #12"
+         },
+         "elements": [
+          {
+           "id": "1dd55a8",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Eine Lasergravur ist ein modernes Produktionsverfahren, mit dem eine dünne Schicht der Materialoberfläche abgetragen werden kann. Dies ist z.B. bei unseren schwarz eloxierten Aluminium-Schildern oder allen Materia-Schildern möglich. Es kommt das darunterliegende, anders farbige Material zum Vorschein.<br />Edelstahl kann per Lasergravur schwarz und Holz dunkelbraun beschriftet werden.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "e27203a",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #13"
+         },
+         "elements": [
+          {
+           "id": "94a72c2",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Die Lasergravur hat gegenüber dem Druck wesentliche Vorteile. Sie ist schneller realisierbar, sie ist absolut haltbar und beständig (keine Abnutzung). Außerdem ist sie absolut präzise und feiner als ein Druck.<br />Mit Hilfe modernster Laser-Gravurmaschinen können wir Aluminium, Edelstahlund weitere Materialien schnell und höchst präzise lasern. Nachdem wir Ihre vektorisierte (in Zeichenwege umgewandelte) Logodatei erhalten haben, wird hiervon ein Programm geschrieben. Alle Daten werden archiviert und können bei einer Nachbestellung des identischen Lasermotivs wieder verwendet werden.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "759a6b2",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #14"
+         },
+         "elements": [
+          {
+           "id": "668743a",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Siebdruck lässt sich auf Aluminium, Messing, Kunststoff, Acrylglas und Edelstahl anbringen. Zur besseren Farbtreue werden für Logos etc. die genauen Farbangaben in HKS, Pantone oder RAL benötigt.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "3ac5d89",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #15"
+         },
+         "elements": [
+          {
+           "id": "b5a49e8",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Alle bedruckten Teile müssen einen Trockenvorgang durchlaufen, die richtige und notwendige Aushärtung kann einige Tage dauern und ist materialabhängig.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "2ad2839",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #16"
+         },
+         "elements": [
+          {
+           "id": "891c045",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Das Bundesamt für Strahlenschutz steht zu dieser häufig gestellten Frage folgendes fest:<br />Das Tragen von kleinen Dauermagneten am Körper wie z. B. bei in Form von magnetischen Ansteckerclips für Namensschilder, ist in der Regel gesundheitlich unbedenklich. Diese Anwendungen führen nur zu einer lokal eng begrenzten Exposition mit schwachen statischen Magnetfeldern. Bei normaler Anwendung derartiger Magnetclips werden die bekannten biologischen Wirkungsschwellen bei weitem nicht erreicht.<br />Störbeeinflussungen bestimmter Herzschrittmachertypen durch kleine Dauermagneten sind jedoch nicht auszuschließen. Ab ca. 1 mT magnetischer Flussdichte ist auch eine Beeinflussung u. a. von  Magnetkarten, Kreditkarten, Uhren denkbar. Es ist daher ratsam, die Namensschilder nicht unmittelbar über dem implantierten Herzschrittmachern zu benutzen und in den Jackentaschen keine empfindlichen Magnetkarten aufzubewahren.<br />Es ist aber trotzdem ratsam vor der Ausgabe der Namensschilder mit Magnet die Mitarbeiter auf die mögliche Gefahr durch diese hinzuweisen. Am besten legen Sie jedem Schild ein kleines Merkblatt mit dem Hinweis auf den Magneten bei.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "e72754a",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #17"
+         },
+         "elements": [
+          {
+           "id": "3608094",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Alle personenbezogenen Daten werden grundsätzlich vertraulich behandelt. Die für die Geschäftsabwicklung notwendigen Daten werden gespeichert. Ausführliche Informationen erhalten Sie in unserer Datenschutzerklärung.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "ea28659",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #18"
+         },
+         "elements": [
+          {
+           "id": "407045f",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Am 14. September 2019 tritt die neue Zahlungsdienstrichtlinie der Europäischen Kommission, auch bekannt als Payment Services Directive (PSD2), in Kraft. Damit soll die Sicherheit bei Online-Zahlungen erhöht werden. Aufgrund dieser gesetzlichen Änderung wird bei Online-Zahlungen – z. B. mit Kreditkarte oder über Paypal – ein Sicherheitsverfahren mit Zwei-Faktor-Authentifizierung eingeführt. Das betrifft auch unseren Onlineshop. Bei Online-Zahlungen wird dann neben den bekannten Zahlungsdaten in bestimmen Fällen ein weiteres Sicherheitsmerkmal abgefragt. Bei welchen Transaktionen dies geschieht, entscheiden der Zahlungsdienstleister bzw. Ihre Bank jeweils beim Zahlvorgang. Falls Sie betroffen sind, werden Sie aufgefordert, während des Bezahlprozesses ein weiteres Sicherheitsmerkmal einzugeben. Das kann beispielsweise eine mobile TAN sein, die Sie per SMS auf Ihr Handy gesendet bekommen. Auf diese Weise identifizieren Sie sich als rechtmäßiger Karteninhaber. Die Art der Sicherheitsabfrage zur Zwei-Faktor-Authentifizierung kann je nach Bank unterschiedlich ausfallen. Für konkrete Informationen setzen Sie sich bitte mit Ihrer Bank oder Kreditkarteninstitut in Verbindung. Sollten bei der Bezahlung Probleme mit Ihrer gewohnten Zahlart auftreten, empfehlen wir, vorübergehend eine andere Methode zu wählen. Wenn Sie weitere Fragen haben oder Unterstützung benötigen, wenden Sie sich bitte an unseren Kundenservice.</p>"
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        },
+        {
+         "id": "807e46e",
+         "elType": "container",
+         "settings": {
+          "_title": "Item #18"
+         },
+         "elements": [
+          {
+           "id": "939805f",
+           "elType": "widget",
+           "settings": {
+            "editor": "<p>Ja, unseren Verhaltenscodex - den Code of Conduct finden Sie <a href=\"https://navajowhite-rhinoceros-679020.hostingersite.com/verhaltenskodex/\" target=\"_blank\" rel=\"noopener\">hier</a>.</p>",
+            "__globals__": {
+             "link_color": "globals/colors?id=primary",
+             "link_hover_color": "globals/colors?id=primary"
+            }
+           },
+           "elements": [],
+           "widgetType": "text-editor"
+          }
+         ],
+         "isInner": true,
+         "isLocked": true
+        }
+       ]
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1774967595"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 17027,
+  "elementor_data_sha256_of_db_string": "5db28b257999998a469d377bd1fac74f92b0787268678d2760eb85ba763b1d7f",
+  "page_settings_db_length_bytes": 34
+ }
+}

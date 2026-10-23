@@ -1,0 +1,51 @@
+/* element ca6b1d7 infoplus-model-selector */
+.elementor-2190 .elementor-element.elementor-element-ca6b1d7 .infoplus-model-selector__list{
+    direction: rtl!important;
+    padding-left: 10px!important;
+}
+
+/* element c0deeb0 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}
+
+/* element 3d00462 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}
+
+/* element d809b0f container */
+selector .elementor-widget-icon-box.elementor-mobile-position-left .elementor-icon-box-wrapper, .elementor-widget-icon-box.elementor-mobile-position-right .elementor-icon-box-wrapper {
+    align-items: center;
+}
+
+@media only screen and (max-width: 767px) {
+  selector .elementor-icon {
+    padding-top: 6px;
+}
+}
+
+/* element c1520fd icon-box */
+selector p {
+    padding-bottom: 7px;
+}
+
+/* element d034dcb button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}

@@ -1,0 +1,15 @@
+/* element e6dd629 container */
+selector .elementor-heading-title{
+    transition: all .3s ease;
+}
+
+selector:hover .elementor-heading-title{
+    text-decoration: underline;
+}
+
+/* element e27e879 heading */
+selector:hover{
+    text-decoration: underline;
+    text-decoration-color: var(--e-global-color-text);
+    color: var(--e-global-color-secondary)
+}

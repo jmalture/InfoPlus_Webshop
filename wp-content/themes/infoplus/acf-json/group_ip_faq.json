@@ -1,0 +1,263 @@
+{
+    "key": "group_ip_faq",
+    "title": "FAQ",
+    "fields": [
+        {
+            "key": "field_ip_faq_tab_head",
+            "label": "Kopfbereich",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_faq_kicker",
+            "label": "Kleine Zeile",
+            "name": "kicker",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Häufige Fragen"
+        },
+        {
+            "key": "field_ip_faq_title",
+            "label": "Überschrift (H1)",
+            "name": "title",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "FAQ"
+        },
+        {
+            "key": "field_ip_faq_intro",
+            "label": "Einleitung",
+            "name": "intro",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "In der FAQ werden oft gestellte Fragen beantwortet. Sollten Sie keine Antworten gefunden haben, wenden Sie sich gern an uns.",
+            "rows": 2,
+            "new_lines": ""
+        },
+        {
+            "key": "field_ip_faq_tab_items",
+            "label": "Fragen",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_faq_items",
+            "label": "Fragen und Antworten",
+            "name": "items",
+            "type": "repeater",
+            "instructions": "Reihenfolge per Ziehen. Die Fragen werden auch als strukturierte Daten (FAQPage) für Suchmaschinen ausgegeben.",
+            "required": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": [
+                {
+                    "question": "Wie finde ich den passenden Artikel",
+                    "answer": "<p>Sie können in der Navigation nach Produkten suchen oder über die Schildersuche unsere Produktvorschläge erhalten. Wir bieten Ihnen verschiedene Filter in den entsprechenden Produktübersichten an.</p>"
+                },
+                {
+                    "question": "Ich benötige mehrere Schilder mit Text und unserem farbigen Logo. Können unsere individuellen Wünsche von Ihnen berücksichtigt werden?",
+                    "answer": "<p>In unserem Shop finden Sie eine große Auswahl unserer Standardprodukte. Darüber hinaus fertigen wir Ihnen Ihre Schilder in fast allen Ausführungen und Formaten. Senden Sie uns Ihren Entwurf unter Angabe der Maße, Farben, Texte etc. und wir erstellen Ihnen gern ein individuelles Angebot.</p>"
+                },
+                {
+                    "question": "Können wir ein Muster haben?",
+                    "answer": "<p>Gerne senden wir Ihnen Muster zur Ansicht zu. Bei aufwändiger Bemusterung (große Mengen, hochwertige Muster oder Musterkoffer) behalten wir uns die Berechnung von Mustern vor, wenn sie nicht zurückgesandt werden.</p>"
+                },
+                {
+                    "question": "Wie schnell kann ich meine bestellten Produkte erhalten?",
+                    "answer": "<p>Viele unserer Kunden beliefern wir unter größtem Zeitdruck pünktlich. Wenn der Liefertermin für Sie von größter Wichtigkeit ist, geben Sie dies rechtzeitig zu erkennen. Bitte berechnen Sie in Ihrem eigenen Interesse einen Zeitpuffer ein und bestellen Sie rechtzeitig. Knappe punktgenaue Lieferungen bedürfen eines optimalen Ablaufs der Abwicklung, erteilen Sie daher Ihre Layout-Freigaben fristgemäß. Wir sind stets bemüht, schnellstmöglich zu liefern. Für einige Produktausführungen bieten wir zudem unseren badge24 Schnell-Lieferservice an.</p>"
+                },
+                {
+                    "question": "Liefern Sie auch direkt an unseren Kunden aus?",
+                    "answer": "<p>Wenn Sie es wünschen, senden wir direkt und neutral verpackt mit Ihrem Lieferschein an Ihren Kunden! Projektschutz kann vereinbart werden.</p>"
+                },
+                {
+                    "question": "Was beinhalten Vorkosten?",
+                    "answer": "<p>Wenn Sie es wünschen, senden wir direkt und neutral verpackt mit Ihrem Lieferschein an Ihren Kunden! Projektschutz kann vereinbart werden.</p>"
+                },
+                {
+                    "question": "Gibt es Mehr-/Mindermengen?",
+                    "answer": "<p>Es ist möglich, dass beim Gravur- oder Druckvorgang das Namensschild beschädigt wird. Ein einzelnes Nachdrucken oder Nachgravieren ist zu kostspielig. Die Serienproduktion erfolgt in Nutzen. Deshalb ist eine produktionsbedingte Unter- oder Überlieferung in Höhe von 10% möglich und zu akzeptieren.</p>"
+                },
+                {
+                    "question": "Können wir auch kleine Mengen bei Ihnen erhalten?",
+                    "answer": "<p>Unser Angebot ist an Industrie, Handel und Werbemittelhandel gerichtet. Kleinstmengen werden ggf. mit Mindermengenzuschlägen versehen. Unsere Schilder sind i.d.R. ab einer Stückzahl von 10 erhältlich. Bei Erteilung eines Abrufauftrags oder bei abgeschlossener Rahmenvereinbarung (ab 10 Stck.) sind Abrufe ab 1 Stck. möglich. Ebenso sind personalisierte Schilder im Online-Shop bereits ab 1 Stck. bestellbar.</p>"
+                },
+                {
+                    "question": "Welche Angaben sind für Dateien, Logodaten und Farben erforderlich?",
+                    "answer": "<p>Wir benötigen vektorisierte Dateien im .eps-, .pdf- oder .ai-Format in CMYK oder Volltonfarben (z.B. Pantone Coated oder HKS). Alle Schriften im Logo sind bitte in Pfade umzuwandeln. Eingefügte Bilder senden Sie bitte als hochauflösende .jpg- oder .tif-Dateien. Bilder/Logos in Halbtönen, die als 4c oder Graustufen gedruckt werden sollen, sollten eine Größe von mindestens 300 dpi in 1:1-Größe haben. Für die Fertigung im Siebdruck bitten wir um genaue Farbangaben in Pantone, HKS oder RAL bzw. einen farbverbindlichen Andruck (Muster).<br>Bitte bedenken Sie, dass Untergrundart und Untergrundfarbe einen Druck geringfügig beeinflussen können. Leichte Farbabweichungen sind kein Grund zur Reklamation.</p>"
+                },
+                {
+                    "question": "Was verstehen Sie unter Produktänderungen?",
+                    "answer": "<p>Unsere Produkte werden ständig weiterverbessert. Wir sind stets bemüht, Ihnen beste Qualität zu liefern. Wir behalten uns vor, auf technische Neuerungen zu reagieren. Es ist möglich,  dass Ihr Produkt bei einer Nachlieferung eventuell etwas anders aussieht oder es zu geringfügigen Farbabweichungen kommen kann.</p>"
+                },
+                {
+                    "question": "Was ist 4C-Digitaldruck?",
+                    "answer": "<p>Wir drucken mit modernen Digitaldruckmaschinen, die Ihnen eine hohe Druckqualität bringen. Vielfarbige Logos bzw. Motive können preisgünstig und schnell produziert werden. Der Druck erfolgt abhängig von der Produktvariante bzw. -ausführung im kratzfesten Hinterdruck, im kratzresistenten Digital-Aufdruck bzw. im nicht kratzfesten Reliefdruck (Aufdruck).</p>"
+                },
+                {
+                    "question": "Was ist eine Lasergravur?",
+                    "answer": "<p>Eine Lasergravur ist ein modernes Produktionsverfahren, mit dem eine dünne Schicht der Materialoberfläche abgetragen werden kann. Dies ist z.B. bei unseren schwarz eloxierten Aluminium-Schildern oder allen Materia-Schildern möglich. Es kommt das darunterliegende, anders farbige Material zum Vorschein.<br>Edelstahl kann per Lasergravur schwarz und Holz dunkelbraun beschriftet werden.</p>"
+                },
+                {
+                    "question": "Was sind die Vorteile der Lasergravur?",
+                    "answer": "<p>Die Lasergravur hat gegenüber dem Druck wesentliche Vorteile. Sie ist schneller realisierbar, sie ist absolut haltbar und beständig (keine Abnutzung). Außerdem ist sie absolut präzise und feiner als ein Druck.<br>Mit Hilfe modernster Laser-Gravurmaschinen können wir Aluminium, Edelstahlund weitere Materialien schnell und höchst präzise lasern. Nachdem wir Ihre vektorisierte (in Zeichenwege umgewandelte) Logodatei erhalten haben, wird hiervon ein Programm geschrieben. Alle Daten werden archiviert und können bei einer Nachbestellung des identischen Lasermotivs wieder verwendet werden.</p>"
+                },
+                {
+                    "question": "Was ist Siebdruck?",
+                    "answer": "<p>Siebdruck lässt sich auf Aluminium, Messing, Kunststoff, Acrylglas und Edelstahl anbringen. Zur besseren Farbtreue werden für Logos etc. die genauen Farbangaben in HKS, Pantone oder RAL benötigt.</p>"
+                },
+                {
+                    "question": "Wie lange dauert ein Trockenvorgang?",
+                    "answer": "<p>Alle bedruckten Teile müssen einen Trockenvorgang durchlaufen, die richtige und notwendige Aushärtung kann einige Tage dauern und ist materialabhängig.</p>"
+                },
+                {
+                    "question": "Sind Magnet-Namensschilder unbedenklich für Träger von Herzschrittmachern?",
+                    "answer": "<p>Das Bundesamt für Strahlenschutz steht zu dieser häufig gestellten Frage folgendes fest:<br>Das Tragen von kleinen Dauermagneten am Körper wie z. B. bei in Form von magnetischen Ansteckerclips für Namensschilder, ist in der Regel gesundheitlich unbedenklich. Diese Anwendungen führen nur zu einer lokal eng begrenzten Exposition mit schwachen statischen Magnetfeldern. Bei normaler Anwendung derartiger Magnetclips werden die bekannten biologischen Wirkungsschwellen bei weitem nicht erreicht.<br>Störbeeinflussungen bestimmter Herzschrittmachertypen durch kleine Dauermagneten sind jedoch nicht auszuschließen. Ab ca. 1 mT magnetischer Flussdichte ist auch eine Beeinflussung u. a. von  Magnetkarten, Kreditkarten, Uhren denkbar. Es ist daher ratsam, die Namensschilder nicht unmittelbar über dem implantierten Herzschrittmachern zu benutzen und in den Jackentaschen keine empfindlichen Magnetkarten aufzubewahren.<br>Es ist aber trotzdem ratsam vor der Ausgabe der Namensschilder mit Magnet die Mitarbeiter auf die mögliche Gefahr durch diese hinzuweisen. Am besten legen Sie jedem Schild ein kleines Merkblatt mit dem Hinweis auf den Magneten bei.</p>"
+                },
+                {
+                    "question": "Was passiert mit meinen Daten?",
+                    "answer": "<p>Alle personenbezogenen Daten werden grundsätzlich vertraulich behandelt. Die für die Geschäftsabwicklung notwendigen Daten werden gespeichert. Ausführliche Informationen erhalten Sie in unserer Datenschutzerklärung.</p>"
+                },
+                {
+                    "question": "Was ist neu bei der Online-Zahlung durch die PSD2?",
+                    "answer": "<p>Am 14. September 2019 tritt die neue Zahlungsdienstrichtlinie der Europäischen Kommission, auch bekannt als Payment Services Directive (PSD2), in Kraft. Damit soll die Sicherheit bei Online-Zahlungen erhöht werden. Aufgrund dieser gesetzlichen Änderung wird bei Online-Zahlungen – z. B. mit Kreditkarte oder über Paypal – ein Sicherheitsverfahren mit Zwei-Faktor-Authentifizierung eingeführt. Das betrifft auch unseren Onlineshop. Bei Online-Zahlungen wird dann neben den bekannten Zahlungsdaten in bestimmen Fällen ein weiteres Sicherheitsmerkmal abgefragt. Bei welchen Transaktionen dies geschieht, entscheiden der Zahlungsdienstleister bzw. Ihre Bank jeweils beim Zahlvorgang. Falls Sie betroffen sind, werden Sie aufgefordert, während des Bezahlprozesses ein weiteres Sicherheitsmerkmal einzugeben. Das kann beispielsweise eine mobile TAN sein, die Sie per SMS auf Ihr Handy gesendet bekommen. Auf diese Weise identifizieren Sie sich als rechtmäßiger Karteninhaber. Die Art der Sicherheitsabfrage zur Zwei-Faktor-Authentifizierung kann je nach Bank unterschiedlich ausfallen. Für konkrete Informationen setzen Sie sich bitte mit Ihrer Bank oder Kreditkarteninstitut in Verbindung. Sollten bei der Bezahlung Probleme mit Ihrer gewohnten Zahlart auftreten, empfehlen wir, vorübergehend eine andere Methode zu wählen. Wenn Sie weitere Fragen haben oder Unterstützung benötigen, wenden Sie sich bitte an unseren Kundenservice.</p>"
+                },
+                {
+                    "question": "Gibt es einen Verhaltenscodex?",
+                    "answer": "<p>Ja, unseren Verhaltenscodex - den Code of Conduct finden Sie <a href=\"/verhaltenskodex/\" target=\"_blank\" rel=\"noopener\">hier</a>.</p>"
+                }
+            ],
+            "layout": "block",
+            "button_label": "Frage hinzufügen",
+            "collapsed": "field_ip_faq_items_question",
+            "min": 0,
+            "max": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ip_faq_items_question",
+                    "label": "Frage",
+                    "name": "question",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    }
+                },
+                {
+                    "key": "field_ip_faq_items_answer",
+                    "label": "Antwort",
+                    "name": "answer",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "tabs": "visual",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 1
+                }
+            ]
+        },
+        {
+            "key": "field_ip_faq_tab_contact",
+            "label": "Kontakt-Karte",
+            "name": "",
+            "type": "tab",
+            "placement": "top",
+            "endpoint": 0
+        },
+        {
+            "key": "field_ip_faq_contact_title",
+            "label": "Überschrift",
+            "name": "contact_title",
+            "type": "text",
+            "instructions": "Karte neben den Fragen mit Telefon und E-Mail aus den Website-Einstellungen. Leer lassen, um sie auszublenden.",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Ihre Frage ist nicht dabei?"
+        },
+        {
+            "key": "field_ip_faq_contact_text",
+            "label": "Text",
+            "name": "contact_text",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Wir beraten Sie gern persönlich.",
+            "rows": 2,
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "2667"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content",
+        "excerpt",
+        "discussion",
+        "comments",
+        "revisions",
+        "author",
+        "format",
+        "featured_image",
+        "categories",
+        "tags",
+        "send-trackbacks"
+    ],
+    "active": true,
+    "description": "Inhalte der Seite /faq/ (page-faq.php).",
+    "show_in_rest": 0,
+    "modified": 1792483200
+}

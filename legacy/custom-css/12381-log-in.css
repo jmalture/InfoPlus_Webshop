@@ -1,0 +1,9 @@
+/* element 60c77e5 container */
+selector{
+    //filter: blur(10px);
+}
+
+/* element 00aebb2 eael-login-register */
+selector #eael-lostpassword-submit{
+    margin-bottom: 20px;
+}

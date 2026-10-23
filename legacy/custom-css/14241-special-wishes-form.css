@@ -1,0 +1,154 @@
+/* page_settings document 14241 */
+/* ============================================
+   SONDERWUNSCH FORM - TWO COLUMN LAYOUT
+   ============================================ */
+
+/* Main form container - enable grid */
+.sonderwuche_popup .elementor-form-fields-wrapper {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 40px;
+    align-items: start;
+}
+
+/* ── Section Headers (full width) ─────────────── */
+/* Product section header */
+.sonderwuche_popup .elementor-field-group-product::before {
+    content: 'Produktdetails';
+    display: block;
+    width: calc(200% + 40px); /* Span both columns + gap */
+    font-size: 13px;
+    font-weight: 600;
+    color: #e91e8c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e91e8c;
+    margin-left: 0;
+}
+
+/* Contact section header */
+.sonderwuche_popup .elementor-field-group-firma::before {
+    content: 'Ihre Kontaktdaten';
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #e91e8c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e91e8c;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+/* Additional details header */
+.sonderwuche_popup .elementor-field-group-message::before {
+    content: 'Weitere Angaben';
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 600;
+    color: #e91e8c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e91e8c;
+    margin-top: 15px;
+}
+
+/* ── Product Fields (Left Column) ─────────────── */
+.sonderwuche_popup .elementor-field-group-product,
+.sonderwuche_popup .elementor-field-group-stuck,
+.sonderwuche_popup .elementor-field-group-modell,
+.sonderwuche_popup .elementor-field-group-variante,
+.sonderwuche_popup .elementor-field-group-befestigung {
+    grid-column: 1;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ── Contact Fields (Right Column) ────────────── */
+.sonderwuche_popup .elementor-field-group-firma,
+.sonderwuche_popup .elementor-field-group-name,
+.sonderwuche_popup .elementor-field-group-email,
+.sonderwuche_popup .elementor-field-group-rufnummer {
+    grid-column: 2;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Position for header spacing */
+.sonderwuche_popup .elementor-field-group-firma {
+    position: relative;
+    padding-top: 45px !important; /* Space for absolute header */
+}
+
+/* ── Full Width Fields (Bottom) ───────────────── */
+.sonderwuche_popup .elementor-field-group-message,
+.sonderwuche_popup .elementor-field-group-muster,
+.sonderwuche_popup .elementor-field-group-file_upload {
+    grid-column: 1 / -1;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Submit button */
+.sonderwuche_popup .elementor-field-type-submit {
+    grid-column: 1 / -1;
+    margin-top: 10px !important;
+}
+
+/* ── Field Styling ────────────────────────────── */
+.sonderwuche_popup .elementor-field {
+    border-radius: 6px !important;
+}
+
+.sonderwuche_popup .elementor-field-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+/* ── Mobile Responsive ────────────────────────── */
+@media (max-width: 767px) {
+    .sonderwuche_popup .elementor-form-fields-wrapper {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .sonderwuche_popup .elementor-field-group-product,
+    .sonderwuche_popup .elementor-field-group-stuck,
+    .sonderwuche_popup .elementor-field-group-modell,
+    .sonderwuche_popup .elementor-field-group-variante,
+    .sonderwuche_popup .elementor-field-group-befestigung,
+    .sonderwuche_popup .elementor-field-group-firma,
+    .sonderwuche_popup .elementor-field-group-name,
+    .sonderwuche_popup .elementor-field-group-email,
+    .sonderwuche_popup .elementor-field-group-rufnummer {
+        grid-column: 1;
+    }
+
+    .sonderwuche_popup .elementor-field-group-product::before {
+        width: 100%;
+    }
+
+    .sonderwuche_popup .elementor-field-group-firma {
+        padding-top: 35px !important;
+    }
+
+    .sonderwuche_popup .elementor-field-group-firma::before {
+        position: relative;
+        margin-bottom: 15px;
+    }
+}

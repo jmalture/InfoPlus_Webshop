@@ -1,0 +1,908 @@
+{
+ "id": 2222,
+ "post_type": "elementor_library",
+ "title": "Laufender Bedarf",
+ "slug": "laufender-bedarf",
+ "status": "publish",
+ "template_type": "container",
+ "conditions": null,
+ "page_settings": null,
+ "elementor_data": [
+  {
+   "id": "8e80f4b",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "0",
+     "row": "5",
+     "isLinked": false,
+     "unit": "px",
+     "size": 0
+    },
+    "content_width": "full",
+    "width_laptop": {
+     "unit": "px",
+     "size": 1395
+    },
+    "_flex_size": "none",
+    "_element_width_laptop": "initial"
+   },
+   "elements": [
+    {
+     "id": "626fd6c",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "fac874a",
+       "elType": "widget",
+       "settings": {
+        "title": "Abruf- bzw. Rahmenvereinbarungen",
+        "typography_typography": "custom",
+        "typography_font_family": "Montserrat",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 18,
+         "sizes": []
+        },
+        "typography_font_weight": "700",
+        "__globals__": {
+         "typography_typography": "",
+         "title_color": "globals/colors?id=text"
+        }
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "e4e9f5c",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Für alle, die mehrfach im Jahr Namensschilder benötigen, bieten wir maßgeschneiderte Abruf- bzw. Rahmenvereinbarungen über die Gesamtmenge an – max. Laufzeit 24 Monate.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "5",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "00535e7",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p><strong>Lösungen für Ihren Namensschilderbedarf in den nächsten 1 bis 2 Jahren</strong></p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": ""
+        },
+        "typography_typography": "custom",
+        "typography_font_family": "Montserrat",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 14,
+         "sizes": []
+        },
+        "typography_font_weight": "500",
+        "text_color": "#4A4E53"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "9a7f333",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Abrufvereinbarungen",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "42c6237",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Wir produzieren im Rahmen der Erstausstattung für Ihren späteren Bedarf zusätzliche Namensschilder-Rohlinge. Die Reserveschilder werden zusammen mit dem Erstauftrag abgerechnet und kostenlos bei uns eingelagert. Bei Bedarf können Sie bequem die benötigten AluContur | Comfort Namensschilder mit 4C-Untereloxaldruck abrufen.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "2417699",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p><strong>Ihre Vorteile auf einen Blick:</strong></p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      },
+      {
+       "id": "6bc30a5",
+       "elType": "container",
+       "settings": {
+        "content_width": "full",
+        "flex_gap": {
+         "column": "0",
+         "row": "5",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "30",
+         "left": "35",
+         "isLinked": false
+        }
+       },
+       "elements": [
+        {
+         "id": "6448911",
+         "elType": "container",
+         "settings": {
+          "flex_direction": "column",
+          "flex_gap": {
+           "column": "0",
+           "row": "5",
+           "isLinked": false,
+           "unit": "px",
+           "size": 0
+          },
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "fab2132",
+           "elType": "widget",
+           "settings": {
+            "icon_list": [
+             {
+              "text": "Sie profitieren vom günstigen Staffelpreis der Gesamtmenge!",
+              "selected_icon": {
+               "value": "fas fa-chevron-right",
+               "library": "fa-solid"
+              },
+              "_id": "642d269"
+             }
+            ],
+            "space_between": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "icon_size": {
+             "unit": "px",
+             "size": 24,
+             "sizes": []
+            },
+            "__globals__": {
+             "icon_color": "globals/colors?id=primary",
+             "text_color": "globals/colors?id=8df0251",
+             "icon_typography_typography": "globals/typography?id=f3646f3"
+            }
+           },
+           "elements": [],
+           "widgetType": "icon-list"
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "7e7bad0",
+         "elType": "container",
+         "settings": {
+          "flex_direction": "column",
+          "flex_gap": {
+           "column": "0",
+           "row": "5",
+           "isLinked": false,
+           "unit": "px",
+           "size": 0
+          },
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "dfd9423",
+           "elType": "widget",
+           "settings": {
+            "icon_list": [
+             {
+              "text": "24 Monate Preisstabilität bei den Teilabrufen!",
+              "selected_icon": {
+               "value": "fas fa-chevron-right",
+               "library": "fa-solid"
+              },
+              "_id": "642d269"
+             }
+            ],
+            "space_between": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "icon_size": {
+             "unit": "px",
+             "size": 24,
+             "sizes": []
+            },
+            "__globals__": {
+             "icon_color": "globals/colors?id=primary",
+             "text_color": "globals/colors?id=8df0251",
+             "icon_typography_typography": "globals/typography?id=f3646f3"
+            }
+           },
+           "elements": [],
+           "widgetType": "icon-list"
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "57d6746",
+         "elType": "container",
+         "settings": {
+          "flex_direction": "column",
+          "flex_gap": {
+           "column": "0",
+           "row": "5",
+           "isLinked": false,
+           "unit": "px",
+           "size": 0
+          },
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "fcae576",
+           "elType": "widget",
+           "settings": {
+            "icon_list": [
+             {
+              "text": "Kostenlose Abrufe: Ab 5 Stück produzieren und liefern wie kostenlos, lediglich für Kleinstabrufe von 1-4 Stück berechnen wir eine Kostenpauschale.",
+              "selected_icon": {
+               "value": "fas fa-chevron-right",
+               "library": "fa-solid"
+              },
+              "_id": "642d269"
+             }
+            ],
+            "space_between": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "icon_size": {
+             "unit": "px",
+             "size": 24,
+             "sizes": []
+            },
+            "__globals__": {
+             "icon_color": "globals/colors?id=primary",
+             "text_color": "globals/colors?id=8df0251",
+             "icon_typography_typography": "globals/typography?id=f3646f3"
+            }
+           },
+           "elements": [],
+           "widgetType": "icon-list"
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "1dfcd05",
+         "elType": "container",
+         "settings": {
+          "flex_direction": "column",
+          "flex_gap": {
+           "column": "0",
+           "row": "5",
+           "isLinked": false,
+           "unit": "px",
+           "size": 0
+          },
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "5e0f074",
+           "elType": "widget",
+           "settings": {
+            "icon_list": [
+             {
+              "text": "Keine Maschinen-Einrichtungskosten: Keine Vorkosten für Ihren späteren (laufenden) Bedarf, da die Rohlinge bereits bei Erstauflage produziert wurden!",
+              "selected_icon": {
+               "value": "fas fa-chevron-right",
+               "library": "fa-solid"
+              },
+              "_id": "642d269"
+             }
+            ],
+            "space_between": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "icon_size": {
+             "unit": "px",
+             "size": 24,
+             "sizes": []
+            },
+            "__globals__": {
+             "icon_color": "globals/colors?id=primary",
+             "text_color": "globals/colors?id=8df0251",
+             "icon_typography_typography": "globals/typography?id=f3646f3"
+            }
+           },
+           "elements": [],
+           "widgetType": "icon-list"
+          }
+         ],
+         "isInner": true
+        },
+        {
+         "id": "cb9ce8b",
+         "elType": "container",
+         "settings": {
+          "flex_direction": "column",
+          "flex_gap": {
+           "column": "0",
+           "row": "5",
+           "isLinked": false,
+           "unit": "px",
+           "size": 0
+          },
+          "content_width": "full"
+         },
+         "elements": [
+          {
+           "id": "fc58f9d",
+           "elType": "widget",
+           "settings": {
+            "icon_list": [
+             {
+              "text": "Laufende Bestandsinformation: Bei jedem Abruf erhalten Sie eine Bestandsinformation und wir bieten Ihnen rechtzeitig neue Reserveschilder an!",
+              "selected_icon": {
+               "value": "fas fa-chevron-right",
+               "library": "fa-solid"
+              },
+              "_id": "642d269"
+             }
+            ],
+            "space_between": {
+             "unit": "px",
+             "size": 0,
+             "sizes": []
+            },
+            "icon_size": {
+             "unit": "px",
+             "size": 24,
+             "sizes": []
+            },
+            "__globals__": {
+             "icon_color": "globals/colors?id=primary",
+             "text_color": "globals/colors?id=8df0251",
+             "icon_typography_typography": "globals/typography?id=f3646f3"
+            }
+           },
+           "elements": [],
+           "widgetType": "icon-list"
+          }
+         ],
+         "isInner": true
+        }
+       ],
+       "isInner": true
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "b1d1022",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "3058fe7",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Rahmenvereinbarungen",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "ce7fc69",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Es wird eine Gesamtmenge fest bestellt, die im Laufe von 1 bzw. 2 Jahren abgerufen wird. Sie ordern bequem und einfach bei Bedarf Ihre Namensschilder und wir produzieren Ihre personalisierten Schilder. Dabei profitieren Sie von günstigen Stückkosten und Vorkosten bei Order größerer Mengen.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "eed9887",
+     "elType": "widget",
+     "settings": {
+      "editor": "<p><strong>Ihre Vorteile auf einen Blick:</strong></p>",
+      "_margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "35",
+       "isLinked": false
+      },
+      "__globals__": {
+       "text_color": "globals/colors?id=8df0251",
+       "typography_typography": "globals/typography?id=f3646f3"
+      }
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "61f0d8c",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "30",
+       "left": "35",
+       "isLinked": false
+      }
+     },
+     "elements": [
+      {
+       "id": "846ff1c",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "flex_gap": {
+         "column": "0",
+         "row": "5",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "content_width": "full"
+       },
+       "elements": [
+        {
+         "id": "14030fe",
+         "elType": "widget",
+         "settings": {
+          "icon_list": [
+           {
+            "text": "Sie profitieren vom günstigen Staffelpreis der Gesamtmenge!",
+            "selected_icon": {
+             "value": "fas fa-chevron-right",
+             "library": "fa-solid"
+            },
+            "_id": "642d269"
+           }
+          ],
+          "space_between": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "icon_size": {
+           "unit": "px",
+           "size": 24,
+           "sizes": []
+          },
+          "__globals__": {
+           "icon_color": "globals/colors?id=primary",
+           "text_color": "globals/colors?id=8df0251",
+           "icon_typography_typography": "globals/typography?id=f3646f3"
+          }
+         },
+         "elements": [],
+         "widgetType": "icon-list"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "b698304",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "flex_gap": {
+         "column": "0",
+         "row": "5",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "content_width": "full"
+       },
+       "elements": [
+        {
+         "id": "3488c92",
+         "elType": "widget",
+         "settings": {
+          "icon_list": [
+           {
+            "text": "24 Monate Preisstabilität bei den Teilabrufen!",
+            "selected_icon": {
+             "value": "fas fa-chevron-right",
+             "library": "fa-solid"
+            },
+            "_id": "642d269"
+           }
+          ],
+          "space_between": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "icon_size": {
+           "unit": "px",
+           "size": 24,
+           "sizes": []
+          },
+          "__globals__": {
+           "icon_color": "globals/colors?id=primary",
+           "text_color": "globals/colors?id=8df0251",
+           "icon_typography_typography": "globals/typography?id=f3646f3"
+          }
+         },
+         "elements": [],
+         "widgetType": "icon-list"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "683b59d",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "flex_gap": {
+         "column": "0",
+         "row": "5",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "content_width": "full"
+       },
+       "elements": [
+        {
+         "id": "c106bd3",
+         "elType": "widget",
+         "settings": {
+          "icon_list": [
+           {
+            "text": "Abrufe ab 1 Stück möglich!",
+            "selected_icon": {
+             "value": "fas fa-chevron-right",
+             "library": "fa-solid"
+            },
+            "_id": "642d269"
+           }
+          ],
+          "space_between": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "icon_size": {
+           "unit": "px",
+           "size": 24,
+           "sizes": []
+          },
+          "__globals__": {
+           "icon_color": "globals/colors?id=primary",
+           "text_color": "globals/colors?id=8df0251",
+           "icon_typography_typography": "globals/typography?id=f3646f3"
+          }
+         },
+         "elements": [],
+         "widgetType": "icon-list"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "76c615b",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "flex_gap": {
+         "column": "0",
+         "row": "5",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "content_width": "full"
+       },
+       "elements": [
+        {
+         "id": "457789e",
+         "elType": "widget",
+         "settings": {
+          "icon_list": [
+           {
+            "text": "Je Abruf nur reduzierte Maschinen-Einrichtungskosten!",
+            "selected_icon": {
+             "value": "fas fa-chevron-right",
+             "library": "fa-solid"
+            },
+            "_id": "642d269"
+           }
+          ],
+          "space_between": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "icon_size": {
+           "unit": "px",
+           "size": 24,
+           "sizes": []
+          },
+          "__globals__": {
+           "icon_color": "globals/colors?id=primary",
+           "text_color": "globals/colors?id=8df0251",
+           "icon_typography_typography": "globals/typography?id=f3646f3"
+          }
+         },
+         "elements": [],
+         "widgetType": "icon-list"
+        }
+       ],
+       "isInner": true
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "82c848a",
+     "elType": "widget",
+     "settings": {
+      "editor": "<p><strong>Wir beraten Sie gern und erstellen Ihnen ein individuelles Angebot über Objektmengen (z.B. für Unternehmen mit Niederlassungen, Außendienst o.a.).</strong></p>",
+      "_margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": true
+      },
+      "__globals__": {
+       "text_color": "globals/colors?id=8df0251",
+       "typography_typography": "globals/typography?id=f3646f3"
+      }
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.2",
+  "elementor_pro_version": "3.30.0",
+  "elementor_source": "post",
+  "wp_page_template": "default"
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 13629,
+  "elementor_data_sha256_of_db_string": "601e0f8ce17d7614a61b42d5061fdde0fcf995248b6ccb94197082ab68211440",
+  "page_settings_db_length_bytes": null
+ }
+}

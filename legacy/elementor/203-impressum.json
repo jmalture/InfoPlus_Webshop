@@ -1,0 +1,630 @@
+{
+ "id": 203,
+ "post_type": "page",
+ "title": "Impressum",
+ "slug": "impressum",
+ "status": "publish",
+ "template_type": "wp-post",
+ "conditions": null,
+ "page_settings": {
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "c7d1141",
+   "elType": "container",
+   "settings": {
+    "flex_gap": {
+     "column": "50",
+     "row": "50",
+     "isLinked": true,
+     "unit": "px",
+     "size": 50
+    },
+    "padding": {
+     "unit": "px",
+     "top": "80",
+     "right": "40",
+     "bottom": "80",
+     "left": "40",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "40",
+     "right": "20",
+     "bottom": "40",
+     "left": "20",
+     "isLinked": false
+    },
+    "padding_tablet": {
+     "unit": "px",
+     "top": "40",
+     "right": "40",
+     "bottom": "40",
+     "left": "40",
+     "isLinked": true
+    },
+    "flex_gap_tablet": {
+     "column": "40",
+     "row": "40",
+     "isLinked": true,
+     "unit": "px",
+     "size": 40
+    },
+    "flex_gap_mobile": {
+     "column": "",
+     "row": "",
+     "isLinked": true,
+     "unit": "px",
+     "size": null
+    }
+   },
+   "elements": [
+    {
+     "id": "124a3d3",
+     "elType": "widget",
+     "settings": {
+      "title": "Impressum",
+      "__globals__": {
+       "typography_typography": "globals/typography?id=secondary",
+       "title_color": "globals/colors?id=primary"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "00a167e",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "480e6dc",
+       "elType": "widget",
+       "settings": {
+        "title": "Infoplus Blindow\nNamensschilder GmbH & Co. KG",
+        "__globals__": {
+         "typography_typography": "",
+         "title_color": "globals/colors?id=text"
+        },
+        "typography_typography": "custom",
+        "typography_font_family": "Archivo Narrow",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 20,
+         "sizes": []
+        },
+        "typography_font_weight": "600",
+        "typography_text_transform": "uppercase",
+        "typography_font_style": "normal",
+        "typography_text_decoration": "none",
+        "typography_line_height": {
+         "unit": "em",
+         "size": 1.2,
+         "sizes": []
+        },
+        "typography_letter_spacing": {
+         "unit": "px",
+         "size": 1.5,
+         "sizes": []
+        },
+        "typography_word_spacing": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "title_color": "#E6007E"
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "66f8743",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Schierenberg 62<br />22145 Hamburg</p><p>Telefon: +49 (0) 40 - 696 3003-0<br />Telefax: +49 (0) 40 - 696 3003-13<br />E-Mail: info@infoplus.de</p><p>Amtsgericht Hamburg HRA 130346<br />USt.-IDNr. DE 813 388 042</p><p>Persönlich haftender Gesellschafter:<br />INFOPLUS Verwaltungsgesellschaft mbH<br />Schierenberg 62, 22145 Hamburg<br />Amtsgericht Hamburg HRB 182543</p><p>Geschäftsführer: Martin Blindow</p><p>© 2025 Infoplus Blindow Namensschilder GmbH &amp; Co. KG</p><p>Alle Preisangaben auf unserer Website sind freibleibend und verstehen sich zzgl. der gesetzlichen Mehrwertsteuer. Mit unserem Angebot wenden wir uns an Unternehmen, Gewerbetreibende und Freiberufler und nicht an Privatpersonen.</p><p>Sie suchen niveauvolle Büroschilder, Praxisschilder oder Namensschilder für Ihren Messeauftritt? Dann sind Sie bei uns genau richtig. Entdecken Sie jetzt unser vielseitiges Angebot und bestellen Sie Ihre Schilder online – bereits ab 1 Stück möglich.</p>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "005a1d1",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "7447fc7",
+       "elType": "widget",
+       "settings": {
+        "title": "Design und umsetzung",
+        "__globals__": {
+         "typography_typography": "",
+         "title_color": "globals/colors?id=text"
+        },
+        "typography_typography": "custom",
+        "typography_font_family": "Archivo Narrow",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 20,
+         "sizes": []
+        },
+        "typography_font_weight": "600",
+        "typography_text_transform": "uppercase",
+        "typography_font_style": "normal",
+        "typography_text_decoration": "none",
+        "typography_line_height": {
+         "unit": "em",
+         "size": 1.2,
+         "sizes": []
+        },
+        "typography_letter_spacing": {
+         "unit": "px",
+         "size": 1.5,
+         "sizes": []
+        },
+        "typography_word_spacing": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "title_color": "#E6007E"
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "c4b86c7",
+       "elType": "widget",
+       "settings": {
+        "image": {
+         "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/Alture_Logo_1-scaled.png",
+         "id": 205,
+         "size": "",
+         "alt": "",
+         "source": "library"
+        },
+        "link_to": "custom",
+        "link": {
+         "url": "https://alture.io/",
+         "is_external": "on",
+         "nofollow": "",
+         "custom_attributes": ""
+        },
+        "align": "left",
+        "width": {
+         "unit": "px",
+         "size": 200,
+         "sizes": []
+        },
+        "width_tablet": {
+         "unit": "px",
+         "size": "",
+         "sizes": []
+        },
+        "width_mobile": {
+         "unit": "px",
+         "size": "",
+         "sizes": []
+        }
+       },
+       "elements": [],
+       "widgetType": "image"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "08aace8",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "e6af957",
+       "elType": "widget",
+       "settings": {
+        "title": "Haftungshinweis",
+        "__globals__": {
+         "typography_typography": "",
+         "title_color": "globals/colors?id=text"
+        },
+        "typography_typography": "custom",
+        "typography_font_family": "Archivo Narrow",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 20,
+         "sizes": []
+        },
+        "typography_font_weight": "600",
+        "typography_text_transform": "uppercase",
+        "typography_font_style": "normal",
+        "typography_text_decoration": "none",
+        "typography_line_height": {
+         "unit": "em",
+         "size": 1.2,
+         "sizes": []
+        },
+        "typography_letter_spacing": {
+         "unit": "px",
+         "size": 1.5,
+         "sizes": []
+        },
+        "typography_word_spacing": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "title_color": "#E6007E"
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "afb9492",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich. Sämtliche angebotenen Informationen dürfen - auch auszugsweise - nur mit schriftlicher Genehmigung der Infoplus Blindow Namensschilder GmbH &amp; Co. KG weiterverbreitet oder anderweitig veröffentlicht werden.</p>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "b40fe9f",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "6f84092",
+       "elType": "widget",
+       "settings": {
+        "title": "Urheberrecht",
+        "__globals__": {
+         "typography_typography": "",
+         "title_color": "globals/colors?id=text"
+        },
+        "typography_typography": "custom",
+        "typography_font_family": "Archivo Narrow",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 20,
+         "sizes": []
+        },
+        "typography_font_weight": "600",
+        "typography_text_transform": "uppercase",
+        "typography_font_style": "normal",
+        "typography_text_decoration": "none",
+        "typography_line_height": {
+         "unit": "em",
+         "size": 1.2,
+         "sizes": []
+        },
+        "typography_letter_spacing": {
+         "unit": "px",
+         "size": 1.5,
+         "sizes": []
+        },
+        "typography_word_spacing": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "title_color": "#E6007E"
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "1396319",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Gemäß §4 Abs. 1, Abs. 2 UrhG (Schutz von Datenbanken) besteht für das gesamte Internet-Angebot der Firma Infoplus Blindow Namensschilder GmbH &amp; Co. KG Urheberrechtsschutz.</p><p>Die Inhalte dieser Website sowie die dort genannten Marken- und Warenzeichen unterliegen uneingeschränkt den Bestimmungen des jeweils gültigen Kennzeichenrechts und den Besitzrechten der jeweiligen eingetragenen Eigentümer. Sie dürfen nur zum Zwecke der Information genutzt werden. Jede sonstige Vervielfältigung, Bearbeitung und jede Art der Verwertung von Grafiken, Texten und Dokumenten in anderen elektronischen oder gedruckten Publikationen ist ohne ausdrückliche Genehmigung nicht gestattet. Allein aufgrund der bloßen Nennung ist nicht der Schluß zu ziehen, dass Marken- und Warenzeichen nicht durch Rechte Dritter geschützt sind! Das Copyright für veröffentlichte, vom Autor selbst erstellte Objekte bleibt allein beim Autor der Seiten. Eine Vervielfältigung oder Verwendung solcher Grafiken, Texte und Dokumente ist ebenfalls ohne ausdrückliche Zustimmung des Autors nicht gestattet. Ausgenommen hiervon sind die in unserem Servicebereich „Service &amp; Support“ bereitgestellten Download-Dokumente. Diese dürfen in der Downloadfassung ohne weitere Genehmigung verwendet werden, solange keine Veränderungen an den Dateien, Ausdrucken oder Kopien vorgenommen werden und die Quelle des jeweiligen Dokuments deutlich erkennbar bleibt.</p>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "1f92aec",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "bc28059",
+       "elType": "widget",
+       "settings": {
+        "title": "Markenschutz",
+        "__globals__": {
+         "typography_typography": "",
+         "title_color": "globals/colors?id=text"
+        },
+        "typography_typography": "custom",
+        "typography_font_family": "Archivo Narrow",
+        "typography_font_size": {
+         "unit": "px",
+         "size": 20,
+         "sizes": []
+        },
+        "typography_font_weight": "600",
+        "typography_text_transform": "uppercase",
+        "typography_font_style": "normal",
+        "typography_text_decoration": "none",
+        "typography_line_height": {
+         "unit": "em",
+         "size": 1.2,
+         "sizes": []
+        },
+        "typography_letter_spacing": {
+         "unit": "px",
+         "size": 1.5,
+         "sizes": []
+        },
+        "typography_word_spacing": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "title_color": "#E6007E"
+       },
+       "elements": [],
+       "widgetType": "heading"
+      },
+      {
+       "id": "049aa34",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Aufgeführte Warenzeichen, Produktnamen, Firmennamen und Logos sind Eigentum der jeweiligen Hersteller und Urheber.</p>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.29.2",
+  "elementor_pro_version": "3.8.1",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1774967595"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 11419,
+  "elementor_data_sha256_of_db_string": "181365a27eb57d07dd4ef373d9c1c45fe47335c91602f9369a30c42fe1315311",
+  "page_settings_db_length_bytes": 34
+ }
+}

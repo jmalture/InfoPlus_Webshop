@@ -1,0 +1,77 @@
+{
+ "id": 27,
+ "post_type": "page",
+ "title": "",
+ "slug": "cart",
+ "status": "publish",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents"
+ },
+ "elementor_data": [
+  {
+   "id": "4e2d13a4",
+   "elType": "container",
+   "settings": {
+    "min_height": {
+     "unit": "vh",
+     "size": 75,
+     "sizes": []
+    },
+    "min_height_laptop": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_tablet": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_mobile": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "flex_justify_content": "center",
+    "flex_align_items": "center",
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+   },
+   "elements": [
+    {
+     "id": "7310158",
+     "elType": "widget",
+     "settings": {
+      "cart_layout": "one-column",
+      "update_cart_button_text": "Update Cart",
+      "apply_coupon_button_text": "Apply coupon",
+      "totals_section_title": "Cart Totals",
+      "update_shipping_button_text": "Update",
+      "checkout_button_text": "Proceed to Checkout",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);"
+     },
+     "elements": [],
+     "widgetType": "woocommerce-cart"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_version": "3.33.4",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": 1774967595
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 1291,
+  "elementor_data_sha256_of_db_string": "41709bdeb8d2aca99aa726139d8b288931b7d82ed8c5048154d69cdbbcbc5d18",
+  "page_settings_db_length_bytes": 57
+ }
+}

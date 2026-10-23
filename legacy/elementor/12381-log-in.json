@@ -1,0 +1,567 @@
+{
+ "id": 12381,
+ "post_type": "page",
+ "title": "Log in",
+ "slug": "log-in",
+ "status": "publish",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents"
+ },
+ "elementor_data": [
+  {
+   "id": "60c77e5",
+   "elType": "container",
+   "settings": {
+    "min_height": {
+     "unit": "vh",
+     "size": 80,
+     "sizes": []
+    },
+    "min_height_laptop": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_tablet": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_mobile": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "flex_justify_content": "center",
+    "flex_align_items": "center",
+    "background_image": {
+     "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/06/bg-banner-slide1-scaled.jpg",
+     "id": 289,
+     "size": "",
+     "alt": "",
+     "source": "library"
+    },
+    "background_position": "center center",
+    "background_repeat": "no-repeat",
+    "background_size": "cover",
+    "margin": {
+     "unit": "em",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "margin_laptop": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "margin_tablet": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "margin_mobile": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding": {
+     "unit": "em",
+     "top": "5",
+     "right": "0",
+     "bottom": "5",
+     "left": "0",
+     "isLinked": false
+    },
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "background_background": "classic",
+    "background_overlay_background": "classic",
+    "background_overlay_opacity": {
+     "unit": "px",
+     "size": 0.98,
+     "sizes": []
+    },
+    "eael_liquid_glass_effect": "effect2",
+    "eael_image_masking_type": "image",
+    "custom_css": "selector{\n    //filter: blur(10px);\n}",
+    "padding_laptop": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding_tablet": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding_mobile": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    }
+   },
+   "elements": [
+    {
+     "id": "00aebb2",
+     "elType": "widget",
+     "settings": {
+      "redirect_for_logged_in_user": "yes",
+      "redirect_url_for_logged_in_user": {
+       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/account/",
+       "is_external": false,
+       "nofollow": "",
+       "custom_attributes": ""
+      },
+      "log_out_link_text": "Aausloggen",
+      "lost_password_text": "Passwort vergessen?",
+      "remember_text": "Erinnere dich an mich",
+      "login_link_text_lostpassword": "\nSign In",
+      "lr_form_image": {
+       "url": "",
+       "id": "",
+       "size": "",
+       "alt": "",
+       "source": "library"
+      },
+      "lr_form_logo": {
+       "url": "",
+       "id": "",
+       "size": "",
+       "alt": "",
+       "source": "library"
+      },
+      "lr_form_logo_position": "block",
+      "login_user_label": "Benutzername oder E-Mail-Adresse",
+      "login_password_label": "Passwort",
+      "login_user_placeholder": "Benutzername oder E-Mail-Adresse",
+      "login_password_placeholder": "Passwort",
+      "login_button_text": "Einloggen",
+      "redirect_after_login": "yes",
+      "redirect_url": {
+       "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/account/",
+       "is_external": false,
+       "nofollow": true,
+       "custom_attributes": ""
+      },
+      "register_fields": [
+       {
+        "field_type": "user_name",
+        "field_label": "Benutzername",
+        "placeholder": "Benutzername",
+        "_id": "cd12b55"
+       },
+       {
+        "field_type": "email",
+        "field_label": "E-Mail",
+        "placeholder": "E-Mail",
+        "required": "yes",
+        "_id": "90108cb"
+       },
+       {
+        "field_type": "password",
+        "field_label": "Passwort",
+        "placeholder": "Passwort",
+        "required": "yes",
+        "_id": "bbe1f3c"
+       }
+      ],
+      "reg_button_text": "Registrieren",
+      "reg_email_subject": "Willkommen bei Infoplus – Ihr Konto wurde erstellt",
+      "reg_admin_email_subject": "Willkommen bei Infoplus – Ihr Konto wurde erstellt",
+      "lostpassword_user_label": "Benutzername oder E-Mail-Adresse",
+      "lostpassword_user_placeholder": "Benutzername oder E-Mail-Adresse",
+      "lostpassword_button_text": "Passwort zurücksetzen",
+      "lostpassword_email_subject": "Ihr Passwort zurücksetzen – Infoplus",
+      "lostpassword_email_message_reset_link_text": "Klicken Sie hier, um Ihr Passwort zurückzusetzen.",
+      "resetpassword_password_label": "Neues Passwort",
+      "resetpassword_confirm_password_label": "Neues Passwort bestätigen",
+      "resetpassword_password_placeholder": "Neues Passwort",
+      "resetpassword_confirm_password_placeholder": "Neues Passwort bestätigen",
+      "resetpassword_button_text": "Passwort speichern",
+      "acceptance_label": "I Accept\n the Terms and Conditions.",
+      "err_email": "Sie haben eine ungültige E-Mail-Adresse verwendet.",
+      "err_email_missing": "Die E-Mail-Adresse fehlt oder ist ungültig.",
+      "err_email_used": "Die angegebene E-Mail-Adresse ist bereits für ein anderes Konto registriert. Bitte melden Sie sich an, setzen Sie Ihr Passwort zurück oder verwenden Sie eine andere E-Mail-Adresse.",
+      "err_username": "Sie haben einen ungültigen Benutzernamen verwendet.",
+      "err_username_used": "Ungültiger Benutzername angegeben oder der Benutzername ist bereits registriert.",
+      "err_pass": "Ihr Passwort ist ungültig.",
+      "err_conf_pass": "Ihr bestätigtes Passwort stimmte nicht überein.",
+      "err_loggedin": "Sie sind bereits angemeldet",
+      "err_recaptcha": "You did not pass reCAPTCHA challenge.",
+      "err_cloudflare_turnstile": "You did not pass Cloudflare Turnstile challenge.",
+      "err_reset_password_key_expired": "Ihr Link zum Zurücksetzen des Passworts scheint ungültig zu sein. Bitte fordern Sie einen neuen Link an.",
+      "err_tc": "Sie haben die Allgemeinen Geschäftsbedingungen nicht akzeptiert. Bitte akzeptieren Sie sie und versuchen Sie es erneut.",
+      "err_unknown": "Etwas ist schiefgelaufen!",
+      "err_phone_number_missing": "Die Telefonnummer fehlt.",
+      "err_phone_number_invalid": "Ungültige Telefonnummer angegeben",
+      "success_login": "Sie haben sich erfolgreich angemeldet.",
+      "success_register": "Die Registrierung wurde erfolgreich abgeschlossen. Sollten Sie bei der Registrierung kein Passwort angegeben haben, überprüfen Sie bitte Ihren Posteingang.",
+      "success_lostpassword": "Prüfen Sie, ob Sie per E-Mail einen Bestätigungslink erhalten haben.",
+      "success_resetpassword": "Ihr Passwort wurde zurückgesetzt.",
+      "eael_form_wrap_width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "eael_form_wrap_width_laptop": {
+       "unit": "rem",
+       "size": "",
+       "sizes": []
+      },
+      "eael_form_wrap_width_tablet": {
+       "unit": "rem",
+       "size": 75,
+       "sizes": []
+      },
+      "eael_form_wrap_width_mobile": {
+       "unit": "rem",
+       "size": 100,
+       "sizes": []
+      },
+      "eael_form_wrap_border_width": {
+       "unit": "px",
+       "top": "1",
+       "right": "1",
+       "bottom": "1",
+       "left": "1",
+       "isLinked": true
+      },
+      "eael_form_wrap_border_radius": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": true
+      },
+      "eael_form_bg_color_image": {
+       "url": "",
+       "id": "",
+       "size": "",
+       "alt": "",
+       "source": "library"
+      },
+      "eael_form_bg_color_position": "bottom right",
+      "login_fhc_po_toggle": "yes",
+      "eael_field_border_radius": {
+       "unit": "px",
+       "top": "16",
+       "right": "16",
+       "bottom": "16",
+       "left": "16",
+       "isLinked": true
+      },
+      "eael_field_border_focus_border": "solid",
+      "eael_field_border_focus_width": {
+       "unit": "px",
+       "top": "1",
+       "right": "1",
+       "bottom": "1",
+       "left": "1",
+       "isLinked": true
+      },
+      "eael_field_border_radius_focus": {
+       "unit": "px",
+       "top": "16",
+       "right": "16",
+       "bottom": "16",
+       "left": "16",
+       "isLinked": true
+      },
+      "rmark_sign": "*",
+      "login_btn_bg_color_hover_background": "classic",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "__globals__": {
+       "eael_form_wrap_border_color": "globals/colors?id=primary",
+       "eael_field_bg_color": "globals/colors?id=accent",
+       "eael_field_color": "globals/colors?id=text",
+       "eael_field_border_focus_color": "globals/colors?id=primary",
+       "login_btn_typography_typography": "globals/typography?id=9e95dbb",
+       "login_btn_color": "globals/colors?id=accent",
+       "login_btn_bg_color_color": "globals/colors?id=primary",
+       "login_button_color_hover": "globals/colors?id=accent",
+       "login_btn_bg_color_hover_color": "globals/colors?id=secondary",
+       "register_btn_typography_typography": "globals/typography?id=text",
+       "register_btn_color": "globals/colors?id=accent",
+       "register_btn_bg_color_color": "globals/colors?id=primary",
+       "login_link_typography_typography": "globals/typography?id=text",
+       "login_link_color": "globals/colors?id=primary",
+       "login_link_bg_color_color": "globals/colors?id=primary",
+       "login_form_title_color": "globals/colors?id=primary",
+       "login_form_title_typo_typography": "globals/typography?id=primary",
+       "register_form_title_color": "globals/colors?id=primary",
+       "register_form_title_typo_typography": "globals/typography?id=primary",
+       "register_link_typography_typography": "globals/typography?id=9e95dbb",
+       "register_link_color": "globals/colors?id=primary",
+       "_background_color": "globals/colors?id=accent",
+       "resetpassword_btn_typography_typography": "globals/typography?id=text",
+       "resetpassword_btn_color": "globals/colors?id=accent",
+       "resetpassword_btn_bg_color_color": "globals/colors?id=primary",
+       "resetpassword_button_color_hover": "globals/colors?id=primary",
+       "resetpassword_btn_bg_color_hover_color": "globals/colors?id=accent",
+       "lostpassword_btn_typography_typography": "globals/typography?id=text",
+       "lostpassword_btn_color": "globals/colors?id=accent",
+       "lostpassword_btn_bg_color_color": "globals/colors?id=primary",
+       "resetpassword_btn_border_hover_color": "globals/colors?id=primary",
+       "lostpassword_form_title_typo_typography": "globals/typography?id=primary",
+       "resetpassword_form_title_typo_typography": "globals/typography?id=primary",
+       "lostpassword_link_color": "globals/colors?id=primary",
+       "lostpassword_form_title_color": "globals/colors?id=primary",
+       "resetpassword_form_title_color": "globals/colors?id=primary"
+      },
+      "registration_link_text": " \nJetzt registrieren",
+      "login_link_text": " \nAnmelden",
+      "login_form_title": "Willkommen zurück!",
+      "register_form_title": "Neues Konto erstellen",
+      "eael_form_wrap_shadow_box_shadow": {
+       "horizontal": 0,
+       "vertical": 0,
+       "blur": 0,
+       "spread": 0,
+       "color": "rgba(0,0,0,0.5)"
+      },
+      "login_fhc_width": {
+       "unit": "px",
+       "size": "",
+       "sizes": []
+      },
+      "login_form_title_po_toggle": "yes",
+      "register_fhc_po_toggle": "yes",
+      "register_fhc_width_laptop": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "register_fhc_width_tablet": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "register_fhc_width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "register_fhc_padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "50",
+       "left": "0",
+       "isLinked": false
+      },
+      "register_form_title_po_toggle": "yes",
+      "register_btn_bg_color_background": "classic",
+      "_element_width": "initial",
+      "form_form_wrap_po_toggle": "yes",
+      "eael_form_wrap_margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "eael_form_wrap_padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_flex_align_self": "center",
+      "reg_admin_email_message": "<p>Hallo [username],</p><p>herzlich willkommen bei Infoplus! Ihr Konto wurde erfolgreich erstellt.</p><p>Hier sind Ihre Zugangsdaten:</p><p>Benutzername: [username]<br />Passwort: [password]</p><p>Jetzt anmelden und loslegen:<br /><a href=\"https://navajowhite-rhinoceros-679020.hostingersite.com/log-in/\">login link</a></p><p>Mit Ihrem Infoplus-Konto können Sie:</p><p>- Individuelle Namensschilder im Editor gestalten<br />- Projekte speichern und verwalten<br />- Bestellungen verfolgen<br />- Von Händlerrabatten profitieren</p><p>Wir empfehlen Ihnen, Ihr Passwort nach der ersten Anmeldung zu ändern.</p><p>Bei Fragen steht Ihnen unser Support-Team gerne zur Verfügung.</p><p>Mit freundlichen Grüßen,<br />Ihr Infoplus Team</p>",
+      "login_btn_bg_color_background": "classic",
+      "login_fhc_padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "50",
+       "left": "0",
+       "isLinked": false
+      },
+      "register_user_role": "sales",
+      "reg_email_message": "<p>Hallo [username],</p><p>herzlich willkommen bei Infoplus! Ihr Konto wurde erfolgreich erstellt.</p><p>Hier sind Ihre Zugangsdaten:</p><p>Benutzername: [username]<br />Passwort: [password]</p><p>Jetzt anmelden und loslegen:</p><p><a href=\"https://navajowhite-rhinoceros-679020.hostingersite.com/log-in/\">Login link</a></p><p>Mit Ihrem Infoplus-Konto können Sie:</p><p>- Individuelle Namensschilder im Editor gestalten<br />- Projekte speichern und verwalten<br />- Bestellungen verfolgen<br />- Von Händlerrabatten profitieren</p><p>Wir empfehlen Ihnen, Ihr Passwort nach der ersten Anmeldung zu ändern.</p><p>Bei Fragen steht Ihnen unser Support-Team gerne zur Verfügung.</p><p>Mit freundlichen Grüßen,<br />Ihr Infoplus Team</p>",
+      "acceptance_text": "<p>Please go through the following terms and conditions carefully.</p>",
+      "eael_form_wrap_bg_color_background": "classic",
+      "eael_form_wrap_bg_color_color": "#02010100",
+      "_z_index": 999,
+      "_padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_element_custom_width": {
+       "unit": "%",
+       "size": 50,
+       "sizes": []
+      },
+      "_background_background": "classic",
+      "_border_radius": {
+       "unit": "px",
+       "top": "9",
+       "right": "9",
+       "bottom": "9",
+       "left": "9",
+       "isLinked": true
+      },
+      "register_form_subtitle": "Registrieren Sie sich jetzt, um individuelle Namensschilder zu gestalten, Projekte zu speichern und Bestellungen zu verfolgen. Sichern Sie sich bis zu 25% Rabatt und Premium-Vorteile mit unserem  Partnerprogramm",
+      "enable_reset_password": "yes",
+      "preview_reset_password": "yes",
+      "lost_password_link_type": "form",
+      "lostpassword_form_title": "Willkommen zurück!",
+      "lostpassword_form_subtitle": "Bitte geben Sie Ihren Benutzernamen oder Ihre E-Mail-Adresse ein. Sie erhalten eine E-Mail mit Anweisungen zum Zurücksetzen Ihres Passworts.",
+      "resetpassword_form_title": "Passwort zurücksetzen",
+      "resetpassword_form_subtitle": "Geben Sie Ihr neues Passwort ein",
+      "password_toggle_register": "yes",
+      "lostpassword_label_types": "custom",
+      "lostpassword_email_message": "<p>Hallo [username],</p><p>wir haben eine Anfrage zum Zurücksetzen Ihres Passworts für Ihr Infoplus-Konto erhalten.</p><p>Klicken Sie auf den folgenden Link, um ein neues Passwort festzulegen:</p><p>[password_reset_link]</p><p>Dieser Link ist aus Sicherheitsgründen nur 24 Stunden gültig.</p><p>Falls Sie diese Anfrage nicht gestellt haben, können Sie diese E-Mail ignorieren – Ihr Passwort bleibt unverändert.</p><p>Bei Fragen steht Ihnen unser Support-Team gerne zur Verfügung.</p><p>Mit freundlichen Grüßen,<br />Ihr Infoplus Team</p>",
+      "redirect_after_resetpassword": "yes",
+      "resetpassword_fhc_po_toggle": "yes",
+      "lostpassword_btn_bg_color_background": "classic",
+      "lostpassword_btn_border_radius": {
+       "unit": "px",
+       "top": "9",
+       "right": "9",
+       "bottom": "9",
+       "left": "9",
+       "isLinked": true
+      },
+      "resetpassword_btn_bg_color_background": "classic",
+      "resetpassword_btn_border_border": "solid",
+      "resetpassword_btn_border_width": {
+       "unit": "px",
+       "top": "1",
+       "right": "1",
+       "bottom": "1",
+       "left": "1",
+       "isLinked": true
+      },
+      "resetpassword_btn_border_radius": {
+       "unit": "px",
+       "top": "9",
+       "right": "9",
+       "bottom": "9",
+       "left": "9",
+       "isLinked": true
+      },
+      "resetpassword_btn_bg_color_hover_background": "classic",
+      "resetpassword_btn_border_hover_border": "solid",
+      "resetpassword_btn_border_hover_width": {
+       "unit": "px",
+       "top": "1",
+       "right": "1",
+       "bottom": "1",
+       "left": "1",
+       "isLinked": true
+      },
+      "resetpassword_btn_border_radius_hover": {
+       "unit": "px",
+       "top": "9",
+       "right": "9",
+       "bottom": "9",
+       "left": "9",
+       "isLinked": true
+      },
+      "lostpassword_form_title_po_toggle": "yes",
+      "resetpassword_form_title_po_toggle": "yes",
+      "enable_login_register_recaptcha": "",
+      "resetpassword_label_types": "custom",
+      "__dynamic__": {
+       "login_user_placeholder": "[elementor-tag id=\"a48c635\" name=\"user-info\" settings=\"%7B%22type%22%3A%22login%22%7D\"]"
+      },
+      "password_toggle": "",
+      "login_label_types": "custom",
+      "reg_email_template_type": "custom",
+      "reg_admin_email_template_type": "custom",
+      "lostpassword_fhc_po_toggle": "yes",
+      "lostpassword_fhc_margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "50",
+       "left": "0",
+       "isLinked": false
+      },
+      "resetpassword_fhc_margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "50",
+       "left": "0",
+       "isLinked": false
+      },
+      "register_btn_border_radius": {
+       "unit": "px",
+       "top": "9",
+       "right": "9",
+       "bottom": "9",
+       "left": "9",
+       "isLinked": true
+      },
+      "register_btn_width": {
+       "unit": "px",
+       "size": 150,
+       "sizes": []
+      },
+      "lostpassword_btn_d_type": "column",
+      "lostpassword_btn_width": {
+       "unit": "px",
+       "size": 200,
+       "sizes": []
+      },
+      "custom_css": "selector #eael-lostpassword-submit{\n    margin-bottom: 20px;\n}",
+      "err_restricted_role": "You are not allowed to login from here.",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "eael-login-register"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.35.7",
+  "elementor_pro_version": "3.35.1",
+  "wp_page_template": "elementor_header_footer",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1791031652"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 16179,
+  "elementor_data_sha256_of_db_string": "3780ffb1ff9f1a69db8a8e103199f14679d6218f0237046b9331e460fa4e909b",
+  "page_settings_db_length_bytes": 57
+ }
+}

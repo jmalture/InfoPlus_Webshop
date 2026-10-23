@@ -1,0 +1,15 @@
+/* element ba9a744 container */
+selector .elementor-widget-icon-box.elementor-mobile-position-left .elementor-icon-box-wrapper, .elementor-widget-icon-box.elementor-mobile-position-right .elementor-icon-box-wrapper {
+    align-items: center;
+}
+
+@media only screen and (max-width: 767px) {
+  selector .elementor-icon {
+    padding-top: 6px;
+}
+}
+
+/* element 27b830f icon-box */
+selector p {
+    padding-bottom: 7px;
+}

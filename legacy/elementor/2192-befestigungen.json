@@ -1,0 +1,666 @@
+{
+ "id": 2192,
+ "post_type": "elementor_library",
+ "title": "Befestigungen",
+ "slug": "befestigungen",
+ "status": "publish",
+ "template_type": "container",
+ "conditions": null,
+ "page_settings": null,
+ "elementor_data": [
+  {
+   "id": "c8b4a8f",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "flex_wrap": "wrap",
+    "flex_gap": {
+     "unit": "px",
+     "size": 0,
+     "column": "0",
+     "row": "0"
+    }
+   },
+   "elements": [
+    {
+     "id": "c28a747",
+     "elType": "widget",
+     "settings": {
+      "title": "Magnet-Systeme",
+      "typography_typography": "custom",
+      "typography_font_family": "Montserrat",
+      "typography_font_size": {
+       "unit": "px",
+       "size": 22,
+       "sizes": []
+      },
+      "typography_font_size_mobile": {
+       "unit": "px",
+       "size": 36,
+       "sizes": []
+      },
+      "typography_font_weight": "600",
+      "typography_text_transform": "none",
+      "typography_font_style": "normal",
+      "typography_text_decoration": "none",
+      "typography_line_height": {
+       "unit": "em",
+       "size": 1.2,
+       "sizes": []
+      },
+      "typography_letter_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "typography_word_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "__globals__": {
+       "title_color": "globals/colors?id=text"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "ae7f736",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "flex_direction": "row",
+      "flex_gap": {
+       "column": "0",
+       "row": "0",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "flex_wrap": "wrap"
+     },
+     "elements": [
+      {
+       "id": "935aeae",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "content_width": "full",
+        "width": {
+         "unit": "%",
+         "size": "33.3333"
+        },
+        "flex_gap": {
+         "column": "0",
+         "row": "0",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        }
+       },
+       "elements": [
+        {
+         "id": "3b3531b",
+         "elType": "widget",
+         "settings": {
+          "image": {
+           "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/AluContur_PROMAG_380x209.png",
+           "id": 2205,
+           "size": "",
+           "alt": "",
+           "source": "library"
+          }
+         },
+         "elements": [],
+         "widgetType": "image"
+        },
+        {
+         "id": "18f5e8c",
+         "elType": "widget",
+         "settings": {
+          "title": "PROMAG",
+          "align": "center",
+          "typography_typography": "custom",
+          "typography_font_family": "Montserrat",
+          "typography_font_size": {
+           "unit": "px",
+           "size": 15,
+           "sizes": []
+          },
+          "typography_font_size_mobile": {
+           "unit": "px",
+           "size": 36,
+           "sizes": []
+          },
+          "typography_font_weight": "700",
+          "typography_text_transform": "none",
+          "typography_font_style": "normal",
+          "typography_text_decoration": "none",
+          "typography_line_height": {
+           "unit": "em",
+           "size": 1.2,
+           "sizes": []
+          },
+          "typography_letter_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "typography_word_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "__globals__": {
+           "title_color": "globals/colors?id=text"
+          }
+         },
+         "elements": [],
+         "widgetType": "heading"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "bbc101d",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "content_width": "full",
+        "width": {
+         "unit": "%",
+         "size": "33.3333"
+        },
+        "flex_gap": {
+         "column": "0",
+         "row": "0",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        }
+       },
+       "elements": [
+        {
+         "id": "43a15f9",
+         "elType": "widget",
+         "settings": {
+          "image": {
+           "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/AluContur_DUOMAG_380x209.png",
+           "id": 2202,
+           "size": "",
+           "alt": "",
+           "source": "library"
+          }
+         },
+         "elements": [],
+         "widgetType": "image"
+        },
+        {
+         "id": "16b6c9d",
+         "elType": "widget",
+         "settings": {
+          "title": "DUOMAG",
+          "align": "center",
+          "typography_typography": "custom",
+          "typography_font_family": "Montserrat",
+          "typography_font_size": {
+           "unit": "px",
+           "size": 15,
+           "sizes": []
+          },
+          "typography_font_size_mobile": {
+           "unit": "px",
+           "size": 36,
+           "sizes": []
+          },
+          "typography_font_weight": "700",
+          "typography_text_transform": "none",
+          "typography_font_style": "normal",
+          "typography_text_decoration": "none",
+          "typography_line_height": {
+           "unit": "em",
+           "size": 1.2,
+           "sizes": []
+          },
+          "typography_letter_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "typography_word_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "__globals__": {
+           "title_color": "globals/colors?id=text"
+          }
+         },
+         "elements": [],
+         "widgetType": "heading"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "60384e9",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "content_width": "full",
+        "width": {
+         "unit": "%",
+         "size": "33.3333"
+        },
+        "flex_gap": {
+         "column": "0",
+         "row": "0",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        }
+       },
+       "elements": [
+        {
+         "id": "61072c7",
+         "elType": "widget",
+         "settings": {
+          "image": {
+           "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/AluContur_DUOMAG-Plus_380x209.png",
+           "id": 2203,
+           "size": "",
+           "alt": "",
+           "source": "library"
+          }
+         },
+         "elements": [],
+         "widgetType": "image"
+        },
+        {
+         "id": "9837033",
+         "elType": "widget",
+         "settings": {
+          "title": "DUOMAG- Plus*",
+          "align": "center",
+          "typography_typography": "custom",
+          "typography_font_family": "Montserrat",
+          "typography_font_size": {
+           "unit": "px",
+           "size": 15,
+           "sizes": []
+          },
+          "typography_font_size_mobile": {
+           "unit": "px",
+           "size": 36,
+           "sizes": []
+          },
+          "typography_font_weight": "700",
+          "typography_text_transform": "none",
+          "typography_font_style": "normal",
+          "typography_text_decoration": "none",
+          "typography_line_height": {
+           "unit": "em",
+           "size": 1.2,
+           "sizes": []
+          },
+          "typography_letter_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "typography_word_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "__globals__": {
+           "title_color": "globals/colors?id=text"
+          }
+         },
+         "elements": [],
+         "widgetType": "heading"
+        }
+       ],
+       "isInner": true
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "a9a1b55",
+     "elType": "widget",
+     "settings": {
+      "title": "Befestigungs-Alternativen",
+      "typography_typography": "custom",
+      "typography_font_family": "Montserrat",
+      "typography_font_size": {
+       "unit": "px",
+       "size": 22,
+       "sizes": []
+      },
+      "typography_font_size_mobile": {
+       "unit": "px",
+       "size": 36,
+       "sizes": []
+      },
+      "typography_font_weight": "600",
+      "typography_text_transform": "none",
+      "typography_font_style": "normal",
+      "typography_text_decoration": "none",
+      "typography_line_height": {
+       "unit": "em",
+       "size": 1.2,
+       "sizes": []
+      },
+      "typography_letter_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "typography_word_spacing": {
+       "unit": "px",
+       "size": 0,
+       "sizes": []
+      },
+      "_margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_padding": {
+       "unit": "px",
+       "top": "20",
+       "right": "0",
+       "bottom": "20",
+       "left": "0",
+       "isLinked": false
+      },
+      "__globals__": {
+       "title_color": "globals/colors?id=text"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "e85b895",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "flex_direction": "row",
+      "flex_gap": {
+       "column": "0",
+       "row": "0",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "flex_wrap": "wrap"
+     },
+     "elements": [
+      {
+       "id": "9eb16e0",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "content_width": "full",
+        "width": {
+         "unit": "%",
+         "size": "33.3333"
+        },
+        "flex_gap": {
+         "column": "0",
+         "row": "0",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        }
+       },
+       "elements": [
+        {
+         "id": "dd1d4b5",
+         "elType": "widget",
+         "settings": {
+          "image": {
+           "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/AluContur_Krokodilklemme_380x209.png",
+           "id": 2204,
+           "size": "",
+           "alt": "",
+           "source": "library"
+          }
+         },
+         "elements": [],
+         "widgetType": "image"
+        },
+        {
+         "id": "274350c",
+         "elType": "widget",
+         "settings": {
+          "title": "Krokodilklemme",
+          "align": "center",
+          "typography_typography": "custom",
+          "typography_font_family": "Montserrat",
+          "typography_font_size": {
+           "unit": "px",
+           "size": 15,
+           "sizes": []
+          },
+          "typography_font_size_mobile": {
+           "unit": "px",
+           "size": 36,
+           "sizes": []
+          },
+          "typography_font_weight": "700",
+          "typography_text_transform": "none",
+          "typography_font_style": "normal",
+          "typography_text_decoration": "none",
+          "typography_line_height": {
+           "unit": "em",
+           "size": 1.2,
+           "sizes": []
+          },
+          "typography_letter_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "typography_word_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "__globals__": {
+           "title_color": "globals/colors?id=text"
+          }
+         },
+         "elements": [],
+         "widgetType": "heading"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "269221b",
+       "elType": "container",
+       "settings": {
+        "flex_direction": "column",
+        "content_width": "full",
+        "width": {
+         "unit": "%",
+         "size": "33.3333"
+        },
+        "flex_gap": {
+         "column": "0",
+         "row": "0",
+         "isLinked": false,
+         "unit": "px",
+         "size": 0
+        },
+        "margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        }
+       },
+       "elements": [
+        {
+         "id": "405f028",
+         "elType": "widget",
+         "settings": {
+          "image": {
+           "url": "https://navajowhite-rhinoceros-679020.hostingersite.com/wp-content/uploads/2025/07/AluContur_Sicherheits-Anstecknadel_380x209.png",
+           "id": 2206,
+           "size": "",
+           "alt": "",
+           "source": "library"
+          }
+         },
+         "elements": [],
+         "widgetType": "image"
+        },
+        {
+         "id": "e206d70",
+         "elType": "widget",
+         "settings": {
+          "title": "Sicherheits-Anstecknadel",
+          "align": "center",
+          "typography_typography": "custom",
+          "typography_font_family": "Montserrat",
+          "typography_font_size": {
+           "unit": "px",
+           "size": 15,
+           "sizes": []
+          },
+          "typography_font_size_mobile": {
+           "unit": "px",
+           "size": 36,
+           "sizes": []
+          },
+          "typography_font_weight": "700",
+          "typography_text_transform": "none",
+          "typography_font_style": "normal",
+          "typography_text_decoration": "none",
+          "typography_line_height": {
+           "unit": "em",
+           "size": 1.2,
+           "sizes": []
+          },
+          "typography_letter_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "typography_word_spacing": {
+           "unit": "px",
+           "size": 0,
+           "sizes": []
+          },
+          "__globals__": {
+           "title_color": "globals/colors?id=text"
+          }
+         },
+         "elements": [],
+         "widgetType": "heading"
+        }
+       ],
+       "isInner": true
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.2",
+  "elementor_pro_version": "3.30.0",
+  "elementor_source": "post",
+  "wp_page_template": "default"
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 9067,
+  "elementor_data_sha256_of_db_string": "de20af79a32952328820fbce337cad07c0eb91ffba5d912a4d7019b20376935d",
+  "page_settings_db_length_bytes": null
+ }
+}

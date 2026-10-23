@@ -1,0 +1,239 @@
+{
+ "id": 15902,
+ "post_type": "page",
+ "title": "Namensschilder",
+ "slug": "namensschilder",
+ "status": "publish",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents"
+ },
+ "elementor_data": [
+  {
+   "id": "c28baa0",
+   "elType": "container",
+   "settings": {
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "min_height": {
+     "unit": "vh",
+     "size": 100,
+     "sizes": []
+    },
+    "min_height_laptop": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_tablet": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "min_height_mobile": {
+     "unit": "vh",
+     "size": "",
+     "sizes": []
+    },
+    "margin": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "padding": {
+     "unit": "em",
+     "top": "5",
+     "right": "2",
+     "bottom": "5",
+     "left": "2",
+     "isLinked": false
+    },
+    "padding_laptop": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding_tablet": {
+     "unit": "em",
+     "top": "5",
+     "right": "1",
+     "bottom": "5",
+     "left": "1",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    }
+   },
+   "elements": [
+    {
+     "id": "130845c",
+     "elType": "widget",
+     "settings": {
+      "title": "Namensschilder von infoplus",
+      "__globals__": {
+       "typography_typography": "globals/typography?id=secondary",
+       "title_color": "globals/colors?id=text"
+      },
+      "eael_vto_writing_gradient_color_repeater": [
+       {
+        "eael_vto_writing_gradient_color": "#7C62FF",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 50
+        },
+        "_id": "b218049"
+       },
+       {
+        "eael_vto_writing_gradient_color": "#FF6464",
+        "eael_vto_writing_gradient_color_location": {
+         "unit": "%",
+         "size": 90
+        },
+        "_id": "e0b8bb0"
+       }
+      ],
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis",
+      "typography_line_height": {
+       "unit": "px",
+       "size": "",
+       "sizes": []
+      },
+      "typography_word_spacing": {
+       "unit": "px",
+       "size": "",
+       "sizes": []
+      },
+      "eael_vto_writing_styling_background_color_stop_laptop": {
+       "unit": "%"
+      },
+      "eael_vto_writing_styling_background_color_stop_tablet": {
+       "unit": "%"
+      },
+      "eael_vto_writing_styling_background_color_stop_mobile": {
+       "unit": "%"
+      },
+      "eael_vto_writing_styling_background_color_b_stop_laptop": {
+       "unit": "%"
+      },
+      "eael_vto_writing_styling_background_color_b_stop_tablet": {
+       "unit": "%"
+      },
+      "eael_vto_writing_styling_background_color_b_stop_mobile": {
+       "unit": "%"
+      },
+      "eael_vto_writing_styling_background_gradient_angle_laptop": {
+       "unit": "deg"
+      },
+      "eael_vto_writing_styling_background_gradient_angle_tablet": {
+       "unit": "deg"
+      },
+      "eael_vto_writing_styling_background_gradient_angle_mobile": {
+       "unit": "deg"
+      },
+      "eael_vto_writing_styling_background_gradient_position_laptop": "",
+      "eael_vto_writing_styling_background_gradient_position_tablet": "",
+      "eael_vto_writing_styling_background_gradient_position_mobile": "",
+      "_margin": {
+       "unit": "em",
+       "top": "0",
+       "right": "0",
+       "bottom": "3",
+       "left": "0",
+       "isLinked": false
+      },
+      "_margin_laptop": {
+       "unit": "em",
+       "top": "",
+       "right": "",
+       "bottom": "",
+       "left": "",
+       "isLinked": true
+      },
+      "_margin_tablet": {
+       "unit": "em",
+       "top": "",
+       "right": "",
+       "bottom": "",
+       "left": "",
+       "isLinked": true
+      },
+      "_margin_mobile": {
+       "unit": "em",
+       "top": "",
+       "right": "",
+       "bottom": "",
+       "left": "",
+       "isLinked": true
+      },
+      "_padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "0d86432",
+     "elType": "widget",
+     "settings": {
+      "_skin": "product",
+      "template_id": 15906,
+      "alternate_templates": [
+       {
+        "template_id": null,
+        "_id": "2f4a35f"
+       }
+      ],
+      "pagination_page_limit": "5",
+      "pagination_prev_label": "Previous",
+      "pagination_next_label": "Next",
+      "text": "Load More",
+      "load_more_no_posts_custom_message": "No more posts to show",
+      "nothing_found_message_text": "It seems we can’t find what you’re looking for.",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "loop-grid"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.35.7",
+  "elementor_pro_version": "3.35.1",
+  "wp_page_template": "elementor_header_footer",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1790578654"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 4171,
+  "elementor_data_sha256_of_db_string": "24217fb0cd1a7fc11dba1fece11b06eb1dc2e4fd96f8c75a1c666c46d86800de",
+  "page_settings_db_length_bytes": 57
+ }
+}

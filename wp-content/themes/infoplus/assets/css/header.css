@@ -1,0 +1,558 @@
+/* Header, Namensschilder mega menu and mobile drawer.
+   Content from the old Elementor header 17 / popup 141; look and motion per
+   DESIGN.md (SDX cues): white compact bar with a hairline, floating panels
+   (.ip-panel, --shadow-2), cards on Very Light Grey tiles, pills for counts,
+   short eased motion (off under prefers-reduced-motion).
+   Mobile first; breakpoints 768 and 1101 only. */
+
+/* ── Local values ───────────────────────────────────────────────────────── */
+/* Real header heights: the bar has a fixed height, so these are exact.
+   main.css also sets --header-h (64 / 83); this file loads after it and wins. */
+:root { --header-h: 64px }
+@media (min-width: 1101px) { :root { --header-h: 76px } }
+
+.ip-header,
+.ip-drawer {
+  --ip-dur: 250ms;                        /* hover, chevrons, panel rise */
+  --ip-drawer-dur: 300ms;
+  --ip-stagger: 40ms;
+  --ip-overlay: rgb(25 27 28 / .45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ip-header, .ip-drawer { --ip-dur: 0ms; --ip-drawer-dur: 0ms; --ip-stagger: 0ms }
+}
+
+/* ── Header bar ─────────────────────────────────────────────────────────── */
+/* Fixed height, so nothing below moves. The white layer is ::before; when
+   site.js adds .is-stuck it slides up by --ip-shrink and gains a soft
+   shadow, and the bar moves up by half that (transforms only). The strip
+   it uncovers lets clicks through to the page (pointer-events). */
+.ip-header {
+  --ip-shrink: 6px;
+  position: sticky;
+  top: var(--wp-admin--admin-bar--height, 0px);
+  z-index: 1000;
+  height: var(--header-h);
+  color: var(--text-primary);
+  pointer-events: none;
+}
+.ip-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c-white);
+  box-shadow: 0 1px 0 var(--border);
+  pointer-events: auto;
+  transition: transform var(--ip-dur) var(--ease), box-shadow var(--ip-dur) var(--ease);
+}
+.ip-header.is-stuck::before {
+  transform: translateY(calc(-1 * var(--ip-shrink)));
+  box-shadow: 0 1px 0 var(--border), 0 10px 28px -14px rgb(25 27 28 / .22);
+}
+.ip-header__bar {
+  position: relative;               /* containing block of the mega panel */
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: 100%;
+  max-width: calc(var(--layout-max) + 2 * var(--layout-margin));
+  margin-inline: auto;
+  padding-inline: var(--layout-margin);
+  pointer-events: none;             /* only the controls catch clicks */
+  transition: transform var(--ip-dur) var(--ease);
+}
+.ip-header__bar > * { pointer-events: auto }
+.ip-header.is-stuck .ip-header__bar { transform: translateY(calc(-.5 * var(--ip-shrink))) }
+
+.ip-logo {
+  display: block;
+  flex: none;
+  margin-inline-end: auto;
+  border-radius: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  transform-origin: left center;
+  transition: transform var(--ip-dur) var(--ease);
+}
+.ip-header.is-stuck .ip-logo { transform: scale(.94) }
+.ip-logo__img { width: 100px; height: auto; max-height: 40px; object-fit: contain; object-position: left center }
+.ip-logo__text { font: 700 24px/1 var(--font) }
+
+/* Round 40 px icon targets (account, cart, burger, drawer close). */
+.ip-header__icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-header__icon:hover { background: var(--c-primary-tint); color: var(--accent) }
+.ip-header__icon .ip-icon { width: 24px; height: 24px }
+
+/* Cart count (markup from ip_cart_badge(), refreshed as a cart fragment). */
+.ip-cart__count {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--c-primary);
+  color: var(--c-white);
+  box-shadow: 0 0 0 2px var(--c-white);
+  font: 700 11px/18px var(--font);
+  text-align: center;
+}
+.ip-cart__count.is-empty { display: none }
+
+.ip-nav,
+.ip-header__tools { display: none }
+
+/* ── Search (header and drawer) ─────────────────────────────────────────── */
+.ip-search { position: relative; display: flex; align-items: center; width: 100% }
+.ip-search__input {
+  width: 100%;
+  height: 40px;
+  padding: 0 16px 0 40px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--c-grey-100);
+  color: var(--text-primary);
+  font: 400 16px/1 var(--font);
+  appearance: none;
+  transition: background-color var(--ip-dur) var(--ease), border-color var(--ip-dur) var(--ease);
+}
+.ip-search__input::placeholder { color: var(--text-secondary); opacity: 1 }
+.ip-search__input:hover { border-color: var(--border) }
+.ip-search__input:focus { outline: 2px solid var(--focus); outline-offset: 2px; border-color: var(--border); background: var(--c-white) }
+.ip-search__submit {
+  position: absolute;
+  inset-inline-start: 4px;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: color var(--ip-dur) var(--ease);
+}
+.ip-search__submit:hover { color: var(--accent) }
+.ip-search__submit .ip-icon { width: 18px; height: 18px }
+
+/* ── Desktop nav ────────────────────────────────────────────────────────── */
+.ip-nav__list { display: flex; align-items: center; gap: var(--space-1); margin: 0; padding: 0; list-style: none }
+.ip-nav__item { display: flex; align-items: center; gap: 2px }   /* not positioned: the panel anchors to the bar */
+.ip-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 10px;
+  border-radius: 10px;
+  color: var(--text-primary);
+  font: 600 19px/1.3 var(--font);
+  text-decoration: none;
+  transition: color var(--ip-dur) var(--ease);
+}
+.ip-nav__link:hover,
+.ip-nav__item--mega.is-open > .ip-nav__link { color: var(--accent) }
+/* Current page: short magenta bar under the label. */
+.ip-nav__link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 10px;
+  bottom: 2px;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.ip-nav__count { transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease) }
+.ip-nav__item--mega:hover .ip-nav__count,
+.ip-nav__item--mega.is-open .ip-nav__count { background: var(--accent); color: var(--c-white) }
+.ip-nav__toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-nav__toggle .ip-icon { width: 18px; height: 18px; transform: rotate(90deg); transition: transform var(--ip-dur) var(--ease) }
+.ip-nav__item--mega:hover .ip-nav__toggle,
+.ip-nav__item--mega.is-open .ip-nav__toggle { background: var(--c-primary-tint); color: var(--accent) }
+.ip-nav__toggle[aria-expanded="true"] .ip-icon { transform: rotate(270deg) }
+.ip-nav a:focus-visible,
+.ip-nav button:focus-visible { outline-offset: 2px }
+
+/* ── Mega panel ─────────────────────────────────────────────────────────── */
+/* Anchored to the bar; site.js sets --ip-mega-left (aligned with the item,
+   clamped into the bar) and --ip-caret-x (caret under the item). The
+   transparent top padding bridges the pointer from the item to the panel. */
+.ip-mega {
+  --ip-bridge: calc((var(--header-h) - 40px) / 2);
+  position: absolute;
+  top: calc(100% - var(--ip-bridge));
+  left: var(--ip-mega-left, var(--layout-margin));
+  z-index: 1;
+  width: min(1000px, calc(100% - 2 * var(--layout-margin)));
+  padding-top: calc(var(--ip-bridge) + 12px);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 220ms ease,
+    transform 300ms var(--ease),
+    visibility 0s linear 300ms;
+}
+.ip-nav__item--mega.is-open .ip-mega {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition: opacity 220ms ease, transform 300ms var(--ease), visibility 0s;
+}
+.ip-mega__box { position: relative; padding: var(--space-3) }
+.ip-mega__box::before {                 /* caret */
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: var(--ip-caret-x, 48px);
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--c-white);
+  box-shadow: -1px -1px 0 rgb(25 27 28 / .06);
+  transform: rotate(45deg);
+}
+.ip-mega__grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ip-mega__cell {
+  display: flex;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 300ms ease, transform 350ms var(--ease);
+}
+.ip-nav__item--mega.is-open .ip-mega__cell {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(min(var(--i, 0), 10) * var(--ip-stagger));
+}
+.ip-mega__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  border-top: 1px solid var(--border);
+}
+.ip-mega__all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: 8px;
+  color: var(--c-secondary);             /* 16 px: secondary for contrast */
+  font: 600 16px/1.3 var(--font);
+  text-decoration: none;
+}
+.ip-mega__all:hover { text-decoration: underline; text-underline-offset: 3px }
+.ip-mega__all .ip-icon { width: 18px; height: 18px; transition: transform var(--ip-dur) var(--ease) }
+.ip-mega__all:hover .ip-icon { transform: translateX(4px) }
+
+/* Product card (mega panel and drawer). */
+.ip-pcard {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: 14px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background-color var(--ip-dur) var(--ease);
+}
+.ip-pcard:hover,
+.ip-pcard:focus-visible { background: var(--c-primary-tint) }
+/* The image is laid over the 4:3 box and fitted with contain, so a photo of
+   any proportion shows whole: nothing is cut at the edges. */
+.ip-pcard__thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background: var(--c-grey-100);
+  overflow: hidden;
+}
+.ip-pcard__thumb .ip-card-img {
+  position: absolute;
+  inset: var(--space-2);
+  width: calc(100% - 2 * var(--space-2));
+  height: calc(100% - 2 * var(--space-2));
+  object-fit: contain;
+  transition: transform 350ms var(--ease);
+}
+.ip-pcard:hover .ip-card-img,
+.ip-pcard:focus-visible .ip-card-img { transform: scale(1.06) }
+.ip-pcard__name { font: 600 15px/1.25 var(--font); text-align: center }
+.ip-pcard[aria-current="page"] .ip-pcard__name { color: var(--c-secondary) }
+
+/* ── Mobile drawer ──────────────────────────────────────────────────────── */
+.ip-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(420px, 92vw);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-panel) 0 0 var(--radius-panel);
+  background: var(--c-white);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  transform: translateX(100%);
+  transition:
+    transform var(--ip-drawer-dur) var(--ease),
+    overlay var(--ip-drawer-dur) allow-discrete,
+    display var(--ip-drawer-dur) allow-discrete;
+}
+.ip-drawer[open] { display: flex; flex-direction: column; transform: none }
+@starting-style { .ip-drawer[open] { transform: translateX(100%) } }
+
+.ip-drawer::backdrop {
+  background: var(--ip-overlay);
+  opacity: 0;
+  transition:
+    opacity var(--ip-drawer-dur) ease,
+    overlay var(--ip-drawer-dur) allow-discrete,
+    display var(--ip-drawer-dur) allow-discrete;
+}
+.ip-drawer[open]::backdrop { opacity: 1 }
+@starting-style { .ip-drawer[open]::backdrop { opacity: 0 } }
+
+.ip-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-3) var(--space-2) var(--space-6);
+}
+.ip-drawer__scroll {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-6) var(--space-6);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.ip-drawer__menu,
+.ip-drawer__cards,
+.ip-drawer__sub { margin: 0; padding: 0; list-style: none }
+.ip-drawer__item { border-bottom: 1px solid var(--border) }
+.ip-drawer__row { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2) }
+.ip-drawer__link {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 14px 0;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font: 600 20px/1.25 var(--font);
+  text-decoration: none;
+  transition: color var(--ip-dur) var(--ease);
+}
+.ip-drawer__link:hover,
+.ip-drawer__item.is-active > .ip-drawer__row .ip-drawer__link { color: var(--accent) }
+
+.ip-drawer__sub-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-drawer__sub-toggle .ip-icon { width: 20px; height: 20px; transform: rotate(90deg); transition: transform var(--ip-dur) var(--ease) }
+.ip-drawer__sub-toggle:hover,
+.ip-drawer__sub-toggle[aria-expanded="true"] { background: var(--c-primary-tint); color: var(--accent) }
+.ip-drawer__sub-toggle[aria-expanded="true"] .ip-icon { transform: rotate(270deg) }
+
+.ip-drawer__item:not(.is-open) > .ip-drawer__cards,
+.ip-drawer__item:not(.is-open) > .ip-drawer__sub { display: none }
+.ip-drawer__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+  padding-bottom: var(--space-4);
+}
+.ip-drawer__cards > li,
+.ip-drawer__sub > li { display: flex; animation: ip-rise 300ms var(--ease) both; animation-delay: calc(min(var(--i, 0), 10) * var(--ip-stagger)) }
+.ip-pcard--small { gap: 6px; padding: 6px }
+.ip-pcard--small .ip-pcard__thumb { aspect-ratio: 16 / 9; padding: 6px; border-radius: 10px }
+.ip-pcard--small .ip-pcard__name { font-size: 14px }
+.ip-drawer__sub { padding: 0 0 var(--space-3) var(--space-3) }
+.ip-drawer__sublink { padding: var(--space-2) 0; color: var(--text-primary); font: 400 17px/1.3 var(--font); text-decoration: none }
+.ip-drawer__sublink:hover,
+.ip-drawer__sublink[aria-current="page"] { color: var(--accent) }
+
+.ip-drawer__foot {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-6) calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--border);
+}
+.ip-drawer__foot .ip-btn { justify-content: center; position: relative; padding-inline: var(--space-3) }
+.ip-drawer__foot .ip-icon { width: 20px; height: 20px }
+/* The count sits inline inside the magenta button, inverted. */
+.ip-drawer__foot .ip-cart__count { position: static; background: var(--c-white); color: var(--c-secondary); box-shadow: none }
+
+@keyframes ip-rise { from { opacity: 0; transform: translateY(6px) } }
+@media (prefers-reduced-motion: reduce) {
+  .ip-drawer__cards > li, .ip-drawer__sub > li { animation: none }
+  .ip-nav__count, .ip-card-img { transition: none }
+}
+
+/* ── Account quick menu (inc/account-menu.php, site.js) ──────────────────── */
+/* Same layering as the mega menu: a floating .ip-panel under the icon, the
+   transparent top padding bridges the pointer from the icon to the panel. */
+.ip-account { position: relative; display: flex }
+.ip-header__account[aria-expanded="true"] { background: var(--c-primary-tint); color: var(--accent) }
+.ip-account__panel {
+  --ip-bridge: calc((var(--header-h) - 44px) / 2);
+  position: absolute;
+  top: calc(100% - 4px);
+  right: -12px;
+  z-index: 2;
+  width: min(360px, calc(100vw - 2 * var(--layout-margin)));
+  padding-top: calc(var(--ip-bridge) + 10px);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 220ms ease, transform 300ms var(--ease), visibility 0s linear 300ms;
+}
+.ip-account.is-open .ip-account__panel,
+html:not(.js) .ip-account:focus-within .ip-account__panel {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition: opacity 220ms ease, transform 300ms var(--ease), visibility 0s;
+}
+.ip-account__box { position: relative; padding: var(--space-4) }
+.ip-account__box::before {               /* caret under the icon */
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 27px;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--c-white);
+  box-shadow: -1px -1px 0 rgb(25 27 28 / .06);
+  transform: rotate(45deg);
+}
+
+.ip-acct { display: grid; gap: var(--space-3); font: 400 16px/1.35 var(--font) }
+.ip-acct__intro { color: var(--text-secondary); font-size: 16px }
+.ip-acct__login { justify-content: center }
+.ip-acct__head { display: flex; align-items: center; gap: var(--space-3); padding-bottom: var(--space-3); border-bottom: 1px solid var(--border) }
+.ip-acct__who { display: grid; gap: 2px; min-width: 0 }
+.ip-acct__name { font: 600 18px/1.25 var(--font); overflow-wrap: anywhere }
+.ip-acct__company { color: var(--text-secondary); font-size: 15px; overflow-wrap: anywhere }
+.ip-acct__status { margin-inline-start: auto }
+.ip-acct__orders { display: grid; gap: var(--space-2) }
+.ip-acct__label { font: 600 13px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-acct__list, .ip-acct__links { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none }
+.ip-acct__order { display: flex; align-items: center; gap: var(--space-1) }
+.ip-acct__order-link {
+  display: flex; flex: 1; align-items: center; justify-content: space-between; gap: var(--space-3); min-width: 0;
+  margin-inline: calc(-1 * var(--space-2)); padding: var(--space-2);
+  border-radius: 12px; color: inherit; text-decoration: none;
+  transition: background-color var(--ip-dur) var(--ease);
+}
+.ip-acct__order-link:hover { background: var(--c-grey-100) }
+.ip-acct__order-main { display: grid; gap: 2px; min-width: 0 }
+.ip-acct__order-no { font-weight: 600 }
+.ip-acct__order-date { color: var(--text-secondary); font-size: 14px }
+.ip-acct__order-side { display: grid; justify-items: end; gap: 4px; text-align: end }
+.ip-acct__order-total { font-weight: 600; white-space: nowrap }
+.ip-acct__order-total small, .ip-acct__order-total .includes_tax { display: none }
+.ip-acct .ip-status { padding: 2px 8px 2px 6px; font-size: 13px }
+.ip-acct__invoice {
+  display: inline-grid; place-items: center; flex: none; width: 40px; height: 40px;
+  border-radius: 50%; color: var(--text-secondary);
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-acct__invoice:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-acct__invoice .ip-icon { width: 20px; height: 20px }
+.ip-acct__all { display: inline-flex; align-items: center; gap: 4px; justify-self: start; color: var(--c-secondary); font: 600 15px/1.3 var(--font); text-decoration: none }
+.ip-acct__all:hover { text-decoration: underline; text-underline-offset: 3px }
+.ip-acct__all .ip-icon { width: 16px; height: 16px }
+.ip-acct__empty { color: var(--text-secondary); font-size: 15px }
+.ip-acct__links { padding-top: var(--space-2); border-top: 1px solid var(--border) }
+.ip-acct__link {
+  display: flex; align-items: center; gap: 10px;
+  margin-inline: calc(-1 * var(--space-2)); padding: var(--space-2);
+  border-radius: 10px; color: var(--text-primary); font: 600 16px/1.3 var(--font); text-decoration: none;
+  transition: background-color var(--ip-dur) var(--ease), color var(--ip-dur) var(--ease);
+}
+.ip-acct__link .ip-icon { width: 20px; height: 20px; color: var(--text-secondary); transition: color var(--ip-dur) var(--ease) }
+.ip-acct__link:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-acct__link:hover .ip-icon { color: var(--c-secondary) }
+.ip-acct__sep { margin-top: 2px; padding-top: 2px; border-top: 1px solid var(--border) }
+.ip-acct--panel .ip-acct__links:first-child { border-top: 0; padding-top: 0 }
+.ip-acct--drawer .ip-acct__links:not(:first-child) { border-top: 0 }
+/* In the drawer: the menu sits under its row; padding like the other submenus. */
+.ip-drawer__account { padding: 0 0 var(--space-4) }
+.ip-drawer__item--account { border-bottom: 0 }
+@media (prefers-reduced-motion: reduce) {
+  .ip-account__panel, .ip-account.is-open .ip-account__panel { transition: none }
+}
+
+/* ── Tablet ─────────────────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .ip-drawer { width: 440px }
+}
+
+/* ── Desktop ────────────────────────────────────────────────────────────── */
+@media (min-width: 1101px) {
+  .ip-header { --ip-shrink: 10px }
+  .ip-header__bar { gap: var(--space-2) }
+  .ip-logo { margin-inline-end: var(--space-8) }
+  .ip-logo__img { width: 120px; max-height: 48px }
+  .ip-nav { display: block }
+  .ip-header__tools { display: flex; align-items: center; gap: var(--space-2); margin-inline-start: auto }
+  .ip-header__tools .ip-search { width: 210px; transition: width 300ms var(--ease) }
+  .ip-header__tools .ip-search:focus-within { width: 290px }
+  .ip-burger { display: none }
+}

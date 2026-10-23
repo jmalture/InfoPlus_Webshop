@@ -1,0 +1,175 @@
+{
+ "id": 2836,
+ "post_type": "page",
+ "title": "3D Product View",
+ "slug": "3d-product-view",
+ "status": "publish",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "8ddebaf",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "",
+     "row": "",
+     "isLinked": true,
+     "unit": "px",
+     "size": null
+    },
+    "margin": {
+     "unit": "px",
+     "top": "50",
+     "right": "0",
+     "bottom": "50",
+     "left": "0",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "93a8c40",
+     "elType": "widget",
+     "settings": {
+      "shortcode": "[3d_viewer id=2831]"
+     },
+     "elements": [],
+     "widgetType": "shortcode"
+    }
+   ],
+   "isInner": false
+  },
+  {
+   "id": "1851e98",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "margin": {
+     "unit": "px",
+     "top": "50",
+     "right": "0",
+     "bottom": "50",
+     "left": "0",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "72fc9fa",
+     "elType": "widget",
+     "settings": {
+      "shortcode": "[3d_viewer id=2862]"
+     },
+     "elements": [],
+     "widgetType": "shortcode"
+    }
+   ],
+   "isInner": false
+  },
+  {
+   "id": "8dceef8",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "margin": {
+     "unit": "px",
+     "top": "50",
+     "right": "0",
+     "bottom": "50",
+     "left": "0",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "f69a468",
+     "elType": "widget",
+     "settings": {
+      "shortcode": " [3d_viewer id=\"2924\"]"
+     },
+     "elements": [],
+     "widgetType": "shortcode"
+    }
+   ],
+   "isInner": false
+  },
+  {
+   "id": "ebc3da5",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "margin": {
+     "unit": "px",
+     "top": "50",
+     "right": "0",
+     "bottom": "50",
+     "left": "0",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "f151354",
+     "elType": "widget",
+     "settings": {
+      "shortcode": "[3d_viewer id=2863]"
+     },
+     "elements": [],
+     "widgetType": "shortcode"
+    }
+   ],
+   "isInner": false
+  },
+  {
+   "id": "5c59024",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "margin": {
+     "unit": "px",
+     "top": "50",
+     "right": "0",
+     "bottom": "50",
+     "left": "0",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "8fb46bb",
+     "elType": "widget",
+     "settings": {
+      "shortcode": " [3d_viewer id=\"2917\"]"
+     },
+     "elements": [],
+     "widgetType": "shortcode"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [
+    "plus-alignmnet-effect",
+    "plus-temp-notice",
+    "tp-navigation-menu"
+   ],
+   "update_at": "1757070205"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 1660,
+  "elementor_data_sha256_of_db_string": "eb4b40e9f84c7eb1c33db0e8c5bd9a398ce9a66affa00d861d653cadc9688c91",
+  "page_settings_db_length_bytes": 34
+ }
+}

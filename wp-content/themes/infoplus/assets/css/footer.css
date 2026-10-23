@@ -1,0 +1,228 @@
+/* Footer and floating Kontakt panel. Loaded on every view (inc/assets.php).
+   Mobile first; breakpoints 768 and 1101 only (see main.css). Brand tokens
+   and shared components (.ip-kicker, .ip-tile, .ip-panel, .ip-btn) come from
+   main.css; layout, layering and motion follow DESIGN.md (SDX cues).
+   Content is the old Elementor footer (template 21) and Kontakt snippet 14273. */
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.ip-footer { background: var(--surface-alt); color: var(--text-secondary); font: 400 16px/1.45 var(--font) }
+.ip-footer__inner { max-width: calc(var(--layout-max) + 2 * var(--layout-margin)); margin-inline: auto; padding-inline: var(--layout-margin) }
+.ip-footer__main { padding-block: 56px 32px }
+
+/* Grid: phone = brand, then Informationen | Rechtliches side by side, then
+   Kontakt; tablet = brand on top, three columns below; desktop = one row. */
+.ip-footer__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 24px; align-items: start }
+.ip-footer__brand,
+.ip-footer__col--contact { grid-column: 1 / -1 }
+.ip-footer__col { min-width: 0 }
+.ip-footer__kicker { margin: 0 0 16px }
+
+/* Brand column: logo + one factual trust line (DESIGN.md 9). */
+.ip-footer__logo { display: inline-block; width: 150px; border-radius: 8px }
+.ip-footer__logo img { width: 100%; height: auto }
+.ip-footer__trust { display: flex; align-items: flex-start; gap: 12px; max-width: 36ch; margin-top: 20px; font-size: 15px; line-height: 1.45 }
+.ip-footer__trust-icon { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 10px; background: var(--c-white); color: var(--accent) }
+.ip-footer__trust-icon .ip-icon { width: 18px; height: 18px }
+
+/* Link lists: grey, magenta on hover with a short bar sliding in. Hover and
+   current text use #9E0056 (16 px text on #EFEFF6 needs the darker magenta). */
+.ip-footer__menu { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font: 400 16px/1.3 var(--font) }
+.ip-footer__menu a { display: inline-flex; align-items: center; color: var(--text-secondary); text-decoration: none; transition: color var(--dur-ui) var(--ease) }
+.ip-footer__menu a::before { content: ""; flex: none; width: 0; height: 2px; margin-right: 0; border-radius: 1px; background: var(--accent); transition: width var(--dur-ui) var(--ease), margin-right var(--dur-ui) var(--ease) }
+.ip-footer__menu a:hover,
+.ip-footer__menu a:focus-visible { color: var(--c-secondary) }
+.ip-footer__menu a:hover::before,
+.ip-footer__menu a:focus-visible::before { width: 10px; margin-right: 6px }
+.ip-footer__menu .current-menu-item > a,
+.ip-footer__menu a[aria-current="page"] { color: var(--c-secondary); font-weight: 600 }
+
+/* Contact column: address as text, phone and e-mail as icon-tile rows. */
+.ip-footer__contact { display: grid; gap: 12px; font-style: normal }
+.ip-footer__address { margin-bottom: 4px; font-size: 15px; line-height: 1.45 }
+.ip-footer__address strong { color: var(--text-primary); font-weight: 600 }
+.ip-footer__reach { display: flex; align-items: center; gap: 14px; width: fit-content; max-width: 100%; color: var(--text-primary); text-decoration: none; border-radius: 14px }
+.ip-footer__reach-text { display: grid; min-width: 0 }
+.ip-footer__reach-label { font-size: 13px; line-height: 1.3; color: var(--text-secondary) }
+.ip-footer__reach-value { font-size: 17px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; transition: color var(--dur-ui) var(--ease) }
+.ip-footer__reach:hover .ip-footer__reach-value,
+.ip-footer__reach:focus-visible .ip-footer__reach-value { color: var(--c-secondary) }
+.ip-footer__fax { font-size: 14px }
+
+/* Logo chips: payment, shipping, security, each group under its kicker. */
+.ip-footer__badges { display: flex; flex-wrap: wrap; gap: 28px 48px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border) }
+.ip-footer__group { min-width: 0 }
+.ip-footer__group .ip-footer__kicker { margin-bottom: 12px }
+.ip-footer__chip-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px }
+.ip-footer__chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px }
+.ip-footer__chip { display: grid; place-items: center; height: 48px; min-width: 64px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--c-white) }
+.ip-footer__chip img { width: auto; height: auto; max-height: 26px; max-width: 72px }
+.ip-footer__btn { min-height: 48px }
+
+/* Bottom bar: the footer's one magenta block, slim, small type. */
+.ip-footer__bar { padding-block: 12px; background: var(--accent); color: var(--c-white); font: 400 14px/1.4 var(--font) }
+.ip-footer__bar-inner { display: flex; flex-direction: column; gap: 4px }
+.ip-footer__bar p { margin: 0 }
+.ip-footer__legal { display: flex; flex-direction: column }
+.ip-footer__credit { display: flex; flex-wrap: wrap; align-items: center; column-gap: .3em }
+.ip-footer__credit img { width: 20px; height: 20px; object-fit: contain }
+.ip-footer__bar a { color: inherit; text-decoration: none; border-radius: 2px }
+.ip-footer__bar a:hover,
+.ip-footer__bar a:focus-visible { text-decoration: underline; text-underline-offset: 3px }
+.ip-footer__bar :focus-visible { outline-color: var(--c-white) }
+
+@media (min-width: 768px) {
+  .ip-footer__main { padding-block: 72px 40px }
+  .ip-footer__grid { grid-template-columns: 1fr 1fr 1.4fr; gap: 48px 32px }
+  .ip-footer__col--contact { grid-column: auto }
+  .ip-footer__logo { width: 170px }
+  .ip-footer__badges { margin-top: 48px }
+  .ip-footer__legal { flex-direction: row; flex-wrap: wrap; column-gap: .5em }
+  .ip-footer__legal span + span::before { content: "·"; margin-right: .5em }
+  .ip-footer__bar-inner { flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 24px }
+}
+
+@media (min-width: 1101px) {
+  .ip-footer__main { padding-block: 88px 40px }
+  .ip-footer__grid { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, .8fr) minmax(0, 1.3fr); gap: 48px }
+  .ip-footer__brand { grid-column: auto }
+  .ip-footer__badges { gap: 28px 64px }
+}
+
+/* ── Floating Kontakt panel ─────────────────────────────────────────────── */
+/* Phone: round magenta button bottom right, panel as a bottom sheet over a
+   scrim. Desktop: magenta tab on the right edge, the panel slides out with
+   it. Header is z-index 9999; the panel sits above it. */
+.ip-contact { --ip-cp-w: 340px; --ip-cp-dur: 300ms; display: none }
+.js .ip-contact { display: block }
+
+.ip-contact__tab {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: var(--c-white);
+  box-shadow: var(--shadow-2);
+  transition: background-color var(--dur-ui) var(--ease), transform var(--ip-cp-dur) var(--ease), opacity var(--ip-cp-dur) var(--ease);
+}
+.ip-contact__tab:hover { background: var(--c-secondary) }
+.ip-contact__tab:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 3px }
+.ip-contact__tab-icon { display: grid; place-items: center }
+.ip-contact__tab-icon .ip-icon { width: 24px; height: 24px }
+.ip-contact__tab-icon--phone { display: none }
+.ip-contact__tab-label { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap }
+.ip-contact.is-open .ip-contact__tab { opacity: 0; transform: scale(.8); pointer-events: none }
+
+.ip-contact__scrim { position: fixed; inset: 0; z-index: 10001; background: rgb(25 27 28 / .4); opacity: 0; visibility: hidden; transition: opacity var(--ip-cp-dur) var(--ease), visibility 0s linear var(--ip-cp-dur) }
+.ip-contact.is-open .ip-contact__scrim { opacity: 1; visibility: visible; transition-delay: 0s }
+
+.ip-contact__panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10002;
+  max-height: min(85vh, 640px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+  color: var(--text-primary);
+  font: 400 16px/1.4 var(--font);
+  transform: translateY(calc(100% + 24px));
+  visibility: hidden;
+  transition: transform var(--ip-cp-dur) var(--ease), visibility 0s linear var(--ip-cp-dur);
+}
+.ip-contact.is-open .ip-contact__panel { transform: none; visibility: visible; transition-delay: 0s }
+.ip-contact__panel:focus { outline: none }
+
+/* Content rises in, staggered 40 ms (DESIGN.md 4). */
+.ip-contact__panel > * { opacity: 0; transform: translateY(8px); transition: opacity var(--ip-cp-dur) var(--ease), transform var(--ip-cp-dur) var(--ease) }
+.ip-contact.is-open .ip-contact__panel > * { opacity: 1; transform: none }
+.ip-contact.is-open .ip-contact__panel > :nth-child(1) { transition-delay: 60ms }
+.ip-contact.is-open .ip-contact__panel > :nth-child(2) { transition-delay: 100ms }
+.ip-contact.is-open .ip-contact__panel > :nth-child(3) { transition-delay: 140ms }
+.ip-contact.is-open .ip-contact__panel > :nth-child(4) { transition-delay: 180ms }
+
+.ip-contact__head { position: relative; padding-right: 48px }
+.ip-contact__grabber { display: block; width: 40px; height: 4px; margin: 0 auto 16px; border-radius: 2px; background: var(--border); transform: translateX(24px) } /* centred on the sheet, offsetting the head's close-button padding */
+.ip-contact__kicker { display: block; font-size: 14px }
+.ip-contact__title { margin-top: 6px; font: 600 24px/1.2 var(--font); color: var(--text-primary) }
+.ip-contact__intro { margin-top: 6px; font-size: 15px; line-height: 1.45; color: var(--text-secondary) }
+.ip-contact__close { position: absolute; top: 12px; right: -8px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 12px; background: transparent; color: var(--text-primary); transition: background-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease) }
+.ip-contact__close:hover { background: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-contact__close .ip-icon { width: 22px; height: 22px }
+
+/* Opening hours: small two-column list on a grey card. */
+.ip-contact__hours { margin-top: 20px; padding: 14px 16px; border-radius: 14px; background: var(--surface-alt) }
+.ip-contact__hours-title { display: flex; align-items: center; gap: 8px; font: 600 13px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-contact__hours-title .ip-icon { width: 18px; height: 18px; color: var(--accent) }
+.ip-contact__hours-list { display: grid; gap: 4px; margin: 10px 0 0 }
+.ip-contact__hours-list > div { display: flex; justify-content: space-between; gap: 16px; font-size: 15px; line-height: 1.4 }
+.ip-contact__hours-list dt { font-weight: 600; color: var(--text-primary) }
+.ip-contact__hours-list dd { margin: 0; color: var(--text-secondary); font-variant-numeric: tabular-nums }
+
+/* Phone / e-mail rows: whole row is the click target. */
+.ip-contact__reach { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px }
+.ip-contact__row { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--c-white); color: var(--text-primary); text-decoration: none; transition: transform var(--dur-ui) var(--ease), box-shadow var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease) }
+.ip-contact__row:hover { transform: translateY(-2px); border-color: transparent; box-shadow: var(--shadow-1) }
+.ip-contact__row-text { display: grid; flex: 1; min-width: 0 }
+.ip-contact__row-label { font-size: 13px; line-height: 1.3; color: var(--text-secondary) }
+.ip-contact__row-value { font-size: 17px; font-weight: 600; line-height: 1.3; overflow-wrap: anywhere }
+.ip-contact__row > .ip-icon { width: 18px; height: 18px; color: var(--text-secondary); transition: transform var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease) }
+.ip-contact__row:hover > .ip-icon,
+.ip-contact__row:focus-visible > .ip-icon { color: var(--accent); transform: translateX(2px) }
+
+.ip-contact__form { justify-content: center; width: 100%; min-height: 48px; margin-top: 16px }
+
+@media (min-width: 768px) {
+  /* Desktop: the wrapper is only as wide as the tab and sits flush with the
+     right edge, low enough to clear the header. The tab is 40px wide, inside
+     the 48px page margin, so closed it never covers content at 1101px and up.
+     The panel hangs to the right of the tab, off screen until opened; opening
+     slides the panel in and moves the tab left by the panel width.
+     Transitions run only while JS toggles (.is-anim): the old transform on
+     the whole wrapper re-animated on every style change (first paint,
+     viewport resize, full-page screenshots), so the tab was caught drifting
+     in from about 190px left of the edge. */
+  .js .ip-contact { position: fixed; right: 0; bottom: 96px; z-index: 10000; display: block }
+
+  .ip-contact__tab { position: relative; right: auto; bottom: auto; z-index: 1; display: flex; flex-direction: row; align-items: center; width: auto; height: auto; gap: 8px; padding: 16px 10px; border-radius: 14px 0 0 14px; box-shadow: var(--shadow-1); writing-mode: vertical-lr; font: 600 14px/1 var(--font); letter-spacing: 1.5px; text-transform: uppercase; transition: background-color var(--dur-ui) var(--ease) }
+  .ip-contact.is-open .ip-contact__tab { opacity: 1; transform: translateX(calc(-1 * var(--ip-cp-w))); pointer-events: auto }
+  .ip-contact__tab:focus-visible { outline-color: var(--c-secondary) }
+  .ip-contact__tab-icon--phone { display: grid }
+  .ip-contact__tab-icon--chat { display: none }
+  .ip-contact__tab-icon .ip-icon { width: 20px; height: 20px }
+  .ip-contact__tab-label { position: static; width: auto; height: auto; margin: 0; overflow: visible; clip: auto }
+
+  .ip-contact__scrim { display: none }
+
+  /* Bottom 24px below the tab, so the tab meets the panel's straight edge,
+     not its rounded corner. Height capped to the space above it, then scrolls. */
+  .ip-contact__panel { position: absolute; left: auto; right: 0; bottom: -24px; z-index: auto; width: var(--ip-cp-w); max-height: calc(100vh - 96px); padding: 24px; border-radius: var(--radius-panel) 0 0 var(--radius-panel); transform: translateX(100%); transition: none }
+  .ip-contact.is-open .ip-contact__panel { transform: none }
+  .ip-contact.is-anim .ip-contact__tab { transition: background-color var(--dur-ui) var(--ease), transform var(--ip-cp-dur) var(--ease) }
+  .ip-contact.is-anim .ip-contact__panel { transition: transform var(--ip-cp-dur) var(--ease), visibility 0s linear var(--ip-cp-dur) }
+  .ip-contact.is-anim.is-open .ip-contact__panel { transition-delay: 0s }
+  .ip-contact__grabber { display: none }
+  .ip-contact__close { top: -8px }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ip-contact { --ip-cp-dur: 0s }
+  .ip-contact *,
+  .ip-contact__panel > * { transition-duration: 0s !important; transition-delay: 0s !important }
+}
+
+/* Print: no floating panel on paper. */
+@media print {
+  .ip-contact { display: none !important }
+}

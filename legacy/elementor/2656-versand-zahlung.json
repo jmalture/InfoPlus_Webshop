@@ -1,0 +1,158 @@
+{
+ "id": 2656,
+ "post_type": "page",
+ "title": "Versand/Express und Zahlung",
+ "slug": "versand-zahlung",
+ "status": "publish",
+ "template_type": "wp-post",
+ "conditions": null,
+ "page_settings": {
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "c7d1141",
+   "elType": "container",
+   "settings": {
+    "flex_gap": {
+     "column": "50",
+     "row": "50",
+     "isLinked": true,
+     "unit": "px",
+     "size": 50
+    },
+    "padding": {
+     "unit": "px",
+     "top": "80",
+     "right": "40",
+     "bottom": "80",
+     "left": "40",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "40",
+     "right": "20",
+     "bottom": "40",
+     "left": "20",
+     "isLinked": false
+    },
+    "padding_tablet": {
+     "unit": "px",
+     "top": "40",
+     "right": "40",
+     "bottom": "40",
+     "left": "40",
+     "isLinked": true
+    },
+    "flex_gap_tablet": {
+     "column": "40",
+     "row": "40",
+     "isLinked": true,
+     "unit": "px",
+     "size": 40
+    },
+    "flex_gap_mobile": {
+     "column": "",
+     "row": "",
+     "isLinked": true,
+     "unit": "px",
+     "size": null
+    }
+   },
+   "elements": [
+    {
+     "id": "124a3d3",
+     "elType": "widget",
+     "settings": {
+      "title": "Versand/Express und Zahlung",
+      "__globals__": {
+       "typography_typography": "globals/typography?id=secondary",
+       "title_color": "globals/colors?id=primary"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "00a167e",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "66f8743",
+       "elType": "widget",
+       "settings": {
+        "editor": "<div class=\"custom-page--content content block\"><div class=\"content--custom\"><div class=\"content--wrapper\"><div class=\"custom-page--content content block\"><div class=\"content--custom\"><h1 class=\"custom-page--tab-headline\">Versand / Express &amp; Zahlung</h1><h2>Lieferung</h2><p>Ab einem Bestellwert von 250,– € liefern wir per UPS Standard innerhalb Deutschlands frei Haus. Wenn es einmal sehr schnell gehen muss, wählen Sie UPS Express 12:00 oder UPS Express Saver.</p><h2>Zustellung nach Versandarten</h2><h3>UPS Standard</h3><p>Deutschland: Zustellung in 1-2 Arbeitstagen<br />Europa: Zustellung in 1-5 Arbeitstagen, abhängig vom Zielland<br />Informieren Sie sich zu den UPS-Laufzeiten (keine zeitdefinierte Zustellung) innerhalb Europas auch gern unter <a href=\"https://wwwapps.ups.com/maps_europe/\" target=\"_blank\" rel=\"nofollow noopener\">www.ups.com</a></p><div class=\"row\"><div class=\"col-one-half\"><p><img src=\"https://www.infoplus.de/media/image/0f/14/47/European-Transit-Time-Map-UPS-Standard-transit-from-GERMANY-22941.png\" alt=\"European Transit Time Map UPS Standard\" width=\"2800\" /></p><p>UPS Standard - Transit Time Map Europe</p></div><div class=\"col-one-half\"><p><img src=\"https://www.infoplus.de/media/image/f4/e6/89/European-Transit-Time-Map-UPS-Standard-Legend.png\" alt=\"European Transit Time Map UPS Standard Legend\" width=\"293\" /></p><p>UPS Standard - Transit Time Map - Legend</p></div></div><h3>UPS Express Saver</h3><p>Deutschland: Zustellung bis zum Ende des folgenden Arbeitstages<br />International: Zustellung in 1-5 Arbeitstagen abhängig vom Zielland<br />Zustellung bis zum Ende des folgenden Arbeitstages zu den meisten europäischen Wirtschaftszentren und bis zum Ende des zweiten Werktags zu den meisten Geschäftsadressen in den USA und den größten Wirtschaftszentren in Kanada, die Zustellung erfolgt innerhalb von zwei bis drei Werktagen tagsüber in asiatischen Ländern oder Gebieten und die Zustellung erfolgt an einem bestimmten Tag tagsüber in anderen Ländern weltweit.<br />Informieren Sie sich zu den UPS-Laufzeiten auch gern unter <a href=\"https://wwwapps.ups.com/ctc/request?loc=de_DE\" target=\"_blank\" rel=\"nofollow noopener\">www.ups.com</a></p><h3>UPS Express 12:00 (nur Deutschland)</h3><p>Deutschland: Zustellung bis 12:00 Uhr des folgenden Arbeitstages</p><h2>Weitere Hinweise</h2><p>Bei Lieferungen auf Inseln erfolgt ggf. ein Zuschlag.<br />Die genaue Laufzeit ist zudem abhängig von zollamtlichen Abfertigungen.<br />Die angegebenen Laufzeiten gelten für den Zeitpunkt ab Versand. Bitte beachten Sie die bei den Produkten ausgewiesenen Fertigungszeiten.</p><p>Sendungsverlauf online verfolgen unter: <a href=\"https://www.ups.com/track?loc=de_DE&amp;requester=WT/\" target=\"_blank\" rel=\"nofollow noopener\">www.ups.com</a><br />Die Trackingnummer Ihres Paketes erhalten Sie nach Versand von infoplus.<br />Für die Bearbeitung unverschuldeter Rücksendungen berechnen wir eine variable Aufwandspauschale. Bitte sprechen Sie uns daher vor einer Rücksendung an, wir können ggf. eine kostengünstige Rücksendung über UPS veranlassen.</p><h2>UPS Lieferzonen</h2><p><a href=\"https://www.ups.com/de/de/shipping/zones-and-rates.page\" target=\"_blank\" rel=\"nofollow noopener\">www.ups.com</a></p><h2>Zahlungsarten und -bedingungen</h2><p>Lieferung ausschließlich an Gewerbetreibende, Selbstständige und Industrie</p><h3>Zahlungsarten</h3><ul><li>offene Rechnung (14 Tage netto)</li><li>Vorauszahlung</li><li>Kreditkarten (automatisiert im Webshop, Kartendaten über Sicherheitsserver)</li><li>PayPal (automatisiert im Webshop, mit PayPal-Anmeldung über Sicherheitsserver)</li></ul><h2>Steuerfreie innergemeinschaftliche Lieferung</h2><p>USt-Ident-Nummer: Wenn bei Bestellung keine bzw. keine gültige USt-Ident-Nr. vorliegt, wird zuzüglich der gesetzlichen Mehrwertsteuer fakturiert.</p></div></div></div></div></div>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1774967595"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 5720,
+  "elementor_data_sha256_of_db_string": "19dd6f88aa3afc5bd61261ff42b8e6552c305fe428dabfc41d631bfdbb12f576",
+  "page_settings_db_length_bytes": 34
+ }
+}

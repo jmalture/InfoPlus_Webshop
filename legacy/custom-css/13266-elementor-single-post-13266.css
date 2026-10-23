@@ -1,0 +1,9 @@
+/* element aba1243 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+selector path {
+    fill: white;
+}

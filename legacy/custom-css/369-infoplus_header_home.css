@@ -1,0 +1,9 @@
+/* element da89c59 icon */
+selector path {
+    stroke: white;
+}
+
+/* element 63965d5 nav-menu */
+selector .sub-menu  {
+    width: 141px !important;
+}

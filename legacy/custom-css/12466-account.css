@@ -1,0 +1,145 @@
+/* element 242b378 container */
+selector{
+    align-items: center!important;
+}
+
+/* element cdb6692 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 0730496 container */
+selector .e-n-tabs-heading{
+    background-color: white;
+
+    padding: 8px;
+}
+.order-card, .project-card {
+    transition: opacity 0.3s ease;
+}
+
+.filtered-hidden {
+    display: none !important;
+}
+
+/* element 9b5190b nested-tabs */
+selector #e-n-tab-title-1628633713{
+    display: none;
+}
+
+/* element e4f46a6 heading */
+selector:hover{
+    text-decoration: underline;
+    text-decoration-color: var(--e-global-color-primary);
+    color: var(--e-global-color-secondary)
+}
+
+/* element e6b0fc8 heading */
+selector:hover{
+    text-decoration: underline;
+    text-decoration-color: var(--e-global-color-primary);
+    color: var(--e-global-color-secondary)
+}
+
+/* element 19adf4f heading */
+selector:hover{
+    text-decoration: underline;
+    text-decoration-color: var(--e-global-color-primary);
+    color: var(--e-global-color-secondary)
+}
+
+/* element 1be0b59 container */
+selector{
+    cursor: pointer;
+}
+
+/* element 030929c button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 17e8c48 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 0de050d button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element d373f39 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 2e13c9d button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 360544b button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element ba9f494 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element a96a044 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element a540129 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 038ec71 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 57f7ffe button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element c9183b3 button */
+selector svg {
+    font-size:30px;
+    margin-top:-1px;
+}
+
+/* element 8cbcd03 html */
+selector button{
+        display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: rgb(233, 30, 140);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: "archivo narrow";
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: 0.2s;
+}

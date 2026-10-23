@@ -1,0 +1,158 @@
+{
+ "id": 2647,
+ "post_type": "page",
+ "title": "Verhaltenskodex",
+ "slug": "verhaltenskodex",
+ "status": "publish",
+ "template_type": "wp-post",
+ "conditions": null,
+ "page_settings": {
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "c7d1141",
+   "elType": "container",
+   "settings": {
+    "flex_gap": {
+     "column": "50",
+     "row": "50",
+     "isLinked": true,
+     "unit": "px",
+     "size": 50
+    },
+    "padding": {
+     "unit": "px",
+     "top": "80",
+     "right": "40",
+     "bottom": "80",
+     "left": "40",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "40",
+     "right": "20",
+     "bottom": "40",
+     "left": "20",
+     "isLinked": false
+    },
+    "padding_tablet": {
+     "unit": "px",
+     "top": "40",
+     "right": "40",
+     "bottom": "40",
+     "left": "40",
+     "isLinked": true
+    },
+    "flex_gap_tablet": {
+     "column": "40",
+     "row": "40",
+     "isLinked": true,
+     "unit": "px",
+     "size": 40
+    },
+    "flex_gap_mobile": {
+     "column": "",
+     "row": "",
+     "isLinked": true,
+     "unit": "px",
+     "size": null
+    }
+   },
+   "elements": [
+    {
+     "id": "124a3d3",
+     "elType": "widget",
+     "settings": {
+      "title": "Verhaltenskodex - Code of conduct",
+      "__globals__": {
+       "typography_typography": "globals/typography?id=secondary",
+       "title_color": "globals/colors?id=primary"
+      }
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "00a167e",
+     "elType": "container",
+     "settings": {
+      "content_width": "full",
+      "width": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_tablet": {
+       "unit": "%",
+       "size": 100,
+       "sizes": []
+      },
+      "width_mobile": {
+       "unit": "%",
+       "size": "",
+       "sizes": []
+      },
+      "flex_direction": "column",
+      "flex_justify_content": "center",
+      "flex_gap": {
+       "column": "",
+       "row": "",
+       "isLinked": true,
+       "unit": "px",
+       "size": null
+      },
+      "flex_gap_tablet": {
+       "column": "30",
+       "row": "30",
+       "isLinked": true,
+       "unit": "px",
+       "size": 30
+      },
+      "flex_gap_mobile": {
+       "column": "20",
+       "row": "20",
+       "isLinked": true,
+       "unit": "px",
+       "size": 20
+      }
+     },
+     "elements": [
+      {
+       "id": "66f8743",
+       "elType": "widget",
+       "settings": {
+        "editor": "<div class=\"custom-page--content content block\"><div class=\"content--custom\"><p><strong>Die weltweit wichtigsten Instrumente zur Förderung einer verantwortungsvollen Unternehmensführung sind die OECD-Leitsätze, die ILO-Kernarbeitsnormen und der UN Global Compact. Deren Leitfäden sind kein bürokratisches Textwerk – diese Prinzipien unterstützen uns in der Umsetzung von rechtlichen und ethischen Verhaltensregeln im Einklang mit den geltenden Gesetzen. Unser infoplus-Verhaltenskodex soll ein Zeichen von Engagement innerhalb unseres Unternehmens setzen, unsere Geschäftstätigkeit auf Grundlage der 10 Prinzipien des UN Global Compact auszurichten. Unser Code of Conduct soll Vertrauen zwischen uns und unseren Lieferanten, unseren Geschäftspartnern, unseren Mitarbeitern und Mitarbeiterinnen sowie auch der Öffentlichkeit verstärken und vertiefen und ggf. aufbauen.</strong></p><p><a href=\"https://www.oecd.org/berlin/publikationen/oecd-leitsaetze-fuer-multinationale-unternehmen.htm\" rel=\"nofollow noopener\">OECD-Leitsätze</a></p><p><a href=\"https://www.globalcompact.de/ueber-uns/united-nations-global-compact\" rel=\"nofollow noopener\">UN Global Compact</a></p><p><a href=\"https://www.infoplus.de/engine/Library/TinyMce/themes/advanced/link.htm?202008121209\">ILO Kernarbeitsnormen</a></p><p> </p><p><strong>Wir alle tragen Mitverantwortung – teilen wir alle die Vision der UN und leisten unseren Beitrag zum Nutzen aller – heute, morgen und in Zukunft. </strong></p><p><strong>Wir alle gemeinsam für eine bessere Welt!</strong></p><p> </p><p> </p><ol><li> Führung und soziales Miteinander Umgang mit Dritten (Geschäftspartner, Lieferanten, Öffentlichkeit)</li><li>Umgang mit Geschenken und Einladungen Vergabe von Spenden und Sponsoring</li><li>Umgang mit Informationen (Geschäftsgeheimnisse, sensible Daten)</li><li>Wirtschaftliches Handeln im globalen Kontext (Menschenrechte, Arbeits- und Sozialstandards)</li><li>Verantwortung gegenüber der Natur (Umweltschutz, Ressourcen)</li><li>Wirtschaftliches Handeln im globalen Kontext (Menschenrechte, Arbeits- und Sozialstandards)</li><li>Verantwortung gegenüber der Natur (Umweltschutz, Ressourcenverbrauch)</li></ol><h3> </h3><h3>1. Führung und soziales Miteinander</h3><p>Wir richten unsere Handlungen/ Entscheidungen an den allgemein gültigen Werten wie Integrität, Glaubwürdigkeit, Transparenz sowie dem Respekt vor der Menschenwürde aus. Hier tragen insbesondere die Mitglieder unserer Geschäftsführung die Verantwortung für eine aktive Umsetzung; sie haben in jeglicher Hinsicht eine Vorbildfunktion zu erfüllen. Dieser Kodex ist der Leitfaden für unsere täglichen Herausforderungen. Es kann sich jeder Mitarbeiter mit Fragen und/ oder Hinweisen an seinen direkten Vorgesetzten oder an unsere Geschäftsführung wenden.</p><p>Wir erwarten auch von unseren Lieferanten die Beachtung dieser Leitwerte und fordern sie auf, Gleiches in ihren Lieferantenketten zu tun.</p><h3>2. Umgang mit Dritten (Geschäftspartner, Lieferanten, Öffentlichkeit)</h3><p>Ein freier und fairer Wettbewerb - das Grundprinzip unserer Marktwirtschaft. Infoplus setzt im Wettbewerb ausschließlich auf Leistung, Kundenorientierung sowie die Qualität der Produkte. Unsere Mitarbeiter sind verpflichtet, keinerlei Absprache mit Wettbewerbern in Bezug auf Preis/ Kondition/ Kunde und Kapazität zu treffen oder über geplante Innovationen zu sprechen. Erfolgt eine Auftragsvergabe auf Grundlage einer Ausschreibung, so werden wir Angebote mit weiteren Anbietern weder absprechen noch abstimmen – ganz gleich, ob es sich um eine Vergabe der öffentlichen Hand oder eine Vergabe von Unternehmensseite handelt.</p><p>Auch wenden wir uns gegen jede Form von Korruption im In- und Ausland. Kein Mitarbeiter darf unsere geschäftlichen Verbindungen zum eigenen oder fremden Vorteil oder zu unserem Nachteil ausnutzen.</p><h3>3. Umgang mit Geschenken und Einladungen</h3><p>Kein Mitarbeiter darf im Geschäftsverkehr unerlaubte private Vorteile wie z.B. Geld, Sachwerte, Dienstleistungen annehmen, die geeignet sind, eine sachgerechte Entscheidung zu beeinflussen – dies gilt auch für Geschenke. Bestehen Zweifel am Grund oder an der Art einer Zuwendung, so ist vorab die Geschäftsführung zu informieren bzw. zu fragen.</p><p>Einladungen zu einem Geschäftsessen oder einer Veranstaltung, die angemessen sind, dürfen ausgesprochen oder angenommen werden, wenn sie nicht einer unzulässigen Bevorzugung dienen.</p><h3>4. Vergabe von Spenden und Entscheidungen über Sponsoring</h3><p>Unsere Spenden beruhen auf rein freiwilliger Basis und sind frei von jeglicher Erwartung einer Gegenleistung. Unsere Spendentätigkeit und/ oder Sponsoringleistung ist nicht darauf angelegt, verdeckt Entscheidungen in unserem Interesse zu fördern. Die Empfänger unserer Spenden sowie deren Verwendung durch den Empfänger sind transparent und werden durch entsprechende Bescheinigungen nachgewiesen. Wir dulden keine Geldwäsche und unsere Mitarbeiter sind angewiesen, verdächtige Zahlungsformen oder andere Transaktionen, die auf Geldwäsche hindeuten, sofort der Geschäftsführung mitzuteilen. Unsere Steuererklärungen sowie -anmeldungen werden wahrheitsgemäß erstellt und zollpflichtige Waren werden von uns ordnungsgemäß verzollt. Wir halten die gesetzlichen Vorgaben für Exportkontrolle und Zoll im Außenwirtschafts- und Zollrecht konsequent ein.</p><h3>5. Umgang mit Informationen (Geschäftsgeheimnisse und sensiblen Daten)</h3><p>Unsere Mitarbeiter sind verpflichtet, über Betriebs- und Geschäftsgeheimnisse und andere interne Angelegenheiten Verschwiegenheit zu wahren. Dies gilt entsprechend für Informationen über unsere Vertragspartner und unsere Kunden. Die Verschwiegenheits-verpflichtung gilt nach Beendigung des Arbeitsverhältnisses fort.</p><p>Neben den allgemeinen Geheimhaltungsvorschriften ist das Datengeheimnis nach DSGVO einzuhalten - unsere Mitarbeiter verpflichten sich gemäß Arbeitsvertrag zur Wahrung des Datengeheimnisses i.S.v. § 53 BDSG. Insbesondere ist es untersagt, geschützte personenbezogene Daten unbefugt zu einem anderen als dem zur jeweiligen rechtmäßigen Aufgabenerfüllung gehörenden Zweck zu verarbeiten, bekannt zu geben, zugänglich zu machen oder anderweitig zu nutzen. Alle Berichte und andere schriftlichen Dokumentationen werden korrekt und wahrheitsgemäß verfasst. Datenerfassungen und andere Aufzeichnungen richten sich stets an den Grundsätzen einer ordnungsgemäßen Buchführung aus und diese sind stets vollständig und korrekt.</p><h3>6. Wirtschaftliches Handeln im globalen Kontext (Menschenrechte, Arbeits- und Sozialstandards)</h3><p>Soziale Verantwortung ist unverzichtbarer Bestandteil einer an Werten orientierten Unternehmensführung und wesentlicher Faktor für nachhaltigen Unternehmenserfolg. Wir respektieren und unterstützen die internationalanerkannten Menschenrechte - wir stehen im Dialog mit unseren Lieferanten, um zu vermeiden, dass unsere Produkte Rohstoffe aus Konfliktregionen enthalten. Wir halten Verbote von Kinderarbeit und Zwangsarbeit in jeder Form ein und auch Diskriminierung von Mitarbeitern und Dritten dulden wir nicht. Wir fördern die Chancengleichheit unserer Mitarbeiter. Wir beachten die geltenden Gesetze/ Arbeitsnormen im Hinblick auf angemessene Entlohnung und maximaler Arbeitszeit und wir halten uns an die Bestimmungen eines allgemeinen Mindestlohns. Wir sorgen für faire Arbeitsbedingungen – die Arbeitnehmerrechte und Arbeitssicherheit und der Gesundheitsschutz am Arbeitsplatz werden im Rahmen der Bestimmungen gewährleistet.</p><h3>7. Verantwortung gegenüber der Natur (Umweltschutz, Ressourcenverbrauch)</h3><p>Nachhaltiger Umwelt- und Klimaschutz sowie Effizienz im Verbrauch von Ressourcen sind aktuell unsere wichtigsten Unternehmensziele und wir achten sowohl bei der Produktentwicklung, der Entwicklung innovativer Dienstleistungen und auch bei der Produktion selbst darauf, dass alle Auswirkungen auf die Umwelt und das Klima so gering wie möglich gehalten werden können und unsere Produkte so ebenfalls einen positiven Beitrag zu Umwelt- und Klimaschutz bei unseren Kunden leisten können. Jeder einzelne Mitarbeiter / unseres Unternehmens steht in der Verantwortung, die natürlichen Ressourcen achtsam zu behandeln und durch individuelles Verhalten einen Beitrag zu leisten.</p><p> </p><p>Die in diesem Verhaltenskodex niedergelegten Verhaltensanforderungen sind als Zusatz/ Anhang zum Arbeitsvertrag für unsere Mitarbeiter verbindlich und daher unbedingt einzuhalten. Wir werden die Einhaltung unseres Kodex kontinuierlich kontrollieren.</p><p>Unsere Mitarbeiter sind angewiesen, beobachtete oder potenzielle Verstöße gegen Gesetze und interne Regelungen der Geschäftsführung mitzuteilen. Meldungen einer Verletzung werden selbstverständlich vertraulich behandelt und haben keine negativen Auswirkungen für den jeweiligen Mitarbeiter, mit der Ausnahme, ein unwahrer Sachverhalt wird behauptet.</p><p>Verstöße gegen den Verhaltenskodex und gesetzliche Bestimmungen können je nach Schwere arbeits- und haftungsrechtliche Konsequenzen nach sich ziehen und auch strafrechtliche Sanktionen zur Folge haben.</p><p>Bargteheide, 10.09.2021</p></div></div>",
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251"
+        },
+        "align": "justify",
+        "align_mobile": "left"
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1774967595"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 11417,
+  "elementor_data_sha256_of_db_string": "326d76947186419a63eca97af2e629c3b5dc13b9561e59681c2064df9d44b272",
+  "page_settings_db_length_bytes": 34
+ }
+}

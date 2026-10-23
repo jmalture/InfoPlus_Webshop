@@ -1,0 +1,134 @@
+/* Archive bundle: shop, product categories, the Namensschilder page, search.
+   Section head + category chips + product card grid + pagination + empty
+   state. Mobile first; breakpoints 560 (grid only), 768, 1101.
+   Tokens and .ip-card/.ip-head/.ip-pill/.ip-tile/.ip-btn come from main.css.
+   New here: .ip-chip (filter chip; larger than .ip-pill, which stays the
+   small count label) and .ip-shop-card (the product card). */
+
+/* ── Band ───────────────────────────────────────────────────────────────── */
+.ip-shop { padding-block: var(--space-6) var(--section-gap) }
+@media (min-width: 768px) { .ip-shop { padding-top: var(--space-12) } }
+
+/* Breadcrumb (ip_breadcrumb(), category pages) */
+.ip-shop .ip-crumbs { margin-bottom: var(--space-4) } /* Base styles in main.css. */
+
+/* ── Section head ───────────────────────────────────────────────────────── */
+.ip-shop-head { display: grid; gap: var(--space-4); align-items: end }
+.ip-shop-head__title { font: var(--type-heading); text-wrap: balance }
+.ip-shop-head__intro { font: 400 18px/1.4 var(--font) }
+.ip-shop-head__intro > * + * { margin-top: .6em }
+.ip-shop-head__intro[hidden] { display: none }
+.ip-shop-head__count { margin: 0 }
+.ip-shop-head__count .ip-pill { min-height: 26px; padding: 0 10px; font-size: 13px }
+@media (min-width: 768px) {
+  .ip-shop-head { grid-template-columns: minmax(0, 1fr) auto }
+  .ip-shop-head__intro { font: var(--type-text) }
+}
+/* Shop page text the client may write (woocommerce_product_archive_description). */
+.ip-shop .page-description { max-width: 70ch; margin-top: var(--space-4); color: var(--text-secondary) }
+
+/* ── Category chips: one swipe row on phones, wrapping row from 768 ─────── */
+.ip-chips { margin-top: var(--space-6) }
+.ip-chips__list {
+  display: flex; gap: var(--space-2);
+  margin: 0 calc(-1 * var(--layout-margin)); padding: 2px var(--layout-margin) var(--space-2);
+  list-style: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-padding-inline: var(--layout-margin);
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--layout-margin), #000 calc(100% - var(--layout-margin)), transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 var(--layout-margin), #000 calc(100% - var(--layout-margin)), transparent 100%);
+}
+.ip-chips__list::-webkit-scrollbar { display: none }
+.ip-chips__list > li { flex: none; scroll-snap-align: start }
+.ip-chip {
+  display: inline-flex; align-items: center; min-height: 40px; padding: 0 var(--space-4);
+  border: 1px solid var(--border); border-radius: 999px; background: var(--c-white);
+  color: var(--text-primary); font: 600 16px/1 var(--font); white-space: nowrap; text-decoration: none;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease);
+}
+.ip-chip:hover { background: var(--c-primary-tint); border-color: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-chip[aria-current="page"] { background: var(--c-primary-tint); border-color: var(--accent); color: var(--c-secondary) }
+.ip-chip:focus-visible { outline-offset: 2px }
+@media (min-width: 768px) {
+  .ip-chips__list { flex-wrap: wrap; margin: 0; padding: 0; overflow: visible; -webkit-mask-image: none; mask-image: none }
+}
+
+/* ── Notices (Woo's classic notice CSS is not loaded on listings) ───────── */
+.ip-shop .woocommerce-notices-wrapper:not(:empty) { margin-top: var(--space-6) }
+.ip-shop :is(.woocommerce-message, .woocommerce-info, .woocommerce-error) {
+  margin: 0 0 var(--space-3); padding: var(--space-3) var(--space-4); list-style: none;
+  border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; background: var(--c-white); font-size: 16px;
+}
+.ip-shop .woocommerce-error { border-left-color: var(--c-secondary) }
+.ip-shop :is(.woocommerce-message, .woocommerce-info) .button { float: right; margin-left: var(--space-3); color: var(--c-secondary); font-weight: 600 }
+
+/* ── Product grid: 1 / 2 / 3 / 4 columns ────────────────────────────────── */
+.ip-shop-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); margin: var(--space-8) 0 0; padding: 0; list-style: none }
+.ip-shop-grid__item { display: flex; min-width: 0; margin: 0 }
+/* Cards outside the active category pill (inc/catalog.php). display:flex above would beat the UA rule. */
+.ip-shop-grid__item[hidden] { display: none }
+@media (min-width: 560px) { .ip-shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) } }
+@media (min-width: 768px) { .ip-shop-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6) } }
+@media (min-width: 1101px) { .ip-shop-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) } }
+
+/* ── Product card (template-parts/product-card.php) ─────────────────────── */
+.ip-shop-card { position: relative; display: flex; flex-direction: column; width: 100%; padding: var(--space-2) }
+/* The image is laid over the box and fitted with contain, centred, with a
+   7% margin: any upload shows whole, whatever its proportions. */
+.ip-shop-card__media {
+  position: relative; display: block; aspect-ratio: 4 / 3;
+  border-radius: 12px; background: var(--c-grey-100); overflow: hidden;
+}
+.ip-shop-card__media img {
+  position: absolute; inset: 7%; width: 86%; height: 86%;
+  object-fit: contain; object-position: center;
+}
+.ip-shop-card__body { display: flex; flex: 1; flex-direction: column; gap: var(--space-2); padding: var(--space-4) var(--space-2) var(--space-2) }
+.ip-shop-card__title { font: 600 22px/1.2 var(--font) }
+.ip-shop-card__link { color: inherit; text-decoration: none }
+/* One link per card: stretched over the whole card. */
+.ip-shop-card__link::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: var(--radius-card) }
+.ip-shop-card__link:focus-visible { outline: none }
+.ip-shop-card__link:focus-visible::after { outline: 2px solid var(--focus); outline-offset: 3px }
+.ip-shop-card__text {
+  color: var(--text-secondary); font: 400 16px/1.4 var(--font);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+}
+.ip-shop-card__cta { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: var(--space-2); color: var(--c-secondary); font: 600 16px/1.2 var(--font) }
+.ip-shop-card__cta .ip-icon { width: 18px; height: 18px; transition: transform var(--dur-ui) var(--ease) }
+.ip-shop-card:hover .ip-shop-card__title { color: var(--c-secondary) }
+.ip-shop-card:hover .ip-shop-card__cta .ip-icon { transform: translateX(3px) }
+/* Output of plugins on Woo's loop item hooks: above the stretched link so its links stay clickable. */
+.ip-shop-card__extra { position: relative; z-index: 2; font-size: 14px; color: var(--text-secondary) }
+.ip-shop-card__extra:empty { display: none }
+@media (prefers-reduced-motion: no-preference) {
+  .ip-shop-card__media img { transition: transform 300ms var(--ease) }
+  .ip-shop-card:hover .ip-shop-card__media img { transform: scale(1.04) }
+}
+
+/* ── Pagination (Woo loop/pagination.php, core the_posts_pagination) ───── */
+.ip-shop :is(.woocommerce-pagination, .pagination) { margin-top: var(--space-12) }
+.ip-shop .woocommerce-pagination ul.page-numbers,
+.ip-shop .pagination .nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); margin: 0; padding: 0; list-style: none }
+.ip-shop .woocommerce-pagination li { margin: 0 }
+.ip-shop :is(a, span).page-numbers {
+  display: inline-grid; place-items: center; min-width: 44px; height: 44px; padding: 0 var(--space-3);
+  border: 1px solid var(--border); border-radius: 10px; background: var(--c-white);
+  color: var(--text-primary); font: 600 16px/1 var(--font); text-decoration: none;
+  transition: background-color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease);
+}
+.ip-shop a.page-numbers:hover { background: var(--c-primary-tint); border-color: var(--c-primary-tint); color: var(--c-secondary) }
+.ip-shop span.page-numbers.current { background: var(--c-primary-tint); border-color: var(--accent); color: var(--c-secondary) }
+.ip-shop span.page-numbers.dots { border-color: transparent; background: none; min-width: 24px; padding: 0 }
+.ip-shop .page-numbers .ip-icon { width: 18px; height: 18px }
+
+/* ── Empty state (template-parts/shop-empty.php) ────────────────────────── */
+.ip-shop-empty { display: grid; gap: var(--space-4); max-width: 760px; margin-top: var(--space-8); padding: var(--space-6) }
+.ip-shop-empty__body { display: grid; gap: var(--space-3); justify-items: start }
+.ip-shop-empty__title { font: 600 24px/1.25 var(--font) }
+.ip-shop-empty .ip-sub { font-size: 18px }
+.ip-shop-empty .ip-search { max-width: 420px; margin-top: var(--space-2) }
+.ip-shop-empty .ip-btn .ip-icon { width: 18px; height: 18px }
+@media (min-width: 768px) {
+  .ip-shop-empty { grid-template-columns: auto minmax(0, 1fr); gap: var(--space-6); padding: var(--space-8) }
+}

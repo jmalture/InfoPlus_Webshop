@@ -1,0 +1,88 @@
+/* Header */
+
+
+/* HIDES THE DARK LOGO */
+.d-logo {
+ display: none !important;
+}
+/* SWITCHES LOGO ON SCROLL */
+.elementor-sticky--effects .d-logo {
+ display: inline-block !important;
+}
+.elementor-sticky--effects .l-logo {
+ display: none;
+}
+/* CHANGES THE BACKGROUND MENU ON SCROLL */
+.elementor-sticky--effects {
+ background: white !important; /* edit here to change the background color for your sticky header*/
+}
+/* CHANGES THE TEXT COLOR ON SCROLL */
+.elementor-sticky--effects .sticky-menu-items ul li a {
+ color: var(--e-global-color-text ) !important;
+}
+
+.elementor-sticky--effects .sticky-menu-items {
+ color: var(--e-global-color-text ) !important;
+}
+
+.elementor-sticky--effects .sticky-menu-items .elementor-sub-item  {
+ color: white !important;
+}
+
+.elementor-sticky--effects .elementor-icon, .elementor-sticky--effects .elementor-button-icon, .elementor-sticky--effects .elementor-search-form__submit, .elementor-sticky--effects .elementor-search-form__input {
+ color: var(--e-global-color-text ) !important;
+}
+
+.elementor-sticky--effects .elementor-icon:hover, .elementor-sticky--effects .elementor-button-icon:hover, .elementor-sticky--effects .elementor-search-form__submit:hover {
+ color: var(--e-global-color-primary ) !important;
+}
+
+.elementor-sticky--effects .elementor-search-form__container {
+	border-color: var(--e-global-color-text ) !important;
+}
+
+/* CONTROLS THE TRANSITION SPEED - KEEP ALL SAME SPEED TO HAVE A CLEAN EFFECT */
+.elementor-sticky--effects .sticky-menu-items {
+ transition: .5s all ease-in-out;
+}
+.elementor-sticky--effects {
+ transition: .5s all ease-in-out;
+}
+
+/*updated changing mobile hamburger menu toggle and menu links on hover on scroll */
+
+
+@media only screen and (min-width: 1024px) {
+	.elementor-369 .elementor-element.elementor-element-2c421df.elementor-element {
+		display: none !Important;
+	}
+}
+
+/* Buttons */
+
+.button-arrow-right:hover svg {
+	transform: translatex(10px);
+	transition: all .3s linear;
+}
+
+.button-arrow-right svg {
+	transition: all .3s linear;
+}
+/* Change main WooCommerce button color */
+.woocommerce button.button,
+.woocommerce a.button,
+.woocommerce input.button,
+.woocommerce #respond input#submit,
+.woocommerce .button {
+    background-color: var(--e-global-color-primary ) !important; !important;  /* Change to your color */
+    color: #fff !important;         
+}
+
+/* Optional: Button hover color */
+.woocommerce button.button:hover,
+.woocommerce a.button:hover,
+.woocommerce input.button:hover,
+.woocommerce #respond input#submit:hover,
+.woocommerce .button:hover {
+    background-color: var(--e-global-color-primary ) !important; !important;  /* Change to hover color */
+}

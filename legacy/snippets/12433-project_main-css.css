@@ -1,0 +1,37 @@
+<!--
+Elementor Custom Code snippet (post_type elementor_snippet) exported read-only from staging
+post_id: 12433
+title: Project_main.css
+status: publish
+location (_elementor_location): elementor_head
+priority (_elementor_priority): 1
+conditions (_elementor_conditions): ["include/general"]
+conditions raw: a:1:{i:0;s:15:"include/general";}
+extra options (_elementor_extra_options): []
+code bytes (LENGTH(_elementor_code)): 667
+Everything below the END HEADER line is the _elementor_code meta value verbatim (post_content is empty for these posts).
+-->
+<!-- END HEADER -->
+<style>
+/*Register/login form*/
+	.lr-form-wrapper{
+		width: 100%!important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+	}
+	.lr-form-header.header-block{
+		justify-items: center;
+	}
+	.eael-lr-form-wrapper .eael-lr-password-wrapper button, .eael-lr-form-wrapper .eael-lr-password-wrapper-register button{
+		color: var(--e-global-color-primary)!important;
+	}
+	
+	@supports (-webkit-appearance: none) or (-moz-appearance: none) {
+    .eael-lr-form-wrapper input[type=checkbox]:checked {
+        --b: var(--e-global-color-primary);
+        --bc: var(--e-global-color-primary);
+    }
+}
+</style>

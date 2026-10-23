@@ -1,0 +1,15 @@
+/* element 0d88742 container */
+selector .elementor-heading-title{
+    transition: color .3s ease;
+}
+
+selector:hover .elementor-heading-title{
+    color: var(--e-global-color-primary);
+}
+
+/* element 7078524 heading */
+selector:hover{
+    text-decoration: underline;
+    text-decoration-color: var(--e-global-color-text);
+    color: var(--e-global-color-secondary)
+}

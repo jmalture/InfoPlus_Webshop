@@ -1,0 +1,69 @@
+{
+ "id": 9999,
+ "post_type": "page",
+ "title": "xmas",
+ "slug": "xmas",
+ "status": "publish",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "hide_title": "yes"
+ },
+ "elementor_data": [
+  {
+   "id": "44b4db1",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column"
+   },
+   "elements": [
+    {
+     "id": "2991b3d",
+     "elType": "widget",
+     "settings": {
+      "revslidertitle": "Christmas Landing Page 1",
+      "shortcode": "[rev_slider alias=\"christmas-landing-page-1\" slidertitle=\"Christmas Landing Page 1\"][/rev_slider]"
+     },
+     "elements": [],
+     "widgetType": "slider_revolution"
+    }
+   ],
+   "isInner": false
+  },
+  {
+   "id": "7b29288",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column"
+   },
+   "elements": [
+    {
+     "id": "e51c99a",
+     "elType": "widget",
+     "settings": {
+      "revslidertitle": "Christmas Landing Page 2",
+      "shortcode": "[rev_slider alias=\"christmas-landing-page-2\" slidertitle=\"Christmas Landing Page 2\"][/rev_slider]"
+     },
+     "elements": [],
+     "widgetType": "slider_revolution"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.3",
+  "elementor_pro_version": "3.30.0",
+  "wp_page_template": "default",
+  "tp_widgets": {
+   "widgets": [],
+   "update_at": "1791031652"
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 725,
+  "elementor_data_sha256_of_db_string": "3f43657557e62b9dcfbac1b02fcefef4d0c9ffbf131ff6857b55878b9161bed2",
+  "page_settings_db_length_bytes": 34
+ }
+}

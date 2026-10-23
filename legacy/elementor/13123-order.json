@@ -1,0 +1,105 @@
+{
+ "id": 13123,
+ "post_type": "page",
+ "title": "Order",
+ "slug": "order",
+ "status": "publish",
+ "template_type": "wp-page",
+ "conditions": null,
+ "page_settings": {
+  "eael_ext_toc_title": "Table of Contents"
+ },
+ "elementor_data": [
+  {
+   "id": "f9c17a8",
+   "elType": "container",
+   "settings": {
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "margin": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "padding": {
+     "unit": "em",
+     "top": "4",
+     "right": "0",
+     "bottom": "4",
+     "left": "0",
+     "isLinked": false
+    },
+    "padding_laptop": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding_tablet": {
+     "unit": "em",
+     "top": "",
+     "right": "",
+     "bottom": "",
+     "left": "",
+     "isLinked": true
+    },
+    "padding_mobile": {
+     "unit": "em",
+     "top": "2",
+     "right": "2",
+     "bottom": "2",
+     "left": "2",
+     "isLinked": true
+    }
+   },
+   "elements": [
+    {
+     "id": "3553cd3",
+     "elType": "widget",
+     "settings": {
+      "invoice_button_text": "Rechnung herunterladen",
+      "email_button_text": "E-Mail-Kunde",
+      "print_button_text": "Druckauftrag",
+      "not_found_message": "Bestellung nicht gefunden.",
+      "not_logged_in_message": "Bitte melden Sie sich an, um Ihre Bestellung zu sehen.",
+      "label_date": "Datum:",
+      "label_payment": "Zahlung:",
+      "label_customer": "Kunde",
+      "label_shipping": "Versandadresse",
+      "label_billing": "Rechnungsadresse",
+      "label_items": "Artikel bestellen",
+      "label_subtotal": "Zwischensumme:",
+      "label_shipping_cost": "Versand:",
+      "label_total": "Total",
+      "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+      "manual_order_id": 13981,
+      "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+     },
+     "elements": [],
+     "widgetType": "infoplus-order-details"
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.35.7",
+  "elementor_pro_version": "3.35.1",
+  "wp_page_template": "elementor_header_footer",
+  "tp_widgets": {
+   "widgets": []
+  }
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 1834,
+  "elementor_data_sha256_of_db_string": "7b82d128e99cccfc3587f0804c263c4adcce2fd1d98a368f5b4da360dad5e30f",
+  "page_settings_db_length_bytes": 57
+ }
+}

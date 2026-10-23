@@ -1,0 +1,361 @@
+{
+ "id": 2213,
+ "post_type": "elementor_library",
+ "title": "Druck & Gestaltung",
+ "slug": "druck-gestaltung",
+ "status": "publish",
+ "template_type": "container",
+ "conditions": null,
+ "page_settings": null,
+ "elementor_data": [
+  {
+   "id": "8e80f4b",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "flex_gap": {
+     "column": "0",
+     "row": "5",
+     "isLinked": false,
+     "unit": "px",
+     "size": 0
+    }
+   },
+   "elements": [
+    {
+     "id": "626fd6c",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "9a7f333",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Logo Upload",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "42c6237",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Ihr individuelles Logo können Sie im Anschluss an Ihre Bestellung im Upload-Center hochladen. Bitte beachten Sie die infoplus Daten-Voraussetzungen (siehe Druckdaten-Guide unter \"Downloads\").</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "ddeacda",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "c5e1e39",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Upload Namensliste",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "17fa0d8",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Ihre individuelle Namensliste können Sie im Anschluss an Ihre Bestellung im Upload-Center hochladen. Bitte verwenden Sie die infoplus Excel-Vorlage (siehe Namenslisten-Vorlage unter \"Downloads\").</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "cb9ce8b",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "fc58f9d",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Layout-Erstellung",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "bf48f31",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Gern erstellen wir ein individuelles Design für Ihr AluContur | Comfort Namensschild im 4C-Untereloxaldruck. Die Layout-Vorschläge unserer erfahrenen Grafiker werden Ihnen im Kunden-Center (Bestell-Übersicht) zur Verfügung gestellt. Sie geben einfach Ihr Wunsch-Design final zur Fertigungsfreigabe frei.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    },
+    {
+     "id": "1dfcd05",
+     "elType": "container",
+     "settings": {
+      "flex_direction": "column",
+      "flex_gap": {
+       "column": "0",
+       "row": "5",
+       "isLinked": false,
+       "unit": "px",
+       "size": 0
+      },
+      "content_width": "full"
+     },
+     "elements": [
+      {
+       "id": "5e0f074",
+       "elType": "widget",
+       "settings": {
+        "icon_list": [
+         {
+          "text": "Originalmuster",
+          "selected_icon": {
+           "value": "fas fa-chevron-right",
+           "library": "fa-solid"
+          },
+          "_id": "642d269"
+         }
+        ],
+        "space_between": {
+         "unit": "px",
+         "size": 0,
+         "sizes": []
+        },
+        "icon_size": {
+         "unit": "px",
+         "size": 24,
+         "sizes": []
+        },
+        "__globals__": {
+         "icon_color": "globals/colors?id=primary",
+         "text_color": "globals/colors?id=8df0251",
+         "icon_typography_typography": "globals/typography?id=405538e"
+        }
+       },
+       "elements": [],
+       "widgetType": "icon-list"
+      },
+      {
+       "id": "155c08a",
+       "elType": "widget",
+       "settings": {
+        "editor": "<p>Ab einem Netto-Auftragswert Ihrer Namensschilder-Bestellung von 1.000,00 EUR erhalten Sie zusätzlich ein kostenloses Originalmuster zur Freigabe der Serienproduktion.</p>",
+        "_margin": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "0",
+         "isLinked": false
+        },
+        "_padding": {
+         "unit": "px",
+         "top": "0",
+         "right": "0",
+         "bottom": "0",
+         "left": "35",
+         "isLinked": false
+        },
+        "__globals__": {
+         "text_color": "globals/colors?id=8df0251",
+         "typography_typography": "globals/typography?id=f3646f3"
+        }
+       },
+       "elements": [],
+       "widgetType": "text-editor"
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  }
+ ],
+ "extra_meta": {
+  "elementor_edit_mode": "builder",
+  "elementor_version": "3.30.2",
+  "elementor_pro_version": "3.30.0",
+  "elementor_source": "post",
+  "wp_page_template": "default"
+ },
+ "export_info": {
+  "elementor_data_db_length_bytes": 5375,
+  "elementor_data_sha256_of_db_string": "846376da491e54051200a39469ac0dccb348b515e0e1f20d675d0cb0409a71b7",
+  "page_settings_db_length_bytes": null
+ }
+}

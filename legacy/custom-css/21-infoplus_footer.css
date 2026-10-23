@@ -1,0 +1,32 @@
+/* element 9d608a3 text-editor */
+selector a {
+    color: var(--e-global-color-accent);
+}
+
+selector a:hover {
+    color: var(--e-global-color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* element 833ed41 text-editor */
+selector a {
+    color: var(--e-global-color-accent);
+}
+
+selector a:hover {
+    color: var(--e-global-color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* element f7977bf text-editor */
+selector a {
+    color: var(--e-global-color-accent);
+}
+
+selector a:hover {
+    color: var(--e-global-color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}

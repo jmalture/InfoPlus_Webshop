@@ -1,0 +1,1034 @@
+{
+ "note": "Form widget settings only. Form submissions are NOT exported (personal data).",
+ "form_submissions_in_db_count": 4,
+ "forms": [
+  {
+   "document_id": 3040,
+   "document_title": "Kontakt",
+   "document_type": "page",
+   "element_id": "9cb78e8",
+   "form_name": "New Form",
+   "submit_actions": null,
+   "fields_summary": [
+    {
+     "custom_id": "field_bf9c093",
+     "field_type": "text",
+     "field_label": "Firma",
+     "placeholder": "Firma",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "name",
+     "field_type": "text",
+     "field_label": "Name",
+     "placeholder": "Name",
+     "required": true,
+     "field_options": null
+    },
+    {
+     "custom_id": "email",
+     "field_type": "email",
+     "field_label": "E-Mail",
+     "placeholder": "E-Mail",
+     "required": true,
+     "field_options": null
+    },
+    {
+     "custom_id": "field_6ddc3c7",
+     "field_type": "tel",
+     "field_label": "Rufnummer",
+     "placeholder": "+49 (0)123 4567890",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "message",
+     "field_type": "textarea",
+     "field_label": "Nachricht",
+     "placeholder": "Schreiben Sie uns Ihr Anliegen",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "field_eab8b23",
+     "field_type": "honeypot",
+     "field_label": null,
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    }
+   ],
+   "email_settings": {
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io"
+   },
+   "settings_verbatim": {
+    "form_name": "New Form",
+    "form_fields": [
+     {
+      "_id": "bf9c093",
+      "field_label": "Firma",
+      "placeholder": "Firma",
+      "custom_id": "field_bf9c093"
+     },
+     {
+      "custom_id": "name",
+      "field_label": "Name",
+      "placeholder": "Name",
+      "dynamic": {
+       "active": true
+      },
+      "_id": "6410a5a",
+      "required": "true"
+     },
+     {
+      "custom_id": "email",
+      "field_type": "email",
+      "required": "true",
+      "field_label": "E-Mail",
+      "placeholder": "E-Mail",
+      "_id": "c09a327"
+     },
+     {
+      "_id": "6ddc3c7",
+      "field_type": "tel",
+      "field_label": "Rufnummer",
+      "placeholder": "+49 (0)123 4567890",
+      "custom_id": "field_6ddc3c7"
+     },
+     {
+      "custom_id": "message",
+      "field_type": "textarea",
+      "field_label": "Nachricht",
+      "placeholder": "Schreiben Sie uns Ihr Anliegen",
+      "_id": "d996f2f"
+     },
+     {
+      "_id": "eab8b23",
+      "field_type": "honeypot",
+      "custom_id": "field_eab8b23"
+     }
+    ],
+    "step_next_label": "Next",
+    "step_previous_label": "Previous",
+    "button_text": "Absenden",
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io",
+    "mailchimp_fields_map": [],
+    "drip_fields_map": [],
+    "activecampaign_fields_map": [],
+    "getresponse_fields_map": [],
+    "convertkit_fields_map": [],
+    "mailerlite_fields_map": [],
+    "custom_messages": "yes",
+    "success_message": "Ihre Nachricht wurde erfolgreich übertragen",
+    "error_message": "Übertragung fehlgeschlagen. Es ist ein Fehler aufgetreten.",
+    "server_message": "Übertragung fehlgeschlagen aufgrund eines Serverfehlers",
+    "invalid_message": "Bitte füllen Sie alle Pflichtfelder aus. Dann können Sie das Formular abschicken.",
+    "required_field_message": "This field is required.",
+    "__globals__": {
+     "button_background_color": "globals/colors?id=primary",
+     "button_background_hover_color": "globals/colors?id=secondary"
+    },
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "button_align": "center",
+    "button_content_align": "center",
+    "button_text_padding": {
+     "unit": "px",
+     "top": "10",
+     "right": "24",
+     "bottom": "10",
+     "left": "24",
+     "isLinked": false
+    },
+    "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+   }
+  },
+  {
+   "document_id": 12466,
+   "document_title": "Account",
+   "document_type": "page",
+   "element_id": "9c3adcd",
+   "form_name": "Persona linfo",
+   "submit_actions": [],
+   "fields_summary": [
+    {
+     "custom_id": "user_name",
+     "field_type": "text",
+     "field_label": "Vollständiger Name",
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "user_email",
+     "field_type": "email",
+     "field_label": "E-Mail",
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "user_compan",
+     "field_type": "text",
+     "field_label": "Firmenname (Optional)",
+     "placeholder": "Alture",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "field_b0ad0f1",
+     "field_type": "tel",
+     "field_label": null,
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    }
+   ],
+   "email_settings": {
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io"
+   },
+   "settings_verbatim": {
+    "form_name": "Persona linfo",
+    "form_fields": [
+     {
+      "custom_id": "user_name",
+      "field_label": "Vollständiger Name",
+      "dynamic": {
+       "active": true
+      },
+      "_id": "d0d9749",
+      "__dynamic__": {
+       "placeholder": "[elementor-tag id=\"463317a\" name=\"user-info\" settings=\"%7B%22type%22%3A%22display_name%22%7D\"]"
+      }
+     },
+     {
+      "custom_id": "user_email",
+      "field_type": "email",
+      "field_label": "E-Mail",
+      "_id": "23b638d",
+      "__dynamic__": {
+       "placeholder": "[elementor-tag id=\"5b8dcfb\" name=\"user-info\" settings=\"%7B%22type%22%3A%22email%22%7D\"]"
+      }
+     },
+     {
+      "custom_id": "user_compan",
+      "field_label": "Firmenname (Optional)",
+      "placeholder": "Alture",
+      "__dynamic__": [],
+      "_id": "f1d1551"
+     },
+     {
+      "_id": "b0ad0f1",
+      "custom_id": "field_b0ad0f1",
+      "field_type": "tel",
+      "__dynamic__": {
+       "field_label": "[elementor-tag id=\"329a6e0\" name=\"user-info\" settings=\"%7B%7D\"]"
+      }
+     }
+    ],
+    "input_size": "md",
+    "step_next_label": "Next",
+    "step_previous_label": "Previous",
+    "button_text": "Änderungen speichern",
+    "selected_button_icon": {
+     "value": "fas fa-save",
+     "library": "fa-solid"
+    },
+    "button_icon_indent": {
+     "unit": "px",
+     "size": 15,
+     "sizes": []
+    },
+    "submit_actions": [],
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io",
+    "mailchimp_fields_map": [],
+    "drip_fields_map": [],
+    "activecampaign_fields_map": [],
+    "getresponse_fields_map": [],
+    "convertkit_fields_map": [],
+    "mailerlite_fields_map": [],
+    "step_type": "none",
+    "form_id": "infoplus_profile_form",
+    "form_validation": "custom",
+    "custom_messages": "yes",
+    "success_message": "Ihre Übermittlung war erfolgreich.",
+    "error_message": "Ihre Übermittlung ist aufgrund eines Fehlers fehlgeschlagen.",
+    "server_message": "Ihre Übermittlung ist aufgrund eines Serverfehlers fehlgeschlagen.",
+    "invalid_message": "Ihre Übermittlung ist fehlgeschlagen, da das Formular ungültig ist.",
+    "required_field_message": "Dieses Feld ist erforderlich.",
+    "label_spacing": {
+     "unit": "px",
+     "size": 4,
+     "sizes": []
+    },
+    "label_color": "#333333",
+    "label_typography_typography": "custom",
+    "label_typography_font_family": "Archivo Narrow",
+    "label_typography_font_size": {
+     "unit": "px",
+     "size": 17,
+     "sizes": []
+    },
+    "label_typography_font_weight": "500",
+    "label_typography_text_transform": "none",
+    "label_typography_font_style": "normal",
+    "label_typography_text_decoration": "none",
+    "label_typography_line_height": {
+     "unit": "em",
+     "size": 1.3,
+     "sizes": []
+    },
+    "label_typography_letter_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "label_typography_word_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "html_color": "#191B1C",
+    "html_typography_typography": "custom",
+    "html_typography_font_family": "Archivo Narrow",
+    "html_typography_font_size": {
+     "unit": "px",
+     "size": 20,
+     "sizes": []
+    },
+    "html_typography_font_weight": "400",
+    "html_typography_text_transform": "none",
+    "html_typography_font_style": "normal",
+    "html_typography_text_decoration": "none",
+    "html_typography_line_height": {
+     "unit": "em",
+     "size": 1.3,
+     "sizes": []
+    },
+    "html_typography_letter_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "html_typography_word_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "field_border_color": "#E0E0E0",
+    "field_border_radius": {
+     "unit": "px",
+     "top": "8",
+     "right": "8",
+     "bottom": "8",
+     "left": "8",
+     "isLinked": true
+    },
+    "button_align": "start",
+    "button_typography_typography": "custom",
+    "button_typography_font_family": "Archivo Narrow",
+    "button_typography_font_size": {
+     "unit": "px",
+     "size": 18,
+     "sizes": []
+    },
+    "button_typography_font_size_mobile": {
+     "unit": "px",
+     "size": 24,
+     "sizes": []
+    },
+    "button_typography_font_weight": "500",
+    "button_typography_text_transform": "none",
+    "button_typography_font_style": "normal",
+    "button_typography_text_decoration": "none",
+    "button_typography_line_height": {
+     "unit": "em",
+     "size": 1.2,
+     "sizes": []
+    },
+    "button_typography_letter_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "button_typography_word_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "button_background_color": "#E6007E",
+    "button_border_radius": {
+     "unit": "px",
+     "top": "8",
+     "right": "8",
+     "bottom": "8",
+     "left": "8",
+     "isLinked": true
+    },
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "__globals__": {
+     "label_color": "",
+     "html_color": "globals/colors?id=text",
+     "button_background_color": "globals/colors?id=primary",
+     "button_typography_typography": "",
+     "label_typography_typography": "",
+     "html_typography_typography": "",
+     "field_typography_typography": "globals/typography?id=f3646f3"
+    },
+    "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis",
+    "hide_desktop": "hidden-desktop",
+    "hide_laptop": "hidden-laptop",
+    "hide_tablet": "hidden-tablet"
+   }
+  },
+  {
+   "document_id": 12466,
+   "document_title": "Account",
+   "document_type": "page",
+   "element_id": "20ce51c",
+   "form_name": "Change password",
+   "submit_actions": [],
+   "fields_summary": [
+    {
+     "custom_id": "current_password",
+     "field_type": "password",
+     "field_label": "Aktuelles Passwort",
+     "placeholder": "Enter Current Password",
+     "required": true,
+     "field_options": null
+    },
+    {
+     "custom_id": "new_password",
+     "field_type": "password",
+     "field_label": "Neues Passwort",
+     "placeholder": "Neues Passwort eingeben",
+     "required": true,
+     "field_options": null
+    },
+    {
+     "custom_id": "confirm_password",
+     "field_type": "password",
+     "field_label": "Neues Passwort bestätigen",
+     "placeholder": "Neues Passwort bestätigen",
+     "required": true,
+     "field_options": null
+    }
+   ],
+   "email_settings": {
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io"
+   },
+   "settings_verbatim": {
+    "form_name": "Change password",
+    "form_fields": [
+     {
+      "custom_id": "current_password",
+      "field_type": "password",
+      "field_label": "Aktuelles Passwort",
+      "placeholder": "Enter Current Password",
+      "dynamic": {
+       "active": true
+      },
+      "_id": "d0d9749",
+      "required": "true",
+      "__dynamic__": []
+     },
+     {
+      "custom_id": "new_password",
+      "field_type": "password",
+      "field_label": "Neues Passwort",
+      "placeholder": "Neues Passwort eingeben",
+      "dynamic": {
+       "active": true
+      },
+      "required": "true",
+      "__dynamic__": [],
+      "_id": "386a7e2"
+     },
+     {
+      "custom_id": "confirm_password",
+      "field_type": "password",
+      "field_label": "Neues Passwort bestätigen",
+      "placeholder": "Neues Passwort bestätigen",
+      "dynamic": {
+       "active": true
+      },
+      "required": "true",
+      "__dynamic__": [],
+      "_id": "4f61d4d"
+     }
+    ],
+    "input_size": "md",
+    "step_next_label": "Next",
+    "step_previous_label": "Previous",
+    "button_text": "Passwort aktualisieren",
+    "selected_button_icon": {
+     "value": "fas fa-save",
+     "library": "fa-solid"
+    },
+    "button_icon_indent": {
+     "unit": "px",
+     "size": 15,
+     "sizes": []
+    },
+    "submit_actions": [],
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io",
+    "mailchimp_fields_map": [],
+    "drip_fields_map": [],
+    "activecampaign_fields_map": [],
+    "getresponse_fields_map": [],
+    "convertkit_fields_map": [],
+    "mailerlite_fields_map": [],
+    "step_type": "none",
+    "form_id": "infoplus_password_form",
+    "form_validation": "custom",
+    "success_message": "Ihre Übermittlung war erfolgreich.",
+    "error_message": "Ihre Übermittlung ist aufgrund eines Fehlers fehlgeschlagen.",
+    "server_message": "Ihre Übermittlung ist aufgrund eines Serverfehlers fehlgeschlagen.",
+    "invalid_message": "Ihre Übermittlung ist fehlgeschlagen, da das Formular ungültig ist.",
+    "required_field_message": "Dieses Feld ist erforderlich.",
+    "label_spacing": {
+     "unit": "px",
+     "size": 4,
+     "sizes": []
+    },
+    "label_color": "#333333",
+    "label_typography_typography": "custom",
+    "label_typography_font_family": "Archivo Narrow",
+    "label_typography_font_size": {
+     "unit": "px",
+     "size": 17,
+     "sizes": []
+    },
+    "label_typography_font_weight": "500",
+    "label_typography_text_transform": "none",
+    "label_typography_font_style": "normal",
+    "label_typography_text_decoration": "none",
+    "label_typography_line_height": {
+     "unit": "em",
+     "size": 1.3,
+     "sizes": []
+    },
+    "label_typography_letter_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "label_typography_word_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "html_color": "#191B1C",
+    "html_typography_typography": "custom",
+    "html_typography_font_family": "Archivo Narrow",
+    "html_typography_font_size": {
+     "unit": "px",
+     "size": 20,
+     "sizes": []
+    },
+    "html_typography_font_weight": "400",
+    "html_typography_text_transform": "none",
+    "html_typography_font_style": "normal",
+    "html_typography_text_decoration": "none",
+    "html_typography_line_height": {
+     "unit": "em",
+     "size": 1.3,
+     "sizes": []
+    },
+    "html_typography_letter_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "html_typography_word_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "field_border_color": "#E0E0E0",
+    "field_border_radius": {
+     "unit": "px",
+     "top": "8",
+     "right": "8",
+     "bottom": "8",
+     "left": "8",
+     "isLinked": true
+    },
+    "button_align": "start",
+    "button_typography_typography": "custom",
+    "button_typography_font_family": "Archivo Narrow",
+    "button_typography_font_size": {
+     "unit": "px",
+     "size": 18,
+     "sizes": []
+    },
+    "button_typography_font_size_mobile": {
+     "unit": "px",
+     "size": 24,
+     "sizes": []
+    },
+    "button_typography_font_weight": "500",
+    "button_typography_text_transform": "none",
+    "button_typography_font_style": "normal",
+    "button_typography_text_decoration": "none",
+    "button_typography_line_height": {
+     "unit": "em",
+     "size": 1.2,
+     "sizes": []
+    },
+    "button_typography_letter_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "button_typography_word_spacing": {
+     "unit": "px",
+     "size": 0,
+     "sizes": []
+    },
+    "button_background_color": "#E6007E",
+    "button_border_radius": {
+     "unit": "px",
+     "top": "8",
+     "right": "8",
+     "bottom": "8",
+     "left": "8",
+     "isLinked": true
+    },
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "__globals__": {
+     "label_color": "",
+     "html_color": "globals/colors?id=text",
+     "button_background_color": "globals/colors?id=primary",
+     "button_typography_typography": "",
+     "label_typography_typography": "",
+     "html_typography_typography": "",
+     "field_typography_typography": "globals/typography?id=f3646f3"
+    },
+    "custom_messages": "yes",
+    "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+   }
+  },
+  {
+   "document_id": 14241,
+   "document_title": "Special Wishes Form",
+   "document_type": "elementor_library",
+   "element_id": "7cedd60",
+   "form_name": "specia wusges form",
+   "submit_actions": null,
+   "fields_summary": [
+    {
+     "custom_id": "product",
+     "field_type": "text",
+     "field_label": "Produkt",
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "stuck",
+     "field_type": "number",
+     "field_label": "Stück",
+     "placeholder": "10",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "modell",
+     "field_type": "text",
+     "field_label": "Modell",
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "variante",
+     "field_type": "text",
+     "field_label": "Variante",
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "befestigung",
+     "field_type": "select",
+     "field_label": "Befestigung",
+     "placeholder": "10",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "firma",
+     "field_type": "text",
+     "field_label": "Firma",
+     "placeholder": "Firma",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "name",
+     "field_type": "text",
+     "field_label": "Name",
+     "placeholder": "Name",
+     "required": true,
+     "field_options": null
+    },
+    {
+     "custom_id": "email",
+     "field_type": "email",
+     "field_label": "Email",
+     "placeholder": "Email",
+     "required": true,
+     "field_options": null
+    },
+    {
+     "custom_id": "rufnummer",
+     "field_type": "tel",
+     "field_label": "Rufnummer",
+     "placeholder": "+49 (0) 123 4567890",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "message",
+     "field_type": "textarea",
+     "field_label": "Bemerkungen",
+     "placeholder": "Beschreiben Sie Ihre Wunschkontur...",
+     "required": false,
+     "field_options": null
+    },
+    {
+     "custom_id": "muster",
+     "field_type": "checkbox",
+     "field_label": "Muster gewünscht",
+     "placeholder": null,
+     "required": false,
+     "field_options": "Ja|ja\nNein|nein"
+    },
+    {
+     "custom_id": "file_upload",
+     "field_type": "upload",
+     "field_label": "Logo/Bild hochladen",
+     "placeholder": null,
+     "required": false,
+     "field_options": null
+    }
+   ],
+   "email_settings": {
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io"
+   },
+   "settings_verbatim": {
+    "form_name": "specia wusges form",
+    "form_fields": [
+     {
+      "_id": "9ddc7bd",
+      "field_label": "Produkt",
+      "custom_id": "product"
+     },
+     {
+      "field_label": "Stück",
+      "custom_id": "stuck",
+      "field_type": "number",
+      "placeholder": "10",
+      "_id": "e8636ac"
+     },
+     {
+      "field_label": "Modell",
+      "custom_id": "modell",
+      "_id": "3660cf2"
+     },
+     {
+      "field_label": "Variante",
+      "custom_id": "variante",
+      "_id": "f448c1f"
+     },
+     {
+      "field_label": "Befestigung",
+      "custom_id": "befestigung",
+      "field_type": "select",
+      "placeholder": "10",
+      "_id": "427b0c3"
+     },
+     {
+      "_id": "f0a99f7",
+      "field_label": "Firma",
+      "placeholder": "Firma",
+      "custom_id": "firma"
+     },
+     {
+      "custom_id": "name",
+      "field_label": "Name",
+      "placeholder": "Name",
+      "dynamic": {
+       "active": true
+      },
+      "_id": "c21c666",
+      "required": "true"
+     },
+     {
+      "custom_id": "email",
+      "field_type": "email",
+      "required": "true",
+      "field_label": "Email",
+      "placeholder": "Email",
+      "_id": "86b81a7",
+      "width": "80"
+     },
+     {
+      "_id": "7d16702",
+      "field_type": "tel",
+      "field_label": "Rufnummer",
+      "placeholder": "+49 (0) 123 4567890",
+      "custom_id": "rufnummer"
+     },
+     {
+      "custom_id": "message",
+      "field_type": "textarea",
+      "field_label": "Bemerkungen",
+      "placeholder": "Beschreiben Sie Ihre Wunschkontur...",
+      "_id": "e3682f4"
+     },
+     {
+      "_id": "db7260a",
+      "field_type": "checkbox",
+      "field_label": "Muster gewünscht",
+      "field_options": "Ja|ja\nNein|nein",
+      "custom_id": "muster"
+     },
+     {
+      "_id": "abf4045",
+      "field_type": "upload",
+      "field_label": "Logo/Bild hochladen",
+      "attachment_type": "both",
+      "file_sizes": 10,
+      "file_types": "jpg,png,webp,",
+      "allow_multiple_upload": "yes",
+      "max_files": 4,
+      "custom_id": "file_upload"
+     }
+    ],
+    "input_size": "md",
+    "mark_required": "yes",
+    "button_size": "md",
+    "step_next_label": "Next",
+    "step_previous_label": "Previous",
+    "button_text": "Anfrage absenden",
+    "email_to": "hostinger@alture.io",
+    "email_subject": "New message from \"infoplus\"",
+    "email_content": "[all-fields]",
+    "email_from": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name": "infoplus",
+    "email_to_2": "hostinger@alture.io",
+    "email_subject_2": "New message from \"infoplus\"",
+    "email_content_2": "[all-fields]",
+    "email_from_2": "email@navajowhite-rhinoceros-679020.hostingersite.com",
+    "email_from_name_2": "infoplus",
+    "email_reply_to_2": "hostinger@alture.io",
+    "mailchimp_fields_map": [],
+    "drip_fields_map": [],
+    "activecampaign_fields_map": [],
+    "getresponse_fields_map": [],
+    "convertkit_fields_map": [],
+    "mailerlite_fields_map": [],
+    "success_message": "Your submission was successful.",
+    "error_message": "Your submission failed because of an error.",
+    "server_message": "Your submission failed because of a server error.",
+    "invalid_message": "Your submission failed because the form is invalid.",
+    "required_field_message": "This field is required.",
+    "row_gap": {
+     "unit": "px",
+     "size": 20,
+     "sizes": []
+    },
+    "label_spacing": {
+     "unit": "px",
+     "size": 5,
+     "sizes": []
+    },
+    "label_color": "#191B1C",
+    "mark_required_color": "#E6007E",
+    "field_background_color": "",
+    "field_border_radius": {
+     "unit": "px",
+     "top": "6",
+     "right": "6",
+     "bottom": "6",
+     "left": "6",
+     "isLinked": true
+    },
+    "button_border_border": "solid",
+    "button_border_width": {
+     "unit": "px",
+     "top": "1",
+     "right": "1",
+     "bottom": "1",
+     "left": "1",
+     "isLinked": true
+    },
+    "eael_image_masking_custom_clip_path": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "eael_image_masking_custom_clip_path_hover": "clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);",
+    "__globals__": {
+     "label_color": "globals/colors?id=text",
+     "mark_required_color": "globals/colors?id=primary",
+     "field_background_color": "",
+     "button_background_color": "globals/colors?id=primary",
+     "button_typography_typography": "globals/typography?id=text",
+     "button_background_hover_color": "globals/colors?id=accent",
+     "button_hover_color": "globals/colors?id=primary"
+    },
+    "plus_tooltip_content_desc": "Luctus nec ullamcorper mattis"
+   }
+  }
+ ],
+ "elementor_forms_snapshot_meta": {
+  "14241": [
+   {
+    "id": "7cedd60",
+    "name": "specia wusges form",
+    "fields": [
+     {
+      "id": "product",
+      "type": "text",
+      "label": "Produkt"
+     },
+     {
+      "id": "stuck",
+      "type": "number",
+      "label": "Stück"
+     },
+     {
+      "id": "modell",
+      "type": "text",
+      "label": "Modell"
+     },
+     {
+      "id": "variante",
+      "type": "text",
+      "label": "Variante"
+     },
+     {
+      "id": "befestigung",
+      "type": "select",
+      "label": "Befestigung",
+      "options": [
+       ""
+      ],
+      "is_multiple": false
+     },
+     {
+      "id": "firma",
+      "type": "text",
+      "label": "Firma"
+     },
+     {
+      "id": "name",
+      "type": "text",
+      "label": "Name"
+     },
+     {
+      "id": "email",
+      "type": "email",
+      "label": "Email"
+     },
+     {
+      "id": "rufnummer",
+      "type": "tel",
+      "label": "Rufnummer"
+     },
+     {
+      "id": "message",
+      "type": "textarea",
+      "label": "Bemerkungen"
+     },
+     {
+      "id": "muster",
+      "type": "checkbox",
+      "label": "Muster gewünscht",
+      "options": [
+       "Ja|ja",
+       "Nein|nein"
+      ]
+     },
+     {
+      "id": "file_upload",
+      "type": "upload",
+      "label": "Logo/Bild hochladen"
+     }
+    ]
+   }
+  ]
+ }
+}
