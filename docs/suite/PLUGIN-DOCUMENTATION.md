@@ -152,6 +152,8 @@ The admin page is registered under **IKONA IFE** in the WP sidebar (position 56)
 
 `Plugin::VERSION` (currently `0.10.26`, 0.10.25 before `feature/view-renderer`) is the cache-bust string most modules append to their asset URLs. It is independent of the plugin header version (`0.9.111`). See Section 8.
 
+Superseded in 0.10.33: `infoplus-suite.php` defines `INFOPLUS_SUITE_VERSION` before it loads `Plugin.php`, and `Plugin::VERSION = INFOPLUS_SUITE_VERSION`. The header `Version:` carries the same number (0.10.33; it was 0.9.113 up to then, so the Plugins screen showed the same version for every build). `tools/build-zips.sh` compares the header and the constant and stops when they differ. `ProductDetailSuite\Module::VERSION` and `IkonaIFE\Module::VERSION` are unchanged and still separate.
+
 ### `src/Admin/Dashboard.php`
 
 - Registers the `admin.php?page=infoplus-suite` menu page

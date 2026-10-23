@@ -17,7 +17,7 @@ Monorepo for the Infoplus nameplate shop (Namensschilder): the Infoplus Suite pl
 
 ```
 wp-content/plugins/infoplus-suite/   the Suite plugin (deployed as folder "Infoplus Suite" on staging)
-  infoplus-suite.php                 entry point, plugin header (Version 0.9.113)
+  infoplus-suite.php                 entry point, plugin header and INFOPLUS_SUITE_VERSION (0.10.33)
   src/Plugin.php                     orchestrator, Plugin::VERSION (0.10.33 on main), registers the modules
   src/Admin/Dashboard.php            WP Admin menu "IKONA IFE" (slug infoplus-suite), module tabs
   src/Contracts/ModuleInterface.php  slug(), label(), register()
@@ -45,13 +45,13 @@ Modules, in registration order: `WooSingleProductAddons`, `WooProductVariationFi
 
 | Where | Value | Meaning |
 |-------|-------|---------|
-| `infoplus-suite.php` header | 0.9.113 (0.9.111 on `production`) | What WordPress shows. Bumped by hand at release. Not used in code. |
-| `Plugin::VERSION` in `src/Plugin.php` | 0.10.33 (0.10.25 on `production`) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. |
+| `infoplus-suite.php` header and `INFOPLUS_SUITE_VERSION` | 0.10.33 (header 0.9.111 on `production`) | Since 0.10.33 one release number: the header is what WordPress shows, the constant (next to it, same file) is what the code uses. Bump both together. `tools/build-zips.sh` refuses to build when they differ. |
+| `Plugin::VERSION` in `src/Plugin.php` | `= INFOPLUS_SUITE_VERSION` (0.10.25 on `production`) | Cache-bust string for assets of WooSingleProductAddons, UserDashboard, UserOrders and the product meta box. Up to 0.10.32 it was a separate literal and the header lagged behind at 0.9.113. |
 | `ProductDetailSuite\Module::VERSION` | 1.1.1 (1.1.0 on `production`) | Cache-bust for ProductDetailSuite assets and part of the transient key `infoplus_pd_{product_id}_{VERSION}`. |
 | `IkonaIFE\Module::VERSION` | 1.0.4 | Cache-bust for the sync dashboard assets. |
 | Theme `style.css` Version and `IP_VERSION` in `functions.php` | 0.4.0 | Theme release number; theme assets are versioned with it plus the file time, so every upload busts caches. |
 
-Rule: after any JS or CSS change, bump the constant that the module's enqueue uses, then hard refresh. A ProductDetailSuite bump also invalidates every cached product data blob. The two top-level numbers have drifted; roadmap R-08 wants one source of truth, not done yet.
+Rule: after any JS or CSS change, bump the constant that the module's enqueue uses, then hard refresh. A ProductDetailSuite bump also invalidates every cached product data blob. Release rule for the Suite: every ZIP that goes to a site gets a new number in `infoplus-suite.php` (header and constant), so the Plugins screen shows which build is installed. The two module constants are still separate (R-08 partly done).
 
 ## Module registration pattern
 

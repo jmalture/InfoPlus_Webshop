@@ -17,7 +17,7 @@ Each item below is written as a self-contained implementation brief. When we sta
 | R-05 Try/catch module registration | open | `Plugin::registerModules()` unchanged, now nine modules |
 | R-06 Remove SyncService self HTTP request | open, question answered | Still `wp_remote_get(rest_url('infoplus/v1/products'))`; source is InfoplusAPI on the same install |
 | R-07 Extract inline CSS | partially done | Cart/checkout styles moved to `woo-pages.css`; thank-you page and login guard still inline; new inline CSS added in Custom404 |
-| R-08 Unify version management | open | Three constants still used for cache busting; ProductDetailSuite VERSION now also keys a transient |
+| R-08 Unify version management | partly done (0.10.33) | Header and `Plugin::VERSION` are one number (`INFOPLUS_SUITE_VERSION`, checked by `tools/build-zips.sh`). The ProductDetailSuite and IkonaIFE constants are still separate; ProductDetailSuite VERSION also keys a transient |
 | R-09 Translate hardcoded German | open | 14 PHP files with German characters, 82 lines outside `__()`; more added since |
 | R-10 class_exists guards | done as far as it goes | Only two call sites exist, both guarded |
 | R-11 Module toggle | open | No `disabled_modules` option or filter in the code |
@@ -340,6 +340,8 @@ if ($token) {
 ---
 
 ## 🟡 R-08: Unify Version Management
+
+> **Status (2026-10-23): partly done in 0.10.33.** The plugin header and `Plugin::VERSION` now share one number: `infoplus-suite.php` defines `INFOPLUS_SUITE_VERSION` next to the header, `Plugin::VERSION = INFOPLUS_SUITE_VERSION`, and `tools/build-zips.sh` stops when header and constant differ. Still open: the two module constants below.
 
 > **Status (2026-09-17): open.** Current values: plugin header `0.9.111`, `Plugin::VERSION = '0.10.25'`, `IkonaIFE\Module::VERSION = '1.0.4'`, `ProductDetailSuite\Module::VERSION = '1.1.0'`. `IkonaIFE/Module.php` line 154 and `ProductDetailSuite/Module.php` lines 134 and 256 still use `self::VERSION` for enqueues; `ProductAttributeImages.php` line 980 uses `Plugin::VERSION . '.7'`. New since the brief: `ProductDetailSuite\Module::VERSION` is part of the transient key `infoplus_pd_{id}_{VERSION}`, so switching that module to `Plugin::VERSION` must also change the key (or bumping `Plugin::VERSION` will no longer refresh the product data cache the way a module bump does today). The header version and `Plugin::VERSION` have diverged (0.9.x vs 0.10.x) with no documented rule.
 
