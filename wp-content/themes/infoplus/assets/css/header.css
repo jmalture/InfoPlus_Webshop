@@ -443,6 +443,39 @@
   .ip-nav__count, .ip-card-img { transition: none }
 }
 
+/* ── Cart preview (ip_minicart_html(), site.js) ─────────────────────────── */
+/* Same panel as the account quick menu (.ip-account__panel, .ip-account__box);
+   the cart icon stays a link to the Warenkorb. Desktop only. */
+.ip-cartbox .ip-account__panel { width: min(380px, calc(100vw - 2 * var(--layout-margin))) }
+.ip-cartbox.is-open .ip-cart { background: var(--c-primary-tint); color: var(--accent) }
+@media (max-width: 1100px) { .ip-cartbox .ip-account__panel { display: none } }
+.ip-minicart { display: grid; gap: var(--space-3); font: 400 16px/1.35 var(--font) }
+.ip-minicart__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border) }
+.ip-minicart__title { font: 600 18px/1.25 var(--font) }
+.ip-minicart__list { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; max-height: min(52vh, 360px); overflow-y: auto; overscroll-behavior: contain }
+.ip-minicart__item { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: var(--space-3); align-items: center; padding: var(--space-2); border-radius: 10px; transition: background-color var(--ip-dur) var(--ease) }
+.ip-minicart__item:hover { background: var(--c-grey-100) }
+.ip-minicart__thumb { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 10px; background: var(--c-grey-100); overflow: hidden }
+.ip-minicart__thumb img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply }
+.ip-minicart__main { display: grid; gap: 1px; min-width: 0 }
+.ip-minicart__name { font-weight: 600; color: inherit; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+a.ip-minicart__name:hover { color: var(--c-secondary); text-decoration: underline; text-underline-offset: 2px }
+.ip-minicart__model { font-size: 14px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.ip-minicart__qty { font-size: 14px; color: var(--text-secondary) }
+.ip-minicart__price { font-weight: 600; white-space: nowrap; text-align: end }
+.ip-minicart__price small, .ip-minicart__sum b small, .ip-minicart .tax_label { display: none }
+.ip-minicart__more { padding-inline: var(--space-2); font-size: 14px; color: var(--text-secondary) }
+.ip-minicart__sum { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border) }
+.ip-minicart__sum > span { display: grid; gap: 2px; font-weight: 600 }
+.ip-minicart__sum small { font: 400 13px/1.2 var(--font); color: var(--text-secondary) }
+.ip-minicart__sum b { font: 700 22px/1 var(--font); color: var(--c-secondary); font-variant-numeric: tabular-nums }
+.ip-minicart__actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) }
+.ip-minicart__actions .ip-btn { justify-content: center; padding-inline: var(--space-3) }
+.ip-minicart__empty { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-2) 0; text-align: center }
+.ip-minicart__empty-title { font: 600 18px/1.25 var(--font) }
+.ip-minicart__empty-text { color: var(--text-secondary); font-size: 15px }
+.ip-minicart.is-loading { opacity: .6; transition: opacity 200ms ease }
+
 /* ── Account quick menu (inc/account-menu.php, site.js) ──────────────────── */
 /* Same layering as the mega menu: a floating .ip-panel under the icon, the
    transparent top padding bridges the pointer from the icon to the panel. */
@@ -462,7 +495,8 @@
   transition: opacity 220ms ease, transform 300ms var(--ease), visibility 0s linear 300ms;
 }
 .ip-account.is-open .ip-account__panel,
-html:not(.js) .ip-account:focus-within .ip-account__panel {
+html:not(.js) .ip-account:focus-within .ip-account__panel,
+.ip-cartbox:has(:focus-visible) .ip-account__panel {
   visibility: visible;
   opacity: 1;
   transform: none;

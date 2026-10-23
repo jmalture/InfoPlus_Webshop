@@ -377,10 +377,28 @@ $ip_mega_id = 'ip-mega-panel';
 			<?php endif; ?>
 		</div>
 
-		<a class="ip-header__icon ip-cart" href="<?php echo esc_url( ip_header_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Warenkorb', 'infoplus' ); ?>">
-			<?php echo ip_icon( 'cart' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
-			<?php echo ip_cart_badge(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_cart_badge(). ?>
-		</a>
+		<?php if ( function_exists( 'ip_minicart_enabled' ) && ip_minicart_enabled() ) : ?>
+			<?php
+			// Cart preview (inc/woocommerce.php ip_minicart_html()): the icon stays a link to the Warenkorb;
+			// on desktop the panel opens on mouse hover and on keyboard focus (site.js, header.css).
+			?>
+			<div class="ip-account ip-cartbox" data-ip-cartbox data-ip-fragments="<?php echo esc_url( add_query_arg( 'wc-ajax', 'get_refreshed_fragments', home_url( '/' ) ) ); ?>">
+				<a class="ip-header__icon ip-cart" href="<?php echo esc_url( ip_header_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Warenkorb', 'infoplus' ); ?>">
+					<?php echo ip_icon( 'cart' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+					<?php echo ip_cart_badge(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_cart_badge(). ?>
+				</a>
+				<div class="ip-account__panel ip-cartbox__panel" role="region" aria-label="<?php esc_attr_e( 'Warenkorb-Vorschau', 'infoplus' ); ?>">
+					<div class="ip-account__box ip-panel">
+						<?php echo ip_minicart_html(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_minicart_html(). ?>
+					</div>
+				</div>
+			</div>
+		<?php else : ?>
+			<a class="ip-header__icon ip-cart" href="<?php echo esc_url( ip_header_cart_url() ); ?>" aria-label="<?php esc_attr_e( 'Warenkorb', 'infoplus' ); ?>">
+				<?php echo ip_icon( 'cart' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>
+				<?php echo ip_cart_badge(); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ip_cart_badge(). ?>
+			</a>
+		<?php endif; ?>
 
 		<button type="button" class="ip-header__icon ip-burger" data-ip-open="ip-mobile-menu" aria-haspopup="dialog" aria-controls="ip-mobile-menu" aria-label="<?php esc_attr_e( 'Menü', 'infoplus' ); ?>">
 			<?php echo ip_icon( 'menu' ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?>

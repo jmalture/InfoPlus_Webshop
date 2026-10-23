@@ -44,3 +44,7 @@ Guided picker for new customers at `/berater/` (page 25879 on staging, template 
 
 Front page: section "Drei Wege" after the hero (field group tab "Drei Wege": switch, head, help bar texts) with the three options, their live "ab" prices and model counts, and a link under the hero buttons (`hero_finder_label`).
 
+
+## Cart preview in the header (since 0.5.0)
+
+On desktop the cart icon opens a preview on mouse hover, in the same panel as the account quick menu (`.ip-account__panel`); keyboard focus on the icon shows it too. The icon stays a link to the Warenkorb. Markup: `ip_minicart_html()` in `inc/woocommerce.php` (first four lines with picture, model, quantity and line total, "+ N weitere Positionen", subtotal, "Zum Warenkorb" and "Zur Kasse"; an empty state with the shop and the Berater). It is also a cart fragment: `site.js` fetches `?wc-ajax=get_refreshed_fragments` the first time the panel opens, so a cached page never shows an old cart. Not shown on the cart and checkout pages (`ip_minicart_enabled()`, filter of the same name). Lines from the online editor use their `ife_thumbnail_url` and `display` text.

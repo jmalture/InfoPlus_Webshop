@@ -98,6 +98,8 @@
         // One floating panel at a time: close the account menu.
         var acctItem = doc.querySelector('[data-ip-account].is-open');
         if (acctItem) { acctItem.classList.remove('is-open'); var ab = acctItem.querySelector('[aria-expanded]'); if (ab) ab.setAttribute('aria-expanded', 'false'); }
+        var cartItem = doc.querySelector('[data-ip-cartbox].is-open');
+        if (cartItem) cartItem.classList.remove('is-open');
       }
       mega.classList.toggle('is-open', open);
       megaBtn.setAttribute('aria-expanded', String(open));
@@ -175,6 +177,8 @@
         // One floating panel at a time: close the mega menu.
         var megaItem = doc.querySelector('[data-ip-mega].is-open');
         if (megaItem) { megaItem.classList.remove('is-open'); var mb = megaItem.querySelector('[aria-expanded]'); if (mb) mb.setAttribute('aria-expanded', 'false'); }
+        var cartOpen = doc.querySelector('[data-ip-cartbox].is-open');
+        if (cartOpen) cartOpen.classList.remove('is-open');
       }
       acct.classList.toggle('is-open', open);
       acctBtn.setAttribute('aria-expanded', String(open));
@@ -212,6 +216,73 @@
       if (acctOpen() && !acct.contains(e.target)) setAcct(false);
     });
     desktop.addEventListener('change', function (e) { if (!e.matches) setAcct(false); });
+  }
+
+  /* ── Cart preview (ip_minicart_html()): the icon stays a link to the Warenkorb. Mouse
+     hover on desktop opens the panel with the account menu's intent delay; keyboard focus
+     shows it through CSS (:focus-visible). The first opening asks WooCommerce for fresh
+     cart fragments, so a page from the page cache never shows an old cart. ── */
+  var cartbox = doc.querySelector('[data-ip-cartbox]');
+  if (cartbox) {
+    var cartTimer = 0;
+    var cartFresh = false;
+    var cartFine = window.matchMedia('(hover: hover) and (pointer: fine)');
+    var setCart = function (open) {
+      clearTimeout(cartTimer);
+      if (open === cartbox.classList.contains('is-open')) return;
+      if (open) {
+        // One floating panel at a time.
+        doc.querySelectorAll('[data-ip-account].is-open, [data-ip-mega].is-open').forEach(function (el) {
+          el.classList.remove('is-open');
+          var b = el.querySelector('[aria-expanded]');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        });
+        refreshCart();
+      }
+      cartbox.classList.toggle('is-open', open);
+    };
+    var refreshCart = function () {
+      var url = cartbox.getAttribute('data-ip-fragments');
+      if (cartFresh || !url || !window.fetch) return;
+      cartFresh = true;
+      var box = cartbox.querySelector('[data-ip-minicart]');
+      if (box) box.classList.add('is-loading');
+      fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          var frags = data && data.fragments;
+          if (!frags) return;
+          Object.keys(frags).forEach(function (sel) {
+            if (sel !== '[data-ip-minicart]' && sel !== '[data-ip-cart-count]') return;
+            doc.querySelectorAll(sel).forEach(function (el) {
+              var tmp = doc.createElement('div');
+              tmp.innerHTML = frags[sel];
+              if (tmp.firstElementChild) el.replaceWith(tmp.firstElementChild);
+            });
+          });
+        })
+        .catch(function () { cartFresh = false; })
+        .then(function () {
+          var b = cartbox.querySelector('[data-ip-minicart]');
+          if (b) b.classList.remove('is-loading');
+        });
+    };
+    var cartHover = function (e) { return e.pointerType === 'mouse' && cartFine.matches && desktop.matches; };
+    cartbox.addEventListener('pointerenter', function (e) {
+      if (!cartHover(e)) return;
+      clearTimeout(cartTimer);
+      cartTimer = setTimeout(function () { setCart(true); }, 120);
+    });
+    cartbox.addEventListener('pointerleave', function (e) {
+      if (!cartHover(e)) return;
+      clearTimeout(cartTimer);
+      cartTimer = setTimeout(function () { setCart(false); }, 250);
+    });
+    cartbox.addEventListener('focusin', function () { if (desktop.matches) refreshCart(); });
+    doc.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && cartbox.classList.contains('is-open')) setCart(false);
+    });
+    desktop.addEventListener('change', function (e) { if (!e.matches) setCart(false); });
   }
 
   /* ── Sticky header state: .is-stuck once the page has scrolled ── */
