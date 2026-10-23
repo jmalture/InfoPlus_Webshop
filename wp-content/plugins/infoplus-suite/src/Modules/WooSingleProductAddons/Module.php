@@ -51,6 +51,9 @@ final class Module implements ModuleInterface
         add_filter('woocommerce_add_to_cart_validation', [$this, 'validateBuyForm'], 20, 5);
         add_filter('woocommerce_add_cart_item_data', [$this, 'addBuyFormCartItemData'], 20, 3);
 
+        // Server-side Mindestbestellmenge (replaces the BeRocket Min/Max plugin).
+        (new MinQuantity())->register();
+
         // Show model image in cart/checkout instead of product image
         add_filter('woocommerce_cart_item_thumbnail', [$this, 'cartItemModelImage'], 10, 3);
         
@@ -746,6 +749,16 @@ final class Module implements ModuleInterface
 
         if (!$product_id || !$variation_id) {
             wp_send_json_error(['message' => 'Missing product or variation ID'], 400);
+        }
+
+        // This handler calls WC()->cart->add_to_cart() directly, which skips
+        // woocommerce_add_to_cart_validation, so the minimum is checked here.
+        $min_qty = MinQuantity::forProduct($product_id, $variation_id);
+        if ($quantity < $min_qty) {
+            wp_send_json_error([
+                'message' => sprintf(__('Die Mindestbestellmenge beträgt %d Stück.', 'infoplus-suite'), $min_qty),
+                'min'     => $min_qty,
+            ], 400);
         }
 
         // Build variation attributes from the variation
