@@ -5,7 +5,7 @@ Monorepo for the Infoplus nameplate shop (Namensschilder): the Infoplus Suite pl
 ## State of the repo
 
 - Created 2026-10-23 by merging two histories: the Suite (formerly MrBeardman/Infoplus-Suite, 45 commits) and the theme (formerly standalone, 40 commits). Paths were rewritten into this layout, so all commit hashes changed. Old hash to new hash: `docs/history/commit-map-suite.txt` and `docs/history/commit-map-theme.txt`. Hashes quoted in older docs are the old ones; look them up there.
-- `main`: current line, deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com) as Suite 0.10.32 + theme 0.4.0. Elementor and its add-ons are deactivated on staging.
+- `main`: current line, deployed on staging (navajowhite-rhinoceros-679020.hostingersite.com) as Suite 0.10.34 + theme 0.5.0 (plus later fixes written straight to staging, all committed). Elementor and its add-ons are deactivated on staging; 20 unused plugins were deleted there on 2026-10-23.
 - `production`: the Suite as production runs it (old `main`, production-identical at old `f01aca6`, new `1b24e5c`, 2026-09-17, plus documentation commits). Production still uses Elementor and the old Suite line. Reference until rollout.
 - `feature/catalog-import` (0.9.113): CatalogImport module and the `tools/import-mapping/` pipeline. Already contained in `main`.
 - Tags `archive/*`: merged or retired branches (fix/order-details-ownership, fix/infoplusapi-customerdashboard-auth, chore/sync-staging, claude/admiring-archimedes, an older unrelated line from March 2026).
