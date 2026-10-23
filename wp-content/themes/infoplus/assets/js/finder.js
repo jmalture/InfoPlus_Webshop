@@ -53,6 +53,7 @@
   var nameEl = $('[data-ip-finder-name]');
   var nameInput = $('[data-ip-finder-name-input]');
   var countEl = $('[data-ip-finder-count]');
+  var countLabel = $('[data-ip-finder-count-label]');
   var chipsEl = $('[data-ip-finder-chips]');
   var sceneEl = $('[data-ip-finder-scene]');
   var favEl = $('[data-ip-finder-fav]');
@@ -232,33 +233,43 @@
     return { list: list, relaxed: relaxed };
   }
 
-  /** Beste Wahl, Preis-Tipp, Premium: three families where possible. */
+  /** Unit price at the chosen quantity, else the lowest price. */
+  function priceOf(r) { return r.unit != null ? r.unit : lowest(r.c); }
+
+  /**
+   * Beste Wahl, Preis-Tipp, Premium: three families where possible.
+   * The labels must be true: a Preis-Tipp is cheaper than the Beste Wahl, a
+   * Premium is finer (premium trait) than it. When no candidate qualifies,
+   * the slot goes to the next best family, labelled "Alternative".
+   */
   function picks(list) {
     if (!list.length) return [];
     var best = list[0];
     var floor = best.score > 0 ? best.score * 0.6 : -Infinity;
+    var good = list.filter(function (r) { return r.score >= floor; });
     var used = {};
     used[best.c.pid] = true;
-    var pool = list.filter(function (r) { return r.score >= floor; });
-    var price = null;
-    pool.forEach(function (r) {
-      if (used[r.c.pid]) return;
-      var p = r.unit != null ? r.unit : lowest(r.c);
-      if (!price || p < (price.unit != null ? price.unit : lowest(price.c))) price = r;
-    });
-    if (price) used[price.c.pid] = true;
-    var premium = null;
-    pool.forEach(function (r) {
-      if (used[r.c.pid]) return;
-      if (!premium || (r.c.traits.premium || 0) > (premium.c.traits.premium || 0) ||
-        ((r.c.traits.premium || 0) === (premium.c.traits.premium || 0) && r.score > premium.score)) premium = r;
-    });
+    function pickFrom(arr, better, ok) {
+      var found = null;
+      arr.forEach(function (r) {
+        if (used[r.c.pid] || !ok(r)) return;
+        if (!found || better(r, found)) found = r;
+      });
+      return found;
+    }
+    var prem = function (r) { return r.c.traits.premium || 0; };
+    var cheaper = function (r, o) { return priceOf(r) < priceOf(o) || (priceOf(r) === priceOf(o) && r.score > o.score); };
+    var finer = function (r, o) { return prem(r) > prem(o) || (prem(r) === prem(o) && r.score > o.score); };
+    var isCheaper = function (r) { return priceOf(r) < priceOf(best); };
+    var isFiner = function (r) { return prem(r) > prem(best); };
+
     var out = [{ kind: 'best', r: best }];
-    if (price) out.push({ kind: 'price', r: price });
-    if (premium) out.push({ kind: 'premium', r: premium });
-    // Fill with the next best families when the pool was too small.
+    var price = pickFrom(good, cheaper, isCheaper) || pickFrom(list, cheaper, isCheaper);
+    if (price) { used[price.c.pid] = true; out.push({ kind: 'price', r: price }); }
+    var premium = pickFrom(good, finer, isFiner) || pickFrom(list, finer, isFiner);
+    if (premium) { used[premium.c.pid] = true; out.push({ kind: 'premium', r: premium }); }
     for (var i = 0; out.length < 3 && i < list.length; i++) {
-      if (!used[list[i].c.pid]) { used[list[i].c.pid] = true; out.push({ kind: out.length === 1 ? 'price' : 'premium', r: list[i] }); }
+      if (!used[list[i].c.pid]) { used[list[i].c.pid] = true; out.push({ kind: 'alt', r: list[i] }); }
     }
     return out;
   }
@@ -357,7 +368,10 @@
     var fav = ranked.list[0] ? ranked.list[0].c : null;
 
     // Counter
-    var n = ranked.relaxed ? 0 : ranked.list.length;
+    // Counter: what is left after the filters. Nothing fits exactly: the
+    // nearest alternatives are counted and the label says so.
+    var n = ranked.list.length;
+    if (countLabel) countLabel.textContent = ranked.relaxed ? 'ähnliche Varianten' : 'passende Varianten';
     if (countEl && countEl.textContent !== String(n)) {
       animateCount(countEl, parseInt(countEl.textContent, 10) || 0, n);
     }
@@ -416,7 +430,7 @@
 
   /* ── Results ─────────────────────────────────────────────────────────── */
 
-  var TAGS = { best: 'Beste Wahl', price: 'Preis-Tipp', premium: 'Premium' };
+  var TAGS = { best: 'Beste Wahl', price: 'Preis-Tipp', premium: 'Premium', alt: 'Alternative' };
 
   function linkFor(c) {
     var q = qty();
@@ -436,8 +450,11 @@
       priceHtml = '<dd><small>ab</small> ' + esc(money(lowest(c))) + ' <small>pro Stück</small></dd>';
     }
     var why = r.why.slice(0, 3);
-    if (p.kind === 'price') why = ['Die günstigste passende Serie.'].concat(why).slice(0, 3);
-    if (p.kind === 'premium' && c.traits.claim) why = why.slice(0, 2);
+    var bestR = current.picks[0] ? current.picks[0].r : null;
+    if (p.kind === 'price' && bestR) {
+      why = ['Günstiger als die Beste Wahl: ' + money(priceOf(r)) + ' statt ' + money(priceOf(bestR)) + ' pro Stück.'].concat(why).slice(0, 3);
+    }
+    if (p.kind === 'premium') why = ['Hochwertiger in Material und Anmutung.'].concat(why).slice(0, 3);
     if (!why.length) why = ['Passt zu Ihren Angaben.'];
     var total = unit != null && q ? '<div class="ip-fpick__fact"><dt>Gesamt ca.</dt><dd>' + esc(money(unit * (q >= 300 ? 250 : q))) + '</dd></div>' : '';
     var fasts = c.fasteners.map(function (f) { return FAST_LABEL[f]; }).filter(Boolean).join(', ');

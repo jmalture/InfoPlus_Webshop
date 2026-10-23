@@ -245,7 +245,7 @@
 .ip-fpick__model { font: var(--type-badge); letter-spacing: .5px; color: var(--c-secondary) }
 .ip-fpick__claim { color: var(--text-secondary); font-size: 18px }
 .ip-fpick__why { display: grid; gap: var(--space-2); margin: 0; padding: var(--space-3) 0 0; list-style: none; border-top: 1px solid var(--border) }
-.ip-fpick__why-title { font: 600 13px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
+.ip-fpick__why .ip-fpick__why-title { display: block; font: 600 13px/1.2 var(--font); letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary) }
 .ip-fpick__why li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--space-2); font: 400 17px/1.35 var(--font) }
 .ip-fpick__why .ip-icon { width: 20px; height: 20px; color: var(--accent); stroke-width: 2.25 }
 .ip-fpick__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); margin: var(--space-2) 0 0; padding: var(--space-4); border-radius: 12px; background: var(--surface-alt) }

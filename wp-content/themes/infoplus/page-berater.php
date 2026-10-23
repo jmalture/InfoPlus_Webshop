@@ -133,7 +133,7 @@ $ip_opt_look  = array( 'often' => 'self', 'sometimes' => 'logo', 'rarely' => 'pr
 							</label>
 							<div class="ip-fstage__count">
 								<span class="ip-fstage__num" data-ip-finder-count><?php echo (int) count( $ip_data['candidates'] ); ?></span>
-								<span class="ip-fstage__count-label"><?php esc_html_e( 'passende Varianten', 'infoplus' ); ?></span>
+								<span class="ip-fstage__count-label" data-ip-finder-count-label><?php esc_html_e( 'passende Varianten', 'infoplus' ); ?></span>
 							</div>
 						</div>
 						<p class="ip-fstage__fav" data-ip-finder-fav aria-live="polite"></p>
