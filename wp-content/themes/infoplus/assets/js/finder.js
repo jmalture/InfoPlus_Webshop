@@ -271,6 +271,15 @@
     for (var i = 0; out.length < 3 && i < list.length; i++) {
       if (!used[list[i].c.pid]) { used[list[i].c.pid] = true; out.push({ kind: 'alt', r: list[i] }); }
     }
+    // Fewer than three families left: other models of the same families.
+    var shown = out.map(function (p) { return p.r.c.id; });
+    for (var j = 0; out.length < 3 && j < list.length; j++) {
+      if (shown.indexOf(list[j].c.id) !== -1) continue;
+      shown.push(list[j].c.id);
+      var kind = !price && isCheaper(list[j]) ? 'price' : 'alt';
+      if (kind === 'price') price = list[j];
+      out.push({ kind: kind, r: list[j] });
+    }
     return out;
   }
 
@@ -498,7 +507,9 @@
     picksEl.innerHTML = ps.map(pickCard).join('');
     resultsSub.textContent = ranked.relaxed
       ? 'Für genau diese Kombination haben wir kein Modell. Hier sind die nächstbesten, mit anderem Material oder ohne Sonderkontur.'
-      : ranked.list.length + ' Varianten passen zu Ihren Angaben. Das sind die drei, die wir Ihnen empfehlen.';
+      : (ranked.list.length === 1
+        ? 'Genau eine Variante passt zu Ihren Angaben.'
+        : ranked.list.length + ' Varianten passen zu Ihren Angaben. ' + (ps.length >= 3 ? 'Das sind die drei, die wir Ihnen empfehlen.' : 'Das ist unsere Empfehlung.'));
 
     // Preview: the best pick
     if (ps[0]) {

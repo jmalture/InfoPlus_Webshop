@@ -260,6 +260,7 @@
 .ip-fpick__actions .ip-btn { width: 100% }
 
 .ip-finder__more { margin-top: var(--space-6); display: grid; justify-items: start; gap: var(--space-4) }
+.ip-finder__more[hidden], .ip-finder__list[hidden] { display: none }
 .ip-finder__list { display: grid; gap: var(--space-2); width: 100%; margin: 0; padding: 0; list-style: none }
 .ip-finder__row {
   display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-4); align-items: center; padding: var(--space-3) var(--space-4);
