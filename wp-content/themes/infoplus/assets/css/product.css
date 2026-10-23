@@ -132,13 +132,31 @@
 .ip-product .ip-c-product-image__fullscreen:hover { background: var(--accent); color: var(--c-white) }
 @media (hover: none) { .ip-product .ip-c-product-image__fullscreen { opacity: 1 } }
 
-/* Thumbnails: one swipe row on phones, wrapping row from 768. */
+/* Thumbnails: one row on every width that swipes sideways (touch, trackpad,
+   Shift + wheel). When the row overflows, product.js wraps it in .ip-thumbs
+   and adds an arrow on each side that steps to the previous or next picture;
+   the row follows along. The arrows sit beside the row, never over a
+   thumbnail (same pattern as the HomeStyle theme). */
 .ip-product .ip-c-product-image__gallery {
+  position: relative; flex: 1 1 auto; min-width: 0;
   flex-wrap: nowrap; gap: var(--ip-pi-thumb-gap); margin: 0; padding: 2px 2px var(--space-1);
-  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: none;
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scroll-behavior: smooth; scrollbar-width: none;
 }
 .ip-product .ip-c-product-image__gallery::-webkit-scrollbar { display: none }
-@media (min-width: 768px) { .ip-product .ip-c-product-image__gallery { flex-wrap: wrap; overflow: visible } }
+@media (prefers-reduced-motion: reduce) { .ip-product .ip-c-product-image__gallery { scroll-behavior: auto } }
+.ip-thumbs { display: flex; align-items: flex-start; gap: 6px; min-width: 0 }
+.ip-thumbs[hidden] { display: none }
+.ip-thumbs__btn {
+  flex: none; display: grid; place-items: center; width: 32px; height: var(--ip-pi-thumb-size); margin-top: 2px; padding: 0;
+  border: 1px solid var(--border); border-radius: var(--ip-pi-thumb-radius); background: var(--c-white); color: var(--text-primary);
+  cursor: pointer; transition: background var(--dur-ui) var(--ease), color var(--dur-ui) var(--ease), border-color var(--dur-ui) var(--ease), opacity var(--dur-ui) var(--ease);
+}
+.ip-thumbs__btn[hidden] { display: none }
+.ip-thumbs__btn svg { width: 18px; height: 18px }
+.ip-thumbs__btn--prev { order: -1 }
+.ip-thumbs__btn--prev svg { transform: scaleX(-1) }
+.ip-thumbs__btn:disabled { opacity: .35; cursor: default }
+@media (hover: hover) { .ip-thumbs__btn:not(:disabled):hover { border-color: var(--accent); background: var(--accent); color: var(--c-white) } }
 .ip-product .infoplus-product-image__thumb {
   flex: none; width: var(--ip-pi-thumb-size); height: var(--ip-pi-thumb-size); scroll-snap-align: start;
   border: 1px solid var(--ip-pi-thumb-border); border-radius: var(--ip-pi-thumb-radius); background: var(--c-white);

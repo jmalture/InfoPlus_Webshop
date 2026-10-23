@@ -1432,3 +1432,110 @@
     io.observe(el);
   });
 })();
+
+/* Thumbnail row of the product image (Suite component product-image): one
+   row that swipes sideways (product.css). When it is wider than its column,
+   the row is wrapped in .ip-thumbs with an arrow on each side. An arrow steps
+   to the previous or next picture by clicking that thumbnail, so the Suite
+   swaps the big image as on a click; the row scrolls along to keep the
+   current thumbnail in view. The Suite rebuilds the thumbnails when the
+   model changes (buildModelGallery), so a MutationObserver keeps the arrows
+   in step. The arrows are not in the tab order: the thumbnails themselves
+   are buttons. Pattern from the HomeStyle theme (assets/js/product.js). */
+(function () {
+  'use strict';
+  var row = document.querySelector('.ip-product .ip-c-product-image__gallery');
+  if (!row || !('MutationObserver' in window)) { return; }
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var chevron = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg>';
+
+  var wrap = document.createElement('div');
+  wrap.className = 'ip-thumbs';
+  row.parentNode.insertBefore(wrap, row);
+  wrap.appendChild(row);
+
+  function arrow(dir, label) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'ip-thumbs__btn ip-thumbs__btn--' + dir;
+    b.setAttribute('aria-label', label);
+    b.setAttribute('aria-hidden', 'true');
+    b.tabIndex = -1;
+    b.hidden = true;
+    b.innerHTML = chevron;
+    wrap.appendChild(b);
+    return b;
+  }
+  var prev = arrow('prev', 'Vorheriges Bild');
+  var next = arrow('next', 'Nächstes Bild');
+
+  function thumbs() { return row.querySelectorAll('.infoplus-product-image__thumb'); }
+  function current(list) {
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].classList.contains('is-active')) { return i; }
+    }
+    return -1;
+  }
+
+  /* Scroll the row so the thumbnail and a bit of its neighbour show. The
+     row snaps to thumbnail starts (scroll-snap in product.css), so the
+     target is always a thumbnail start (or the end of the row); any other
+     position would be pulled back by the snap. */
+  function reveal(el) {
+    if (!el) { return; }
+    var list = thumbs(), k = Array.prototype.indexOf.call(list, el), pad = 40;
+    var left = el.offsetLeft, right = left + el.offsetWidth;
+    var from = row.scrollLeft, to = from + row.clientWidth, max = row.scrollWidth - row.clientWidth;
+    var target = null;
+    if (left - pad < from) {
+      target = k > 0 ? list[k - 1].offsetLeft : 0;
+    } else if (right + pad > to) {
+      target = max;
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].offsetLeft >= right + pad - row.clientWidth) { target = Math.min(list[i].offsetLeft, max); break; }
+      }
+    }
+    if (null !== target && Math.abs(target - from) > 1) {
+      row.scrollTo({ left: target, behavior: reduce ? 'auto' : 'smooth' });
+    }
+  }
+
+  function update() {
+    var list = thumbs();
+    var shown = list.length > 0 && row.style.display !== 'none';
+    wrap.hidden = !shown;
+    var overflow = shown && row.scrollWidth > row.clientWidth + 1;
+    prev.hidden = next.hidden = !overflow;
+    var i = current(list);
+    prev.disabled = i <= 0;
+    next.disabled = i >= list.length - 1;
+  }
+
+  function step(d) {
+    var list = thumbs();
+    var i = current(list);
+    var j = i < 0 ? (d > 0 ? 0 : -1) : i + d;
+    if (j < 0 || j >= list.length) { return; }
+    list[j].click();
+  }
+  prev.addEventListener('click', function () { step(-1); });
+  next.addEventListener('click', function () { step(1); });
+
+  var queued = false;
+  function sync() {
+    if (queued) { return; }
+    queued = true;
+    window.requestAnimationFrame(function () {
+      queued = false;
+      update();
+      var list = thumbs();
+      reveal(list[current(list)]);
+    });
+  }
+  new MutationObserver(sync).observe(row, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'style'] });
+  if ('ResizeObserver' in window) { new ResizeObserver(sync).observe(row); }
+  else { window.addEventListener('resize', sync); }
+  row.addEventListener('load', sync, true); // thumbnail images arriving change the row width
+  update();
+})();
+
