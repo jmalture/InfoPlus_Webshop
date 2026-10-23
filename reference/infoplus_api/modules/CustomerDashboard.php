@@ -11,9 +11,24 @@ class CustomerDashboard{
 	
 		$this->project  = new Project();
 	}
+
+	/**
+	 * Customer whose data may be read: always the logged-in user.
+	 * Only shop managers may pass another customer ID in the query string.
+	 */
+	private function resolve_customer_id($requested){
+		if(isset($requested) && current_user_can('manage_woocommerce')){
+			return intval($requested);
+		}
+		return get_current_user_id();
+	}
+
+	function permission_logged_in(){
+		return is_user_logged_in();
+	}
 	
 	function get_customer_dashboard_data(){
-		$id = isset( $_GET['id'] ) ? intval( $_GET['id'] ) : null;
+		$id = $this->resolve_customer_id( isset( $_GET['id'] ) ? $_GET['id'] : null );
 		
 		if(!isset($id)){
 			return "Parameter id is required";
@@ -51,7 +66,7 @@ class CustomerDashboard{
 	}
 	
 	function get_dashboard_customer_orders(){
-		$customer_id = isset( $_GET['customerId'] ) ? intval( $_GET['customerId'] ) : null;
+		$customer_id = $this->resolve_customer_id( isset( $_GET['customerId'] ) ? $_GET['customerId'] : null );
 		
 		$orders = $this -> get_customer_orders($customer_id);
 	
@@ -66,6 +81,11 @@ class CustomerDashboard{
 		$order = wc_get_order( $order_id );
 		
 		if(empty($order)){
+			return $result;
+		}
+
+		// Only the order's own customer or a shop manager may read it.
+		if((int) $order->get_customer_id() !== get_current_user_id() && !current_user_can('manage_woocommerce')){
 			return $result;
 		}
 		
@@ -161,7 +181,7 @@ class CustomerDashboard{
 	}
 	
 	function get_customer_events(){
-		$customerId = isset($_GET['customerId']) ? intval($_GET['customerId']) : null;
+		$customerId = $this->resolve_customer_id( isset($_GET['customerId']) ? $_GET['customerId'] : null );
 		
 		if(!isset($customerId)){
 			return "Parameter customer id is required";
@@ -190,6 +210,7 @@ class CustomerDashboard{
             'infoplus/'. INFOPLUS_API_VERSION, 'customerdashboard',
             array(
                 'methods'  => 'GET',
+                'permission_callback' => [$this, 'permission_logged_in'],
                 'callback' => [$this, 'get_customer_dashboard_data'],
 				'id' => array(
                     'required' => true,
@@ -202,6 +223,7 @@ class CustomerDashboard{
             'infoplus/'. INFOPLUS_API_VERSION, 'customerdashboard/orders',
             array(
                 'methods'  => 'GET',
+                'permission_callback' => [$this, 'permission_logged_in'],
                 'callback' => [$this, 'get_dashboard_customer_orders'],
 				'customerId' => array(
                     'required' => true,
@@ -214,6 +236,7 @@ class CustomerDashboard{
             'infoplus/'. INFOPLUS_API_VERSION, 'customerdashboard/orders/detailed',
             array(
                 'methods'  => 'GET',
+                'permission_callback' => [$this, 'permission_logged_in'],
                 'callback' => [$this, 'get_dashboard_customer_orders_detailed'],
 				'orderId' => array(
                     'required' => true,
@@ -226,6 +249,7 @@ class CustomerDashboard{
             'infoplus/'. INFOPLUS_API_VERSION, 'customerdashboard/events',
             array(
                 'methods'  => 'GET',
+                'permission_callback' => [$this, 'permission_logged_in'],
                 'callback' => [$this, 'get_customer_events'],
 				'customerId' => array(
                     'required' => true,
