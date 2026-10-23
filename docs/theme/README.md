@@ -63,6 +63,18 @@ What changed:
 - `woocommerce/content-product.php` and `woocommerce/content-single-product.php` print static product classes (`product type-product post-{id} product-type-{type}`) instead of `wc_product_class()`. For a variable product WooCommerce builds the class list from the prices of every variation, which was most of the time on both pages. No theme CSS or JS uses the other classes Woo would add (checked with grep, 2026-10-23).
 - `inc/performance.php` dequeues plugin assets no theme view uses and trims Germanized on listing cards. Every rule has a key in the filter `ip_performance_trims` (`wpda`, `dashicons`, `wdp`, `ppcp_minicart`, `add_to_cart`, `wc_css`, `cart_grids`, `gzd_loop`); remove a key to restore that asset or hook. The file comment lists what each rule removes and why.
 
+Second pass, same day (query count per page view, attributed with a temporary query profiler):
+
+| Page | Queries before | After | Server time after |
+|------|----------------|-------|-------------------|
+| `/namensschilder/` | 662 | 242 | 682 ms |
+| `/product/atlantis-namensschild/` | 407 | 346 | 765 ms |
+
+- `inc/performance.php` `ip_performance_gzd_line()`: the Germanized tax and shipping line was still rendered once per request, and that one call loaded every variation of the first card's product (87 products, about 350 queries). The line is now kept in a transient for 12 hours.
+- `inc/options.php` `ip_setting_prime()`: the settings fields were read as two options each, one query per option because nothing is saved yet (70 queries on every page). One `wp_prime_option_caches()` call now loads them all.
+
+Where the rest goes (product page, 346): about 100 single option reads of plugins whose settings are not autoloaded (WooCommerce payment gateways, WP Activity Log, PayPal, Freemius in WP Data Access), which a persistent object cache removes; about 110 in the Suite product components, which load attribute terms and attachment images one by one (`Components.php` line 281, `ProductAttributeImages.php` lines 1074 and 1115); 18 for the footer images (`template-parts/site-footer.php` line 71); the rest is WordPress and WooCommerce bootstrap.
+
 Still open (Suite `PLUGIN-DOCUMENTATION.md` Section 16, findings 28 to 30): autoloaded options of deleted plugins, the cart and checkout block prefetch on every page once the cart has items, no object cache and no page cache on staging.
 
 ## Search basics (since 0.5.1)
